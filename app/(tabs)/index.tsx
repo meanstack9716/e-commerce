@@ -19,7 +19,7 @@ import {
   FontAwesome6,
 } from "@expo/vector-icons";
 import ProductCard from "@/components/home/ProductCard";
-import { router } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import data from "../../assets/data/products.json";
 import Navbar from "@/components/home/Navbar";
 import CategoryGrid from "@/components/home/CategoryGrid";
@@ -67,6 +67,7 @@ const HomeScreen: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const productData = data as ProductData;
   const insets = useSafeAreaInsets();
+  const navigation = useNavigation();
   const getFilteredProducts = () => {
     let filtered = productData.products;
 
@@ -110,9 +111,13 @@ const HomeScreen: React.FC = () => {
 
   const renderItem = ({ item }: { item: Product }) => (
     <ProductCard
-      {...item}
-      liked={likedItems.includes(item.id)}
-      onLikePress={() => toggleLike(item.id)}
+    {...item}
+    liked={likedItems.includes(item.id)}
+    onLikePress={() => toggleLike(item.id)}
+    onPress={() => router.push({ 
+      pathname: "/ProductDetails",
+      params: { id: item.id } 
+    })}
     />
   );
 

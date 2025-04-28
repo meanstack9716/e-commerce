@@ -18,8 +18,9 @@ export interface ProductCardProps {
   title: string;
   price: string;
   star: number;
-  liked: boolean;
+  liked: boolean; 
   onLikePress: () => void;
+  onPress: () => void;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
@@ -29,6 +30,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   star,
   liked,
   onLikePress,
+  onPress,
 }) => {
   const discountPercentage = Math.floor(Math.random() * 41) + 10;
   const renderStars = () => {
@@ -77,7 +79,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
   return (
     <View style={styles.card}>
-      {/* Image with like button */}
+    <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
       <View style={styles.imageWrapper}>
         <Image source={{ uri: image }} style={styles.cardImage} />
         <TouchableOpacity style={styles.likeButton} onPress={onLikePress}>
@@ -92,22 +94,18 @@ const ProductCard: React.FC<ProductCardProps> = ({
         <Text style={styles.cardTitle} numberOfLines={2}>
           {title}
         </Text>
-
-        {/* Star Rating */}
         <View style={styles.starContainer}>
           {renderStars()}
           <Text style={styles.ratingText}>({star.toFixed(1)})</Text>
         </View>
-
-        {/* Price */}
         <Text style={styles.cardPrice}>${price}</Text>
-
-        {/* Discount */}
         <View style={styles.discountBadge}>
           <Text style={styles.discountText}>{discountPercentage}% OFF</Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
+  </View>
+  
   );
 };
 
