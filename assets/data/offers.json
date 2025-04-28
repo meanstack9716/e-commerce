@@ -1,0 +1,73 @@
+[
+    {
+      "id": "1",
+      "image": "https://www.inweaveindia.com/cdn/shop/products/1_568d0ae6-c5ca-412c-a266-25abedcad655_600x.jpg?v=1742403565", 
+      "brands": ["MANGO", "NEXT"],
+      "tagline": "Global Finds",
+      "offer": "MIN. 55% OFF"
+    },
+    {
+      "id": "2",
+      "image": "https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb",
+      "brands": ["H&M", "FOREVER NEW"],
+      "tagline": "Hottest Styles",
+      "offer": "UP TO 50% OFF"
+    },
+    {
+      "id": "3",
+      "image": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246",
+      "brands": ["LEVIS", "ZARA"],
+      "tagline": "Men’s Wear",
+      "offer": "MIN. 40% OFF"
+    },
+    {
+      "id": "4",
+      "image": "https://images.unsplash.com/photo-1512436991641-6745cdb1723f",
+      "brands": ["NIKE", "PUMA"],
+      "tagline": "Sporty Looks",
+      "offer": "FLAT 60% OFF"
+    },
+    {
+      "id": "5",
+      "image": "https://i.pinimg.com/736x/56/b1/09/56b109e68253b380e878b28a720326d5.jpg",
+      "brands": ["UCB", "VANS"],
+      "tagline": "Casual Picks",
+      "offer": "FLAT 60% OFF"
+    },
+    {
+      "id": "6",
+      "image": "https://img.freepik.com/premium-vector/hand-drawn-lettering-motivational-quote-inscription-try-something-new-perfect-design-greeting-cards-posters-tshirts-banners-print-invitations-self-care-concept_317038-846.jpg",
+      "brands": ["UCB", "VANS"],
+      "tagline": "Try New",
+      "offer": "UP TO 50% OFF"
+    },
+    {
+      "id": "7",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsjODqRtJ1upgBwg3VsMPt_k4hRvRf3NWxbQ&s",
+      "brands": ["UCB", "VANS"],
+      "tagline": "Track Pants",
+      "offer": "MIN. 30% OFF"
+    },
+    {
+      "id": "8",
+      "image": "https://fcity.in/images/products/175524737/yx916_512.jpg",
+      "brands": ["UCB", "VANS"],
+      "tagline": "Formal Shirts",
+      "offer": "MIN. 30% OFF"
+    },
+    {
+      "id": "9",
+      "image": "https://assets.myntassets.com/dpr_1.5,q_60,w_400,c_limit,fl_progressive/assets/images/2024/OCTOBER/21/6yluxQL3_d01b23632c1c409ba30c65d6ecb9ca15.jpg",
+      "brands": ["UCB", "VANS"],
+      "tagline": "Western Avenue",
+      "offer": "MIN. 30% OFF"
+    },
+    {
+      "id": "10",
+      "image": "https://www.aachho.com/cdn/shop/files/1_7377dbff-de77-4b45-a815-577d6d1a69a2_1080x.jpg?v=1725540569F",
+      "brands": ["UCB", "VANS"],
+      "tagline": "Ethenic Dresses",
+      "offer": "MIN. 30% OFF"
+    }
+  ]
+  

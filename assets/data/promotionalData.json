@@ -1,0 +1,94 @@
+{
+    "promotionalCards": [
+      {
+        "id": "shirts",
+        "title": "Shirts",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfVUj9JuAPOEHlbvdODbKfMeE51R585R1jYg&s"
+      },
+      {
+        "id": "jeans",
+        "title": "Jeans",
+        "imageUrl": "https://images.bestsellerclothing.in/data/only/18-mar-2023/103811901_g.jpg?width=1080&height=1355&mode=fill&fill=blur&format=auto"
+      },
+      {
+        "id": "tshirts",
+        "title": "Tshirts",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvVu5OIIkMv3TGS4hUyhwni4iyru3qmALUpg&s"
+      },
+      {
+        "id": "shorts",
+        "title": "Shorts",
+        "imageUrl": "https://pantproject.com/cdn/shop/products/DSC00859_ae6cf3d9-4066-4bd7-837c-5c579fbc47d4.jpg?v=1667638877"
+      },
+      {
+        "id": "shoes",
+        "title": "Shoes",
+        "imageUrl": "https://images.meesho.com/images/products/233816974/hmo5k_512.webp"
+      },
+      {
+        "id": "kurtas",
+        "title": "Kurtas",
+        "imageUrl": "https://img.perniaspopupshop.com/catalog/product/s/n/SNGC032303_1.jpg?impolicy=detailimageprod"
+      },
+      {
+        "id": "flipFlop",
+        "title": "Flip Flop",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS22ZLCLkeA4EbN-ubfFVnXllyKPklqqiGM0w&s"
+      },
+      {
+        "id": "Gadget",
+        "title": "gadgets",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQx9xjslJXhsUGv_JxHvasojUJ8yDyycz7ZhA&s"
+      },
+      {
+        "id": "faceWash",
+        "title": "Face Wash",
+        "imageUrl": "https://rawls.in/cdn/shop/files/rose.png?v=1736237945"
+      },
+      {
+        "id": "trimmer",
+        "title": "Trimmer",
+        "imageUrl": "https://www.jiomart.com/images/product/original/rvj9uoneg7/crystal-digital-hair-trimmer-professional-shaver-with-clipper-and-3-in-1-beard-nose-and-ear-waterproof-hair-trimmer-for-men-pack-of-3-product-images-orvj9uoneg7-p597554930-1-202301140154.jpg?im=Resize=(1000,1000)"
+      },
+      {
+        "id": "kurtaSets",
+        "title": "Kurta Sets",
+        "imageUrl": "https://img.perniaspopupshop.com/catalog/product/s/n/SNGC032303_1.jpg?impolicy=detailimageprod"
+      },
+      {
+        "id": "dresses",
+        "title": "Dresses",
+        "imageUrl": "https://cdn.vibecity.in/providers/63a98db763a7b60011f57343/PM-9002Front_4a02a73c-a897-48c6-bc4e-12a438cf00ae-3X.png"
+      },
+      {
+        "id": "tops",
+        "title": "Tops",
+        "imageUrl": "https://rukminim2.flixcart.com/image/850/1000/xif0q/top/s/b/w/m-1-delta-long-top-tops-nova-original-imah22wzzb8qjsf3.jpeg?q=90&crop=false"
+      },
+      {
+        "id": "flats",
+        "title": "Flats",
+        "imageUrl": "https://assets.ajio.com/medias/sys_master/root/20230628/rPZi/649b9dbba9b42d15c904b06b/-473Wx593H-465810465-gold-MODEL.jpg"
+      },
+      {
+        "id": "Handbegs",
+        "title": "Handbegs",
+        "imageUrl": "https://m.media-amazon.com/images/I/71vz71m5usL._AC_UY1000_.jpg"
+      },
+      {
+        "id": "lipstick",
+        "title": "Lipsticks",
+        "imageUrl": "https://rubysorganics.in/cdn/shop/products/lipstcikshootimage_1100x.jpg?v=1737441110"
+      },
+      {
+        "id": "Sarees",
+        "title": "Sarees",
+        "imageUrl": "https://5.imimg.com/data5/SELLER/Default/2022/7/SN/BP/XV/55112739/whatsapp-image-2022-07-27-at-10-03-07-am-1--500x500.jpeg"
+      },
+      {
+        "id": "jawellery",
+        "title": "Jawellery",
+        "imageUrl": "https://m.media-amazon.com/images/I/41WZNFrf20L._AC_UY1100_.jpg"
+      }
+    ]
+  }

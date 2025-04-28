@@ -1,0 +1,82 @@
+[
+    {
+      "id": "banner1",
+      "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7aWw1v-qsJ5LpdeUq32q1E2PnZiiW5sCU-w&s",
+      "title": "Deeply Ethnic",
+      "subtitle": "Celebrate the Soul of Tradition",
+      "price": "Under ₹899 + Free Shipping",
+      "brands": ["Kalini", "anouk"]
+    },
+    {
+      "id": "banner2",
+      "imageUrl": "https://i.ytimg.com/vi/Y7927OhILhs/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLBwWuAdmIs7BDQNNEAwUqrFAH8HDQ",
+      "title": "Summer Collection",
+      "subtitle": "Fresh Styles for Hot Days",
+      "price": "Starting at ₹499",
+      "brands": ["Zara", "H&M"]
+    },
+    {
+      "id": "banner3",
+      "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQgMZ4mgWF1IMQnz0mYnfWABCNXoJjYcb2NQ&s",
+      "title": "Festive Sale",
+      "subtitle": "Traditional Wear for All Occasions",
+      "price": "Up to 60% Off",
+      "brands": ["Manyavar", "Fabindia"]
+    },
+    {
+      "id": "banner4",
+      "imageUrl": "https://cdn.prod.website-files.com/63b937f7cb69a848fab5e097/669a3a0e1d5ae3521c8aec5c_Lead%20Image%20%20(4).jpg",
+      "title": "Luxury Watches",
+      "subtitle": "Timeless Elegance on Your Wrist",
+      "price": "Premium Collection",
+      "brands": ["Fossil", "Titan"]
+    },
+    {
+      "id": "banner5",
+      "imageUrl": "https://littlemuffet.com/cdn/shop/files/LM_Aug_2335829_84fb25b2-3986-4351-a3b9-251a9108f077_1200x1200_crop_center.jpg?v=1715598188",
+      "title": "Kids Collection",
+      "subtitle": "Fun and Comfortable Styles",
+      "price": "Starting at ₹299",
+      "brands": ["FirstCry", "Lilliput"]
+    },
+    {
+      "id": "banner6",
+      "imageUrl": "https://discover.sportsengineplay.com/sites/default/files/styles/content_1024_w/public/images/shutterstock_1032332713.jpg?itok=8YdmvO8E",
+      "title": "Sports Gear",
+      "subtitle": "Performance Meets Style",
+      "price": "Up to 40% Off",
+      "brands": ["Nike", "Adidas"]
+    },
+    {
+      "id": "banner7",
+      "imageUrl": "https://woodentwist.com/cdn/shop/files/Home_Decor_1200x.png?v=1743306741",
+      "title": "Home Decor",
+      "subtitle": "Transform Your Space",
+      "price": "New Arrivals",
+      "brands": ["HomeTown", "IKEA"]
+    },
+    {
+      "id": "banner8",
+      "imageUrl": "https://media-cldnry.s-nbcnews.com/image/upload/rockcms/2024-06/240610-beauty-awards-2024-face-makeup-winners-vl-social-74fb90.jpg",
+      "title": "Beauty Products",
+      "subtitle": "Self-Care Essentials",
+      "price": "Buy 2 Get 1 Free",
+      "brands": ["Lakme", "Maybelline"]
+    },
+    {
+      "id": "banner9",
+      "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgptJto7F1fEkWuIKHVjBcZwKPVfODAx6boQ&s",
+      "title": "Tech Gadgets",
+      "subtitle": "Latest Innovation",
+      "price": "Limited Time Offers",
+      "brands": ["Apple", "Samsung"]
+    },
+    {
+      "id": "banner10",
+      "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTUQVSvGEG6qHz3ZGlVbF7XxshVctcvuCmdQ&s",
+      "title": "Winter Collection",
+      "subtitle": "Stay Warm, Stay Stylish",
+      "price": "New Season Arrivals",
+      "brands": ["Monte Carlo", "Jack & Jones"]
+    }
+  ]
