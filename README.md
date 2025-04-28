@@ -12,6 +12,21 @@
    ```bash
     npx expo start
    ```
+3. ## Build For ios
+
+   ```bash
+    npx expo run:ios
+   ```
+
+   ## Build For Andriod 
+   ```bash
+    npx expo run:android
+   ```
+
+## Application Information
+Build requirements
+ - .env file
+
 
 In the output, you'll find options to open the app in a
 

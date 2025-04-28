@@ -1,3 +1,4 @@
+import { handleApiError } from "@/utils/handleApiError";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -7,9 +8,6 @@ interface AuthState {
   registered: boolean;
   isAuthenticated: boolean;
   user: any | null;
-  sendCodeLoading: boolean;
-  verifyCodeLoading: boolean;
-  resetPasswordLoading: boolean;
   resetEmail: string | null;
   resetCode: string | null;
 }
@@ -20,15 +18,11 @@ const initialState: AuthState = {
   registered: false,
   isAuthenticated: false,
   user: null,
-  sendCodeLoading: false,
-  verifyCodeLoading: false,
-  resetPasswordLoading: false,
   resetEmail: null,
   resetCode: null,
 };
 
 const apiUrl = process.env.EXPO_PUBLIC_API_URL;
-console.log("apiurl", apiUrl);
 export const registerUser = createAsyncThunk(
   "auth/register",
   async (
@@ -47,17 +41,7 @@ export const registerUser = createAsyncThunk(
       });
       return response.data;
     } catch (error: any) {
-      if (error.response?.data?.errors) {
-        const errorData = error.response.data.errors;
-        for (const field in errorData) {
-          if (errorData[field]) {
-            return rejectWithValue(errorData[field]);
-          }
-        }
-      }
-      return rejectWithValue(
-        error.response?.data?.message || error.message || "Registration failed"
-      );
+      return rejectWithValue(handleApiError(error, "Registration failed"));
     }
   }
 );
@@ -75,17 +59,7 @@ export const loginUser = createAsyncThunk(
       });
       return response.data;
     } catch (error: any) {
-      if (error.response?.data?.errors) {
-        const errorData = error.response.data.errors;
-        for (const field in errorData) {
-          if (errorData[field]) {
-            return rejectWithValue(errorData[field]);
-          }
-        }
-      }
-      return rejectWithValue(
-        error.response?.data?.message || error.message || "Login Failed"
-      );
+      return rejectWithValue(handleApiError(error, "Login failed"));
     }
   }
 );
@@ -96,10 +70,8 @@ export const sendEmailCode = createAsyncThunk(
     try {
       const res = await axios.post(`${apiUrl}/auth/send-email-code`, { email });
       return res.data;
-    } catch (err: any) {
-      return rejectWithValue(
-        err.response?.data?.message || "Failed to send code"
-      );
+    } catch (error: any) {
+      return rejectWithValue(handleApiError(error, "Failed to send code"));
     }
   }
 );
@@ -116,8 +88,8 @@ export const verifyEmailCode = createAsyncThunk(
         code,
       });
       return res.data;
-    } catch (err: any) {
-      return rejectWithValue(err.response?.data?.message || "Invalid OTP");
+    } catch (error: any) {
+      return rejectWithValue(handleApiError(error, "Invalid OTP"));
     }
   }
 );
@@ -147,9 +119,7 @@ export const resetPassword = createAsyncThunk(
       });
       return response.data;
     } catch (error: any) {
-      return rejectWithValue(
-        error.response?.data?.message || "Password reset failed"
-      );
+      return rejectWithValue(handleApiError(error, "Password reset failed"));
     }
   }
 );
@@ -204,36 +174,36 @@ const authSlice = createSlice({
         state.error = action.payload as string;
       })
       .addCase(sendEmailCode.pending, (state) => {
-        state.sendCodeLoading = true;
+        state.loading = true;
         state.error = null;
       })
       .addCase(sendEmailCode.fulfilled, (state) => {
-        state.sendCodeLoading = false;
+        state.loading = false;
       })
       .addCase(sendEmailCode.rejected, (state, action) => {
-        state.sendCodeLoading = false;
+        state.loading = false;
         state.error = action.payload as string;
       })
       .addCase(verifyEmailCode.pending, (state) => {
-        state.verifyCodeLoading = true;
+        state.loading = true;
         state.error = null;
       })
       .addCase(verifyEmailCode.fulfilled, (state) => {
-        state.verifyCodeLoading = false;
+        state.loading = false;
       })
       .addCase(verifyEmailCode.rejected, (state, action) => {
-        state.verifyCodeLoading = false;
+        state.loading = false;
         state.error = action.payload as string;
       })
       .addCase(resetPassword.pending, (state) => {
-        state.resetPasswordLoading = true;
+        state.loading = true;
         state.error = null;
       })
       .addCase(resetPassword.fulfilled, (state) => {
-        state.resetPasswordLoading = false;
+        state.loading = false;
       })
       .addCase(resetPassword.rejected, (state, action) => {
-        state.resetPasswordLoading = false;
+        state.loading = false;
         state.error = action.payload as string;
       });
   },

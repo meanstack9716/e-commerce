@@ -25,7 +25,7 @@ export default function CreateNewPassword() {
     email: state.auth.resetEmail || "",
     code: state.auth.resetCode || "",
   }));
-  const { resetPasswordLoading, error } = useAppSelector((state) => state.auth);
+  const { loading, error } = useAppSelector((state) => state.auth);
 
   const handlePasswordChange = (text: string) => {
     setNewPassword(text);
@@ -93,7 +93,7 @@ export default function CreateNewPassword() {
           error={errors.confirmPassword}
         />
       </View>
-      <Button title="Save" onPress={handleSubmit} style={{ width: "90%" }} loading={resetPasswordLoading}/>
+      <Button title="Save" onPress={handleSubmit} style={{ width: "90%" }} loading={loading}/>
     </View>
   );
 }

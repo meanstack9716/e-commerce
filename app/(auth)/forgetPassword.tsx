@@ -35,7 +35,7 @@ export default function ForgetPassword() {
   const dispatch = useAppDispatch();
   const [timer, setTimer] = useState(30);
   const [otpError, setOtpError] = useState("");
-  const { error, sendCodeLoading, verifyCodeLoading } = useAppSelector(
+  const { error, loading} = useAppSelector(
     (state) => state.auth
   );
 
@@ -168,9 +168,9 @@ export default function ForgetPassword() {
               <TouchableOpacity
                 style={[styles.button, styles.confirmButton]}
                 onPress={handleConfirmEmail}
-                disabled={sendCodeLoading}
+                disabled={loading}
               >
-                {sendCodeLoading ? (
+                {loading ? (
                   <ActivityIndicator size="small" color="#fff" />
                 ) : (
                   <Text style={styles.confirmText}>Confirm</Text>
@@ -218,7 +218,7 @@ export default function ForgetPassword() {
                 style={[styles.resendLink, timer > 0 && styles.disabledResend]}
                 onPress={timer === 0 ? handleResend : undefined}
               >
-                {sendCodeLoading ? (
+                {loading ? (
                   <ActivityIndicator size={12} color="#ddd" />
                 ) : (
                   <Text>Resend</Text>
@@ -239,9 +239,9 @@ export default function ForgetPassword() {
               <TouchableOpacity
                 style={[styles.button, styles.confirmButton]}
                 onPress={handleVerifyOtp}
-                disabled={verifyCodeLoading}
+                disabled={loading}
               >
-                {verifyCodeLoading ? (
+                {loading ? (
                   <ActivityIndicator size="small" color="#fff" />
                 ) : (
                   <Text style={styles.confirmText}>Verify</Text>

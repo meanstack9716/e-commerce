@@ -18,14 +18,20 @@ import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 
 const { height } = Dimensions.get("window");
-
+interface UserData {
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  gender: "male" | "female" | null;
+  selectedImage: string | null;
+}
 const UserInformationScreen = () => {
-  const [userData, setUserData] = useState({
+  const [userData, setUserData] = useState<UserData>({
     firstName: "",
     lastName: "",
     phoneNumber: "",
-    gender: null as "male" | "female" | null,
-    selectedImage: null as string | null,
+    gender: null,
+    selectedImage: null,
   });
 
   const pickImage = async () => {
@@ -50,13 +56,6 @@ const UserInformationScreen = () => {
   };
 
   const handleInputChange = (field: string, value: string) => {
-    setUserData((prevData) => ({
-      ...prevData,
-      [field]: value,
-    }));
-  };
-
-  const handleSelectionChange = (field: "gender", value: "male" | "female") => {
     setUserData((prevData) => ({
       ...prevData,
       [field]: value,
@@ -110,7 +109,7 @@ const UserInformationScreen = () => {
       <Text style={styles.label}>Select Gender</Text>
       <View style={styles.cardRow}>
         <TouchableOpacity
-          onPress={() => handleSelectionChange("gender", "male")}
+          onPress={() => handleInputChange("gender", "male")}
           style={[
             styles.card,
             userData.gender === "male" && styles.selectedCard,
@@ -124,7 +123,7 @@ const UserInformationScreen = () => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => handleSelectionChange("gender", "female")}
+          onPress={() => handleInputChange("gender", "female")}
           style={[
             styles.card,
             userData.gender === "female" && styles.selectedCard,
@@ -167,7 +166,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: height * 0.25,
-    backgroundColor: "#7881FC",
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
     zIndex: -1,
@@ -194,11 +192,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   iconWrapper: {
-    backgroundColor: "#f1f1f1",
+    backgroundColor: staticColors.lightColor,
   },
   uploadText: {
     fontSize: 15,
-    color: "#666",
+    color: staticColors.lightGray,
     marginBottom: 8,
     fontWeight: "bold",
     borderBottomWidth: 2,
@@ -232,14 +230,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 10,
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: staticColors.lightColor,
     borderRadius: 12,
     backgroundColor: colors.whiteColor,
   },
 
   selectedCard: {
-    borderColor: "#232454",
-    backgroundColor: "#E8F6FF",
+    borderColor: staticColors.primaryColor,
+    backgroundColor: staticColors.lightGreen,
   },
 
   cardImage: {
@@ -251,7 +249,7 @@ const styles = StyleSheet.create({
 
   cardText: {
     fontSize: 14,
-    color: "#1A1651",
+    color:staticColors.textSecondary,
     fontFamily: "HelveticaBold",
   },
 
@@ -259,14 +257,14 @@ const styles = StyleSheet.create({
     width: "100%",
     ...spacingStyles.p10,
     borderWidth: 1,
-    borderColor:staticColors.lightColor,
+    borderColor: staticColors.lightColor,
     borderRadius: 10,
     marginBottom: 15,
   },
 
   dobText: {
     fontSize: 16,
-    color:staticColors.cardTitleColor,
+    color: staticColors.cardTitleColor,
   },
   helpContainer: {
     flexDirection: "row",
@@ -288,5 +286,3 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
-
-
