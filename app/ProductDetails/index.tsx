@@ -148,6 +148,8 @@ const ProductDetailsScreen: React.FC = () => {
             <Text style={styles.discount}>(Rs.{discount} OFF)</Text>
           </View>
         </View>
+
+        <View></View>
       </ScrollView>
 
       <View style={styles.bottomContainer}>
