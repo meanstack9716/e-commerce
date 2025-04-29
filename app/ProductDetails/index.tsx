@@ -15,6 +15,11 @@ import colors from "@/style/staticColors";
 import staticColors from "@/style/staticColors";
 import data from "../../assets/data/products.json";
 import spacingStyles from "@/style/spacingStyles";
+import MegaDealBadge from "@/components/productDetails/MegaDealBadge";
+import SizeSelector from "@/components/productDetails/SizeSelector";
+import BottonActions from "@/components/productDetails/BottonActions";
+import DeliveryCheck from "@/components/productDetails/DeliveryCheck";
+import ReturnPolicy from "./ReturnPolicy";
 
 interface Product {
   id: string;
@@ -30,7 +35,7 @@ const ProductDetailsScreen: React.FC = () => {
   const { id } = params;
   const [liked, setLiked] = useState(false);
   const [product, setProduct] = useState<Product | null>(null);
-  const insets = useSafeAreaInsets(); // Get insets from safe area
+  const insets = useSafeAreaInsets();
 
   const originalPrice = product
     ? (parseFloat(product.price) * 1.15).toFixed(2)
@@ -148,24 +153,16 @@ const ProductDetailsScreen: React.FC = () => {
             <Text style={styles.discount}>(Rs.{discount} OFF)</Text>
           </View>
         </View>
-
-        <View></View>
+        <MegaDealBadge />
+        <SizeSelector
+          product={product}
+          originalPrice={originalPrice}
+          onSizeChartOpen={() => {}}
+        />
+        <DeliveryCheck />
+        <ReturnPolicy />
       </ScrollView>
-
-      <View style={styles.bottomContainer}>
-        <TouchableOpacity style={styles.wishlistButton}>
-          <FontAwesome name="heart-o" size={16} color={colors.primaryColor} />
-          <Text style={styles.wishlist}>Wishlist</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.addToCartButton}>
-          <Ionicons
-            name="bag-handle-outline"
-            size={16}
-            color={colors.whiteColor}
-          />
-          <Text style={styles.addToCartText}>Add to Bag</Text>
-        </TouchableOpacity>
-      </View>
+      <BottonActions />
     </SafeAreaView>
   );
 };
@@ -174,6 +171,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: staticColors.lightColor,
+   
   },
   loadingContainer: {
     flex: 1,
@@ -217,7 +215,7 @@ const styles = StyleSheet.create({
   viewSimilarButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f5f5f5",
+    backgroundColor: staticColors.backgroundSecondary,
     ...spacingStyles.py5,
     ...spacingStyles.px10,
     borderRadius: 10,
@@ -226,14 +224,14 @@ const styles = StyleSheet.create({
     bottom: 20,
   },
   viewSimilarText: {
-    marginLeft: 5,
+    ...spacingStyles.ml5,
     fontSize: 14,
-    color: "#000",
+    color: staticColors.shadowColor,
   },
   ratingContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f5f5f5",
+    backgroundColor: staticColors.backgroundSecondary,
     ...spacingStyles.py5,
     ...spacingStyles.px10,
     borderRadius: 10,
@@ -252,6 +250,7 @@ const styles = StyleSheet.create({
   },
   detailsContainer: {
     ...spacingStyles.px15,
+    ...spacingStyles.ml5,
   },
   title: {
     fontSize: 18,
@@ -276,50 +275,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.offerColor,
     fontWeight: "bold",
-  },
-  bottomContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    ...spacingStyles.p10,
-    gap: 10,
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
-  addToCartButton: {
-    backgroundColor: colors.primaryColor,
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 15,
-    ...spacingStyles.py10,
-    flexDirection: "row",
-    gap: 8,
-  },
-  addToCartText: {
-    fontSize: 14,
-    color: staticColors.whiteColor,
-    fontWeight: "bold",
-    letterSpacing: 1.2,
-  },
-  wishlistButton: {
-    backgroundColor: staticColors.lightColor,
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    ...spacingStyles.py10,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: staticColors.borderDark,
-    flexDirection: "row",
-    gap: 8,
-  },
-  wishlist: {
-    fontSize: 14,
-    color: staticColors.shadowColor,
-    fontWeight: "bold",
-    letterSpacing: 1.2,
   },
 });
 

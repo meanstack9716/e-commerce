@@ -60,7 +60,6 @@ const LoginModal: React.FC<LoginModalProps> = ({
       handleLoginPasswordValidation(text);
     }
   };
-  
 
   const handleLoginPress = async (): Promise<void> => {
     handleEmailValidation(formData.email);

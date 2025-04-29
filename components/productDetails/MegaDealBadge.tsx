@@ -1,0 +1,128 @@
+import OfferDetailsModal from "@/modal/OfferDetailsModal";
+import spacingStyles from "@/style/spacingStyles";
+import staticColors from "@/style/staticColors";
+import { EvilIcons } from "@expo/vector-icons";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+
+const DealBanner = () => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const productPrice = "294";
+  const extraDiscount = "90";
+  const toggleModal = () => {
+    setModalVisible(!modalVisible);
+  };
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.topRow}>
+        <View style={styles.leftContent}>
+          <Image
+            source={require("@/assets/images/images/mega-deal.png")}
+            style={styles.megaDealImage}
+            resizeMode="contain"
+          />
+          <Text style={styles.getAtText}>
+            Get at <Text style={styles.priceText}>₹{productPrice}</Text>
+          </Text>
+        </View>
+
+        <View style={styles.rightBadge}>
+          <Text style={styles.badgeText}>Extra ₹{extraDiscount} Off</Text>
+        </View>
+      </View>
+
+      <TouchableOpacity style={styles.bottomRow} onPress={toggleModal}>
+        <Text style={styles.couponText}>
+          With Coupon + <Text style={styles.bankOfferText}>Bank Offer</Text>
+        </Text>
+        <View style={styles.detailsSections}>
+          <Text style={styles.detailsText}>Details</Text>
+          <EvilIcons name="chevron-right" size={20} color={staticColors.offerColor} />
+        </View>
+      </TouchableOpacity>
+
+      <OfferDetailsModal
+        visible={modalVisible}
+        onClose={toggleModal}
+        offerPrice={productPrice}
+        extraDiscount={extraDiscount}
+      />
+    </View>
+  );
+};
+
+export default DealBanner;
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: staticColors.lightLavender,
+    borderRadius: 10,
+    ...spacingStyles.mx20,
+    ...spacingStyles.mt15,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+  },
+  topRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    borderRadius: 10,
+    ...spacingStyles.pr10,
+    ...spacingStyles.py10,
+  },
+  leftContent: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  megaDealImage: {
+    width: 65,
+    height: 45,
+  },
+  getAtText: {
+    fontSize: 18,
+    color: staticColors.cardTitleColor,
+    fontWeight: "bold",
+  },
+  priceText: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  rightBadge: {
+    backgroundColor: staticColors.darkGreen,
+    ...spacingStyles.px10,
+    ...spacingStyles.py5,
+    borderRadius: 8,
+  },
+  badgeText: {
+    color: staticColors.whiteColor,
+    fontSize: 13,
+    fontWeight: "600",
+  },
+  bottomRow: {
+    backgroundColor: staticColors.whiteColor,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    ...spacingStyles.py10,
+    ...spacingStyles.px20,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: staticColors.borderLight,
+  },
+  couponText: {
+    fontSize: 13,
+    color: staticColors.cardTitleColor,
+  },
+  bankOfferText: {
+    fontWeight: "600",
+  },
+  detailsText: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: staticColors.offerColor,
+  },
+  detailsSections:{
+    flexDirection:'row',
+  }
+});

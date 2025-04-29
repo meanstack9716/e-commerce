@@ -20,15 +20,18 @@ export default {
   cardBackground:"#f1f0ff",
   lightPink:"#fee2e2",
   secondaryGray:'#e3e3e3',
+  darkGreen:"#00C853",
+  lightLavender:"#F5F3FF",
+  darkPink:'#d81b60',
   // Borders
   borderLight: "#e0e0e0",
   borderDark: "#bdbdbd",
+  borderSecondaryLight:'#ddd',
 
   // Buttons
   buttonPrimary: "#1E2637",
   buttonPrimaryText: "#ffffff",
   buttonSecondary: "#6c757d",
-  buttonSecondaryText: "#ffffff",
   buttonDanger: "#dc3545",
 
   // Shadows
@@ -37,7 +40,6 @@ export default {
   modalBackGround:"rgba(0, 0, 0, 0.025)",
   // Alerts
   success: "#28a745",
-  
   warning: "#ffc107",
   info: "#17a2b8",
 
