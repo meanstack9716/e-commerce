@@ -20,21 +20,15 @@ import SizeSelector from "@/components/productDetails/SizeSelector";
 import BottonActions from "@/components/productDetails/BottonActions";
 import DeliveryCheck from "@/components/productDetails/DeliveryCheck";
 import ReturnPolicy from "./ReturnPolicy";
-
-interface Product {
-  id: string;
-  image: string;
-  title: string;
-  price: string;
-  star: number;
-  categories: string[];
-}
+import SimilarProducts from "@/components/productDetails/SimilarProducts";
+import { Profile } from "../../types/types";
+import BrandRating from "@/components/productDetails/BrandRating";
 
 const ProductDetailsScreen: React.FC = () => {
   const params = useLocalSearchParams();
   const { id } = params;
   const [liked, setLiked] = useState(false);
-  const [product, setProduct] = useState<Product | null>(null);
+  const [product, setProduct] = useState<Profile | null>(null);
   const insets = useSafeAreaInsets();
 
   const originalPrice = product
@@ -49,7 +43,7 @@ const ProductDetailsScreen: React.FC = () => {
     const rawProductData = products.find((p) => p.id === id);
 
     if (rawProductData) {
-      const normalizedProduct: Product = {
+      const normalizedProduct: Profile = {
         id: rawProductData.id,
         image: rawProductData.image,
         title: rawProductData.title || "Product Title",
@@ -161,6 +155,8 @@ const ProductDetailsScreen: React.FC = () => {
         />
         <DeliveryCheck />
         <ReturnPolicy />
+        <SimilarProducts currentProduct={product} />
+<BrandRating />
       </ScrollView>
       <BottonActions />
     </SafeAreaView>
@@ -171,7 +167,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: staticColors.lightColor,
-   
   },
   loadingContainer: {
     flex: 1,

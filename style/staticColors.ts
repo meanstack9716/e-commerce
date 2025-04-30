@@ -23,6 +23,8 @@ export default {
   darkGreen:"#00C853",
   lightLavender:"#F5F3FF",
   darkPink:'#d81b60',
+  lightYellow:'#FFF8E1',
+  darkYellow:'#F57C00',
   // Borders
   borderLight: "#e0e0e0",
   borderDark: "#bdbdbd",
@@ -37,7 +39,7 @@ export default {
   // Shadows
   shadowColor: "#000000",
   discountColor: "#dc3545",
-  modalBackGround:"rgba(0, 0, 0, 0.025)",
+  modalBackGround:"rgba(0, 0, 0, 0.08)",
   // Alerts
   success: "#28a745",
   warning: "#ffc107",

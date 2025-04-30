@@ -12,14 +12,19 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.myntra.ecommerce",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSLocationWhenInUseUsageDescription": "We need your location to ensure accurate address and hassle-free delivery."
       }
     },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#ffffff"
       },
-      "package": "com.myntra.ecommerce"
+      "package": "com.myntra.ecommerce",
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ]
     },
     "web": {
       "bundler": "metro",

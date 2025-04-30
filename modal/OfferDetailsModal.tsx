@@ -9,6 +9,7 @@ import {
   ScrollView,
   Dimensions,
   TouchableWithoutFeedback,
+  FlatList,
 } from "react-native";
 import {
   AntDesign,
@@ -37,6 +38,7 @@ const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
   const [showCouponDetails, setShowCouponDetails] = useState(false);
   const [showFederalDetails, setShowFederalDetails] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
+  
   const offerDetails = [
     {
       text: "Applicable only on Myntra FWD offer Products",
@@ -63,15 +65,19 @@ const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
   ];
 
   <View style={styles.cardOfferDetails}>
-    {offerDetails.map((item, index) => (
-      <View key={index} style={styles.bulletItem}>
-        <Text style={styles.bulletPoint}>•</Text>
-        <Text style={styles.bulletText}>
-          {item.text}
-          {item.showTnc && <Text style={styles.tandcText}> T&C</Text>}
-        </Text>
-      </View>
-    ))}
+    <FlatList
+      data={offerDetails}
+      keyExtractor={(item, index) => index.toString()}
+      renderItem={({ item }) => (
+        <View style={styles.bulletItem}>
+          <Text style={styles.bulletPoint}>•</Text>
+          <Text style={styles.bulletText}>
+            {item.text}
+            {item.showTnc && <Text style={styles.tandcText}> T&C</Text>}
+          </Text>
+        </View>
+      )}
+    />
   </View>;
 
   const toggleMoreOffers = () => {
@@ -80,7 +86,7 @@ const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
       if (newState && scrollViewRef.current) {
         scrollViewRef.current.scrollToEnd({ animated: true });
       }
-      return newState;
+      return newState;  
     });
   };
   const toggleCouponDetails = () =>
@@ -121,7 +127,7 @@ const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
                 Combine coupons & offers to get maximum discount
               </Text>
 
-              <ScrollView style={styles.offersContainer} ref={scrollViewRef}>
+              <ScrollView style={styles.offersContainer} ref={scrollViewRef} nestedScrollEnabled={true}>
                 {/* Coupon Section */}
                 <View style={styles.offerSection}>
                   <View style={styles.offerHeader}>
@@ -368,6 +374,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.p15,
     maxHeight: screenHeight * 0.8,
     minHeight: screenHeight * 0.5,
+    
   },
   modalHeader: {
     flexDirection: "row",

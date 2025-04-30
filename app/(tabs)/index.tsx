@@ -35,30 +35,7 @@ import BrandCard from "@/components/home/BrandCard";
 import staticColors from "@/style/staticColors";
 import OfferPriceCard from "@/components/home/OfferPriceCard";
 import PocketFriendlyBargain from "@/components/home/PocketFriendlyBargain";
-interface Product {
-  id: string;
-  image: string;
-  title: string;
-  price: string;
-  star: number;
-  categories: string[];
-}
-
-interface Category {
-  id: string;
-  title: string;
-  imageUrl: string;
-  isActive?: boolean;
-}
-
-interface ProductData {
-  categories: {
-    All: Category[];
-    Men: Category[];
-    Women: Category[];
-  };
-  products: Product[];
-}
+import { Profile, ProductData } from "../../types/types";
 
 const HomeScreen: React.FC = () => {
   const [likedItems, setLikedItems] = useState<string[]>([]);
@@ -67,7 +44,6 @@ const HomeScreen: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const productData = data as ProductData;
   const insets = useSafeAreaInsets();
-  const navigation = useNavigation();
   const getFilteredProducts = () => {
     let filtered = productData.products;
 
@@ -109,15 +85,15 @@ const HomeScreen: React.FC = () => {
     setSelectedCategory(categoryId || null);
   };
 
-  const renderItem = ({ item }: { item: Product }) => (
+  const renderItem = ({ item }: { item: Profile }) => (
     <ProductCard
-    {...item}
-    liked={likedItems.includes(item.id)}
-    onLikePress={() => toggleLike(item.id)}
-    onPress={() => router.push({ 
-      pathname: "/ProductDetails",
-      params: { id: item.id } 
-    })}
+      {...item}
+      liked={likedItems.includes(item.id)}
+      onLikePress={() => toggleLike(item.id)}
+      onPress={() => router.push({
+        pathname: "/ProductDetails",
+        params: { id: item.id }
+      })}
     />
   );
 
@@ -238,7 +214,7 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.homebackgroundColor,
   },
   contentWrapper: {
-    flex:1
+    flex: 1
   },
   addressContainer: {
     flexDirection: "row",
@@ -249,7 +225,7 @@ const styles = StyleSheet.create({
   addressTextContainer: {
     flexDirection: "row",
     alignItems: "center",
-    gap:8
+    gap: 8
   },
   addressText: {
     fontSize: 13,
@@ -274,14 +250,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.whiteColor,
     justifyContent: "space-between",
   },
-
   logo: {
     width: 20,
     height: 20,
     resizeMode: "contain",
     ...spacingStyles.mr10
   },
-
   searchInput: {
     flex: 1,
     height: 40,

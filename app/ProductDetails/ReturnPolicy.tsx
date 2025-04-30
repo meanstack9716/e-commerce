@@ -63,20 +63,20 @@ const styles = StyleSheet.create({
   },
   badgeContainer: {
     alignItems: "center",
-    width: "40%",
+    width: "20%",
   },
   badgeImage: {
-    width: 70,
-    height: 70,
+    width: 50,
+    height: 50,
   },
   badgeText: {
     color: staticColors.darkPink,
-    fontSize: 22,
+    fontSize: 15,
     fontWeight: "bold",
     textAlign: "center",
   },
   returnText: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
     color: staticColors.cardTitleColor,
     ...spacingStyles.px15,

@@ -1,0 +1,274 @@
+import React, { useState } from "react";
+import {
+  Modal,
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  TextInput,
+  ActivityIndicator,
+} from "react-native";
+import { FontAwesome6, Ionicons } from "@expo/vector-icons";
+import staticColors from "@/style/staticColors";
+import DeliveryAddressScreen from "@/components/productDetails/DeliveryAddress";
+
+import { Alert } from "react-native";
+import { useLocation } from "@/utils/useLocation";
+import spacingStyles from "@/style/spacingStyles";
+
+interface LocationModalProps {
+  visible: boolean;
+  onClose: () => void;
+  onGrant: (pinCode: string) => void;
+}
+
+const LocationModal: React.FC<LocationModalProps> = ({
+  visible,
+  onClose,
+  onGrant,
+}) => {
+  const [pinCode, setPinCode] = useState<string>("");
+  const [addressModalVisible, setAddressModalVisible] = useState<boolean>(false);
+  const { requestLocationPermission, isLoading } = useLocation();
+
+  const handlePinCodeChange = (text: string) => {
+    const numericText = text.replace(/[^0-9]/g, "").slice(0, 6);
+    setPinCode(numericText);
+  };
+
+  const handleCheckPincode = () => {
+    if (pinCode.length === 6) {
+      onGrant(pinCode);
+      onClose();
+    } else {
+      Alert.alert("Invalid PIN Code", "Please enter a valid 6-digit PIN code");
+    }
+  };
+
+  const handleGrantLocation = () => {
+    requestLocationPermission((fetchedPinCode: string) => {
+      setPinCode(fetchedPinCode);
+      onGrant(fetchedPinCode);
+      onClose();
+    });
+  };
+
+  return (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={visible}
+      onRequestClose={onClose}
+    >
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+            <Ionicons name="close" size={24} color="#000" />
+          </TouchableOpacity>
+
+          <View style={styles.headerContainer}>
+            <FontAwesome6
+              name="location-crosshairs"
+              size={22}
+              color={staticColors.offerColor}
+              style={styles.icon}
+            />
+            <View style={styles.textContainer}>
+              <Text style={styles.titleText}>Location permission is off</Text>
+              <Text style={styles.subtitleText}>
+                Granting location permission will ensure accurate address and
+                hassle free delivery
+              </Text>
+            </View>
+            <TouchableOpacity
+              style={styles.grantButton}
+              onPress={handleGrantLocation}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <ActivityIndicator size="small" color={staticColors.whiteColor} />
+              ) : (
+                <Text style={styles.grantButtonText}>Grant</Text>
+              )}
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputLabel}>Select Delivery Location</Text>
+            <View style={styles.inputWrapper}>
+              <TextInput
+                style={styles.input}
+                value={pinCode}
+                onChangeText={handlePinCodeChange}
+                placeholder="Enter PIN Code"
+                placeholderTextColor="#666"
+                keyboardType="numeric"
+                maxLength={6}
+              />
+              <TouchableOpacity
+                style={[
+                  styles.checkButton,
+                  pinCode.length === 6 ? styles.activeCheckButton : styles.inactiveCheckButton,
+                ]}
+                onPress={handleCheckPincode}
+                disabled={pinCode.length !== 6}
+              >
+                <Text
+                  style={[
+                    styles.checkButtonText,
+                    pinCode.length === 6 && { color: staticColors.offerColor },
+                  ]}
+                >
+                  Check Pincode
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <TouchableOpacity
+            style={styles.searchContainer}
+            onPress={() => setAddressModalVisible(true)}
+          >
+            <FontAwesome6
+              name="map-location-dot"
+              size={20}
+              color={staticColors.offerColor}
+              style={styles.searchIcon}
+            />
+            <Text style={styles.searchText}>Search location</Text>
+            <Ionicons
+              name="chevron-forward"
+              size={13}
+              color={staticColors.offerColor}
+              style={styles.arrowIcon}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={addressModalVisible}
+        onRequestClose={() => setAddressModalVisible(false)}
+      >
+        <DeliveryAddressScreen onPinCodeFetched={onGrant} onCloseModal={() => setAddressModalVisible(false)} />
+      </Modal>
+    </Modal>
+  );
+};
+
+const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: "flex-end",
+    backgroundColor: staticColors.modalBackGround,
+  },
+  modalView: {
+    backgroundColor: staticColors.whiteColor,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    ...spacingStyles.pb10
+  },
+  closeButton: {
+    position: "absolute",
+    right: 10,
+    top: -30,
+    ...spacingStyles.p5
+  },
+  headerContainer: {
+    flexDirection: "row",
+    backgroundColor: staticColors.backgroundSecondary,
+    ...spacingStyles.p20,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+  },
+  icon: {
+    ...spacingStyles.mt2
+  },
+  textContainer: {
+    flex: 1,
+   ...spacingStyles.mx10
+  },
+  titleText: {
+    fontSize: 17,
+    fontWeight: "bold",
+    color: staticColors.primaryColor,
+    marginBottom: 5,
+  },
+  subtitleText: {
+    fontSize: 12,
+    color: staticColors.shadowColor,
+  },
+  grantButton: {
+    backgroundColor: staticColors.offerColor,
+    borderRadius: 20,
+    ...spacingStyles.py5,
+    ...spacingStyles.px15,
+    alignSelf: "flex-start",
+    minWidth: 70,
+    alignItems: "center",
+  },
+  grantButtonText: {
+    color: staticColors.whiteColor,
+    fontSize: 12,
+    fontWeight: "bold",
+  },
+  inputContainer: {
+    marginBottom: 15,
+    ...spacingStyles.px20,
+    paddingTop: 15,
+  },
+  inputLabel: {
+    fontSize: 15,
+    color: staticColors.primaryColor,
+    fontWeight: "bold",
+  },
+  inputWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    ...spacingStyles.mt10
+  },
+  input: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: staticColors.borderLight,
+    borderRadius: 8,
+    ...spacingStyles.p10,
+    backgroundColor: staticColors.backgroundSecondary,
+  },
+  checkButton: {
+    position: "absolute",
+    right: 10,
+    ...spacingStyles.px10
+  },
+  activeCheckButton: {
+    opacity: 1,
+  },
+  inactiveCheckButton: {
+    opacity: 0.5,
+  },
+  checkButtonText: {
+    color: staticColors.shadowColor,
+    fontSize: 13,
+    fontWeight: "bold",
+  },
+  searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    ...spacingStyles.px20
+  },
+  searchIcon: {
+    ...spacingStyles.mr10
+  },
+  arrowIcon: {
+    ...spacingStyles.mt5
+  },
+  searchText: {
+    fontSize: 14,
+    color: staticColors.offerColor,
+    ...spacingStyles.px5
+  },
+});
+
+export default LocationModal;
