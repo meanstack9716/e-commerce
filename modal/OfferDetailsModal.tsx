@@ -9,7 +9,6 @@ import {
   ScrollView,
   Dimensions,
   TouchableWithoutFeedback,
-  FlatList,
 } from "react-native";
 import {
   AntDesign,
@@ -64,31 +63,17 @@ const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
     },
   ];
 
-  <View style={styles.cardOfferDetails}>
-    <FlatList
-      data={offerDetails}
-      keyExtractor={(item, index) => index.toString()}
-      renderItem={({ item }) => (
-        <View style={styles.bulletItem}>
-          <Text style={styles.bulletPoint}>•</Text>
-          <Text style={styles.bulletText}>
-            {item.text}
-            {item.showTnc && <Text style={styles.tandcText}> T&C</Text>}
-          </Text>
-        </View>
-      )}
-    />
-  </View>;
-
-  const toggleMoreOffers = () => {
-    setShowMoreOffers((prevState) => {
-      const newState = !prevState;
-      if (newState && scrollViewRef.current) {
-        scrollViewRef.current.scrollToEnd({ animated: true });
-      }
-      return newState;  
-    });
-  };
+const toggleMoreOffers = () => {
+  setShowMoreOffers((prevState) => {
+    const newState = !prevState;
+    if (newState && scrollViewRef.current) {
+      setTimeout(() => {
+        scrollViewRef.current?.scrollToEnd({ animated: true });
+      }, 100);
+    }
+    return newState;
+  });
+};
   const toggleCouponDetails = () =>
     setShowCouponDetails((prevState) => !prevState);
   const toggleFederalDetails = () =>
@@ -127,7 +112,7 @@ const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
                 Combine coupons & offers to get maximum discount
               </Text>
 
-              <ScrollView style={styles.offersContainer} ref={scrollViewRef} nestedScrollEnabled={true}>
+              <ScrollView style={styles.offersContainer} ref={scrollViewRef} >
                 {/* Coupon Section */}
                 <View style={styles.offerSection}>
                   <View style={styles.offerHeader}>
@@ -372,7 +357,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     ...spacingStyles.p15,
-    maxHeight: screenHeight * 0.8,
+    // maxHeight: screenHeight * 0.8,
     minHeight: screenHeight * 0.5,
     
   },

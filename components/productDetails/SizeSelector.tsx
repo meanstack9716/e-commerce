@@ -25,7 +25,7 @@ interface SizeSelectorProps {
     categories: string[];
   } | null;
   originalPrice: string;
-  onSizeChartOpen?: () => void; // Optional callback
+  onSizeChartOpen?: () => void; 
 }
 
 const sizes: SizeInfo[] = [
@@ -40,9 +40,8 @@ const sizes: SizeInfo[] = [
 const SizeSelector: React.FC<SizeSelectorProps> = ({
   product,
   originalPrice,
-  onSizeChartOpen,
 }) => {
-  const [selectedSize, setSelectedSize] = useState<string>("");
+  const [selectedSize, setSelectedSize] = useState<string>("M");
 
   const handleSizeClick = (size: SizeInfo) => {
     if (size.left > 0) setSelectedSize(size.label);
@@ -154,7 +153,7 @@ const styles = StyleSheet.create({
   },
   sizeOption: {
     alignItems: "center",
-    marginRight: 12,
+    ...spacingStyles.mr10
   },
   sizeButton: {
     width: 56,
@@ -188,7 +187,7 @@ const styles = StyleSheet.create({
   leftText: {
     fontSize: 12,
     color:staticColors.offerColor,
-    marginTop: 4,
+   ...spacingStyles.mt5
   },
   lengthBox: {
     ...spacingStyles.p10,
@@ -212,7 +211,7 @@ const styles = StyleSheet.create({
     
   },
   measureText: {
-    marginRight: 12,
+    ...spacingStyles.mr10,
     fontSize: 13,
     color: "#333",
   },

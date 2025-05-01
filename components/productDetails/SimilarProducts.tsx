@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
+import { router } from "expo-router"; 
 import data from "@/assets/data/products.json";
 import { Profile } from "../../types/types";
 import spacingStyles from "@/style/spacingStyles";
@@ -44,6 +45,13 @@ const SimilarProducts = ({ currentProduct }: { currentProduct: Profile }) => {
     return title;
   };
 
+  const handleProductPress = (productId: string) => {
+    router.push({
+      pathname: "/ProductDetails", 
+      params: { id: productId },
+    });
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Similar Products</Text>
@@ -53,7 +61,10 @@ const SimilarProducts = ({ currentProduct }: { currentProduct: Profile }) => {
         keyExtractor={(item) => item.id}
         showsHorizontalScrollIndicator={false}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.card}>
+          <TouchableOpacity
+            style={styles.card}
+            onPress={() => handleProductPress(item.id)}
+          >
             <View style={styles.imageContainer}>
               <Image source={{ uri: item.image }} style={styles.image} />
               <View style={styles.ratingContainer}>
@@ -89,7 +100,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   imageContainer: {
-    position: "relative", 
+    position: "relative",
   },
   image: {
     width: "100%",
@@ -98,9 +109,9 @@ const styles = StyleSheet.create({
   },
   ratingContainer: {
     position: "absolute",
-    bottom: 8, 
-    left: 8,  
-    backgroundColor:staticColors.whiteColor,
+    bottom: 8,
+    left: 8,
+    backgroundColor: staticColors.whiteColor,
     ...spacingStyles.px5,
     ...spacingStyles.py2,
     borderRadius: 4,
@@ -128,8 +139,8 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 20,
     ...spacingStyles.m5,
-    borderWidth:1,
-    borderColor:staticColors.primaryColor,
+    borderWidth: 1,
+    borderColor: staticColors.primaryColor,
   },
   addButtonText: {
     color: staticColors.primaryColor,
