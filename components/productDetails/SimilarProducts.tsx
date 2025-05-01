@@ -54,7 +54,7 @@ const SimilarProducts = ({ currentProduct }: { currentProduct: Profile }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Similar Products</Text>
+      {/* <Text style={styles.heading}>Similar Products</Text> */}
       <FlatList
         horizontal
         data={limitedSimilar}
@@ -85,13 +85,7 @@ const SimilarProducts = ({ currentProduct }: { currentProduct: Profile }) => {
 
 const styles = StyleSheet.create({
   container: {
-    ...spacingStyles.px20,
-  },
-  heading: {
-    fontSize: 16,
-    fontWeight: "bold",
-    ...spacingStyles.mb10,
-    color: staticColors.cardTitleColor,
+    ...spacingStyles.px15,
   },
   card: {
     ...spacingStyles.mr10,

@@ -57,7 +57,8 @@ export default function BrandRating() {
 
 const styles = StyleSheet.create({
   container: {
-    ...spacingStyles.px20,
+    ...spacingStyles.px15,
+    ...spacingStyles.py15
   },
   header: {
     fontSize: 18,

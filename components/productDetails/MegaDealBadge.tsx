@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: staticColors.lightLavender,
     borderRadius: 10,
-    ...spacingStyles.mx20,
+    ...spacingStyles.mx15,
     ...spacingStyles.mt15,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,

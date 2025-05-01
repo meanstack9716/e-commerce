@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
+  FlatList,
 } from "react-native";
 import { Ionicons, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { useLocalSearchParams, router } from "expo-router";
@@ -23,12 +24,15 @@ import ReturnPolicy from "./ReturnPolicy";
 import SimilarProducts from "@/components/productDetails/SimilarProducts";
 import { Profile } from "../../types/types";
 import BrandRating from "@/components/productDetails/BrandRating";
+import ViewSimilarModal from "@/modal/ViewSimilarModal";
+import ProductList from "@/components/productDetails/ProductList";
 
 const ProductDetailsScreen: React.FC = () => {
   const params = useLocalSearchParams();
   const { id } = params;
   const [liked, setLiked] = useState(false);
   const [product, setProduct] = useState<Profile | null>(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const insets = useSafeAreaInsets();
 
   const originalPrice = product
@@ -77,6 +81,10 @@ const ProductDetailsScreen: React.FC = () => {
     router.back();
   };
 
+  const handleViewSimilar = () => {
+    setIsModalVisible(true);
+  };
+
   if (!product) {
     return (
       <SafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
@@ -91,74 +99,107 @@ const ProductDetailsScreen: React.FC = () => {
       </SafeAreaView>
     );
   }
-
+  const dummyData = [{ key: "dummy" }];
   return (
     <SafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
-            <Ionicons name="arrow-back" size={20} color={colors.primaryColor} />
-          </TouchableOpacity>
+      <FlatList
+        data={dummyData}
+        keyExtractor={(item) => item.key}
+        renderItem={() => null}
+        showsVerticalScrollIndicator={false}
+        ListHeaderComponent={
+          <>
+            {/* Header */}
+            <View style={styles.header}>
+              <TouchableOpacity
+                onPress={handleGoBack}
+                style={styles.backButton}
+              >
+                <Ionicons
+                  name="arrow-back"
+                  size={20}
+                  color={colors.primaryColor}
+                />
+              </TouchableOpacity>
+              <View style={styles.headerRight}>
+                <TouchableOpacity style={styles.iconButton}>
+                  <Ionicons
+                    name="bag-handle-outline"
+                    size={20}
+                    color={colors.primaryColor}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={handleLikePress}
+                  style={styles.iconButton}
+                >
+                  <FontAwesome
+                    name={liked ? "heart" : "heart-o"}
+                    size={20}
+                    color={liked ? "red" : colors.primaryColor}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
 
-          <View style={styles.headerRight}>
-            <TouchableOpacity style={styles.iconButton}>
-              <Ionicons
-                name="bag-handle-outline"
-                size={20}
-                color={colors.primaryColor}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.iconButton}
-              onPress={handleLikePress}
-            >
-              <FontAwesome
-                name={liked ? "heart" : "heart-o"}
-                size={20}
-                color={liked ? "red" : colors.primaryColor}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
+            {/* Product image */}
+            <Image
+              source={{ uri: product.image }}
+              style={styles.image}
+              resizeMode="cover"
+            />
 
-        <Image
-          source={{ uri: product.image }}
-          style={styles.image}
-          resizeMode="cover"
-        />
+            {/* View Similar & Rating */}
+            <View style={styles.actionRow}>
+              <TouchableOpacity
+                style={styles.viewSimilarButton}
+                onPress={handleViewSimilar}
+              >
+                <Ionicons name="grid-outline" size={20} color="#000" />
+                <Text style={styles.viewSimilarText}>View Similar</Text>
+              </TouchableOpacity>
+              <View style={styles.ratingContainer}>
+                <View style={styles.starsContainer}>{renderStars()}</View>
+                <Text style={styles.ratingCount}>
+                  ({product.star.toFixed(1)})
+                </Text>
+              </View>
+            </View>
 
-        <View style={styles.actionRow}>
-          <TouchableOpacity style={styles.viewSimilarButton}>
-            <Ionicons name="grid-outline" size={20} color="#000" />
-            <Text style={styles.viewSimilarText}>View Similar</Text>
-          </TouchableOpacity>
+            {/* Title & Price */}
+            <View style={styles.detailsContainer}>
+              <Text style={styles.title}>{product.title}</Text>
+              <View style={styles.priceContainer}>
+                <Text style={styles.originalPrice}>MRP ₹{originalPrice}</Text>
+                <Text style={styles.discountedPrice}>₹{product.price}</Text>
+                <Text style={styles.discount}>(Rs.{discount} OFF)</Text>
+              </View>
+            </View>
 
-          <View style={styles.ratingContainer}>
-            <View style={styles.starsContainer}>{renderStars()}</View>
-            <Text style={styles.ratingCount}>({product.star.toFixed(1)})</Text>
-          </View>
-        </View>
+            <MegaDealBadge />
+            <SizeSelector
+              product={product}
+              originalPrice={originalPrice}
+              onSizeChartOpen={() => {}}
+            />
+            <DeliveryCheck />
+            <ReturnPolicy />
 
-        <View style={styles.detailsContainer}>
-          <Text style={styles.title}>{product.title}</Text>
-          <View style={styles.priceContainer}>
-            <Text style={styles.originalPrice}>MRP ₹{originalPrice}</Text>
-            <Text style={styles.discountedPrice}>₹{product.price}</Text>
-            <Text style={styles.discount}>(Rs.{discount} OFF)</Text>
-          </View>
-        </View>
-        <MegaDealBadge />
-        <SizeSelector
-          product={product}
-          originalPrice={originalPrice}
-          onSizeChartOpen={() => {}}
-        />
-        <DeliveryCheck />
-        <ReturnPolicy />
-        <SimilarProducts currentProduct={product} />
-<BrandRating />
-      </ScrollView>
+            <Text style={styles.heading}>Similar Products</Text>
+            <SimilarProducts currentProduct={product} />
+
+            <BrandRating />
+            <Text style={styles.heading}>Products you may like</Text>
+            <ProductList />
+          </>
+        }
+      />
       <BottonActions />
+      <ViewSimilarModal
+        visible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+        currentProduct={product}
+      />
     </SafeAreaView>
   );
 };
@@ -270,6 +311,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.offerColor,
     fontWeight: "bold",
+  },
+  heading: {
+    fontSize: 18,
+    fontWeight: "bold",
+    ...spacingStyles.mb10,
+    color: staticColors.cardTitleColor,
+    ...spacingStyles.px15,
   },
 });
 

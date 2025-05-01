@@ -18,7 +18,8 @@ export interface ProductCardProps {
   title: string;
   price: string;
   star: number;
-  liked: boolean; 
+  liked: boolean;
+  cardWidth?: number;
   onLikePress: () => void;
   onPress: () => void;
 }
@@ -31,81 +32,44 @@ const ProductCard: React.FC<ProductCardProps> = ({
   liked,
   onLikePress,
   onPress,
+  cardWidth
 }) => {
   const discountPercentage = Math.floor(Math.random() * 41) + 10;
-  const renderStars = () => {
-    const stars = [];
-    const fullStars = Math.floor(star);
-    const hasHalfStar = star - fullStars >= 0.10;
-    for (let i = 0; i < fullStars; i++) {
-      stars.push(
-        <FontAwesome
-          key={`full-${i}`}
-          name="star"
-          size={14}
-          color="#FFD700"
-          style={styles.starIcon}
-        />
-      );
-    }
-
-    if (hasHalfStar) {
-      stars.push(
-        <FontAwesome
-          key="half"
-          name="star-half-o"
-          size={14}
-          color="#FFD700"
-          style={styles.starIcon}
-        />
-      );
-    }
-
-    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-    for (let i = 0; i < emptyStars; i++) {
-      stars.push(
-        <FontAwesome
-          key={`empty-${i}`}
-          name="star-o"
-          size={14}
-          color="#FFD700"
-          style={styles.starIcon}
-        />
-      );
-    }
-
-    return stars;
-  };
 
   return (
-    <View style={styles.card}>
-    <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
-      <View style={styles.imageWrapper}>
-        <Image source={{ uri: image }} style={styles.cardImage} />
-        <TouchableOpacity style={styles.likeButton} onPress={onLikePress}>
-          <FontAwesome
-            name={liked ? "heart" : "heart-o"}
-            size={18}
-            color={liked ? "red" : "#fff"}
-          />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.cardContainer}>
-        <Text style={styles.cardTitle} numberOfLines={2}>
-          {title}
-        </Text>
-        <View style={styles.starContainer}>
-          {renderStars()}
-          <Text style={styles.ratingText}>({star.toFixed(1)})</Text>
+    <View style={[styles.card, cardWidth ? { width: cardWidth } : {}]}>
+      <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
+        <View style={styles.imageWrapper}>
+          <Image source={{ uri: image }} style={styles.cardImage} />
+          <View style={styles.starOverlay}>
+            <FontAwesome name="star" size={14} color="#FFD700" />
+            <Text style={styles.ratingText}>({star.toFixed(1)})</Text>
+          </View>
         </View>
-        <Text style={styles.cardPrice}>${price}</Text>
-        <View style={styles.discountBadge}>
-          <Text style={styles.discountText}>{discountPercentage}% OFF</Text>
+        <View style={styles.cardContainer}>
+          <View style={styles.titleRow}>
+            <Text style={styles.cardTitle} numberOfLines={2}>
+              {title}
+            </Text>
+            <TouchableOpacity
+              style={styles.inlineLikeButton}
+              onPress={onLikePress}
+            >
+              <FontAwesome
+                name={liked ? "heart" : "heart-o"}
+                size={16}
+                color={liked ? "red" : "#999"}
+              />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.discountBadge}>
+            <Text style={styles.cardPrice}>${price}</Text>
+            <Text style={styles.discountText}>{discountPercentage}% OFF</Text>
+          </View>
         </View>
-      </View>
-    </TouchableOpacity>
-  </View>
-  
+      </TouchableOpacity>
+    </View>
   );
 };
 
@@ -113,9 +77,7 @@ export default ProductCard;
 
 const styles = StyleSheet.create({
   card: {
-    width: Dimensions.get("window").width / 2 - 20,
-    backgroundColor: colors.whiteColor,
-    borderRadius: 8,
+    width: Dimensions.get("window").width / 2 - 16,
     overflow: "hidden",
   },
   imageWrapper: {
@@ -125,36 +87,36 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 240,
     resizeMode: "cover",
+    borderRadius: 10,
   },
-  likeButton: {
-    position: "absolute",
-    top: 10,
-    right: 10,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    padding: 7,
-    borderRadius: 20,
-  },
-  cardContainer:{
-    borderWidth: 1,
-    borderColor: colors.lightColor,
+  cardContainer: {},
+  titleRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    ...spacingStyles.px10,
+    ...spacingStyles.pt10,
   },
   cardTitle: {
     fontSize: 13,
     fontWeight: "600",
     color: staticColors.cardTitleColor,
-    height:43,
-    ...spacingStyles.px10,
-    ...spacingStyles.pt10,
+    flex: 1,
     lineHeight: 18,
   },
-  starContainer: {
+  inlineLikeButton: {
+    ...spacingStyles.p2
+  },
+  starOverlay: {
+    position: "absolute",
+    bottom: 8,
+    left: 8,
     flexDirection: "row",
     alignItems: "center",
+    backgroundColor:staticColors.whiteColor,
     ...spacingStyles.px10,
-    ...spacingStyles.mt5,
-  },
-  starIcon: {
-    marginRight: 2,
+    ...spacingStyles.py5,
+    borderRadius: 8,
   },
   ratingText: {
     fontSize: 12,
@@ -165,17 +127,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "700",
     color: colors.primaryColor,
-    ...spacingStyles.px10,
-    ...spacingStyles.pt5,
   },
   discountBadge: {
-    alignSelf: "flex-start",
+    flexDirection: "row",
     ...spacingStyles.mx10,
-    ...spacingStyles.my5
+    ...spacingStyles.my5,
+    alignItems: "center",
+    gap: "5",
   },
   discountText: {
     color: staticColors.discountColor,
-    fontSize: 10,
+    fontSize: 12,
     fontWeight: "bold",
   },
 });

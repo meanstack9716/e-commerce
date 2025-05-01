@@ -164,7 +164,7 @@ const ProductDetails = () => {
 
 const styles = StyleSheet.create({
   container: {
-    ...spacingStyles.px20,
+    ...spacingStyles.px15,
   },
   sectionTitle: {
     fontSize: 18,
