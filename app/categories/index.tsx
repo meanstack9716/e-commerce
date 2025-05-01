@@ -14,148 +14,90 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
-import categoriesData from "../../assets/data/category-data.json";
+import { useSelector } from "react-redux";
+
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
+import { useAppDispatch } from "@/store/hooks";
+import { RootState } from "@/store/store";
+import {
+  fetchCategories,
+  fetchCategoryDetails,
+  clearSelectedCategoryDetails,
+} from "@/store/category/categoriesSlice";
+import FullScreenLoader from "@/components/common/FullScreenLoader";
 
 interface CategoryItem {
   id: string;
-  title: string;
-  imageUrl: string;
+  name: string;
+  img_url: string;
 }
 
-interface SpotlightItem {
+interface ProductType {
   id: string;
-  title: string;
-  imageUrl: string;
-}
-
-interface StoreItem {
-  id: string;
-  title: string;
-  imageUrl: string;
+  name: string;
+  description: string;
+  img_url: string;
 }
 
 const CategoriesScreen: React.FC = () => {
   const params = useLocalSearchParams();
   const { categoryId, categoryTitle } = params;
 
-  const sidebarCategories: CategoryItem[] = [
-    {
-      id: "trending",
-      title: "Trending Now",
-      imageUrl:
-        "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQBxhOCxZs3zo0Qlpn72vIlhWjTG8alq0AU7un_MUXWiuWwJCtD",
-    },
-    {
-      id: "men",
-      title: "Men's Wear",
-      imageUrl:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSC7wnKA_8jaZEdZY_kZBLgGI7kbzadW2vKNQ&s",
-    },
-    {
-      id: "women",
-      title: "Women's Wear",
-      imageUrl:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShfXxyQ8GDk8wllWVptpn-aVkWCuJcPBIFpA&s",
-    },
-    {
-      id: "kids",
-      title: "Kids Wear",
-      imageUrl:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSt6qGDwhaA9ubQKppLzzDKQqaYa5qzlu5NV6cjCHAYhdWYau3etT4WjH6rJpncc2UAc5w&usqp=CAU",
-    },
-    {
-      id: "footwear",
-      title: "Footwear",
-      imageUrl:
-        "https://m.media-amazon.com/images/I/31sI-rxlmWL._AC_UY1000_.jpg",
-    },
-    {
-      id: "beautyAndGrooming",
-      title: "Beauty & Grooming",
-      imageUrl:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBzZMe22iEWMvU_BiAxk8n4W4kfQkKZPMa_A&s",
-    },
-    {
-      id: "homeAndLiving",
-      title: "Home & Living",
-      imageUrl:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQydg-hPWV4zFSfYk20qgJVWxRAOJ1YwrJoOw&s",
-    },
-    {
-      id: "accessories",
-      title: "Accessories",
-      imageUrl:
-        "https://media.theeverygirl.com/wp-content/uploads/2024/07/the-everygirl-feature-amazon-summer-accessories-2025.jpg",
-    },
-    {
-      id: "gadgets",
-      title: "Gadgets",
-      imageUrl:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiG59Twie2L3rCAN5Ks1e_D6iylqt6gTexlQ&s",
-    },
-    {
-      id: "jewellery",
-      title: "Jewellery",
-      imageUrl:
-        "https://www.urvaa.com/wp-content/uploads/2024/02/WhatsApp-Image-2024-02-27-at-12.27.59-PM.jpeg",
-    },
-  ];
-
+  const dispatch = useAppDispatch();
   const {
-    trendingNow: { spotlight: spotlightItems, trendingStores },
-    mensWear: {
-      casualWear,
-      workWear,
-      occasionWear,
-      sportsWear,
-      genZFashion: menGenZFashion,
-    },
-    womensWear: {
-      westernWear,
-      ethnicWear,
-      genZFashion: womenGenZFashion,
-      genzFootwear,
-    },
-    kidsWear: { infants, girls, boys, teens, footwear: kidsFootwear },
-    footwear: {
-      womensFootwear: womensfootwear,
-      mensFootwear: mensfootwear,
-      genzFootwear: mensGenzFootwear,
-    },
-    beautyAndGrooming: { grooming, fragrances, hairCare, skincare, makeup },
-    homeAndLiving: { kitchenAndDining, homeDecor, bathAndBedding },
-    accessories: { mensAccessories, womensAccessories },
-    gadgets: { gadGet },
-    jewellery: { jewellery },
-  } = categoriesData;
+    data: sidebarCategories,
+    loading: isLoading,
+    error,
+    selectedCategoryDetails,
+    detailsLoading,
+    detailsError,
+  } = useSelector((state: RootState) => state.categories);
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(
-    (categoryId as string) || "trending"
+    (categoryId as string) || null
   );
 
+  // A single loading state for the screen
+  const isScreenLoading = isLoading || detailsLoading;
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
+  
   useEffect(() => {
     if (categoryId) {
       setSelectedCategory(categoryId as string);
+      dispatch(fetchCategoryDetails(categoryId as string));
+    } else if (sidebarCategories.length > 0 && !selectedCategory) {
+      const firstCategoryId = sidebarCategories[0].id;
+      setSelectedCategory(firstCategoryId);
+      dispatch(fetchCategoryDetails(firstCategoryId));
     }
-  }, [categoryId]);
-
-  const handleGoBack = () => {
-    router.back();
-  };
+  }, [categoryId, sidebarCategories, selectedCategory, dispatch]);
 
   useEffect(() => {
     const onBackPress = () => {
-      handleGoBack();
+      dispatch(clearSelectedCategoryDetails());
+      router.back();
       return true;
     };
     BackHandler.addEventListener("hardwareBackPress", onBackPress);
     return () => {
       BackHandler.removeEventListener("hardwareBackPress", onBackPress);
     };
-  }, []);
+  }, [dispatch]);
+
+  const handleCategorySelect = (categoryId: string) => {
+    setSelectedCategory(categoryId);
+    dispatch(fetchCategoryDetails(categoryId));
+  };
+
+  const handleGoBack = () => {
+    dispatch(clearSelectedCategoryDetails());
+    router.back();
+  };
 
   const renderSidebarItem = ({ item }: { item: CategoryItem }) => (
     <TouchableOpacity
@@ -163,7 +105,7 @@ const CategoriesScreen: React.FC = () => {
         styles.sidebarItem,
         selectedCategory === item.id && styles.selectedSidebarItem,
       ]}
-      onPress={() => setSelectedCategory(item.id)}
+      onPress={() => handleCategorySelect(item.id)}
     >
       <View style={styles.sidebarItemInner}>
         <View
@@ -172,7 +114,7 @@ const CategoriesScreen: React.FC = () => {
             selectedCategory === item.id && styles.selectedSidebarBorder,
           ]}
         />
-        <Image source={{ uri: item.imageUrl }} style={styles.sidebarImage} />
+        <Image source={{ uri: item.img_url }} style={styles.sidebarImage} />
       </View>
       <Text
         style={[
@@ -180,24 +122,21 @@ const CategoriesScreen: React.FC = () => {
           selectedCategory === item.id && styles.selectedSidebarText,
         ]}
       >
-        {item.title}
+        {item.name}
       </Text>
     </TouchableOpacity>
   );
 
-  const renderSpotlightItem = ({ item }: { item: SpotlightItem }) => (
+  const renderSpotlightItem = ({ item }: { item: ProductType }) => (
     <TouchableOpacity style={styles.spotlightItem}>
       <View style={styles.spotlightImageContainer}>
-        <Image source={{ uri: item.imageUrl }} style={styles.spotlightImage} />
+        <Image source={{ uri: item.img_url }} style={styles.spotlightImage} />
       </View>
-      <Text style={styles.spotlightTitle}>{item.title}</Text>
+      <Text style={styles.spotlightTitle}>{item.name}</Text>
     </TouchableOpacity>
   );
 
-  const renderGridSection = (
-    title: string,
-    items: (SpotlightItem | StoreItem)[]
-  ) => (
+  const renderGridSection = (title: string, items: ProductType[]) => (
     <View style={styles.section}>
       <Text style={styles.sectionTitle}>{title}</Text>
       <View style={styles.spotlightGrid}>
@@ -210,8 +149,58 @@ const CategoriesScreen: React.FC = () => {
     </View>
   );
 
+  const renderCategoryDetails = () => {
+    if (!selectedCategoryDetails || !selectedCategoryDetails.sub_categories) {
+      return <Text style={styles.errorText}>No subcategories available</Text>;
+    }
+
+    return selectedCategoryDetails.sub_categories.map((subCategory) => (
+      <View key={subCategory.id}>
+        {renderGridSection(subCategory.name, subCategory.product_types)}
+      </View>
+    ));
+  };
+
+  const renderError = () => {
+    if (error) {
+      return (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>{error}</Text>
+          <TouchableOpacity
+            style={styles.retryButton}
+            onPress={() => dispatch(fetchCategories())}
+          >
+            <Text style={styles.retryButtonText}>Retry</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+    
+    if (detailsError) {
+      return (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>{detailsError}</Text>
+          <TouchableOpacity
+            style={styles.retryButton}
+            onPress={() =>
+              selectedCategory &&
+              dispatch(fetchCategoryDetails(selectedCategory))
+            }
+          >
+            <Text style={styles.retryButtonText}>Retry</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+    
+    return null;
+  };
+
   return (
     <SafeAreaView style={styles.container}>
+      {/* Full Screen Loader */}
+      <FullScreenLoader visible={isScreenLoading}  />
+
       <View style={styles.header}>
         <View style={styles.headerContain}>
           <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
@@ -235,91 +224,35 @@ const CategoriesScreen: React.FC = () => {
         </View>
       </View>
 
-      <View style={styles.contentContainer}>
-        {/* Left Sidebar */}
-        <View style={styles.sidebar}>
-          <FlatList
-            data={sidebarCategories}
-            keyExtractor={(item) => item.id}
-            renderItem={renderSidebarItem}
-            showsVerticalScrollIndicator={false}
-          />
+      {(error || detailsError) ? (
+        <View style={styles.centeredContent}>
+          {renderError()}
         </View>
+      ) : (
+        <View style={styles.contentContainer}>
+          {/* Left Sidebar */}
+          <View style={styles.sidebar}>
+            {sidebarCategories.length === 0 && !isLoading ? (
+              <Text style={styles.errorText}>No categories available</Text>
+            ) : (
+              <FlatList
+                data={sidebarCategories}
+                keyExtractor={(item) => item.id}
+                renderItem={renderSidebarItem}
+                showsVerticalScrollIndicator={false}
+              />
+            )}
+          </View>
 
-        {/* Main Content Area */}
-        <ScrollView
-          style={styles.mainContent}
-          showsVerticalScrollIndicator={false}
-        >
-          {selectedCategory === "trending" && (
-            <>
-              {renderGridSection("In The Spotlight", spotlightItems)}
-              {renderGridSection("Trending Stores", trendingStores)}
-            </>
-          )}
-          {selectedCategory === "men" && (
-            <>
-              {renderGridSection("Casual Wear", casualWear)}
-              {renderGridSection("Work Wear", workWear)}
-              {renderGridSection("Occasion Wear", occasionWear)}
-              {renderGridSection("Sports Wear", sportsWear)}
-              {renderGridSection("Gen Z Fashion", menGenZFashion)}
-            </>
-          )}
-          {selectedCategory === "women" && (
-            <>
-              {renderGridSection("Western Wear", westernWear)}
-              {renderGridSection("Ethnic Wear", ethnicWear)}
-              {renderGridSection("Gen Z Fashion", womenGenZFashion)}
-              {renderGridSection("Gen Z Footwear", genzFootwear)}
-            </>
-          )}
-          {selectedCategory === "kids" && (
-            <>
-              {renderGridSection("Infants", infants)}
-              {renderGridSection("Girls", girls)}
-              {renderGridSection("Boys", boys)}
-              {renderGridSection("Teens", teens)}
-              {renderGridSection("Footwear", kidsFootwear)}
-            </>
-          )}
-          {selectedCategory === "footwear" && (
-            <>
-              {renderGridSection("Women's Footwear", womensfootwear)}
-              {renderGridSection("GenZ Men's Footwear", mensfootwear)}
-              {renderGridSection("GenZ Women's Footwear", mensGenzFootwear)}
-            </>
-          )}
-          {selectedCategory === "beautyAndGrooming" && (
-            <>
-              {renderGridSection("Grooming", grooming)}
-              {renderGridSection("Fragrances", fragrances)}
-              {renderGridSection("Hair Care", hairCare)}
-              {renderGridSection("Skincare", skincare)}
-              {renderGridSection("Makeup", makeup)}
-            </>
-          )}
-          {selectedCategory === "homeAndLiving" && (
-            <>
-              {renderGridSection("Kitchen & Dining", kitchenAndDining)}
-              {renderGridSection("Home Decor", homeDecor)}
-              {renderGridSection("Bath & Bedding", bathAndBedding)}
-            </>
-          )}
-          {selectedCategory === "accessories" && (
-            <>
-              {renderGridSection("Men's Accessories", mensAccessories)}
-              {renderGridSection("Women's Accessories", womensAccessories)}
-            </>
-          )}
-          {selectedCategory === "gadgets" && (
-            <>{renderGridSection("Gadgets", gadGet)}</>
-          )}
-          {selectedCategory === "jewellery" && (
-            <>{renderGridSection("Jewellery", jewellery)}</>
-          )}
-        </ScrollView>
-      </View>
+          {/* Main Content Area */}
+          <ScrollView
+            style={styles.mainContent}
+            showsVerticalScrollIndicator={false}
+          >
+            {renderCategoryDetails()}
+          </ScrollView>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
@@ -335,10 +268,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     ...spacingStyles.px15,
-    ...spacingStyles.py10
+    ...spacingStyles.py10,
   },
   backButton: {
-   ...spacingStyles.p5,
+    ...spacingStyles.p5,
   },
   headerContain: {
     flexDirection: "row",
@@ -376,13 +309,18 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
   },
+  centeredContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   sidebar: {
     width: 90,
     backgroundColor: staticColors.homebackgroundColor,
   },
   sidebarItem: {
     alignItems: "center",
-    ...spacingStyles.p10
+    ...spacingStyles.p10,
   },
   sidebarItemInner: {
     position: "relative",
@@ -425,7 +363,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.px15,
   },
   section: {
-    ...spacingStyles.mb5
+    ...spacingStyles.mb5,
   },
   sectionTitle: {
     fontSize: 15,
@@ -436,7 +374,6 @@ const styles = StyleSheet.create({
   spotlightGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    // justifyContent: "space-between",
   },
   spotlightItemWrapper: {
     width: "33%",
@@ -466,28 +403,24 @@ const styles = StyleSheet.create({
     color: colors.primaryColor,
     fontWeight: "600",
   },
-  storeItem: {
-    alignItems: "center",
-    width: 90,
-  },
-  storeImageContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    overflow: "hidden",
-    backgroundColor: staticColors.backgroundMuted,
-  },
-  storeImage: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
-  },
-  storeTitle: {
-    fontSize: 12,
+  errorText: {
     textAlign: "center",
-    ...spacingStyles.mt8,
-    color: staticColors.cardTitleColor,
-    fontWeight: "500",
+    marginTop: 20,
+    color: colors.errorColor || "#FF0000",
+  },
+  errorContainer: {
+    alignItems: "center",
+    padding: 20,
+  },
+  retryButton: {
+    backgroundColor: colors.primaryColor,
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  retryButtonText: {
+    color: colors.whiteColor,
+    fontWeight: "bold",
   },
 });
 

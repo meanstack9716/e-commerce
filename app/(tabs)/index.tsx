@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,9 +8,7 @@ import {
   SafeAreaView,
   StatusBar,
   FlatList,
-  ScrollView,
   Image,
-  Platform,
 } from "react-native";
 import {
   Ionicons,
@@ -19,7 +17,7 @@ import {
   FontAwesome6,
 } from "@expo/vector-icons";
 import ProductCard from "@/components/home/ProductCard";
-import { router, useNavigation } from "expo-router";
+import { router } from "expo-router";
 import data from "../../assets/data/products.json";
 import Navbar from "@/components/home/Navbar";
 import CategoryGrid from "@/components/home/CategoryGrid";
@@ -36,18 +34,39 @@ import staticColors from "@/style/staticColors";
 import OfferPriceCard from "@/components/home/OfferPriceCard";
 import PocketFriendlyBargain from "@/components/home/PocketFriendlyBargain";
 import { Profile, ProductData } from "../../types/types";
+import { useSelector, useDispatch } from "react-redux";
+import { useAppDispatch } from "@/store/hooks";
+import { fetchCategories } from "@/store/category/categoriesSlice";
 
 const HomeScreen: React.FC = () => {
   const [likedItems, setLikedItems] = useState<string[]>([]);
-  const [activeTab, setActiveTab] = useState<string>("All");
+  const [activeTab, setActiveTab] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const productData = data as ProductData;
   const insets = useSafeAreaInsets();
+  const dispatch = useAppDispatch();
+
+  const { data: categories, loading, error } = useSelector(
+    (state: any) => state.categories
+  );
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
+
+  const tabs = [...categories.slice(0, 4).map((cat: any) => cat.name), "Categories"];
+  useEffect(() => {
+    if (!activeTab && tabs.length > 0) {
+      const firstTab = tabs.find((tab) => tab !== "Categories");
+      if (firstTab) setActiveTab(firstTab);
+    }
+  }, [tabs]);
+  
   const getFilteredProducts = () => {
     let filtered = productData.products;
 
-    if (activeTab !== "All") {
+    if (activeTab && activeTab !== "Categories" && tabs.includes(activeTab)) {
       const tabLower = activeTab.toLowerCase();
       filtered = filtered.filter((product) =>
         product.categories.includes(tabLower)
@@ -69,8 +88,6 @@ const HomeScreen: React.FC = () => {
     return filtered;
   };
 
-  const tabs = ["All", "Men", "Women", "Kids", "Categories"];
-
   const handleUserIconPress = () => {
     router.push("/profile");
   };
@@ -90,10 +107,12 @@ const HomeScreen: React.FC = () => {
       {...item}
       liked={likedItems.includes(item.id)}
       onLikePress={() => toggleLike(item.id)}
-      onPress={() => router.push({
-        pathname: "/ProductDetails",
-        params: { id: item.id }
-      })}
+      onPress={() =>
+        router.push({
+          pathname: "/ProductDetails",
+          params: { id: item.id },
+        })
+      }
     />
   );
 
@@ -191,7 +210,16 @@ const HomeScreen: React.FC = () => {
           </TouchableOpacity>
         </View>
 
-        <Navbar tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
+        {/* Conditionally render Navbar based on loading/error state */}
+        {loading ? (
+          <Text>Loading categories...</Text>
+        ) : error ? (
+          <Text>Error: {error}</Text>
+        ) : tabs.length > 1 ? ( // Ensure at least one category or "Categories" exists
+          <Navbar tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
+        ) : (
+          <Text>No categories available</Text>
+        )}
 
         <FlatList
           data={getFilteredProducts()}
@@ -214,7 +242,7 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.homebackgroundColor,
   },
   contentWrapper: {
-    flex: 1
+    flex: 1,
   },
   addressContainer: {
     flexDirection: "row",
@@ -225,19 +253,19 @@ const styles = StyleSheet.create({
   addressTextContainer: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 8
+    gap: 8,
   },
   addressText: {
     fontSize: 13,
     fontWeight: "500",
     color: colors.primaryColor,
-    ...spacingStyles.mx5
+    ...spacingStyles.mx5,
   },
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
     ...spacingStyles.mb10,
-    ...spacingStyles.px10
+    ...spacingStyles.px10,
   },
   searchInputContainer: {
     flex: 1,
@@ -254,7 +282,7 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     resizeMode: "contain",
-    ...spacingStyles.mr10
+    ...spacingStyles.mr10,
   },
   searchInput: {
     flex: 1,
@@ -263,14 +291,14 @@ const styles = StyleSheet.create({
     color: staticColors.cardTitleColor,
   },
   iconButton: {
-    ...spacingStyles.ml15
+    ...spacingStyles.ml15,
   },
   flatListContent: {
-    ...spacingStyles.px10
+    ...spacingStyles.px10,
   },
   columnWrapper: {
     justifyContent: "space-between",
-    ...spacingStyles.mb10
+    ...spacingStyles.mb10,
   },
 });
 
