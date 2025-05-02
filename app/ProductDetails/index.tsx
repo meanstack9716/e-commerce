@@ -39,7 +39,10 @@ const ProductDetailsScreen: React.FC = () => {
   const [showBackToTop, setShowBackToTop] = useState(false);
   const insets = useSafeAreaInsets();
   const flatListRef = useRef<FlatList>(null);
-
+  const handleAddToCart = () => {
+    console.log(`Added product ${product?.id} to cart`);
+    router.push("/cart");
+  };
   const originalPrice = product
     ? (parseFloat(product.price) * 1.15).toFixed(2)
     : "0";
@@ -84,7 +87,7 @@ const ProductDetailsScreen: React.FC = () => {
 
   const handleListScroll = (event: any) => {
     const offsetY = event.nativeEvent.contentOffset.y;
-    setShowBackToTop(offsetY > 1200);
+    setShowBackToTop(offsetY > 1400);
   };
 
   const handleLikePress = () => {
@@ -101,7 +104,7 @@ const ProductDetailsScreen: React.FC = () => {
 
   const handleBackToTop = () => {
     flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
-    setShowBackToTop(false);
+    setShowBackToTop(false); 
   };
 
   if (!product) {
@@ -130,7 +133,7 @@ const ProductDetailsScreen: React.FC = () => {
         renderItem={() => null}
         showsVerticalScrollIndicator={false}
         onScroll={handleListScroll}
-        scrollEventThrottle={16}
+        scrollEventThrottle={16} 
         ListHeaderComponent={
           <>
             {/* Header */}
@@ -254,7 +257,7 @@ const ProductDetailsScreen: React.FC = () => {
           <Text style={styles.backToTopText}>Back to Top</Text>
         </TouchableOpacity>
       ) : (
-        <BottonActions />
+        <BottonActions onAddToCart={handleAddToCart} />
       )}
       <ViewSimilarModal
         visible={isModalVisible}
