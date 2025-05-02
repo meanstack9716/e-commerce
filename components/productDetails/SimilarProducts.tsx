@@ -22,6 +22,7 @@ const SimilarProducts = ({ currentProduct }: { currentProduct: Profile }) => {
     ...item,
     title: item.title ?? "Untitled Product",
   }));
+  
 
   const similar = allProducts.filter((product) => {
     if (product.id === currentProduct.id) return false;
@@ -54,7 +55,6 @@ const SimilarProducts = ({ currentProduct }: { currentProduct: Profile }) => {
 
   return (
     <View style={styles.container}>
-      {/* <Text style={styles.heading}>Similar Products</Text> */}
       <FlatList
         horizontal
         data={limitedSimilar}
@@ -66,7 +66,16 @@ const SimilarProducts = ({ currentProduct }: { currentProduct: Profile }) => {
             onPress={() => handleProductPress(item.id)}
           >
             <View style={styles.imageContainer}>
-              <Image source={{ uri: item.image }} style={styles.image} />
+              {item.images && item.images.length > 0 ? (
+                <Image 
+                  source={{ uri: item.images[0] }} 
+                  style={styles.image} 
+                />
+              ) : (
+                <View style={[styles.image, styles.noImageContainer]}>
+                  <Text style={styles.noImageText}>No image</Text>
+                </View>
+              )}
               <View style={styles.ratingContainer}>
                 <Text style={styles.star}>{item.star} ★</Text>
               </View>
@@ -100,6 +109,15 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 190,
     borderRadius: 10,
+  },
+  noImageContainer: {
+    backgroundColor: staticColors.backgroundMuted,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  noImageText: {
+    color: staticColors.lightGray,
+    fontSize: 12,
   },
   ratingContainer: {
     position: "absolute",

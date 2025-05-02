@@ -18,7 +18,7 @@ type SizeInfo = {
 interface SizeSelectorProps {
   product: {
     id: string;
-    image: string;
+    images: string[];
     title: string;
     price: string;
     star: number;
@@ -66,7 +66,7 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
                   title: product.title,
                   price: product.price,
                   originalPrice: originalPrice,
-                  image: product.image,
+                  image: product.images && product.images.length > 0 ? product.images[0] : "", 
                 }
               : null
           }

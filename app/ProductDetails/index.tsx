@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -6,10 +6,10 @@ import {
   Image,
   TouchableOpacity,
   SafeAreaView,
-  ScrollView,
   FlatList,
+  Dimensions,
 } from "react-native";
-import { Ionicons, FontAwesome, MaterialIcons } from "@expo/vector-icons";
+import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { useLocalSearchParams, router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import colors from "@/style/staticColors";
@@ -27,13 +27,18 @@ import BrandRating from "@/components/productDetails/BrandRating";
 import ViewSimilarModal from "@/modal/ViewSimilarModal";
 import ProductList from "@/components/productDetails/ProductList";
 
+const { width: screenWidth } = Dimensions.get("window");
+
 const ProductDetailsScreen: React.FC = () => {
   const params = useLocalSearchParams();
   const { id } = params;
   const [liked, setLiked] = useState(false);
   const [product, setProduct] = useState<Profile | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [showBackToTop, setShowBackToTop] = useState(false);
   const insets = useSafeAreaInsets();
+  const flatListRef = useRef<FlatList>(null);
 
   const originalPrice = product
     ? (parseFloat(product.price) * 1.15).toFixed(2)
@@ -49,13 +54,12 @@ const ProductDetailsScreen: React.FC = () => {
     if (rawProductData) {
       const normalizedProduct: Profile = {
         id: rawProductData.id,
-        image: rawProductData.image,
+        images: rawProductData.images,
         title: rawProductData.title || "Product Title",
         price: rawProductData.price,
         star: rawProductData.star,
         categories: rawProductData.categories || [],
       };
-
       setProduct(normalizedProduct);
     }
   }, [id]);
@@ -73,6 +77,16 @@ const ProductDetailsScreen: React.FC = () => {
     );
   };
 
+  const handleScroll = (event: any) => {
+    const index = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
+    setActiveIndex(index);
+  };
+
+  const handleListScroll = (event: any) => {
+    const offsetY = event.nativeEvent.contentOffset.y;
+    setShowBackToTop(offsetY > 1200);
+  };
+
   const handleLikePress = () => {
     setLiked((prev) => !prev);
   };
@@ -83,6 +97,11 @@ const ProductDetailsScreen: React.FC = () => {
 
   const handleViewSimilar = () => {
     setIsModalVisible(true);
+  };
+
+  const handleBackToTop = () => {
+    flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
+    setShowBackToTop(false);
   };
 
   if (!product) {
@@ -99,14 +118,19 @@ const ProductDetailsScreen: React.FC = () => {
       </SafeAreaView>
     );
   }
+
   const dummyData = [{ key: "dummy" }];
+
   return (
     <SafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
       <FlatList
+        ref={flatListRef}
         data={dummyData}
         keyExtractor={(item) => item.key}
         renderItem={() => null}
         showsVerticalScrollIndicator={false}
+        onScroll={handleListScroll}
+        scrollEventThrottle={16}
         ListHeaderComponent={
           <>
             {/* Header */}
@@ -142,12 +166,39 @@ const ProductDetailsScreen: React.FC = () => {
               </View>
             </View>
 
-            {/* Product image */}
-            <Image
-              source={{ uri: product.image }}
-              style={styles.image}
-              resizeMode="cover"
+            {/* Image Carousel */}
+            <FlatList
+              horizontal
+              pagingEnabled
+              data={product.images}
+              keyExtractor={(_, index) => index.toString()}
+              onScroll={handleScroll}
+              showsHorizontalScrollIndicator={false}
+              renderItem={({ item }) => (
+                <Image
+                  source={{ uri: item }}
+                  style={styles.image}
+                  resizeMode="cover"
+                />
+              )}
             />
+            {/* Dot Indicators */}
+            <View style={styles.dotContainer}>
+              {product.images.map((_, index) => (
+                <View
+                  key={index}
+                  style={[
+                    styles.dot,
+                    {
+                      backgroundColor:
+                        activeIndex === index
+                          ? staticColors.darkGray
+                          : staticColors.borderLight,
+                    },
+                  ]}
+                />
+              ))}
+            </View>
 
             {/* View Similar & Rating */}
             <View style={styles.actionRow}>
@@ -194,7 +245,17 @@ const ProductDetailsScreen: React.FC = () => {
           </>
         }
       />
-      <BottonActions />
+      {showBackToTop ? (
+        <TouchableOpacity
+          style={styles.backToTopButton}
+          onPress={handleBackToTop}
+        >
+          <Ionicons name="arrow-up" size={24} color={colors.whiteColor} />
+          <Text style={styles.backToTopText}>Back to Top</Text>
+        </TouchableOpacity>
+      ) : (
+        <BottonActions />
+      )}
       <ViewSimilarModal
         visible={isModalVisible}
         onClose={() => setIsModalVisible(false)}
@@ -235,10 +296,22 @@ const styles = StyleSheet.create({
     ...spacingStyles.ml15,
   },
   image: {
-    width: "100%",
-    height: 500,
+    width: screenWidth,
+    height: 450,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
+  },
+  dotContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 10,
+    gap: 2,
+  },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    ...spacingStyles.mx2,
   },
   actionRow: {
     flexDirection: "row",
@@ -257,7 +330,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     position: "absolute",
     left: 15,
-    bottom: 20,
+    bottom: 40,
   },
   viewSimilarText: {
     ...spacingStyles.ml5,
@@ -273,7 +346,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     position: "absolute",
     right: 15,
-    bottom: 20,
+    bottom: 40,
   },
   starsContainer: {
     flexDirection: "row",
@@ -318,6 +391,28 @@ const styles = StyleSheet.create({
     ...spacingStyles.mb10,
     color: staticColors.cardTitleColor,
     ...spacingStyles.px15,
+  },
+  backToTopButton: {
+    position: "absolute",
+    bottom: 20,
+    right: 20,
+    backgroundColor: colors.primaryColor,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 25,
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+  },
+  backToTopText: {
+    color: colors.whiteColor,
+    fontSize: 16,
+    fontWeight: "bold",
+    marginLeft: 5,
   },
 });
 

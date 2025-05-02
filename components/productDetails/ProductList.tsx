@@ -26,7 +26,7 @@ const ProductScreen: React.FC = () => {
       const normalizedTitle = product.title || product[" title"] || "Untitled";
       return {
         id: product.id,
-        image: product.image,
+        images: product.images,
         title: normalizedTitle,
         price: product.price,
         star: product.star,
@@ -90,7 +90,7 @@ const ProductScreen: React.FC = () => {
         renderItem={({ item }: { item: Profile }) => (
           <ProductCard
             id={item.id}
-            image={item.image}
+            images={item.images}
             title={item.title}
             price={item.price}
             star={item.star}

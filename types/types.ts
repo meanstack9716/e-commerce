@@ -1,6 +1,6 @@
 interface Profile {
     id: string;
-    image: string;
+    images: string[];
     title: string;
     price: string;
     star: number;

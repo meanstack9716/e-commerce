@@ -14,7 +14,7 @@ import staticColors from "@/style/staticColors";
 
 export interface ProductCardProps {
   id: string;
-  image: string;
+  images: string[]; 
   title: string;
   price: string;
   star: number;
@@ -25,7 +25,7 @@ export interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
-  image,
+  images,
   title,
   price,
   star,
@@ -35,12 +35,19 @@ const ProductCard: React.FC<ProductCardProps> = ({
   cardWidth
 }) => {
   const discountPercentage = Math.floor(Math.random() * 41) + 10;
-
+  const imageToShow = images && images.length > 0 ? images[0] : null;
+  
   return (
     <View style={[styles.card, cardWidth ? { width: cardWidth } : {}]}>
       <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
         <View style={styles.imageWrapper}>
-          <Image source={{ uri: image }} style={styles.cardImage} />
+          {imageToShow ? (
+            <Image source={{ uri: imageToShow }} style={styles.cardImage} />
+          ) : (
+            <View style={[styles.cardImage, styles.noImageContainer]}>
+              <Text style={styles.noImageText}>No image</Text>
+            </View>
+          )}
           <View style={styles.starOverlay}>
             <FontAwesome name="star" size={14} color="#FFD700" />
             <Text style={styles.ratingText}>({star.toFixed(1)})</Text>
@@ -89,6 +96,16 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
     borderRadius: 10,
   },
+  noImageContainer: {
+    backgroundColor: staticColors.backgroundMuted,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  noImageText: {
+    color: staticColors.lightGray,
+    fontSize: 14,
+    fontWeight: "500",
+  },
   cardContainer: {},
   titleRow: {
     flexDirection: "row",
@@ -133,7 +150,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.mx10,
     ...spacingStyles.my5,
     alignItems: "center",
-    gap: "5",
+    gap: 5,  // Changed from string "5" to number 5
   },
   discountText: {
     color: staticColors.discountColor,
