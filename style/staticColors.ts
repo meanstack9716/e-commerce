@@ -17,7 +17,8 @@ export default {
   lightGray: "#999",
   darkGray: "#666",
   lightGreen: "#e6ffe6",
-  cardBackground:"#f1f0ff",
+  cardBackground:"#f5f5fc",
+  cardLightBackground:'#faf5f5',
   lightPink:"#fee2e2",
   secondaryGray:'#e3e3e3',
   // Borders

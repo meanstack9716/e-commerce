@@ -97,7 +97,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
   }, [visible]);
 
   return (
-    <Modal visible={visible} animationType="slide" transparent={true}>
+    <Modal visible={visible} animationType="none" transparent={true}>
       <TouchableWithoutFeedback onPress={onClose}>
         <View style={styles.overlay}>
           <TouchableWithoutFeedback>

@@ -75,6 +75,7 @@ export default function ProfileScreen() {
                   name="qr-code-scanner"
                   size={24}
                   color={colors.textMuted}
+                  style={styles.qrIcon}
                 />
               }
               label="Scan for coupon"
@@ -158,4 +159,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     zIndex: 10,
   },
+  qrIcon:{
+    ...spacingStyles.mt10
+  }
 });

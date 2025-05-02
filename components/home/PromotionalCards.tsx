@@ -73,10 +73,10 @@ const PromotionalCards: React.FC<PromotionalCardsProps> = ({
                 activeOpacity={0.8}
               >
                 <View style={styles.cardContent}>
-                  <Text style={styles.cardTitle}>
-                    {card.title}
+                  <View style={styles.cardtitleContent}>
+                    <Text style={styles.cardTitle}>{card.title} </Text>
                     <AntDesign name="right" size={8} color="#7a7a7a" />
-                  </Text>
+                  </View>
                   <Image
                     source={{ uri: card.imageUrl }}
                     style={styles.cardImage}
@@ -93,10 +93,12 @@ const PromotionalCards: React.FC<PromotionalCardsProps> = ({
               {remainingCards[colIndex * 2] && (
                 <TouchableOpacity style={styles.card} activeOpacity={0.8}>
                   <View style={styles.cardContent}>
-                    <Text style={styles.cardTitle}>
-                      {remainingCards[colIndex * 2].title}
+                    <View style={styles.cardtitleContent}>
+                      <Text style={styles.cardTitle}>
+                        {remainingCards[colIndex * 2].title}
+                      </Text>
                       <AntDesign name="right" size={8} color="#7a7a7a" />
-                    </Text>
+                    </View>
                     <Image
                       source={{ uri: remainingCards[colIndex * 2].imageUrl }}
                       style={styles.cardImage}
@@ -108,10 +110,12 @@ const PromotionalCards: React.FC<PromotionalCardsProps> = ({
               {remainingCards[colIndex * 2 + 1] && (
                 <TouchableOpacity style={styles.card} activeOpacity={0.8}>
                   <View style={styles.cardContent}>
-                    <Text style={styles.cardTitle}>
-                      {remainingCards[colIndex * 2 + 1].title}
+                    <View style={styles.cardtitleContent}>
+                      <Text style={styles.cardTitle}>
+                        {remainingCards[colIndex * 2 + 1].title}
+                      </Text>
                       <AntDesign name="right" size={8} color="#7a7a7a" />
-                    </Text>
+                    </View>
                     <Image
                       source={{
                         uri: remainingCards[colIndex * 2 + 1].imageUrl,
@@ -168,13 +172,12 @@ const PromotionalCards: React.FC<PromotionalCardsProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    ...spacingStyles.mb15
+    ...spacingStyles.mb15,
   },
-  scrollContainer: {
-  },
+  scrollContainer: {},
   firstColumn: {
     width: cardWidth * 2 + 10,
-    ...spacingStyles.mr5
+    ...spacingStyles.mr5,
   },
   subRow: {
     flexDirection: "row",
@@ -182,10 +185,10 @@ const styles = StyleSheet.create({
   },
   column: {
     width: cardWidth,
-    ...spacingStyles.mr5
+    ...spacingStyles.mr5,
   },
   largeCard: {
-    height: 85,
+    height: 80,
     borderRadius: 15,
     ...spacingStyles.mb5,
     overflow: "hidden",
@@ -195,11 +198,11 @@ const styles = StyleSheet.create({
   },
   card: {
     width: cardWidth,
-    height: 85,
+    height: 80,
     borderRadius: 15,
     ...spacingStyles.mb5,
     overflow: "hidden",
-    backgroundColor: staticColors.lightColor,
+    backgroundColor: staticColors.cardLightBackground,
   },
   cardContent: {
     flex: 1,
@@ -207,18 +210,22 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   cardImage: {
-    width: '60%',
-    height: 60,
+    width: "60%",
+    height: 55,
     resizeMode: "cover",
     alignSelf: "center",
+  },
+  cardtitleContent: {
+    flexDirection: "row",
+    ...spacingStyles.pt5,
+    alignItems: "center",
+    gap: 2,
   },
   cardTitle: {
     color: staticColors.cardTitleColor,
     fontWeight: "600",
     fontSize: 12,
     ...spacingStyles.pl10,
-    ...spacingStyles.pt5,
-    textAlign: "left",
   },
   bestSellerOverlay: {
     position: "absolute",
@@ -227,7 +234,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    ...spacingStyles.px15
+    ...spacingStyles.px15,
   },
   bestSellerTitle: {
     color: staticColors.primaryColor,
@@ -274,7 +281,7 @@ const styles = StyleSheet.create({
     width: 1,
     height: "90%",
     backgroundColor: staticColors.lightGray,
-    ...spacingStyles.mx5
+    ...spacingStyles.mx5,
   },
   sparkleLeft: {
     position: "absolute",
