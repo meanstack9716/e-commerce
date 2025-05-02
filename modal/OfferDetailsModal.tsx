@@ -37,7 +37,7 @@ const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
   const [showCouponDetails, setShowCouponDetails] = useState(false);
   const [showFederalDetails, setShowFederalDetails] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
-  
+
   const offerDetails = [
     {
       text: "Applicable only on Myntra FWD offer Products",
@@ -63,17 +63,17 @@ const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
     },
   ];
 
-const toggleMoreOffers = () => {
-  setShowMoreOffers((prevState) => {
-    const newState = !prevState;
-    if (newState && scrollViewRef.current) {
-      setTimeout(() => {
-        scrollViewRef.current?.scrollToEnd({ animated: true });
-      }, 100);
-    }
-    return newState;
-  });
-};
+  const toggleMoreOffers = () => {
+    setShowMoreOffers((prevState) => {
+      const newState = !prevState;
+      if (newState && scrollViewRef.current) {
+        setTimeout(() => {
+          scrollViewRef.current?.scrollToEnd({ animated: true });
+        }, 100);
+      }
+      return newState;
+    });
+  };
   const toggleCouponDetails = () =>
     setShowCouponDetails((prevState) => !prevState);
   const toggleFederalDetails = () =>
@@ -112,7 +112,10 @@ const toggleMoreOffers = () => {
                 Combine coupons & offers to get maximum discount
               </Text>
 
-              <ScrollView style={styles.offersContainer} ref={scrollViewRef} >
+              <ScrollView
+                style={styles.offersContainer}
+                contentContainerStyle={{ paddingBottom: 20, flexGrow: 1 }}
+              >
                 {/* Coupon Section */}
                 <View style={styles.offerSection}>
                   <View style={styles.offerHeader}>
@@ -128,7 +131,7 @@ const toggleMoreOffers = () => {
                       <Text style={styles.detailsButtonText}>Details</Text>
                       <MaterialIcons
                         name={
-                          showFederalDetails
+                          showCouponDetails
                             ? "keyboard-arrow-up"
                             : "keyboard-arrow-down"
                         }
@@ -357,10 +360,10 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     ...spacingStyles.p15,
-    // maxHeight: screenHeight * 0.8,
-    minHeight: screenHeight * 0.5,
-    
+    maxHeight: screenHeight * 0.5,
+    flexGrow: 1,
   },
+
   modalHeader: {
     flexDirection: "row",
     justifyContent: "center",

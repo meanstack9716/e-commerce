@@ -88,7 +88,7 @@ const ProductDetails = () => {
               placeholderTextColor={staticColors.primaryColor}
               value={pinCode}
               onFocus={!pinCode ? handleTextInputPress : undefined}
-              editable={false}
+              editable={!pinCode ? true : false}
               accessibilityLabel="PIN code input"
             />
             {pinCode && (
