@@ -7,17 +7,11 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import data from "@/assets/data/products.json";
+import { useSelector } from "react-redux";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-
-interface CategoryItem {
-  id: string;
-  title: string;
-  imageUrl: string;
-  isActive?: boolean;
-}
+import { CategoryItem } from "@/types/types";
 
 interface CategoryGridProps {
   activeTab: string;
@@ -28,28 +22,34 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({
   activeTab,
   onCategorySelect,
 }) => {
-  const productData = data as { categories: { [key: string]: CategoryItem[] } };
-  
-  const availableTabs = Object.keys(productData.categories);
-  const matchedTab = availableTabs.find(
-    tab => tab.toLowerCase() === activeTab.toLowerCase()
-  ) || "All";
-  
-  const activeCategories = productData.categories[matchedTab] || [];
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
+  const { data: categories } = useSelector((state: any) => state.categories);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
+    null
+  );
   const prevTabRef = useRef<string>(activeTab);
+
+  const activeCategories =
+    activeTab.toLowerCase() === "all"
+      ? categories
+          .flatMap((category: CategoryItem) => category.sub_categories)
+          .slice(0, 8)
+      : (
+          categories.filter(
+            (category: CategoryItem) =>
+              category.name.toLowerCase() === activeTab.toLowerCase()
+          )[0]?.sub_categories || []
+        ).slice(0, 8);
 
   useEffect(() => {
     if (prevTabRef.current !== activeTab) {
       const defaultCategory = activeCategories[0];
       const defaultCategoryId = defaultCategory?.id || null;
-  
+
       setSelectedCategoryId(defaultCategoryId);
       onCategorySelect(defaultCategoryId || "");
       prevTabRef.current = activeTab;
     }
-  }, [activeTab, activeCategories]);
-  
+  }, [activeTab, activeCategories, onCategorySelect]);
 
   const handleCategoryPress = (categoryId: string) => {
     if (selectedCategoryId === categoryId) {
@@ -68,7 +68,7 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.categoriesContainer}
       >
-        {activeCategories.map((category: CategoryItem) => {
+        {activeCategories.map((category: any) => {
           const isSelected = selectedCategoryId === category.id;
           return (
             <TouchableOpacity
@@ -83,17 +83,14 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({
                 ]}
               >
                 <Image
-                  source={{ uri: category.imageUrl }}
+                  source={{ uri: category.img_url }}
                   style={styles.categoryImage}
                 />
               </View>
               <Text
-                style={[
-                  styles.categoryTitle,
-                  isSelected && styles.activeTitle,
-                ]}
+                style={[styles.categoryTitle, isSelected && styles.activeTitle]}
               >
-                {category.title}
+                {category.name}
               </Text>
             </TouchableOpacity>
           );
@@ -105,10 +102,10 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    ...spacingStyles.mx5
+    ...spacingStyles.mx5,
   },
   categoriesContainer: {
-    ...spacingStyles.py2
+    ...spacingStyles.py2,
   },
   categoryItem: {
     alignItems: "center",

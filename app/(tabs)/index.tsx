@@ -55,22 +55,34 @@ const HomeScreen: React.FC = () => {
     dispatch(fetchCategories());
   }, [dispatch]);
 
-  const tabs = [...categories.slice(0, 4).map((cat: any) => cat.name), "Categories"];
+  const tabs = [
+    "All",
+    ...categories.slice(0, 3).map((cat: any) => cat.name),
+    "Categories",
+  ];
+
   useEffect(() => {
     if (!activeTab && tabs.length > 0) {
-      const firstTab = tabs.find((tab) => tab !== "Categories");
-      if (firstTab) setActiveTab(firstTab);
+      setActiveTab("All");
     }
-  }, [tabs]);
-  
+  }, [tabs, activeTab]);
+
   const getFilteredProducts = () => {
     let filtered = productData.products;
 
-    if (activeTab && activeTab !== "Categories" && tabs.includes(activeTab)) {
-      const tabLower = activeTab.toLowerCase();
-      filtered = filtered.filter((product) =>
-        product.categories.includes(tabLower)
+    if (activeTab && activeTab !== "All" && activeTab !== "Categories" && tabs.includes(activeTab)) {
+      const activeCategory = categories.find(
+        (cat: any) => cat.name.toLowerCase() === activeTab.toLowerCase()
       );
+      if (activeCategory) {
+        const subCategoryIds = activeCategory.sub_categories.map((sub: any) => sub.id);
+        filtered = filtered.filter((product) =>
+          product.categories.some(
+            (cat) =>
+              cat === activeCategory.id || subCategoryIds.includes(cat)
+          )
+        );
+      }
     }
 
     if (selectedCategory) {
@@ -210,12 +222,11 @@ const HomeScreen: React.FC = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Conditionally render Navbar based on loading/error state */}
         {loading ? (
           <Text>Loading categories...</Text>
         ) : error ? (
           <Text>Error: {error}</Text>
-        ) : tabs.length > 1 ? ( // Ensure at least one category or "Categories" exists
+        ) : tabs.length > 1 ? (
           <Navbar tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
         ) : (
           <Text>No categories available</Text>

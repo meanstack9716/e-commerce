@@ -15,7 +15,7 @@ const FullScreenLoader: React.FC<FullScreenLoaderProps> = ({
   if (!visible) return null;
 
   return (
-    <Modal visible={visible} transparent={transparent} animationType="fade">
+    <Modal visible={visible} transparent={transparent} >
       <View style={styles.container}>
         <View style={styles.loaderContainer}>
           <ActivityIndicator size="large" color={colors.primaryColor} />

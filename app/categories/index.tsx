@@ -15,71 +15,42 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useSelector } from "react-redux";
-
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { useAppDispatch } from "@/store/hooks";
 import { RootState } from "@/store/store";
-import {
-  fetchCategories,
-  fetchCategoryDetails,
-  clearSelectedCategoryDetails,
-} from "@/store/category/categoriesSlice";
+import { fetchCategories } from "@/store/category/categoriesSlice";
 import FullScreenLoader from "@/components/common/FullScreenLoader";
-
-interface CategoryItem {
-  id: string;
-  name: string;
-  img_url: string;
-}
-
-interface ProductType {
-  id: string;
-  name: string;
-  description: string;
-  img_url: string;
-}
-
+import { CategoryItem , SubSubCategory  } from "@/types/types";
 const CategoriesScreen: React.FC = () => {
   const params = useLocalSearchParams();
   const { categoryId, categoryTitle } = params;
 
   const dispatch = useAppDispatch();
-  const {
-    data: sidebarCategories,
-    loading: isLoading,
-    error,
-    selectedCategoryDetails,
-    detailsLoading,
-    detailsError,
-  } = useSelector((state: RootState) => state.categories);
+  const { data: categories, loading: isLoading, error } = useSelector(
+    (state: RootState) => state.categories
+  );
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(
     (categoryId as string) || null
   );
 
-  // A single loading state for the screen
-  const isScreenLoading = isLoading || detailsLoading;
-
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
-  
+
   useEffect(() => {
     if (categoryId) {
       setSelectedCategory(categoryId as string);
-      dispatch(fetchCategoryDetails(categoryId as string));
-    } else if (sidebarCategories.length > 0 && !selectedCategory) {
-      const firstCategoryId = sidebarCategories[0].id;
+    } else if (categories.length > 0 && !selectedCategory) {
+      const firstCategoryId = categories[0].id;
       setSelectedCategory(firstCategoryId);
-      dispatch(fetchCategoryDetails(firstCategoryId));
     }
-  }, [categoryId, sidebarCategories, selectedCategory, dispatch]);
+  }, [categoryId, categories, selectedCategory]);
 
   useEffect(() => {
     const onBackPress = () => {
-      dispatch(clearSelectedCategoryDetails());
       router.back();
       return true;
     };
@@ -87,15 +58,13 @@ const CategoriesScreen: React.FC = () => {
     return () => {
       BackHandler.removeEventListener("hardwareBackPress", onBackPress);
     };
-  }, [dispatch]);
+  }, []);
 
   const handleCategorySelect = (categoryId: string) => {
     setSelectedCategory(categoryId);
-    dispatch(fetchCategoryDetails(categoryId));
   };
 
   const handleGoBack = () => {
-    dispatch(clearSelectedCategoryDetails());
     router.back();
   };
 
@@ -127,7 +96,7 @@ const CategoriesScreen: React.FC = () => {
     </TouchableOpacity>
   );
 
-  const renderSpotlightItem = ({ item }: { item: ProductType }) => (
+  const renderSpotlightItem = ({ item }: { item: SubSubCategory }) => (
     <TouchableOpacity style={styles.spotlightItem}>
       <View style={styles.spotlightImageContainer}>
         <Image source={{ uri: item.img_url }} style={styles.spotlightImage} />
@@ -136,7 +105,7 @@ const CategoriesScreen: React.FC = () => {
     </TouchableOpacity>
   );
 
-  const renderGridSection = (title: string, items: ProductType[]) => (
+  const renderGridSection = (title: string, items: SubSubCategory[]) => (
     <View style={styles.section}>
       <Text style={styles.sectionTitle}>{title}</Text>
       <View style={styles.spotlightGrid}>
@@ -150,13 +119,19 @@ const CategoriesScreen: React.FC = () => {
   );
 
   const renderCategoryDetails = () => {
-    if (!selectedCategoryDetails || !selectedCategoryDetails.sub_categories) {
+    const selectedCategoryData = categories.find(
+      (category) => category.id === selectedCategory
+    );
+
+    if (!selectedCategoryData || !selectedCategoryData.sub_categories) {
       return <Text style={styles.errorText}>No subcategories available</Text>;
     }
 
-    return selectedCategoryDetails.sub_categories.map((subCategory) => (
+    return selectedCategoryData.sub_categories.map((subCategory) => (
       <View key={subCategory.id}>
-        {renderGridSection(subCategory.name, subCategory.product_types)}
+        {subCategory.sub_sub_categories &&
+          subCategory.sub_sub_categories.length > 0 &&
+          renderGridSection(subCategory.name, subCategory.sub_sub_categories)}
       </View>
     ));
   };
@@ -175,32 +150,12 @@ const CategoriesScreen: React.FC = () => {
         </View>
       );
     }
-    
-    if (detailsError) {
-      return (
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>{detailsError}</Text>
-          <TouchableOpacity
-            style={styles.retryButton}
-            onPress={() =>
-              selectedCategory &&
-              dispatch(fetchCategoryDetails(selectedCategory))
-            }
-          >
-            <Text style={styles.retryButtonText}>Retry</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    }
-    
     return null;
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Full Screen Loader */}
-      <FullScreenLoader visible={isScreenLoading}  />
-
+      <FullScreenLoader visible={isLoading} />
       <View style={styles.header}>
         <View style={styles.headerContain}>
           <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
@@ -210,7 +165,6 @@ const CategoriesScreen: React.FC = () => {
             {categoryTitle ? categoryTitle : "Categories"}
           </Text>
         </View>
-
         <View style={styles.headerRight}>
           <TouchableOpacity style={styles.iconButton}>
             <Ionicons name="heart-outline" size={22} color="#333" />
@@ -223,28 +177,22 @@ const CategoriesScreen: React.FC = () => {
           </TouchableOpacity>
         </View>
       </View>
-
-      {(error || detailsError) ? (
-        <View style={styles.centeredContent}>
-          {renderError()}
-        </View>
+      {error ? (
+        <View style={styles.centeredContent}>{renderError()}</View>
       ) : (
         <View style={styles.contentContainer}>
-          {/* Left Sidebar */}
           <View style={styles.sidebar}>
-            {sidebarCategories.length === 0 && !isLoading ? (
+            {categories.length === 0 && !isLoading ? (
               <Text style={styles.errorText}>No categories available</Text>
             ) : (
               <FlatList
-                data={sidebarCategories}
+                data={categories}
                 keyExtractor={(item) => item.id}
                 renderItem={renderSidebarItem}
                 showsVerticalScrollIndicator={false}
               />
             )}
           </View>
-
-          {/* Main Content Area */}
           <ScrollView
             style={styles.mainContent}
             showsVerticalScrollIndicator={false}
