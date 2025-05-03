@@ -2,13 +2,7 @@ import DeliveryModal from "@/modal/DeliveryModal";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Modal,
-} from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
 
 const ShoppingCartScreen: React.FC = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -20,7 +14,7 @@ const ShoppingCartScreen: React.FC = () => {
   };
 
   return (
-    <View >
+    <View>
       <TouchableOpacity
         style={styles.deliverySection}
         onPress={() => setModalVisible(true)}
@@ -52,7 +46,6 @@ const ShoppingCartScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-
   deliverySection: {
     flexDirection: "row",
     justifyContent: "space-between",

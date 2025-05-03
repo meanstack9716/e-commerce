@@ -1,5 +1,6 @@
 import ProductInfoScreen from "@/components/addToBag/ProductInfoSection";
 import ShoppingCartScreen from "@/components/addToBag/ShoppingCartScreen";
+import { Button } from "@/components/common/Button";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { Ionicons } from "@expo/vector-icons";
@@ -8,9 +9,7 @@ import React, { useEffect } from "react";
 import {
   View,
   Text,
-  Image,
   TouchableOpacity,
-  StatusBar,
   StyleSheet,
   BackHandler,
 } from "react-native";
@@ -48,7 +47,13 @@ const ShoppingBagScreen: React.FC = () => {
       </View>
       <ShoppingCartScreen />
       <ProductInfoScreen />
-      <View style={styles.content}></View>
+
+      <Button
+        title="PLACE ORDER"
+        style={styles.PlaceButton}
+        onPress={alert}
+        textStyle={styles.PlaceText}
+      />
     </SafeAreaView>
   );
 };
@@ -85,6 +90,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 20,
   },
+  PlaceButton: {
+    backgroundColor: staticColors.primaryColor,
+    ...spacingStyles.p15,
+    borderRadius: 0,
+  },
+  PlaceText: { fontSize: 16, letterSpacing: 1 },
 });
 
 export default ShoppingBagScreen;

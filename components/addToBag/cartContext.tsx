@@ -20,6 +20,8 @@ interface CartContextType {
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
   toggleItemSelection: (id: string) => void;
+  deleteSelectedItems: () => void;
+  moveToWishlist: (itemIds: string[]) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -84,9 +86,27 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
     );
   };
 
+  const deleteSelectedItems = () => {
+    setCartItems((prevItems) => prevItems.filter((item) => !item.isSelected));
+  };
+
+  const moveToWishlist = (itemIds: string[]) => {
+    const itemsToMove = cartItems.filter((item) => itemIds.includes(item.id));
+    console.log(`Moving items to wishlist:`, itemsToMove);
+  };
+
   return (
     <CartContext.Provider
-      value={{ cartItems, addToCart, removeFromCart, updateQuantity, clearCart, toggleItemSelection }}
+      value={{
+        cartItems,
+        addToCart,
+        removeFromCart,
+        updateQuantity,
+        clearCart,
+        toggleItemSelection,
+        deleteSelectedItems,
+        moveToWishlist,
+      }}
     >
       {children}
     </CartContext.Provider>
