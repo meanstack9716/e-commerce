@@ -24,12 +24,13 @@ export const useLocation = () => {
           });
 
           const fetchedPinCode = address?.postalCode || "";
-          if (fetchedPinCode) {
+          if (fetchedPinCode && /^\d{6}$/.test(fetchedPinCode)) {
             onSuccess(fetchedPinCode);
           } else {
             Alert.alert(
-              "PIN Code Not Found",
-              "We couldn't determine your PIN code. Please enter it manually."
+              "Invalid PIN Code",
+              "The fetched PIN code is not a valid 6-digit postal code. Please enter a valid PIN code manually.",
+              [{ text: "OK", style: "cancel" }]
             );
           }
         } else {

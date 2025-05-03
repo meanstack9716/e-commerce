@@ -1,14 +1,8 @@
 import SizeChartModal from "@/modal/SizeChartModal";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-} from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 
 type SizeInfo = {
   label: string;
@@ -25,7 +19,8 @@ interface SizeSelectorProps {
     categories: string[];
   } | null;
   originalPrice: string;
-  onSizeChartOpen?: () => void; 
+  onSizeChartOpen?: () => void;
+  onSizeSelect: (size: string) => void;
 }
 
 const sizes: SizeInfo[] = [
@@ -40,13 +35,24 @@ const sizes: SizeInfo[] = [
 const SizeSelector: React.FC<SizeSelectorProps> = ({
   product,
   originalPrice,
+  onSizeSelect,
 }) => {
   const [selectedSize, setSelectedSize] = useState<string>("M");
+  const [showSizeChart, setShowSizeChart] = useState(false);
+
+  // Call onSizeSelect when the component mounts to set the default size
+  useEffect(() => {
+    onSizeSelect(selectedSize); // Set default size "M" in parent
+  }, []); // Empty dependency array to run only on mount
 
   const handleSizeClick = (size: SizeInfo) => {
-    if (size.left > 0) setSelectedSize(size.label);
+    if (size.left > 0) {
+      setSelectedSize(size.label);
+      onSizeSelect(size.label); // Update parent state
+      console.log("Selected Size:", size.label); // Debug log
+    }
   };
-  const [showSizeChart, setShowSizeChart] = useState(false);
+
   return (
     <View style={styles.container}>
       <View style={styles.headerRow}>
@@ -66,7 +72,7 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
                   title: product.title,
                   price: product.price,
                   originalPrice: originalPrice,
-                  image: product.images && product.images.length > 0 ? product.images[0] : "", 
+                  image: product.images && product.images.length > 0 ? product.images[0] : "",
                 }
               : null
           }
@@ -128,6 +134,7 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
 
 export default SizeSelector;
 
+// Styles remain unchanged
 const styles = StyleSheet.create({
   container: {
     ...spacingStyles.px15,
@@ -135,7 +142,7 @@ const styles = StyleSheet.create({
   headerRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    ...spacingStyles.m10
+    ...spacingStyles.m10,
   },
   labelText: {
     fontSize: 16,
@@ -148,12 +155,10 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: 14,
   },
-  sizeScroll: {
- 
-  },
+  sizeScroll: {},
   sizeOption: {
     alignItems: "center",
-    ...spacingStyles.mr10
+    ...spacingStyles.mr10,
   },
   sizeButton: {
     width: 56,
@@ -186,8 +191,8 @@ const styles = StyleSheet.create({
   },
   leftText: {
     fontSize: 12,
-    color:staticColors.offerColor,
-   ...spacingStyles.mt5
+    color: staticColors.offerColor,
+    ...spacingStyles.mt5,
   },
   lengthBox: {
     ...spacingStyles.p10,
@@ -208,7 +213,6 @@ const styles = StyleSheet.create({
   measurements: {
     flexDirection: "row",
     flexWrap: "wrap",
-    
   },
   measureText: {
     ...spacingStyles.mr10,

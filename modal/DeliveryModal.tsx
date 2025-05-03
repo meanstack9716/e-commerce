@@ -2,18 +2,53 @@ import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { FontAwesome6, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  TextInput,
+  ActivityIndicator,
+} from "react-native";
 import DeliveryAddressScreen from "@/components/productDetails/DeliveryAddress";
+import { useLocation } from "@/utils/useLocation";
+
 interface DeliveryModalProps {
   onClose: () => void;
+  onPinCodeSelect: (pinCode: string) => void;
 }
 
-const DeliveryModal: React.FC<DeliveryModalProps> = ({ onClose }) => {
+const DeliveryModal: React.FC<DeliveryModalProps> = ({
+  onClose,
+  onPinCodeSelect,
+}) => {
   const [addressModalVisible, setAddressModalVisible] = useState(false);
+  const [selectedPinCode, setSelectedPinCode] = useState<string>("");
+  const { requestLocationPermission, isLoading } = useLocation();
 
   const handleGrant = (pinCode: string) => {
     console.log("Pincode from address screen:", pinCode);
+    onPinCodeSelect(pinCode);
+    setSelectedPinCode(pinCode);
+    onClose();
   };
+
+  const handleUseCurrentLocation = () => {
+    requestLocationPermission((pinCode: string) => {
+      setSelectedPinCode(pinCode);
+      onPinCodeSelect(pinCode);
+      onClose(); 
+    });
+  };
+
+  const handleCheckPincode = () => {
+    if (isPinCodeValid) {
+      onPinCodeSelect(selectedPinCode);
+      onClose(); 
+    }
+  };
+
+  const isPinCodeValid = selectedPinCode && selectedPinCode.length === 6;
 
   return (
     <View style={styles.modalContainer}>
@@ -26,20 +61,58 @@ const DeliveryModal: React.FC<DeliveryModalProps> = ({ onClose }) => {
             </TouchableOpacity>
           </View>
           <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Enter Pincode</Text>
-            <TouchableOpacity style={styles.checkButton}>
-              <Text style={styles.checkButtonText}>Check Pincode</Text>
+            <TextInput
+              style={styles.inputField}
+              placeholder="Enter Pincode"
+              keyboardType="numeric"
+              maxLength={6}
+              value={selectedPinCode}
+              onChangeText={(text) => setSelectedPinCode(text)}
+            />
+
+            <TouchableOpacity
+              style={[styles.checkButton, !isPinCodeValid && styles.disabledButton]}
+              disabled={!isPinCodeValid}
+              onPress={handleCheckPincode}
+            >
+              <Text
+                style={[
+                  styles.checkButtonText,
+                  {
+                    color: isPinCodeValid
+                      ? staticColors.offerColor
+                      : staticColors.cardTitleColor,
+                  },
+                ]}
+              >
+                Check Pincode
+              </Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity style={styles.searchContainer}>
-            <MaterialIcons
-              name="my-location"
-              size={22}
-              color={staticColors.offerColor}
-              style={styles.searchIcon}
-            />
+
+          {/* Location Options */}
+          <TouchableOpacity
+            style={styles.searchContainer}
+            onPress={handleUseCurrentLocation}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <ActivityIndicator
+                size="small"
+                color={staticColors.offerColor}
+                style={styles.searchIcon}
+              />
+            ) : (
+              <MaterialIcons
+                name="my-location"
+                size={22}
+                color={staticColors.offerColor}
+                style={styles.searchIcon}
+              />
+            )}
             <Text style={styles.searchText}>Use my current Location</Text>
           </TouchableOpacity>
+
           <TouchableOpacity
             style={styles.searchContainer}
             onPress={() => setAddressModalVisible(true)}
@@ -89,7 +162,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.mb10,
   },
   modalTitle: { fontSize: 17, fontWeight: "bold" },
-  closeIcon: { fontSize: 20, color: staticColors.shadowColor },
+  closeIcon: { fontSize: 18, color: staticColors.shadowColor },
   inputContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -99,14 +172,19 @@ const styles = StyleSheet.create({
     borderColor: staticColors.borderLight,
     borderRadius: 8,
     ...spacingStyles.px10,
-    ...spacingStyles.py5,
+    ...spacingStyles.py2,
   },
-  inputLabel: { fontSize: 16, color: staticColors.shadowColor },
+  inputField: {
+    color: staticColors.cardTitleColor,
+    flex: 1, // Ensure input takes available space
+  },
   checkButton: {
-    ...spacingStyles.py5,
+    padding: 10,
   },
-  checkButtonText: { fontSize: 14, color: staticColors.cardTitleColor },
-
+  disabledButton: {
+    opacity: 0.5, // Visual feedback for disabled state
+  },
+  checkButtonText: { fontSize: 14, fontWeight: "bold" },
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",

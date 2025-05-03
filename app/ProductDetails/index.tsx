@@ -26,6 +26,7 @@ import { Profile } from "../../types/types";
 import BrandRating from "@/components/productDetails/BrandRating";
 import ViewSimilarModal from "@/modal/ViewSimilarModal";
 import ProductList from "@/components/productDetails/ProductList";
+import { useCart } from "@/components/addToBag/cartContext";
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -39,9 +40,15 @@ const ProductDetailsScreen: React.FC = () => {
   const [showBackToTop, setShowBackToTop] = useState(false);
   const insets = useSafeAreaInsets();
   const flatListRef = useRef<FlatList>(null);
+  
+  const [selectedSize, setSelectedSize] = useState<string | undefined>(undefined);
+  const { addToCart } = useCart();
   const handleAddToCart = () => {
-    console.log(`Added product ${product?.id} to cart`);
-    router.push("/cart");
+    if (product) {
+      addToCart(product, selectedSize);
+      console.log(`Added product ${product.id} to cart with size ${selectedSize}`);
+      router.push("/cart");
+    }
   };
   const originalPrice = product
     ? (parseFloat(product.price) * 1.15).toFixed(2)
@@ -235,6 +242,7 @@ const ProductDetailsScreen: React.FC = () => {
               product={product}
               originalPrice={originalPrice}
               onSizeChartOpen={() => {}}
+              onSizeSelect={setSelectedSize}
             />
             <DeliveryCheck />
             <ReturnPolicy />

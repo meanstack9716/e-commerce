@@ -49,6 +49,7 @@ export const registerUser = createAsyncThunk(
     } catch (error: any) {
       if (error.response?.data?.errors) {
         const errorData = error.response.data.errors;
+        console.log(errorData)
         for (const field in errorData) {
           if (errorData[field]) {
             return rejectWithValue(errorData[field]);

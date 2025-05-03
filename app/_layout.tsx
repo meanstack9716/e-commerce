@@ -9,10 +9,12 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import "react-native-reanimated";
-import { Provider } from 'react-redux';
+import { Provider } from "react-redux";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { store } from "@/store/store";
+import { CartProvider } from "@/components/addToBag/cartContext";
+import AppProvider from "@/components/AppProvider";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -41,14 +43,16 @@ export default function RootLayout() {
   return (
     <Provider store={store}>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="(tabs)" />
-          <Stack.Screen name="(auth)" />
-          <Stack.Screen name="+not-found" />
-          <Stack.Screen name="/categories" />
-          <Stack.Screen name="/ProductDetails/index" />
-        </Stack>
-        <StatusBar style="auto" />
+        <AppProvider>
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="(tabs)" />
+            <Stack.Screen name="(auth)" />
+            <Stack.Screen name="+not-found" />
+            <Stack.Screen name="/categories" />
+            <Stack.Screen name="/ProductDetails/index" />
+          </Stack>
+          <StatusBar style="auto" />
+        </AppProvider>
       </ThemeProvider>
     </Provider>
   );

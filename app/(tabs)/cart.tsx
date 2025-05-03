@@ -1,4 +1,4 @@
-import NothingShoppingBagContent from "@/components/addToBag/NothingShoppingBagContent";
+import ProductInfoScreen from "@/components/addToBag/ProductInfoSection";
 import ShoppingCartScreen from "@/components/addToBag/ShoppingCartScreen";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
@@ -46,9 +46,8 @@ const ShoppingBagScreen: React.FC = () => {
           <Ionicons name="heart-outline" size={22} color="#333" />
         </TouchableOpacity>
       </View>
-     <ShoppingCartScreen />
-      {/* <NothingShoppingBagContent /> */}
-      {/* Main Content */}
+      <ShoppingCartScreen />
+      <ProductInfoScreen />
       <View style={styles.content}></View>
     </SafeAreaView>
   );
