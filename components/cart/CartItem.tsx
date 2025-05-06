@@ -5,6 +5,7 @@ import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import fontSizes from "@/style/fontSizes";
+import gapSizes from "@/style/gapSizes";
 
 type CartItemProps = {
   id: string;
@@ -97,7 +98,7 @@ const styles = StyleSheet.create({
   qtyContainer: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 6,
+    gap: gapSizes.md,
   },
   qtyIncBtn: {
     width: 28,
@@ -122,6 +123,6 @@ const styles = StyleSheet.create({
   },
   deleteBtn: {
     ...spacingStyles.ml10,
-    padding: 4,
+    ...spacingStyles.p5
   },
 });

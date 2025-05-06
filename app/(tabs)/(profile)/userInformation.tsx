@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
   cardImage: {
     width: 60,
     height: 55,
-    marginBottom: 8,
+   ...spacingStyles.mb10,
     resizeMode: "contain",
   },
 
@@ -249,20 +249,6 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.sm,
     color: staticColors.textSecondary,
     fontFamily: "HelveticaBold",
-  },
-
-  dobPicker: {
-    width: "100%",
-    ...spacingStyles.p10,
-    borderWidth: 1,
-    borderColor: staticColors.lightGray,
-    borderRadius: 10,
-    marginBottom: 15,
-  },
-
-  dobText: {
-    fontSize: fontSizes.base,
-    color: staticColors.darkGray,
   },
   helpContainer: {
     flexDirection: "row",

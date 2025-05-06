@@ -12,6 +12,7 @@ import {
   Pressable,
 } from "react-native";
 import fontSizes from "@/style/fontSizes";
+import gapSizes from "@/style/gapSizes";
 const cartItems = [
   {
     id: "1",
@@ -253,7 +254,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.mb20,
     flexDirection: "row",
     justifyContent: "space-between",
-    gap: 20,
+    gap: gapSizes.xl,
   },
   modalPrice: {
     fontSize: fontSizes.base,

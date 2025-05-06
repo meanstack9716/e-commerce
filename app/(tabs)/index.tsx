@@ -29,6 +29,8 @@ import staticColors from "@/style/staticColors";
 import OfferPriceCard from "@/components/home/OfferPriceCard";
 import PocketFriendlyBargain from "@/components/home/PocketFriendlyBargain";
 import fontSizes from "@/style/fontSizes";
+import gapSizes from "@/style/gapSizes";
+import images from "@/constants/images";
 interface Product {
   id: string;
   image: string;
@@ -55,9 +57,9 @@ interface ProductData {
 }
 
 const HomeScreen: React.FC = () => {
-  const [likedItems, setLikedItems] = useState<string[]>([]);
+  const [likedProductItems, setLikedProductItems] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState<string>("All");
-  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [productSearchQuery, setProductSearchQuery] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const productData = data as ProductData;
   const insets = useSafeAreaInsets();
@@ -77,9 +79,9 @@ const HomeScreen: React.FC = () => {
       );
     }
 
-    if (searchQuery) {
+    if (productSearchQuery) {
       filtered = filtered.filter((product) =>
-        product.title.toLowerCase().includes(searchQuery.toLowerCase())
+        product.title.toLowerCase().includes(productSearchQuery.toLowerCase())
       );
     }
 
@@ -92,8 +94,8 @@ const HomeScreen: React.FC = () => {
     router.push("/profile");
   };
 
-  const toggleLikedItem = (id: string) => {
-    setLikedItems((prev) =>
+  const toggleProductLike = (id: string) => {
+    setLikedProductItems((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
@@ -105,8 +107,8 @@ const HomeScreen: React.FC = () => {
   const renderItem = ({ item }: { item: Product }) => (
     <ProductCard
       {...item}
-      liked={likedItems.includes(item.id)}
-      onLikePress={() => toggleLikedItem(item.id)}
+      liked={likedProductItems.includes(item.id)}
+      onLikePress={() => toggleProductLike(item.id)}
     />
   );
 
@@ -163,16 +165,17 @@ const HomeScreen: React.FC = () => {
         <View style={styles.searchContainer}>
           <View style={styles.searchInputContainer}>
             <Image
-              source={require("../../assets/images/favicon.png")}
+              source={images.logo}
               style={styles.logo}
               resizeMode="contain"
             />
+
             <TextInput
               placeholder="Search products..."
               style={styles.searchInput}
               placeholderTextColor={staticColors.textLightGray}
-              value={searchQuery}
-              onChangeText={setSearchQuery}
+              value={productSearchQuery}
+              onChangeText={setProductSearchQuery}
             />
             <TouchableOpacity>
               <Ionicons
@@ -238,7 +241,7 @@ const styles = StyleSheet.create({
   addressTextContainer: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
+    gap: gapSizes.md,
   },
   addressText: {
     fontSize: fontSizes.sm,

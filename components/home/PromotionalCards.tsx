@@ -18,6 +18,7 @@ import {
 } from "react-native";
 import staticColors from "@/style/staticColors";
 import fontSizes from "@/style/fontSizes";
+import gapSizes from "@/style/gapSizes";
 interface PromotionalCard {
   id: string;
   title: string;
@@ -220,7 +221,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     ...spacingStyles.pt5,
     alignItems: "center",
-    gap: 2,
+    gap: gapSizes.xs,
   },
   cardTitle: {
     color: staticColors.darkGray,
@@ -264,7 +265,7 @@ const styles = StyleSheet.create({
   infoItem: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 5,
+    gap: gapSizes.sm,
   },
   infoTextContainer: {
     flexDirection: "column",

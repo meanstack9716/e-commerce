@@ -27,6 +27,7 @@ import spacingStyles from "@/style/spacingStyles";
 import images from "../../constants/images";
 import staticColors from "@/style/staticColors";
 import fontSizes from "@/style/fontSizes";
+import gapSizes from "@/style/gapSizes";
 export default function ForgetPassword() {
   const router = useRouter();
   const { errors, handleEmailValidation } = useFieldValidation();
@@ -87,7 +88,7 @@ export default function ForgetPassword() {
   };
 
   const handleChangeOtp = (text: string, index: number) => {
-    if (/^\d$/.test(text)) {
+    if ((text)) {
       const newOtp = [...otp];
       newOtp[index] = text;
       setOtp(newOtp);
@@ -285,7 +286,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
-    gap: 15,
+    gap: gapSizes.xl,
     ...spacingStyles.mt15,
   },
   button: {
@@ -315,14 +316,14 @@ const styles = StyleSheet.create({
   },
   timerText: {
     fontSize: fontSizes.sm,
-    color: colors.bgMuted,
+    color: colors.darkGray,
     fontWeight: "500",
   },
   otpContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     ...spacingStyles.mt20,
-    gap: 10,
+    gap: gapSizes.md,
   },
   otpBox: {
     width: 45,
@@ -338,14 +339,14 @@ const styles = StyleSheet.create({
   resendText: {
     fontSize: fontSizes.sm,
     ...spacingStyles.my20,
-    color: colors.bgMuted,
+    color: colors.darkGray,
   },
   resendLink: {
     color: colors.linkDefault,
     fontWeight: "600",
   },
   disabledResend: {
-    color: colors.bgMuted,
+    color: colors.lightGray,
   },
   errorMessage: {
     color: colors.errorColor,

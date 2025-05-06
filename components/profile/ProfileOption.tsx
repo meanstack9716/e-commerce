@@ -5,6 +5,7 @@ import colors from '@/style/staticColors';
 import textStyles from '@/style/textStyles';
 import spacingStyles from '@/style/spacingStyles';
 import fontSizes from '@/style/fontSizes';
+import gapSizes from '@/style/gapSizes';
 
 interface Props {
   icon: ReactNode;
@@ -41,7 +42,7 @@ const styles = StyleSheet.create({
   leftSection: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap:10
+    gap:gapSizes.md
   },
   iconWrapper: {
     ...spacingStyles.mb10

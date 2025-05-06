@@ -221,7 +221,6 @@ const styles = StyleSheet.create({
   apiError: {
     color: staticColors.errorColor,
     fontSize: fontSizes.sm,
-    marginTop: -15,
     ...spacingStyles.mb15,
     textAlign: "left",
   },

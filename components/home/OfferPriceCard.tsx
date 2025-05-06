@@ -5,6 +5,7 @@ import { AntDesign } from '@expo/vector-icons';
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import fontSizes from "@/style/fontSizes";
+import gapSizes from "@/style/gapSizes";
 
 interface OfferCardProps {
   topText: string;
@@ -98,7 +99,7 @@ const styles = StyleSheet.create({
   bottomRow: {
     flexDirection: "column",
     alignItems:'center',
-    gap:15
+    gap:gapSizes.md
   },
   bottomText: {
     fontSize:fontSizes.base,

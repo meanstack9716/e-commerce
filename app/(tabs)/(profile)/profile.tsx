@@ -33,7 +33,7 @@ export default function ProfileScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   useEffect(() => {
-    const backHandler = BackHandler.addEventListener(
+    const backButtonListener = BackHandler.addEventListener(
       "hardwareBackPress",
       () => {
         if (selectedSection !== "Profile") {
@@ -45,7 +45,7 @@ export default function ProfileScreen() {
     );
 
     return () => {
-      backHandler.remove();
+      backButtonListener.remove();
     };
   }, [selectedSection]);
 

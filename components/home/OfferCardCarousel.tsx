@@ -12,6 +12,7 @@ import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import fontSizes from "@/style/fontSizes";
+import gapSizes from "@/style/gapSizes";
 
 const { width } = Dimensions.get("window");
 
@@ -128,7 +129,7 @@ const styles = StyleSheet.create({
   timerBox: {
     flexDirection: "row",
     marginLeft: 10,
-    gap: 10,
+    gap: gapSizes.md
   },
   timerSegment: {
     backgroundColor: staticColors.lightPink,
@@ -138,7 +139,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
     alignItems: "center",
     flexDirection: "row",
-    gap: 5,
+    gap: gapSizes.sm
   },
   timerText: {
     fontWeight: "600",
