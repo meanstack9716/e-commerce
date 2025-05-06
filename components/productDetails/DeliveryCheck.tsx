@@ -13,6 +13,7 @@ import staticColors from "@/style/staticColors";
 import LocationModal from "@/modal/LocationModal";
 import * as Location from "expo-location";
 import fontSizes from "@/style/fontSizes";
+import gapSizes from "@/style/gapSizes";
 
 const ProductDetails = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -223,11 +224,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 10,
-    gap: 10,
+    gap: gapSizes.md,
   },
   sectiontable: {
     flexDirection: "column",
-    gap: 5,
+    gap: gapSizes.sm,
     ...spacingStyles.py10,
   },
   details: {

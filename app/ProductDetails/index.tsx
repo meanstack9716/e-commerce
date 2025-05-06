@@ -26,6 +26,8 @@ import { Profile } from "../../types/types";
 import BrandRating from "@/components/productDetails/BrandRating";
 import ViewSimilarModal from "@/modal/ViewSimilarModal";
 import ProductList from "@/components/productDetails/ProductList";
+import fontSizes from "@/style/fontSizes";
+import gapSizes from "@/style/gapSizes";
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -283,7 +285,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   loadingText: {
-    fontSize: 16,
+    fontSize: fontSizes.base,
     color: colors.primary,
   },
   header: {
@@ -297,7 +299,7 @@ const styles = StyleSheet.create({
   },
   headerRight: {
     flexDirection: "row",
-    gap: 10,
+    gap: gapSizes.md,
   },
   iconButton: {
     ...spacingStyles.ml15,
@@ -311,8 +313,8 @@ const styles = StyleSheet.create({
   dotContainer: {
     flexDirection: "row",
     justifyContent: "center",
-    marginTop: 10,
-    gap: 2,
+    ...spacingStyles.mt10,
+    gap: gapSizes.xs,
   },
   dot: {
     width: 8,
@@ -341,7 +343,7 @@ const styles = StyleSheet.create({
   },
   viewSimilarText: {
     ...spacingStyles.ml5,
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     color: staticColors.shadowColor,
   },
   ratingContainer: {
@@ -362,38 +364,38 @@ const styles = StyleSheet.create({
     ...spacingStyles.m2,
   },
   ratingCount: {
-    fontSize: 12,
+    fontSize: fontSizes.xs,
   },
   detailsContainer: {
     ...spacingStyles.px15,
     ...spacingStyles.ml5,
   },
   title: {
-    fontSize: 18,
+    fontSize: fontSizes.md,
     fontWeight: "bold",
   },
   priceContainer: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
+    gap: gapSizes.md,
   },
   discountedPrice: {
-    fontSize: 18,
+    fontSize: fontSizes.md,
     fontWeight: "bold",
     color: colors.primary,
   },
   originalPrice: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     textDecorationLine: "line-through",
     color: staticColors.softGray,
   },
   discount: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     color: colors.brightRed,
     fontWeight: "bold",
   },
   heading: {
-    fontSize: 18,
+    fontSize: fontSizes.md,
     fontWeight: "bold",
     ...spacingStyles.mb10,
     color: staticColors.primary,
@@ -412,9 +414,9 @@ const styles = StyleSheet.create({
   },
   backToTopText: {
     color: colors.white,
-    fontSize: 16,
+    fontSize: fontSizes.base,
     fontWeight: "bold",
-    marginLeft: 5,
+    ...spacingStyles.ml5
   },
 });
 

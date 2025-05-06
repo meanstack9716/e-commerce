@@ -1,4 +1,5 @@
 import SizeChartModal from "@/modal/SizeChartModal";
+import fontSizes from "@/style/fontSizes";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import React, { useState } from "react";
@@ -138,7 +139,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.m10
   },
   labelText: {
-    fontSize: 16,
+    fontSize: fontSizes.base,
   },
   bold: {
     fontWeight: "bold",
@@ -146,7 +147,7 @@ const styles = StyleSheet.create({
   sizeChart: {
     color: staticColors.discountText,
     fontWeight: "600",
-    fontSize: 14,
+    fontSize: fontSizes.sm,
   },
   sizeScroll: {
  
@@ -174,7 +175,7 @@ const styles = StyleSheet.create({
     borderColor: staticColors.shadowColor,
   },
   sizeLabel: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     fontWeight: "600",
   },
   disabledText: {
@@ -185,7 +186,7 @@ const styles = StyleSheet.create({
     color: staticColors.white,
   },
   leftText: {
-    fontSize: 12,
+    fontSize: fontSizes.xs,
     color:staticColors.discountText,
    ...spacingStyles.mt5
   },
@@ -196,7 +197,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   lengthLabel: {
-    fontSize: 14,
+    fontSize: fontSizes.xs,
     color: "#555",
   },
   lengthValue: {
@@ -212,7 +213,7 @@ const styles = StyleSheet.create({
   },
   measureText: {
     ...spacingStyles.mr10,
-    fontSize: 13,
+    fontSize: fontSizes.xs,
     color:staticColors.darkGray
   },
 });

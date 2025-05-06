@@ -6,6 +6,7 @@ import colors from "@/style/staticColors";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import fontSizes from "@/style/fontSizes";
+import gapSizes from "@/style/gapSizes";
 
 interface BottomActionsProps {
   onAddToCart?: () => void;
@@ -38,7 +39,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     ...spacingStyles.p10,
-    gap: 10,
+    gap: gapSizes.md,
   },
   addToCartButton: {
     backgroundColor: colors.primary,
@@ -48,7 +49,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     ...spacingStyles.py10,
     flexDirection: "row",
-    gap: 8,
+    gap: gapSizes.sm,
   },
   addToCartText: {
     fontSize: fontSizes.sm,
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: staticColors.borderDark,
     flexDirection: "row",
-    gap: 8,
+    gap: gapSizes.sm,
   },
   wishlist: {
     fontSize: fontSizes.sm,

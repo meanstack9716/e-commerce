@@ -1,5 +1,6 @@
 import BottonActions from "@/components/productDetails/ProductActionButtons";
 import fontSizes from "@/style/fontSizes";
+import gapSizes from "@/style/gapSizes";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { Ionicons } from "@expo/vector-icons";
@@ -378,7 +379,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     alignItems: "center",
-    gap:5
+    gap:gapSizes.sm
   },
   backArrow: {
     fontSize: fontSizes['xl'],

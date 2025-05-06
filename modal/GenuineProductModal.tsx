@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   modalImage: {
     width: 60,
     height: 60,
-    marginRight: 10,
+    ...spacingStyles.mr10,
     resizeMode: "contain",
   },
   modalText: {

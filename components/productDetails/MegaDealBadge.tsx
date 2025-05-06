@@ -8,11 +8,11 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 
 const DealBanner = () => {
-  const [modalVisible, setModalVisible] = useState(false);
+  const [isOfferModalVisible, setIsOfferModalVisible] = useState(false);
   const productPrice = PRODUCT_PRICE;
   const extraDiscount = EXTRA_DISCOUNT;
   const toggleModal = () => {
-    setModalVisible(!modalVisible);
+    setIsOfferModalVisible(!isOfferModalVisible);
   };
 
   return (
@@ -45,7 +45,7 @@ const DealBanner = () => {
       </TouchableOpacity>
 
       <OfferDetailsModal
-        visible={modalVisible}
+        visible={isOfferModalVisible}
         onClose={toggleModal}
         offerPrice={productPrice}
         extraDiscount={extraDiscount}

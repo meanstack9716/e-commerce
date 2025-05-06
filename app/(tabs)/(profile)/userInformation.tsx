@@ -19,6 +19,7 @@ import staticColors from "@/style/staticColors";
 import fontSizes from "@/style/fontSizes";
 import images from "@/constants/images";
 import { pickImages } from "@/utils/imagePicker";
+import gapSizes from "@/style/gapSizes";
 
 const { height } = Dimensions.get("window");
 interface UserData {
@@ -204,7 +205,7 @@ const styles = StyleSheet.create({
   rowInput: {
     flexDirection: "row",
     width: "100%",
-    gap: 15,
+    gap: gapSizes.lg,
   },
   buttonWrapper: {
     width: "80%",
@@ -218,7 +219,7 @@ const styles = StyleSheet.create({
   cardRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    gap: 15,
+    gap: gapSizes.lg,
     ...spacingStyles.mb20,
     width: "100%",
   },
