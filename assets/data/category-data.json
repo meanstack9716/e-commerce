@@ -1,0 +1,1274 @@
+{
+  "trendingNow": {
+    "spotlight": [
+      {
+        "id": "SPOT001",
+        "title": "New on innovative",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9p9ZM-2Swt0euR69vfnT6ujKND3h7upyydA&s"
+      },
+      {
+        "id": "SPOT002",
+        "title": "Spring Summer",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyxDXbPDoAtpbLai6G2rd5JeWQdrGaJqGOUyrWZ1VlQc39u1QfzzEf3jkiGYO24PUA6UU&usqp=CAU"
+      },
+      {
+        "id": "SPOT003",
+        "title": "Festive Edit",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHhhFspa3pWJAVhB4C5ztzoVWH1ufwQCjf7w&s"
+      },
+      {
+        "id": "SPOT004",
+        "title": "Days Of Summer",
+        "imageUrl": "https://i.pinimg.com/736x/56/b1/09/56b109e68253b380e878b28a720326d5.jpg"
+      },
+      {
+        "id": "SPOT005",
+        "title": "Wedding Diaries",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3JJFhACUEMovtPEEMWfIfMpwHKkqu121p-g&s"
+      },
+      {
+        "id": "SPOT006",
+        "title": "The Edit",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwZ8R4pdTdNF5Tivc1QOPIaosOIBxXQwsGLg&s"
+      },
+      {
+        "id": "SPOT007",
+        "title": "Trendnxt",
+        "imageUrl": "https://c.ndtvimg.com/2025-01/1qsgolj8_fashion_625x300_06_January_25.jpg?im=FeatureCrop,algorithm=dnn,width=620,height=350"
+      },
+      {
+        "id": "SPOT008",
+        "title": "Innovative Fashion League",
+        "imageUrl": "https://media-hosting.imagekit.io/f40bf18d626b4322/ChatGPT Image Apr 23, 2025, 04_35_16 PM.png?Expires=1840014440&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=qPrhds6seASTbwgeU1yXyhdBCGRBzx30jbVe-o7I5gudeGnwocyFGJ3qTLsLhwOJqEfXHOMqgfBnDKXxz~g70wIOODuQqgnTrgYFWxNmxVVIv1l4JzWLGfB5cy3~oTHXSMjAgCx3MIhJawl6iWHloOWfKDe0mGNzbiKi~D7Bqd-QToLBe8v8yxmAwEtko-0D9CsiePW4tQWKioH1SmQQbgrLvNOlzZJgF8GVJ1M6e~czN9zxkvE3wqgfHSTuE0KflnoNvCIyUaU-JgY7oc5Yp6vSkCN~Q7dHhe9mLCY~scPbDiHT5uq8~c-mmb8luKLU08epSrCNsSu9UvgWaf2fNg__"
+      },
+      {
+        "id": "SPOT009",
+        "title": "Back to School",
+        "imageUrl": "https://img.freepik.com/free-vector/back-school-background-theme_23-2148598170.jpg?semt=ais_hybrid&w=740"
+      }
+    ],
+    "trendingStores": [
+      {
+        "id": "STORE001",
+        "title": "Innovative Unique",
+        "imageUrl": "https://media-hosting.imagekit.io/0c7c50549ee44b0a/image.jpg?Expires=1840014974&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=0PJ6SGt9DL7dmfhJMkgGoy~y5dGeTofOH4MwCrdDWALWS7D9gaZ3KyGS6x7t5RenjOtnWac9izMuBeHgX6CxhnWDRD1b3V89fAa73k03zZ0F~bkHEznpCtCsDFjIwu2xbZQ~33ApBxjhbANSn27Z3AIYI5HXHl4vaWfFPje-~HYzL3lsGkxbxbjHBF0lmvWtuV-YGAuHQk5UO0jtDugJQHGNGVNIIiJqJrZkWfLyI11uIHcVCT7GkdSZz-XwCFmMTmAkUezPttbO9XqO3kve-NOP6KvQ0ujl~beOrOnmd6dvx5Z8FYeew0i65m3IIFfm-uwFJH-iCNQFqLQ~Pt7Wcg__"
+      },
+      {
+        "id": "STORE002",
+        "title": "Ringing Stars",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-f8quctZqH-VEpG0himr-g1WyjBy6rReQQg&s"
+      },
+      {
+        "id": "STORE003",
+        "title": "Luxe",
+        "imageUrl": "https://luxe-cosmetics.com/cdn/shop/files/Lashlift4_mobile.png?v=1699353942&width=3000"
+      },
+      {
+        "id": "STORE004",
+        "title": "Try New",
+        "imageUrl": "https://img.freepik.com/premium-vector/hand-drawn-lettering-motivational-quote-inscription-try-something-new-perfect-design-greeting-cards-posters-tshirts-banners-print-invitations-self-care-concept_317038-846.jpg"
+      },
+      {
+        "id": "STORE005",
+        "title": "Rising Stars Beauty Edit",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShxdjhcdSwppi_1JhQJ7jyDTcUhwlbwvgrSA&s"
+      },
+      {
+        "id": "STORE006",
+        "title": "Inno",
+        "imageUrl": "https://media-hosting.imagekit.io/ea54a3dd3a2c47cf/image%20(4).jpg?Expires=1840015581&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=Upt4FfTagYIqmtFSSghsRvGAQ1tGsgwSzWZQ7D7jtRe6ADrYzSM6CDniHrK~v9Qz2bF0TYSd7zf7PD8h1RrgT0-3hltwAEyjbG~mLN~M8mYYeRT~VmUO~9MnCtCS8UTxbYkGQr4eOL8u1YX3sPLSYIieoWDu0rb7TI0rBzsvca0ECahvL-lm6945ZB~B6tYZexVXGpbj30ry2eMklhGWFViH6CQl199hxNRLlXZMVJnv91lq7OQHoaeb6hgPR~yLhERLhq5Q0necpM4VmE182d1IhtCLsi6f-~yUzxU2sIy6P3ehWiIRbFSTl5DmbJRWpTIhucyAI~CsunCuZHOLMg__"
+      },
+      {
+        "id": "STORE007",
+        "title": "Gifting Store",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4IxGQkoiHDSpB3bxaDKfDeVrys1Jnqsb8iQ&s"
+      },
+      {
+        "id": "STORE008",
+        "title": "Innovative Sneaker Club",
+        "imageUrl": "https://media-hosting.imagekit.io/efa208ff597b443a/image%20(3).jpg?Expires=1840015334&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=WuUosM--Hq0PJBMXgJjH-tSGSAXZxMXWjeOPBJnN3L3bNIcow4a8vr-O1v~qSmwenaj7LVF8zHwgrv-JKixVG1Ewa9d4kR68DUobe~dlvGsBCNF6FO0en5kDX9-q27zJzYwRcY708lTjahImdwucENrC7UT2tjdRmb8fMltsN9IJLsIPjXux5kIQqIse6RLnPAnXtyc9JJFhYdMjh0ZuqeQAIhM0BpYzEVSOU6iMtx2Ov3Dt2Wk-HBkH8Oql6ZsbgJ9mTXX8ZYdr0Ww9pipJyoRcE7SX2vM7DTO~1pokVuUOX3r9lW-mSdj5zim1A3LuBclaQ1bx9yAEZW~N03BwwA__"
+      },
+      {
+        "id": "STORE009",
+        "title": "India Luxe",
+        "imageUrl": "https://media.fashionnetwork.com/cdn-cgi/image/fit=contain,width=1000,height=1000,format=auto/m/2be0/2965/8ad8/a634/4e29/f190/8f60/4dd6/141f/873e/873e.jpeg"
+      },
+      {
+        "id": "STORE010",
+        "title": "Personal Loan",
+        "imageUrl": "https://www.andromedaloans.com/wp-content/uploads/2019/02/personal-loan-andro-jpeg.webp"
+      },
+      {
+        "id": "STORE011",
+        "title": "Innovative Street",
+        "imageUrl": "https://media-hosting.imagekit.io/4ab17e7c463d4d8d/image%20(5).jpg?Expires=1840015620&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=DwI~zVECTX-H10QFTKzVyKfJ-6eUddGbDnKgraQP5zMDBV3YZFN8svum6AUgwqWbjtjDlg2lExX70lyFz2g4EWhm-DXDWj09t4nAHEevs7KqSfztQzjf9G1XLbBXNseJW4pgvIgsrjy~~YO7YAAuf2XmN2LW5rl~nH8efumgOIX7lun05x7O7fyio80tOP432ceGYEiNcNbIcmldmoVyR2HKIgFPnCEVyDszz8Cl8fD7m5~ksSTPIoCGoRaDzVO3KVZ~NYHbSWjBh62br8Ib2otAuljOm10QqJqQlWpQiTPE0X6NDwLbylheXypBUg7EhrhgXy3xL0-XmDlIehIxzw__"
+      },
+      {
+        "id": "STORE012",
+        "title": "Inno Work",
+        "imageUrl": "https://media-hosting.imagekit.io/3a9f055ba6594d2c/image%20(2).jpg?Expires=1840015274&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=JaE-2CziWm33deUAw6vjI9doihExPSsLEuS~atfC09WXyrPnBsOyR1D7xZzUvKWAd-ezDLVJt~NXOssWvfgNOjjc5DZmUfR3LYWhsMnfKMHOIPAfG2qIybFBfNZrPJ-yxHoWwZlTlyFZslqfJbfuwhfZ-ooicd7CPgyXNkPzAWOudfYIJhuSIzaD4GrCfChyr8PTPc9MmiOpiAS6MOZnBdzK6aEt-F2HXB9zQxi23RiXL06AegmF4PVqXbeVpug8QO8okKP--XQDtxyi03zShxJRJI5i-I-bEIzsGADHb3JKIlWNcy-Yq2eTcQfLx3CdLvvKJQSQ6P6-UmshYdDfOw__"
+      }
+    ]
+  },
+  "mensWear": {
+    "casualWear": [
+      {
+        "id": "MEN_CAS001",
+        "title": "Shirt",
+        "imageUrl": "https://www.andamen.com/cdn/shop/products/01_4b31304a-4d67-4544-a365-7a0e5ee47ad3.jpg?v=1743151833"
+      },
+      {
+        "id": "MEN_CAS002",
+        "title": "Tshirt",
+        "imageUrl": "https://assets.ajio.com/medias/sys_master/root/20230628/9NgD/649bc879a9b42d15c909e518/-473Wx593H-465905533-maroon-MODEL.jpg"
+      },
+      {
+        "id": "MEN_CAS003",
+        "title": "Jeans",
+        "imageUrl": "https://m.media-amazon.com/images/I/81+PoprbPzL._AC_UY350_.jpg"
+      },
+      {
+        "id": "MEN_CAS004",
+        "title": "Trousers",
+        "imageUrl": "https://assets.ajio.com/medias/sys_master/root/20241213/cTtC/675b8db1c148fa1b30358085/-1117Wx1400H-700595679-black-MODEL.jpg"
+      },
+      {
+        "id": "MEN_CAS005",
+        "title": "Shorts",
+        "imageUrl": "https://pantproject.com/cdn/shop/products/DSC00859_ae6cf3d9-4066-4bd7-837c-5c579fbc47d4.jpg?v=1667638877"
+      },
+      {
+        "id": "MEN_CAS006",
+        "title": "Track Pants",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsjODqRtJ1upgBwg3VsMPt_k4hRvRf3NWxbQ&s"
+      },
+      {
+        "id": "MEN_CAS007",
+        "title": "Jackets",
+        "imageUrl": "https://m.media-amazon.com/images/I/71zT0tJ2CjL._AC_UY1100_.jpg"
+      },
+      {
+        "id": "MEN_CAS008",
+        "title": "Sweatshirt",
+        "imageUrl": "https://assets.ajio.com/medias/sys_master/root/20231221/fyIG/65846a51afa4cf41f5e28f59/-473Wx593H-442215834-black-MODEL.jpg"
+      },
+      {
+        "id": "MEN_CAS009",
+        "title": "Sweaters",
+        "imageUrl": "https://rukminim2.flixcart.com/image/850/1000/xif0q/sweater/w/l/1/m-basic-men-sweater-navy-blue-myles-original-imagtbw3ct6r7ang.jpeg?q=90&crop=false"
+      }
+    ],
+    "workWear": [
+      {
+        "id": "MEN_CAS010",
+        "title": "Formal Shirts",
+        "imageUrl": "https://fcity.in/images/products/175524737/yx916_512.jpg"
+      },
+      {
+        "id": "MEN_CAS011",
+        "title": "Blazers",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXNcTHud0YmaQcIHiIrao8PPuPp6AjCOfd5g&s"
+      },
+      {
+        "id": "MEN_CAS012",
+        "title": "Formal Trousers",
+        "imageUrl": "https://m.media-amazon.com/images/I/51Mv4zFf7-L._AC_UY1100_.jpg"
+      },
+      {
+        "id": "MEN_CAS013",
+        "title": "Coats",
+        "imageUrl": "https://assets.myntassets.com/dpr_1.5,q_60,w_400,c_limit,fl_progressive/assets/images/29140194/2024/12/5/acea8ddb-0a4a-497c-acb9-5d63d27f1c3c1733392349279-Sztori-Men-Coats-4631733392348667-1.jpg"
+      },
+      {
+        "id": "MEN_CAS014",
+        "title": "Ties",
+        "imageUrl": "https://5.imimg.com/data5/CM/SN/YL/SELLER-2036539/formal-ties-500x500.jpg"
+      },
+      {
+        "id": "MEN_CAS015",
+        "title": "Formal Shoes",
+        "imageUrl": "https://assets.ajio.com/medias/sys_master/root/20240125/s47H/65b264cd16fd2c6e6ac1b004/-473Wx593H-467012308-black-MODEL.jpg"
+      }
+    ],
+    "occasionWear": [
+      {
+        "id": "MEN_OCC001",
+        "title": "Kurtas & Kurta Sets",
+        "imageUrl": "https://img.perniaspopupshop.com/catalog/product/s/n/SNGC032303_1.jpg?impolicy=detailimageprod"
+      },
+      {
+        "id": "MEN_OCC002",
+        "title": "Nehru Jackets",
+        "imageUrl": "https://cdn.linenclub.com/media/catalog/product/cache/d8d099ed0f54be45d4eb2c71c1a3b40d/l/c/lcmjn201yd00809-n7_0.jpg"
+      },
+      {
+        "id": "MEN_OCC003",
+        "title": "Sherwani",
+        "imageUrl": "https://koranm.com/cdn/shop/files/36_c9c2b5e5-7ab3-4196-80b4-6ce75255670b.jpg?v=1737371483"
+      },
+      {
+        "id": "MEN_OCC004",
+        "title": "Kurta Sets",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyeTsRn4jDT2pDOLM2jpFWPiixyBWKAEh_Lg&s"
+      },
+      {
+        "id": "MEN_OCC005",
+        "title": "Ethenic Pajamas",
+        "imageUrl": "https://rukminim2.flixcart.com/image/550/650/xif0q/pyjama/i/z/b/free-vasmpty1cr-vastramay-original-imagfanh7nzhufy5-bb.jpeg?q=90&crop=false"
+      },
+      {
+        "id": "MEN_OCC006",
+        "title": "Dhoti Pants",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRRxa8YGd7zQMn9-t93PGhGUfsaBygHuoJEQ&s"
+      },
+      {
+        "id": "MEN_OCC007",
+        "title": "Blazers",
+        "imageUrl": "https://5.imimg.com/data5/SELLER/Default/2024/1/376075553/KR/YB/GV/208967397/whatsapp-image-2024-01-10-at-18-28-30-9653d710-500x500.jpg"
+      },
+      {
+        "id": "MEN_OCC008",
+        "title": "Suits",
+        "imageUrl": "https://d1fufvy4xao6k9.cloudfront.net/images/blog/posts/2022/11/imagetools3.jpg"
+      },
+      {
+        "id": "MEN_OCC009",
+        "title": "Men Ethenic Valley",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5vjNRtWtAqZq4TGZIMrF8PWWtM7WUX8m-cw&s"
+      }
+    ],
+    "sportsWear": [
+      {
+        "id": "MEN_SPT001",
+        "title": "Tshirts",
+        "imageUrl": "https://triprindia.com/cdn/shop/files/133close1.jpg?v=1741861583"
+      },
+      {
+        "id": "MEN_SPT002",
+        "title": "TrackPants",
+        "imageUrl": "https://triprindia.com/cdn/shop/files/1_5d338cbd-21a1-4d0d-8827-958408bfaa7a_800x.jpg?v=1716817741"
+      },
+      {
+        "id": "MEN_SPT003",
+        "title": "Jackets",
+        "imageUrl": "https://brand.assets.adidas.com/image/upload/f_auto,q_auto,fl_lossy/SS_21_Lightweight_Jackets_plp_interactivewallpaper_mens_jackets_tile_d_760ea8ca8a.jpg"
+      },
+      {
+        "id": "MEN_SPT004",
+        "title": "Shorts",
+        "imageUrl": "https://imagescdn.pantaloons.com/img/app/product/1/1018836-13894415.jpg?auto=format&w=450"
+      },
+      {
+        "id": "MEN_SPT005",
+        "title": "Sweatshirts",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7e1QXwGZNCmq1igV0ib1AaD7C1e-2ywFNrQ&s"
+      },
+      {
+        "id": "MEN_SPT006",
+        "title": "Tracksuits",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQM6hsJcBFtHoElAE5ynUBfajKJPHm-aFi8-Q&s"
+      }
+    ],
+    "genZFashion": [
+      {
+        "id": "MEN_GENZ001",
+        "title": "organized Tees",
+        "imageUrl": "https://images-cdn.ubuy.co.in/67f979ac431bb8a4d50c38ab-chef-t-shirt-for-men-and-women-t-shirt.jpg"
+      },
+      {
+        "id": "MEN_GENZ002",
+        "title": "Oversized Shirts",
+        "imageUrl": "https://pronk.in/cdn/shop/files/PRONK00227_2bccc228-5186-4b8e-8a39-527fb06a9d80.jpg?v=1725866397"
+      },
+      {
+        "id": "MEN_GENZ003",
+        "title": "Casual Trousers",
+        "imageUrl": "https://m.media-amazon.com/images/I/81mM4hFegbL._AC_UY350_.jpg"
+      },
+      {
+        "id": "MEN_GENZ004",
+        "title": "Casual Shorts",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBoYJYWGXMN65XVT_rHRytLcqD7uWGqtAIhA&s"
+      },
+      {
+        "id": "MEN_GENZ005",
+        "title": "Printed Tees",
+        "imageUrl": "https://5.imimg.com/data5/KA/GO/QD/SELLER-102693678/men-half-sleeve-t-shirt-500x500.jpg"
+      },
+      {
+        "id": "MEN_GENZ006",
+        "title": "Half Sleeve Shirts",
+        "imageUrl": "https://images.bestsellerclothing.in/data/JJ/17-jan-2025/901347501_g0.jpg?width=415&height=550&mode=fill&fill=blur&format=auto"
+      },
+      {
+        "id": "MEN_GENZ007",
+        "title": "Back Printed Tees",
+        "imageUrl": "https://images.bewakoof.com/t540/men-s-black-house-of-the-dragon-iconic-graphic-printed-t-shirt-519411-1738673470-1.jpg"
+      },
+      {
+        "id": "MEN_GENZ008",
+        "title": "Printed Shirts",
+        "imageUrl": "https://assets.ajio.com/medias/sys_master/root/20240716/q251/6696aca91d763220fac86475/-1117Wx1400H-466747617-pink-MODEL6.jpg"
+      },
+      {
+        "id": "MEN_GENZ009",
+        "title": "Faded Jeans",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBLPqzcPQ61cIMMpLFEAOLAyNSUnaSLYpAAw&s"
+      },
+      {
+        "id": "MEN_GENZ010",
+        "title": "Polo T-shirt",
+        "imageUrl": "https://rukminim2.flixcart.com/image/850/1000/xif0q/t-shirt/i/z/j/-original-imahfxv8frnh9jmv.jpeg?q=90&crop=false"
+      },
+      {
+        "id": "MEN_GENZ011",
+        "title": "Stripes & Checks",
+        "imageUrl": "https://guniaa.com/cdn/shop/files/Black_and_White_Checked_Full_Sleeve_Shirt_Men_s_Plus_Size.jpg?v=1726893265&width=1500"
+      },
+      {
+        "id": "MEN_GENZ012",
+        "title": "Track Pants",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5tX5LWajh8MuchK9w5_BUJHgE8hxUC5tlIQ&s"
+      },
+      {
+        "id": "MEN_GENZ013",
+        "title": "Cargo",
+        "imageUrl": "https://media-us.landmarkshops.in/cdn-cgi/image/h=730,w=540,q=85,fit=cover/max-new/1000013596505-Green-GREEN-1000013596505_01-2100.jpg"
+      }
+    ]
+  },
+  "womensWear": {
+    "westernWear": [
+      {
+        "id": "WOMEN_WST001",
+        "title": "Dresses",
+        "imageUrl": "https://cdn.vibecity.in/providers/63a98db763a7b60011f57343/PM-9002Front_4a02a73c-a897-48c6-bc4e-12a438cf00ae-3X.png"
+      },
+      {
+        "id": "WOMEN_WST002",
+        "title": "Tops",
+        "imageUrl": "https://rukminim2.flixcart.com/image/850/1000/xif0q/top/s/b/w/m-1-delta-long-top-tops-nova-original-imah22wzzb8qjsf3.jpeg?q=90&crop=false"
+      },
+      {
+        "id": "WOMEN_WST003",
+        "title": "Jeans",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQF3G4TR4tZOBQqTlgKQoR2ktTDvOsQo3NKYg&s"
+      },
+      {
+        "id": "WOMEN_WST004",
+        "title": "Trousers",
+        "imageUrl": "https://rukminim2.flixcart.com/image/850/1000/xif0q/trouser/f/q/p/28-kottywomenspant261-kotty-original-imaghe3gmpq6yrty.jpeg?q=20&crop=false"
+      },
+      {
+        "id": "WOMEN_WST005",
+        "title": "T-Shirts",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWt_EtONeS7NDeiLcs3yNGzPtt0EwfYprimg&s"
+      },
+      {
+        "id": "WOMEN_WST006",
+        "title": "Shirts",
+        "imageUrl": "https://charmgal.in/cdn/shop/files/shirtwomen_fc8118a7-e7ec-4947-bfd7-de6bf775020f.jpg?v=1701240041"
+      },
+      {
+        "id": "WOMEN_WST007",
+        "title": "Co-ords",
+        "imageUrl": "https://www.jiomart.com/images/product/original/rv2c8k5kzr/kaftanize-women-multicolor-co-ord-set-product-images-rv2c8k5kzr-1-202312220114.jpg?im=Resize=(500,630)"
+      },
+      {
+        "id": "WOMEN_WST008",
+        "title": "Skirt & Shorts",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQB9zpVxmsSHq-bk5Bkmlx3ckjrywiK1afslA&s"
+      },
+      {
+        "id": "WOMEN_WST009",
+        "title": "Jumpsuits",
+        "imageUrl": "https://www.inweaveindia.com/cdn/shop/products/1_568d0ae6-c5ca-412c-a266-25abedcad655_600x.jpg?v=1742403565"
+      },
+      {
+        "id": "WOMEN_WST010",
+        "title": "Western Avenue",
+        "imageUrl": "https://assets.myntassets.com/dpr_1.5,q_60,w_400,c_limit,fl_progressive/assets/images/2024/OCTOBER/21/6yluxQL3_d01b23632c1c409ba30c65d6ecb9ca15.jpg"
+      }
+    ],
+    "ethnicWear": [
+      {
+        "id": "WOMEN_ETH001",
+        "title": "Kurta Sets",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHl-_yb6351yEPFZujLu5gyufOBxcKbwO3zg&s"
+      },
+      {
+        "id": "WOMEN_ETH002",
+        "title": "Kurtas",
+        "imageUrl": "https://assets.myntassets.com/h_1440,q_100,w_1080/v1/assets/images/18137424/2025/4/7/8f68847f-0e67-476a-a8c0-3ff4dc3f19081744007252948-Libas-Women-Maroon-Yoke-Design-Embellished-Kurta-32017440072-1.jpg"
+      },
+      {
+        "id": "WOMEN_ETH003",
+        "title": "Sarees",
+        "imageUrl": "https://5.imimg.com/data5/SELLER/Default/2022/7/SN/BP/XV/55112739/whatsapp-image-2022-07-27-at-10-03-07-am-1--500x500.jpeg"
+      },
+      {
+        "id": "WOMEN_ETH004",
+        "title": "Ethenic Dresses",
+        "imageUrl": "https://www.aachho.com/cdn/shop/files/1_7377dbff-de77-4b45-a815-577d6d1a69a2_1080x.jpg?v=1725540569F"
+      },
+      {
+        "id": "WOMEN_ETH005",
+        "title": "Fusionwear",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvi7o_7K58p8B_nK1ckZ-GbpYmLiDa7uh9Fg&s"
+      },
+      {
+        "id": "WOMEN_ETH006",
+        "title": "Ethenic Tops",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCP2WKudB8ShxRIs-QE3bkyZrCTiVYVpVsTA&s"
+      },
+      {
+        "id": "WOMEN_ETH007",
+        "title": "Lehenga Choli",
+        "imageUrl": "https://imgmediagumlet.lbb.in/media/2023/08/64e74bb7657e506338faa8c9_1692879799068.jpg"
+      },
+      {
+        "id": "WOMEN_ETH008",
+        "title": "Co-ords",
+        "imageUrl": "https://ambraee.com/cdn/shop/products/OM_6622_4c741e0f-2f53-4b55-b3da-12b4637c2d28.jpg?v=1691223663&width=1080"
+      },
+      {
+        "id": "WOMEN_ETH009",
+        "title": "Ethenic Alley",
+        "imageUrl": "https://5.imimg.com/data5/TR/GN/MY-36747917/rani-1-500x500.jpeg"
+      }
+    ],
+    "genZFashion": [
+      {
+        "id": "WOMEN_GENZ001",
+        "title": "Printed Dresses",
+        "imageUrl": "https://www.jiomart.com/images/product/original/rvehkcb3si/fabflee-women-off-white-printed-georgette-a-line-maxi-dress-product-images-rvehkcb3si-3-202301120314.jpg?im=Resize=(500,630)"
+      },
+      {
+        "id": "WOMEN_GENZ002",
+        "title": "Crop Tops",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRo1wPVpHO29rjZX2nRPRlEb95n6vDKzegYxA&s"
+      },
+      {
+        "id": "WOMEN_GENZ003",
+        "title": "Printed Tees",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvsk5eq4LYerrSEI8-PqDjtRwaIHnHoTIKBg&s"
+      },
+      {
+        "id": "WOMEN_GENZ004",
+        "title": "Bodycon Dresses",
+        "imageUrl": "https://fcity.in/images/products/325053200/2gdvm_512.jpg"
+      },
+      {
+        "id": "WOMEN_GENZ005",
+        "title": "High Rise Jeans",
+        "imageUrl": "https://m.media-amazon.com/images/I/81dxnCbh5iL._AC_UY350_.jpg"
+      },
+      {
+        "id": "WOMEN_GENZ006",
+        "title": "Oversized Tees",
+        "imageUrl": "https://images.meesho.com/images/products/262818253/ovtts_512.webp"
+      },
+      {
+        "id": "WOMEN_GENZ007",
+        "title": "Oversized Shirts",
+        "imageUrl": "https://m.media-amazon.com/images/I/817SlxV9Y2L._AC_UY1100_.jpg"
+      },
+      {
+        "id": "WOMEN_GENZ008",
+        "title": "Flared Dresses",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQR3SwdAf43wUSucrIEXHIkekPwhdOmtBtOnA&s"
+      },
+      {
+        "id": "WOMEN_GENZ009",
+        "title": "Floral Tops",
+        "imageUrl": "https://pluss.in/cdn/shop/products/xl-ltp10461-pirateprint-pluss-original-imagc7v74h5jcffu.jpg?v=1736414142"
+      },
+      {
+        "id": "WOMEN_GENZ010",
+        "title": "Maxi Dresses",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTT9Xk9OpSfesyDbuJp0aAYb2EWc4I3Abcx1w&s"
+      },
+      {
+        "id": "WOMEN_GENZ011",
+        "title": "Faded Jeans",
+        "imageUrl": "https://5.imimg.com/data5/SELLER/Default/2023/9/343454089/RD/RA/DH/110966981/whatsapp-image-2023-09-12-at-12-28-54-pm-500x500.jpeg"
+      },
+      {
+        "id": "WOMEN_GENZ012",
+        "title": "Printed Shirts",
+        "imageUrl": "https://www.mydesignation.com/cdn/shop/files/tropical-shirt-women-770027.jpg?v=1717546382&width=416"
+      },
+      {
+        "id": "WOMEN_GENZ013",
+        "title": "Mini Skirts",
+        "imageUrl": "https://styleunion.in/cdn/shop/files/LSK00087BLACK_1.jpg?v=1740667969&width=1200"
+      },
+      {
+        "id": "WOMEN_GENZ014",
+        "title": "Crop Tees",
+        "imageUrl": "https://images.meesho.com/images/products/438478422/54fra_512.webp"
+      },
+      {
+        "id": "WOMEN_GENZ015",
+        "title": "Slit Skirts",
+        "imageUrl": "https://assets.ajio.com/medias/sys_master/root/20240304/OE6h/65e5b49605ac7d77bb946f9d/-473Wx593H-443035722-jetblack-MODEL.jpg"
+      },
+      {
+        "id": "WOMEN_GENZ016",
+        "title": "Tank Tops",
+        "imageUrl": "https://assets.ajio.com/medias/sys_master/root/20240728/7C46/66a5af8c6f60443f31ced11e/-473Wx593H-465507028-navy-MODEL.jpg"
+      },
+      {
+        "id": "WOMEN_GENZ017",
+        "title": "Relaxed Fit Shorts",
+        "imageUrl": "https://assets.myntassets.com/w_412,q_60,dpr_2,fl_progressive/assets/images/30386224/2024/7/29/24833873-2d1c-4e00-8062-c5ec3e386abc1722230176464TheRoadsterLifestyleCoRelaxedFitShorts1.jpg"
+      },
+      {
+        "id": "WOMEN_GENZ018",
+        "title": "Short Sleeves",
+        "imageUrl": "https://m.media-amazon.com/images/I/81Kd4PYmVDL._AC_UY1100_.jpg"
+      },
+      {
+        "id": "WOMEN_GENZ019",
+        "title": "Wide Leg Jeans",
+        "imageUrl": "https://shop.mango.com/assets/rcs/pics/static/T8/fotos/S/87020638_TO.jpg?imwidth=2048&imdensity=1&ts=1740753315807"
+      },
+      {
+        "id": "WOMEN_GENZ020",
+        "title": "Cargo Trousers",
+        "imageUrl": "https://assets.myntassets.com/w_412,q_60,dpr_2,fl_progressive/assets/images/25892100/2023/11/15/14a0eeae-a2b4-4e0e-8103-58aed41490321700043120380WomensSolidBaggyFitParachuteTrackpants2.jpg"
+      },
+      {
+        "id": "WOMEN_GENZ021",
+        "title": "Formal Trousers",
+        "imageUrl": "https://assets.ajio.com/medias/sys_master/root/20240129/Rilc/65b7a89d8cdf1e0df5d5fb2b/-288Wx360H-467019348-black-MODEL.jpg"
+      },
+      {
+        "id": "WOMEN_GENZ022",
+        "title": "Bootcut Trousers",
+        "imageUrl": "https://pluss.in/cdn/shop/files/044A9431-2.jpg?v=1736408882"
+      }
+    ],
+    "genzFootwear": [
+      {
+        "id": "WOMEN_GENZ_FOOT001",
+        "title": "Chunky Sneakers",
+        "imageUrl": "https://images-static.nykaa.com/media/catalog/product/7/3/731933dSporty-Grey_1.jpg?tr=w-500"
+      },
+      {
+        "id": "WOMEN_GENZ_FOOT002",
+        "title": "Platform Boots",
+        "imageUrl": "https://5.imimg.com/data5/ECOM/Default/2024/7/438821223/MK/ZG/KX/154169406/s1b53ddde26ba45afadb275e3803fc36ck-500x500.webp"
+      },
+      {
+        "id": "WOMEN_GENZ_FOOT003",
+        "title": "Neon Sandals",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWbxGbtrbiATXseUJQP8jVr5xLMyHbNFRdVg&s"
+      },
+      {
+        "id": "WOMEN_GENZ_FOOT004",
+        "title": "Holographic Sneakers",
+        "imageUrl": "https://fausto.in/cdn/shop/products/FST_1325_SILVER_1-1_MOOD_400x.jpg?v=1679583586"
+      },
+      {
+        "id": "WOMEN_GENZ_FOOT005",
+        "title": "Ankle Strap Heels",
+        "imageUrl": "https://images.meesho.com/images/products/406146373/b8rmd_512.webp"
+      },
+      {
+        "id": "WOMEN_GENZ_FOOT006",
+        "title": "Retro Trainers",
+        "imageUrl": "https://cdn.laredoute.com/cdn-cgi/image/width=500,height=500,fit=pad,dpr=1/products/0/2/7/0273d9eeab296d3756e6efb805a8b3d8.jpg"
+      }
+    ]
+  },
+  "kidsWear": {
+    "infants": [
+      {
+        "id": "KID_INF001",
+        "title": "Clothing Sets",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBnh-xuzthg5U9LyXg-bRTaZtvHxzCfGyF-g&s"
+      },
+      {
+        "id": "KID_INF002",
+        "title": "Bodysuits",
+        "imageUrl": "https://assets.digitalcontent.marksandspencer.app/image/upload/w_550,h_715,q_auto,f_auto,e_sharpen/SD_04_T92_4832S_EK_X_EC_0"
+      },
+      {
+        "id": "KID_INF003",
+        "title": "Tops & T-Shirts",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5niiO3jUSuICx4NojwkbJI9ltIUAiqjfuUw&s"
+      },
+      {
+        "id": "KID_INF004",
+        "title": "BottomWear",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6sInxPdvlTW0oWhAH_YCQbySonm7xHWtfQw&s"
+      },
+      {
+        "id": "KID_INF005",
+        "title": "Dresses",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNY1t645qsxlX7XKBngqYco0-YWMiQFOWtjQ&s"
+      },
+      {
+        "id": "KID_INF006",
+        "title": "NightSuits",
+        "imageUrl": "https://snugkins.com/cdn/shop/files/Nightsuit-_-Bloomer--pants-Shoot.jpg18.jpg?v=1696928474"
+      },
+      {
+        "id": "KID_INF007",
+        "title": "Shorts",
+        "imageUrl": "https://5.imimg.com/data5/SELLER/Default/2021/2/TR/RD/AK/27879837/totztouch-baby-girls-regular-shorts.jpg"
+      },
+      {
+        "id": "KID_INF008",
+        "title": "InnerWear & Sleepswear",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmNcQ03DLpvu3JLpiE94GbKGPhl4wboEOhag&s"
+      },
+      {
+        "id": "KID_INF009",
+        "title": "Rompers & Sleepsuits",
+        "imageUrl": "https://m.media-amazon.com/images/I/611AMFsAe7L.jpg"
+      }
+    ],
+    "girls": [
+      {
+        "id": "KID_GIRL001",
+        "title": "Dresses",
+        "imageUrl": "https://images.meesho.com/images/products/319398186/yuhhx_512.webp"
+      },
+      {
+        "id": "KID_GIRL002",
+        "title": "Tops & T-Shirts",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJL1cjC_nMr78G61fsvHfwQCzeoFj0MBbhCA&s"
+      },
+      {
+        "id": "KID_GIRL003",
+        "title": "Clothing Sets",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8IwSKjpA5qanEtEDoUMZqYzQ-WRwGNoQIdw&s"
+      },
+      {
+        "id": "KID_GIRL004",
+        "title": "Skirt & Shorts",
+        "imageUrl": "https://i5.walmartimages.com/asr/37a07965-4d0b-4db7-86d6-e0bc061831e6.0d528656b4165d05f5d4f6f9a98f135d.jpeg?odnHeight=768&odnWidth=768&odnBg=FFFFFF"
+      },
+      {
+        "id": "KID_GIRL005",
+        "title": "NightSuits",
+        "imageUrl": "https://snugkins.com/cdn/shop/files/Nightsuit-_-Bloomer--pants-Shoot.jpg29-min.jpg?v=1696928936"
+      },
+      {
+        "id": "KID_GIRL006",
+        "title": "Jeans & Trousers",
+        "imageUrl": "https://5.imimg.com/data5/SELLER/Default/2023/8/335439570/FM/QE/NX/47896618/26-plan-sp-2-denton-original-imaghshsunw62xx7-500x500.jpeg"
+      },
+      {
+        "id": "KID_GIRL007",
+        "title": "Kurta Sets",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnS31culxvOevY0CB-EoPTGH3Xqw24s74qNg&s"
+      },
+      {
+        "id": "KID_GIRL008",
+        "title": "Lehenga Choli",
+        "imageUrl": "https://cdn.shopify.com/s/files/1/0466/7582/0704/files/Lengha_Choli_Sari_Palace_480x480.png?v=1693444066"
+      },
+      {
+        "id": "KID_GIRL009",
+        "title": "FootWears",
+        "imageUrl": "https://www.babybooshop.in/cdn/shop/files/F696A2EC-535B-427C-85B7-DF3B73476D86.jpg?v=1729836878&width=533"
+      }
+    ],
+    "boys": [
+      {
+        "id": "KID_BOY001",
+        "title": "T-Shirts",
+        "imageUrl": "https://assets.ajio.com/medias/sys_master/root/20230623/OQEE/6495086d42f9e729d787637c/-473Wx593H-464872535-orange-MODEL.jpg"
+      },
+      {
+        "id": "KID_BOY002",
+        "title": "Clothing Sets",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMVWd9nRsFAB8eVRF2C9ewvXR8jUqVuHb2cA&s"
+      },
+      {
+        "id": "KID_BOY003",
+        "title": "Track Pants & Pajamas",
+        "imageUrl": "https://5.imimg.com/data5/CK/NH/MY-41246450/boys-casual-track-pant.jpg"
+      },
+      {
+        "id": "KID_BOY004",
+        "title": "Jeans & Trousers",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8viRSdBge-3-GaJ-5YIsk0gf7yx4XIFIzDA&s"
+      },
+      {
+        "id": "KID_BOY005",
+        "title": "Shirts",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJO7H89caLE1FWIZqbk0NGLl_NMaoJSWIotg&s"
+      },
+      {
+        "id": "KID_BOY006",
+        "title": "NightSuits",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbWS1IJXo3OZa5JyoCozGkmOqoBjIw1UtkbA&s"
+      },
+      {
+        "id": "KID_BOY007",
+        "title": "Kurta Sets",
+        "imageUrl": "https://www.tasva.com/cdn/shop/files/TMKJ9033REDOS_1.jpg?v=1743666332&width=800"
+      },
+      {
+        "id": "KID_BOY008",
+        "title": "Suits & Blazers",
+        "imageUrl": "https://images.meesho.com/images/products/392303226/lnrnw_512.webp"
+      },
+      {
+        "id": "KID_BOY009",
+        "title": "FootWear",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStgt4qEskL1FGZw_Pq2M7AscQbfpNPnYlXCg&s"
+      }
+    ],
+    "teens": [
+      {
+        "id": "KID_TEEN001",
+        "title": "Dresses",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSg6mGDdkcElXa_cRfuy5CEylQZbh6LjU8bdw&s"
+      },
+      {
+        "id": "KID_TEEN002",
+        "title": "Tops & T-Shirts",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJCbSYt8YuUZBHqZWsQ-xf1IR3Xgy_aoQUTt83WWk7oISBIAYtCdOUQv9Dj8EnDkn9Ti4&usqp=CAU"
+      },
+      {
+        "id": "KID_TEEN003",
+        "title": "Kurta Sets",
+        "imageUrl": "https://mandirawirk.in/cdn/shop/products/24_7805bf30-4f98-4f49-8ff0-e403d0221380.jpg?v=1694152233&width=1000"
+      },
+      {
+        "id": "KID_TEEN004",
+        "title": "Jeans & Trousers",
+        "imageUrl": "https://m.media-amazon.com/images/I/71yfXYjiI9L._AC_UY1100_.jpg"
+      },
+      {
+        "id": "KID_TEEN005",
+        "title": "Skirt & Shorts",
+        "imageUrl": "https://www.biba.in/dw/image/v2/BKQK_PRD/on/demandware.static/-/Sites-biba-product-catalog/default/dwe2e6ea6e/images/aw23/kw5497aw23red_1.jpg?sw=502&sh=753"
+      },
+      {
+        "id": "KID_TEEN006",
+        "title": "FootWears",
+        "imageUrl": "https://fcity.in/images/products/324392287/exr0b_512.jpg"
+      }
+    ],
+    "footwear": [
+      {
+        "id": "KID_FOOT001",
+        "title": "Kids Sneakers",
+        "imageUrl": "https://m.media-amazon.com/images/I/71cSITmJ0iL._AC_UY1000_.jpg"
+      },
+      {
+        "id": "KID_FOOT002",
+        "title": "Kids Sandals",
+        "imageUrl": "https://m.media-amazon.com/images/I/61G6KUzRewL._AC_UY1000_.jpg"
+      },
+      {
+        "id": "KID_FOOT003",
+        "title": "Kids Boots",
+        "imageUrl": "https://m.media-amazon.com/images/I/61loTTqVt5L._AC_UY1000_.jpg"
+      },
+      {
+        "id": "KID_FOOT004",
+        "title": "Kids Slippers",
+        "imageUrl": "https://images.jdmagicbox.com/quickquotes/images_main/winter-warm-kids-slipper-372870949-vytbp.jpg"
+      },
+      {
+        "id": "KID_FOOT005",
+        "title": "Kids Sports Shoes",
+        "imageUrl": "https://cdn.shopify.com/s/files/1/0645/7386/6151/files/IMG_2229_330x.jpg?v=1728278540"
+      },
+      {
+        "id": "KID_FOOT006",
+        "title": "Kids Light-Up Shoes",
+        "imageUrl": "https://images.meesho.com/images/products/300443479/71tyr_512.webp"
+      }
+    ]
+  },
+  "footwear": {
+    "womensFootwear": [
+      {
+        "id": "WOMEN_FOOT001",
+        "title": "Casual Shoes",
+        "imageUrl": "https://i5.walmartimages.com/seo/FZM-Women-shoes-Ladies-Fashion-Solid-Color-Mesh-Metal-Chain-Decorative-Platform-Casual-Shoes_bfb2b081-c54d-468b-b044-1fba2bb4b5dc.f2c4d737b8c6eaa224af344f5a7cf3f9.jpeg"
+      },
+      {
+        "id": "WOMEN_FOOT002",
+        "title": "Sports Shoes",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYDeZlKmwIziLiaBc3RiqLuOZgiIqbKfVOWw&s"
+      },
+      {
+        "id": "WOMEN_FOOT003",
+        "title": "Formal Shoes",
+        "imageUrl": "https://rukminim2.flixcart.com/image/850/1000/xif0q/shoe/o/x/5/3-women-formal-shoes-3-fashimo-black-original-imagcf7vhh5tb8fz-bb.jpeg?q=90&crop=false"
+      },
+      {
+        "id": "WOMEN_FOOT004",
+        "title": "Sandals",
+        "imageUrl": "https://thecaistore.com/cdn/shop/files/3_2f659f0b-85e3-4066-be17-55e71d0c05ff_1080x.png?v=1737527588"
+      },
+      {
+        "id": "WOMEN_FOOT005",
+        "title": "Flip Flops",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS22ZLCLkeA4EbN-ubfFVnXllyKPklqqiGM0w&s"
+      },
+      {
+        "id": "MEN_FOOT006",
+        "title": "Boots",
+        "imageUrl": "https://rukminim2.flixcart.com/image/850/1000/xif0q/shoe/q/i/5/3-bt-tank-36-shoetopia-black-original-imah52bvnxczgcp5.jpeg?q=20&crop=false"
+      }
+    ],
+    "mensFootwear": [
+      {
+        "id": "MEN_FOOT001",
+        "title": "Casual Sneakers",
+        "imageUrl": "https://rukminim2.flixcart.com/image/850/1000/xif0q/shoe/x/a/6/8-dvince-07-42-sneaker-black-original-imagfh39dckeqdsw.jpeg?q=90&crop=false"
+      },
+      {
+        "id": "MEN_FOOT003",
+        "title": "Flip Flops",
+        "imageUrl": "https://m.media-amazon.com/images/I/61JzfDynnAL._AC_UY1000_.jpg"
+      },
+      {
+        "id": "MEN_FOOT004",
+        "title": "Sports Shoes",
+        "imageUrl": "https://images.meesho.com/images/products/371592506/yiwwn_512.webp"
+      }
+    ],
+    "genzFootwear": [
+      {
+        "id": "WOMEN_GENZ_FOOT001",
+        "title": "Block Heels",
+        "imageUrl": "https://images.meesho.com/images/products/57645445/dosu6_512.webp"
+      },
+      {
+        "id": "WOMEN_GENZ_FOOT002",
+        "title": "Flats",
+        "imageUrl": "https://assets.ajio.com/medias/sys_master/root/20230628/rPZi/649b9dbba9b42d15c904b06b/-473Wx593H-465810465-gold-MODEL.jpg"
+      },
+      {
+        "id": "WOMEN_GENZ_FOOT003",
+        "title": "Casual Shoes",
+        "imageUrl": "https://assets.myntassets.com/dpr_1.5,q_60,w_400,c_limit,fl_progressive/assets/images/29553912/2024/5/17/5f90bc0f-c248-4bff-8a88-54128a77c4a61715927218769HRXbyHrithikRoshanUnisexTexturedSneakers1.jpg"
+      },
+      {
+        "id": "WOMEN_GENZ_FOOT004",
+        "title": "Ballerinas",
+        "imageUrl": "https://assets.myntassets.com/w_412,q_60,dpr_2,fl_progressive/assets/images/31021032/2024/10/11/8c08066d-ba87-4a2f-aeab-5fcff91689e91728638737623-Lavie-Women-Square-Toe-Ballerinas-Flats-9611728638737033-1.jpg"
+      },
+      {
+        "id": "WOMEN_GENZ_FOOT005",
+        "title": "Flip Flops",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRl024-IbYvJCXpGbe-0eS6D_xTMyFEiRC0rg&s"
+      },
+      {
+        "id": "WOMEN_GENZ_FOOT006",
+        "title": "Boots",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdkn_QTpyHI9Zm-CU7XVnqn4qbT6F8ySGs6w&s"
+      }
+    ]
+  },
+  "beautyAndGrooming": {
+    "grooming": [
+      {
+        "id": "BEAUTY_GROOM001",
+        "title": "Shaving Cream",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaj2BeGQakoQNbV5WiEGfHCxFQ_Gb7tAVdqg&s"
+      },
+      {
+        "id": "BEAUTY_GROOM002",
+        "title": "Trimmer",
+        "imageUrl": "https://www.jiomart.com/images/product/original/rvj9uoneg7/crystal-digital-hair-trimmer-professional-shaver-with-clipper-and-3-in-1-beard-nose-and-ear-waterproof-hair-trimmer-for-men-pack-of-3-product-images-orvj9uoneg7-p597554930-1-202301140154.jpg?im=Resize=(1000,1000)"
+      },
+      {
+        "id": "BEAUTY_GROOM003",
+        "title": "Bath & Body Care",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcNq7QOQH0mPRblUSaMsqRKspkUzGl8hkEGFgI9tGiAC36YdYcak3gH6MP6NUxPvjl9xE&usqp=CAU"
+      }
+    ],
+    "fragrances": [
+      {
+        "id": "BEAUTY_FRAG001",
+        "title": "Parfume",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTTsLGyNw_z8IU9MZVcJu5gbdwrzDKrbkydA&s"
+      },
+      {
+        "id": "BEAUTY_FRAG002",
+        "title": "Deodorant",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFbFsTVXKPE-PKm3aZTOixq8W4SJFhUJzddA&s"
+      },
+      {
+        "id": "BEAUTY_FRAG003",
+        "title": "Hair Serum",
+        "imageUrl": "https://www.bigbasket.com/media/uploads/p/xxl/265523-2_7-livon-serum-hair-serum.jpg"
+      }
+    ],
+    "hairCare": [
+      {
+        "id": "BEAUTY_HAIR001",
+        "title": "Shampoo",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLKNxAZqYEatOnhFcwUqwkFpZfKzGCiA3qQQ&s"
+      },
+      {
+        "id": "BEAUTY_HAIR002",
+        "title": "Hair Color",
+        "imageUrl": "https://i.pinimg.com/736x/12/62/f3/1262f3d80091f434d5a403c344148932.jpg"
+      },
+      {
+        "id": "BEAUTY_HAIR003",
+        "title": "Hair Serum",
+        "imageUrl": "https://static.wixstatic.com/media/ddb95a_6427243fb200449f82149dea8f46c549~mv2.jpg/v1/fill/w_520,h_520,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/ddb95a_6427243fb200449f82149dea8f46c549~mv2.jpg"
+      },
+      {
+        "id": "BEAUTY_HAIR004",
+        "title": "Conditioner",
+        "imageUrl": "https://images-static.nykaa.com/media/catalog/product/2/0/20963d1NYTRESECOM091.jpg?tr=w-500"
+      },
+      {
+        "id": "BEAUTY_HAIR005",
+        "title": "Hair Appliance",
+        "imageUrl": "https://beardo.in/cdn/shop/files/Beardo_Style_Tornado_Hair_Dryer_05.jpg?v=1713182796&width=1946"
+      },
+      {
+        "id": "BEAUTY_HAIR006",
+        "title": "Hair Mask",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfcQhNY7kZVseh29x4aVoEzYaAVBQGacm0Jw&s"
+      }
+    ],
+    "skincare": [
+      {
+        "id": "BEAUTY_SKIN001",
+        "title": "Facewash & Cleanser",
+        "imageUrl": "https://rawls.in/cdn/shop/files/rose.png?v=1736237945"
+      },
+      {
+        "id": "BEAUTY_SKIN002",
+        "title": "Day Cream",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6Hvc7XZPdhol2UtcOVamxDUGo5_b-mkd-jQ&s"
+      },
+      {
+        "id": "BEAUTY_SKIN003",
+        "title": "Sunscreen",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSf-kGIhvy-TAZ0C-B2Eh7_ftjmSXVAjRXdKw&s"
+      },
+      {
+        "id": "BEAUTY_SKIN004",
+        "title": "Serum & Gel",
+        "imageUrl": "https://images-cdn.ubuy.co.in/64563b11213cc544637f4539-streax-vitalized-hair-serum300-ml.jpg"
+      },
+      {
+        "id": "BEAUTY_SKIN005",
+        "title": "Mask & Peel",
+        "imageUrl": "https://images-cdn.ubuy.co.in/633fedf453bb2022613ad83b-peel-off-face-mask-charcoal-peel-off.jpg"
+      },
+      {
+        "id": "BEAUTY_SKIN006",
+        "title": "Body Lotion",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3QXO9JyBFhQ94drSrrsmPPkoECI036VgerQ&s"
+      },
+      {
+        "id": "BEAUTY_SKIN007",
+        "title": "Body Wash",
+        "imageUrl": "https://rukminim2.flixcart.com/image/850/1000/xif0q/body-wash/o/e/v/-original-imagwdp3thkds8au.jpeg?q=90&crop=false"
+      },
+      {
+        "id": "BEAUTY_SKIN008",
+        "title": "Lip Care",
+        "imageUrl": "https://cdn.shopify.com/s/files/1/0094/2256/9550/files/cove1.jpg?v=1645707158"
+      },
+      {
+        "id": "BEAUTY_SKIN009",
+        "title": "Toner",
+        "imageUrl": "https://plumgoodness.com/cdn/shop/files/03_47b73718-2117-498c-a5b2-325f417d18e6.jpg?v=1737551082"
+      }
+    ],
+    "makeup": [
+      {
+        "id": "BEAUTY_MAKEUP001",
+        "title": "Lipstick",
+        "imageUrl": "https://rubysorganics.in/cdn/shop/products/lipstcikshootimage_1100x.jpg?v=1737441110"
+      },
+      {
+        "id": "BEAUTY_MAKEUP002",
+        "title": "Foundation",
+        "imageUrl": "https://www.coloressence.com/cdn/shop/files/HDF-2-Steamy-Mocha_434247b2-13ed-441a-8bc8-0bdd4665020d.jpg?v=1700291295"
+      },
+      {
+        "id": "BEAUTY_MAKEUP003",
+        "title": "Compact",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2_mlhe8_lz9I7FzQnXv_VCzSr4_kT7_OiLw&s"
+      },
+      {
+        "id": "BEAUTY_MAKEUP004",
+        "title": "Concealer",
+        "imageUrl": "https://swissbeauty.in/cdn/shop/files/1_3bff48ec-4a46-4645-a170-a6215ae23383_1400x.jpg?v=1743404463"
+      },
+      {
+        "id": "BEAUTY_MAKEUP005",
+        "title": "Primers",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTg2q6guJfmnYf8mM3sLGK9Ude0Ldp1R5fP8Q&s"
+      },
+      {
+        "id": "BEAUTY_MAKEUP006",
+        "title": "Mascara",
+        "imageUrl": "https://rukminim2.flixcart.com/image/850/1000/xif0q/mascara/l/h/1/8-eye-lash-waterproof-mascara-eye-makeup-black-mascara-darving-original-imagth78zhrgarbd.jpeg?q=20&crop=false"
+      },
+      {
+        "id": "BEAUTY_MAKEUP007",
+        "title": "Eyeshadow",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfuXPKl9gQuPgUOu6SgjjZFoxUt7wUcuhakg&s"
+      },
+      {
+        "id": "BEAUTY_MAKEUP008",
+        "title": "Eyeliner",
+        "imageUrl": "https://discoverpilgrim.com/cdn/shop/files/Black-Scandal-Eyeliner-Listing-Images-1080x1080-2.jpg?v=1704274487&width=1080"
+      }
+    ]
+  },
+  "homeAndLiving": {
+    "kitchenAndDining": [
+      {
+        "id": "HOME_KITCHEN001",
+        "title": "Dinnerware",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfjlOBx6Td-8mbVDHvjLqKFJ-QyTicekn9iQ&s"
+      },
+      {
+        "id": "HOME_KITCHEN002",
+        "title": "Cookware",
+        "imageUrl": "https://cdn.shopify.com/s/files/1/0931/2382/files/1x1_STAHL_03_2022_8090_1.jpg"
+      },
+      {
+        "id": "HOME_KITCHEN003",
+        "title": "Cups & Mugs",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtEzHHgux5uZIQivT_fcSpMDq6hmmvZU_Kog&s"
+      },
+      {
+        "id": "HOME_KITCHEN004",
+        "title": "Appliances",
+        "imageUrl": "https://5.imimg.com/data5/GL/AB/GLADMIN-37892088/home-appliances.jpg"
+      },
+      {
+        "id": "HOME_KITCHEN005",
+        "title": "Water Bottles",
+        "imageUrl": "https://rukminim2.flixcart.com/image/850/1000/xif0q/bottle/j/x/0/2000-bottle-gallon-with-time-marker-large-capacity-2000ml-1-original-imagpyhdrd2qzwhf.jpeg?q=20&crop=false"
+      },
+      {
+        "id": "HOME_KITCHEN006",
+        "title": "Storage",
+        "imageUrl": "https://m.media-amazon.com/images/I/71JAkNZzi1L._AC_UF894,1000_QL80_.jpg"
+      }
+    ],
+    "homeDecor": [
+      {
+        "id": "HOME_DECOR001",
+        "title": "Curtain",
+        "imageUrl": "https://assets.ajio.com/medias/sys_master/root/20250210/RGqc/67a9dcf92960820c496fbc41/-473Wx593H-462475223-red-MODEL.jpg"
+      },
+      {
+        "id": "HOME_DECOR002",
+        "title": "Showpieces Vase",
+        "imageUrl": "https://assets.ajio.com/medias/sys_master/root/20230525/1qOm/646eadfed55b7d0c63df831c/-473Wx593H-464377737-black-MODEL.jpg"
+      },
+      {
+        "id": "HOME_DECOR003",
+        "title": "Sofa Cover",
+        "imageUrl": "https://assets.ajio.com/medias/sys_master/root/20241108/gfNJ/672dfb7b260f9c41e8c9ef55/-473Wx593H-700719711-multi-MODEL.jpg"
+      },
+      {
+        "id": "HOME_DECOR004",
+        "title": "Wall Art",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMXg73XC_NY4eL5FY7xg77kTn0EHxANsQldw&s"
+      },
+      {
+        "id": "HOME_DECOR005",
+        "title": "Clocks",
+        "imageUrl": "https://media.istockphoto.com/id/483618097/photo/time-concept.jpg?s=612x612&w=0&k=20&c=sEHIq4zwO3lrsfZj3Hiyy_VTPvI8cOlCjqEgpJ1EDmw="
+      },
+      {
+        "id": "HOME_DECOR006",
+        "title": "Artificial Flowers & Plants",
+        "imageUrl": "https://www.jiomart.com/images/product/original/rvgup13ys9/saf-set-of-4-mini-artificial-flower-plant-for-home-office-garden-and-table-decor-bonsai-wild-artificial-plant-with-pot-17-cm-red-product-images-orvgup13ys9-p603500919-0-202308021324.jpg?im=Resize=(1000,1000)"
+      }
+    ],
+    "bathAndBedding": [
+      {
+        "id": "HOME_BATH001",
+        "title": "BedSheets",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3I3TbDv_tFxEPBbqWjGm8wfHQJok24RVOTg&s"
+      },
+      {
+        "id": "HOME_BATH002",
+        "title": "Blankets & Quilts",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqyR6Uqe1ibSE-uMoNNFAIr-SJGoPPUiMlOQ&s"
+      },
+      {
+        "id": "HOME_BATH003",
+        "title": "Cushion",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRso_UlQxbGFQu3MzoyGsDXoQPTCxjQK_EVgg&s"
+      },
+      {
+        "id": "HOME_BATH004",
+        "title": "Bath Towel",
+        "imageUrl": "https://5.imimg.com/data5/SELLER/Default/2024/10/461151626/HT/AI/CW/2054738/plain-cotton-bath-towel.jpeg"
+      },
+      {
+        "id": "HOME_BATH005",
+        "title": "Bath Robes",
+        "imageUrl": "https://img.tatacliq.com/images/i17//658Wx734H/MP000000022128613_658Wx734H_202405042258141.jpeg"
+      },
+      {
+        "id": "HOME_BATH006",
+        "title": "Bathroom Accessories",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSu0oFdJ9TBGbJf2czT6LO0BkeknBGrqMEZyQ&s"
+      }
+    ]
+  },
+  "accessories": {
+    "mensAccessories": [
+      {
+        "id": "ACC_MEN001",
+        "title": "Trolley",
+        "imageUrl": "https://assets.ajio.com/medias/sys_master/root/20250402/sxDk/67ecead755340d4b4fa73221/-473Wx593H-466146971-grey-MODEL.jpg"
+      },
+      {
+        "id": "ACC_MEN002",
+        "title": "Backpack",
+        "imageUrl": "https://redhorns.in/cdn/shop/files/BP1209A_1.jpg?v=1732537638&width=1080"
+      },
+      {
+        "id": "ACC_MEN003",
+        "title": "Watches",
+        "imageUrl": "https://images-cdn.ubuy.co.in/675a6d12bac4a004d15e4fe3-poedagar-luxury-men-quartz-watch.jpg"
+      },
+      {
+        "id": "ACC_MEN004",
+        "title": "Wallet",
+        "imageUrl": "https://images-cdn.ubuy.co.in/653a527f5cd7844ffb624069-serman-brands-rfid-blocking-slim-bifold.jpg"
+      },
+      {
+        "id": "ACC_MEN005",
+        "title": "Belt",
+        "imageUrl": "https://images-cdn.ubuy.co.in/64eeed1a596b0450b3598c7c-chaoren-leather-reversible-belts-for-men.jpg"
+      },
+      {
+        "id": "ACC_MEN006",
+        "title": "Sunglasses",
+        "imageUrl": "https://images-cdn.ubuy.co.in/65389e8fff676c0e4a696a92-onrtry-small-round-polarized-sunglasses.jpg"
+      }
+    ],
+    "womensAccessories": [
+      {
+        "id": "ACC_WOMEN001",
+        "title": "Handbag",
+        "imageUrl": "https://m.media-amazon.com/images/I/71vz71m5usL._AC_UY1000_.jpg"
+      },
+      {
+        "id": "ACC_WOMEN002",
+        "title": "Wallets",
+        "imageUrl": "https://images.meesho.com/images/products/44809268/f3mdx_512.webp"
+      },
+      {
+        "id": "ACC_WOMEN003",
+        "title": "Clutches",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfW21I50V4b-OvFyULBl_Gum0p9-ZaOhkMxA&s"
+      }
+    ]
+  },
+  "gadgets": {
+    "gadGet": [
+      {
+        "id": "GADGET001",
+        "title": "Headphones",
+        "imageUrl": "https://www.boat-lifestyle.com/cdn/shop/products/main2_b66dce6b-710d-49cb-9d1c-2bc8c9c0ab15.png?v=1645698328"
+      },
+      {
+        "id": "GADGET002",
+        "title": "Smartwatch",
+        "imageUrl": "https://assets.nikshanonline.com/wp-content/uploads/2023/10/Mobiles.png"
+      },
+      {
+        "id": "GADGET003",
+        "title": "Speaker",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYd55QDetQ4OZir82uxJPJ-9X_TINi49UpLA&s"
+      },
+      {
+        "id": "GADGET004",
+        "title": "Mobile Accessories",
+        "imageUrl": "https://rukminim2.flixcart.com/image/850/1000/l4ssfww0/cases-covers/back-cover/2/1/b/xr-blue-milestone-mobile-accessories-original-imagfhkb9utanymj.jpeg?q=90&crop=false"
+      },
+      {
+        "id": "GADGET005",
+        "title": "Fitness Bands",
+        "imageUrl": "https://cdn.thewirecutter.com/wp-content/media/2023/11/fitness-tracker-2048px-5344.jpg?auto=webp&quality=75&crop=1.91:1&width=1200"
+      },
+      {
+        "id": "GADGET006",
+        "title": "Tablets",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSElvBzg520NGL3DV00RIdbH4L0sPZSgSGh-Q&s"
+      },
+      {
+        "id": "GADGET007",
+        "title": "Power Bank",
+        "imageUrl": "https://m.media-amazon.com/images/I/61liDz9uZWL._AC_UF1000,1000_QL80_.jpg"
+      },
+      {
+        "id": "GADGET008",
+        "title": "Pen Drive",
+        "imageUrl": "https://m.media-amazon.com/images/I/61mcOyUlsTL.jpg"
+      },
+      {
+        "id": "GADGET009",
+        "title": "Mouse",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQx9xjslJXhsUGv_JxHvasojUJ8yDyycz7ZhA&s"
+      },
+      {
+        "id": "GADGET010",
+        "title": "Menory Card",
+        "imageUrl": "https://makerbazar.in/cdn/shop/files/Sandisk-SD-CARD-462x462-1.jpg?v=1701321465"
+      },
+      {
+        "id": "GADGET011",
+        "title": "Charger",
+        "imageUrl": "https://m.media-amazon.com/images/I/51oZHMpbmxL._AC_UF1000,1000_QL80_.jpg"
+      }
+    ]
+  },
+  "jewellery": {
+    "jewellery": [
+      {
+        "id": "JEWELLERY001",
+        "title": "Jawellery Set",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjSNEZS9JVulfEZBhb1WycwjdB_YDTnLVc6DAonnD1HuY2VOj5XyAXQS1KTdSoo9kMg8E&usqp=CAU"
+      },
+      {
+        "id": "JEWELLERY002",
+        "title": "Earrings",
+        "imageUrl": "https://m.media-amazon.com/images/I/61y6f5R5NLL._AC_UY1100_.jpg"
+      },
+      {
+        "id": "JEWELLERY003",
+        "title": "Gold Coin",
+        "imageUrl": "https://assets.ajio.com/medias/sys_master/root/20201125/xddQ/5fbe4ee8aeb269d5631bcc69/-473Wx593H-6005346060-multi-MODEL.jpg"
+      },
+      {
+        "id": "JEWELLERY004",
+        "title": "Necklace",
+        "imageUrl": "https://m.media-amazon.com/images/I/41WZNFrf20L._AC_UY1100_.jpg"
+      },
+      {
+        "id": "JEWELLERY005",
+        "title": "Bracelet",
+        "imageUrl": "https://m.media-amazon.com/images/I/61+BN4lVkWL._AC_UY1100_.jpg"
+      },
+      {
+        "id": "JEWELLERY006",
+        "title": "Men Jewellerys",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCIwM7qP0FL_TzxMHS0Ku9yCcXSYIi__qRIA&s"
+      }
+    ]
+  }
+}
