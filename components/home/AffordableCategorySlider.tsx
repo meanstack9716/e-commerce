@@ -30,7 +30,7 @@ const CategoryCard: React.FC<{
   </TouchableOpacity>
 );
 
-const PocketFriendlyBargain: React.FC = () => {
+const AffordableCategorySlider: React.FC = () => {
   const categories = categoryData.categories;
   const scrollViewRef = useRef<ScrollView>(null);
   const [scrollX, setScrollX] = useState(0);
@@ -197,4 +197,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PocketFriendlyBargain;
+export default AffordableCategorySlider;

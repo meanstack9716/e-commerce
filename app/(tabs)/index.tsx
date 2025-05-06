@@ -27,7 +27,7 @@ import spacingStyles from "@/style/spacingStyles";
 import BrandCard from "@/components/home/BrandCard";
 import staticColors from "@/style/staticColors";
 import OfferPriceCard from "@/components/home/OfferPriceCard";
-import PocketFriendlyBargain from "@/components/home/PocketFriendlyBargain";
+import PocketFriendlyBargain from "@/components/home/AffordableCategorySlider";
 import fontSizes from "@/style/fontSizes";
 import gapSizes from "@/style/gapSizes";
 import images from "@/constants/images";
