@@ -18,7 +18,7 @@ const OfferCard: React.FC<OfferCardProps> = ({ topText, price, bottomText, color
   return (
     <TouchableOpacity style={styles.cardContainer}>
       <LinearGradient
-        colors={['#f7faff', '#c8d7f7']}
+        colors={[`${staticColors.skyBlue}`, `${staticColors.softSkyBlue}`]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={styles.card}

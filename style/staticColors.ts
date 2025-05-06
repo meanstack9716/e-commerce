@@ -58,5 +58,7 @@ export default {
   lightYellow:"#F7CD03",
   indigoNavy:"#242555",
   ceruleanBlue:"#1B7CA5",
-  softGray:'#ccc'
+  softGray:'#ccc',
+  skyBlue:'#f7faff',
+  softSkyBlue:'#c8d7f7',
 };
