@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import fontSizes from "@/style/fontSizes";
+import { IMAGE_URIS } from "@/constants/imageLinks";
 
 interface QualityCheckModalProps {
   isVisible: boolean;
@@ -33,17 +34,20 @@ const QualityCheckModal: React.FC<QualityCheckModalProps> = ({
           <View style={styles.modalHeader}>
             <Text style={styles.modalTitle}>Quality Check Process</Text>
             <TouchableOpacity onPress={onClose}>
-              <Ionicons name="close" size={24} color={staticColors.textDarkGray} />
+              <Ionicons
+                name="close"
+                size={24}
+                color={staticColors.textDarkGray}
+              />
             </TouchableOpacity>
           </View>
           <View style={styles.modalContent}>
             <View style={styles.section}>
               <Image
-                source={{
-                  uri: "https://cdni.iconscout.com/illustration/premium/thumb/shopping-target-illustration-download-in-svg-png-gif-file-formats--audience-behavior-consumer-targeting-market-lead-generation-pack-business-illustrations-9209228.png?f=webp",
-                }}
+                source={{ uri: IMAGE_URIS.shoppingTargetGraphic }}
                 style={styles.sectionImage}
               />
+
               <View style={styles.sectionText}>
                 <Text style={styles.sectionTitle}>Sample Check</Text>
                 <Text style={styles.sectionDescription}>
@@ -55,9 +59,7 @@ const QualityCheckModal: React.FC<QualityCheckModalProps> = ({
 
             <View style={styles.section}>
               <Image
-                source={{
-                  uri: "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQGfqQRpbiRM4CCgT--YGdHwP2jNbmOt53fOoIKEuuu2CZLAIaZ",
-                }}
+                source={{ uri: IMAGE_URIS.genuineProductBadge }}
                 style={styles.sectionImage}
               />
               <View style={styles.sectionText}>
@@ -71,9 +73,7 @@ const QualityCheckModal: React.FC<QualityCheckModalProps> = ({
 
             <View style={styles.section}>
               <Image
-                source={{
-                  uri: "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSVTZyQ_tYEIASoFg0w1L-YcNQzhqkDJLzjuKjE4OT6uKNVZZIg",
-                }}
+                source={{ uri: IMAGE_URIS.marketingConceptArt }}
                 style={styles.sectionImage}
               />
               <View style={styles.sectionText}>
@@ -87,9 +87,7 @@ const QualityCheckModal: React.FC<QualityCheckModalProps> = ({
 
             <View style={styles.section}>
               <Image
-                source={{
-                  uri: "https://img.freepik.com/premium-vector/colorful-cartoon-medical-beauty-bottles-with-plus-sign_1280751-75391.jpg",
-                }}
+                source={{ uri: IMAGE_URIS.beautyHealthProducts }}
                 style={styles.sectionImage}
               />
               <View style={styles.sectionText}>

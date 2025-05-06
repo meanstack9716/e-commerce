@@ -11,14 +11,12 @@ import { Profile } from "@/types/types";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import fontSizes from "@/style/fontSizes";
-
 const screenWidth = Dimensions.get("window").width;
 const cardWidth = screenWidth / 2 - 22;
-
 const ProductScreen: React.FC = () => {
   const [activeTab, setActiveTab] = useState("ALL");
   const [filteredProducts, setFilteredProducts] = useState<Profile[]>([]);
-  const [likedItems, setLikedItems] = useState<string[]>([]);
+  const [likedProductIds, setLikedProductIds] = useState<string[]>([]);
   const router = useRouter();
   const { id: currentProductId } = useLocalSearchParams();
 
@@ -63,7 +61,7 @@ const ProductScreen: React.FC = () => {
   }, [activeTab, normalizeProducts, currentProductId]);
 
   const toggleLike = (id: string) => {
-    setLikedItems((prev: string[]) =>
+    setLikedProductIds((prev: string[]) =>
       prev.includes(id)
         ? prev.filter((itemId: string) => itemId !== id)
         : [...prev, id]
@@ -95,7 +93,7 @@ const ProductScreen: React.FC = () => {
             title={item.title}
             price={item.price}
             star={item.star}
-            liked={likedItems.includes(item.id)}
+            liked={likedProductIds.includes(item.id)}
             onLikePress={() => toggleLike(item.id)}
             onPress={() =>
               router.push({

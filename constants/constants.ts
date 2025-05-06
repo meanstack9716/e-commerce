@@ -1,3 +1,7 @@
 export const TRACK_WIDTH = 50;
 export const FIXED_INDICATOR_WIDTH = 12;
 export const MAX_TRANSLATION = TRACK_WIDTH - FIXED_INDICATOR_WIDTH;
+export const DISCOUNT_PERCENTAGE = 30;
+export const PRODUCT_CODE = 32361470;
+export const PRODUCT_PRICE = "294";
+export const EXTRA_DISCOUNT = "90";

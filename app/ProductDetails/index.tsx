@@ -34,7 +34,7 @@ const ProductDetailsScreen: React.FC = () => {
   const { id } = params;
   const [liked, setLiked] = useState(false);
   const [product, setProduct] = useState<Profile | null>(null);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isViewSimilarModalVisible, setViewSimilarModalVisible] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const insets = useSafeAreaInsets();
@@ -50,16 +50,16 @@ const ProductDetailsScreen: React.FC = () => {
 
   useEffect(() => {
     const products = data.products || data;
-    const rawProductData = products.find((p) => p.id === id);
+    const selectedProductData = products.find((p) => p.id === id);
 
-    if (rawProductData) {
+    if (selectedProductData) {
       const normalizedProduct: Profile = {
-        id: rawProductData.id,
-        images: rawProductData.images,
-        title: rawProductData.title || "Product Title",
-        price: rawProductData.price,
-        star: rawProductData.star,
-        categories: rawProductData.categories || [],
+        id: selectedProductData.id,
+        images: selectedProductData.images,
+        title: selectedProductData.title || "Product Title",
+        price: selectedProductData.price,
+        star: selectedProductData.star,
+        categories: selectedProductData.categories || [],
       };
       setProduct(normalizedProduct);
     }
@@ -97,7 +97,7 @@ const ProductDetailsScreen: React.FC = () => {
   };
 
   const handleViewSimilar = () => {
-    setIsModalVisible(true);
+    setViewSimilarModalVisible(true);
   };
 
   const handleBackToTop = () => {
@@ -264,8 +264,8 @@ const ProductDetailsScreen: React.FC = () => {
         <BottonActions />
       )}
       <ViewSimilarModal
-        visible={isModalVisible}
-        onClose={() => setIsModalVisible(false)}
+        visible={isViewSimilarModalVisible}
+        onClose={() => setViewSimilarModalVisible(false)}
         currentProduct={product}
       />
     </SafeAreaView>

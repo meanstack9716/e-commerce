@@ -1,3 +1,4 @@
+import { EXTRA_DISCOUNT, PRODUCT_PRICE } from "@/constants/constants";
 import OfferDetailsModal from "@/modal/OfferDetailsModal";
 import fontSizes from "@/style/fontSizes";
 import spacingStyles from "@/style/spacingStyles";
@@ -8,8 +9,8 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 
 const DealBanner = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const productPrice = "294";
-  const extraDiscount = "90";
+  const productPrice = PRODUCT_PRICE;
+  const extraDiscount = EXTRA_DISCOUNT;
   const toggleModal = () => {
     setModalVisible(!modalVisible);
   };
