@@ -22,5 +22,17 @@ interface Profile {
     };
     products: Profile[];
   }
+
+  type OTPInputProps = {
+    email: string;
+    onVerifySuccess: (enteredOtp: string) => void;
+    onStepBack: () => void;
+    cancelText?: string;
+    confirmText?: string;
+    cancelButtonStyle?: object;
+    confirmButtonStyle?: object;
+    cancelTextStyle?: object;
+    confirmTextStyle?: object;
+  };
   
-  export { Profile, Category, ProductData };
+  export { Profile, Category, ProductData ,OTPInputProps };

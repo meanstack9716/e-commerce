@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { Ionicons, MaterialIcons, FontAwesome6 } from "@expo/vector-icons";
 import ProductCard from "@/components/home/ProductCard";
-import { router, useNavigation } from "expo-router";
+import { router } from "expo-router";
 import data from "../../assets/data/products.json";
 import Navbar from "@/components/home/Navbar";
 import CategoryGrid from "@/components/home/CategoryGrid";

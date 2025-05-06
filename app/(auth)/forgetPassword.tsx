@@ -1,23 +1,21 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
-  TextInput,
-  StyleSheet,
   TouchableOpacity,
   Image,
-  Keyboard,
   ActivityIndicator,
   SafeAreaView,
+  StyleSheet,
 } from "react-native";
 import { useRouter } from "expo-router";
+
 import CreateNewPassword from "@/components/auth/CreateNewPassword";
 import TextField from "@/components/common/TextField";
 import { useFieldValidation } from "@/hooks/useFieldValidation";
 import {
   clearAuthError,
   sendEmailCode,
-  verifyEmailCode,
   setResetCredentials,
 } from "@/store/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -25,9 +23,10 @@ import colors from "@/style/staticColors";
 import textStyles from "@/style/textStyles";
 import spacingStyles from "@/style/spacingStyles";
 import images from "../../constants/images";
-import staticColors from "@/style/staticColors";
-import fontSizes from "@/style/fontSizes";
 import gapSizes from "@/style/gapSizes";
+import fontSizes from "@/style/fontSizes";
+import OTPInput from "@/components/common/OtpInput";
+
 export default function ForgetPassword() {
   const router = useRouter();
   const { errors, handleEmailValidation } = useFieldValidation();
@@ -35,35 +34,16 @@ export default function ForgetPassword() {
     "email" | "otp" | "password"
   >("email");
   const [email, setEmail] = useState("");
-  const [otp, setOtp] = useState(new Array(6).fill(""));
-  const inputsRef = useRef<Array<TextInput | null>>([]);
   const dispatch = useAppDispatch();
-  const [timer, setTimer] = useState(30);
-  const [otpError, setOtpError] = useState("");
   const { error, loading } = useAppSelector((state) => state.auth);
-
-  useEffect(() => {
-    let interval: NodeJS.Timeout | null = null;
-    if (currentStage === "otp" && timer > 0) {
-      interval = setInterval(() => {
-        setTimer((prev) => prev - 1);
-      }, 1000);
-    }
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [currentStage, timer]);
 
   const handleStepBack = () => {
     if (currentStage === "otp") {
       setCurrentStage("email");
-      setOtp(new Array(6).fill(""));
-      setTimer(30);
-      setOtpError("");
+      dispatch(clearAuthError());
     } else {
       router.back();
     }
-    dispatch(clearAuthError());
   };
 
   const onEmailChange = (text: string) => {
@@ -76,8 +56,7 @@ export default function ForgetPassword() {
 
   const handleConfirmEmail = async () => {
     handleEmailValidation(email);
-    if (!email.trim()) return;
-    if (errors.email) return;
+    if (!email.trim() || errors.email) return;
 
     try {
       await dispatch(sendEmailCode(email)).unwrap();
@@ -87,59 +66,9 @@ export default function ForgetPassword() {
     }
   };
 
-  const handleChangeOtp = (text: string, index: number) => {
-    if ((text)) {
-      const newOtp = [...otp];
-      newOtp[index] = text;
-      setOtp(newOtp);
-      if (index < 5) {
-        inputsRef.current[index + 1]?.focus();
-      } else {
-        Keyboard.dismiss();
-      }
-    } else if (text === "") {
-      const newOtp = [...otp];
-      newOtp[index] = "";
-      setOtp(newOtp);
-    }
-    if (otpError || error) {
-      setOtpError("");
-      dispatch(clearAuthError());
-    }
-  };
-
-  const handleKeyPress = (e: any, index: number) => {
-    if (e.nativeEvent.key === "Backspace" && otp[index] === "" && index > 0) {
-      inputsRef.current[index - 1]?.focus();
-    }
-  };
-
-  const handleResend = async () => {
-    if (timer === 0) {
-      try {
-        await dispatch(sendEmailCode(email)).unwrap();
-        setTimer(30);
-        setOtp(new Array(6).fill(""));
-      } catch (err) {
-        console.error("Failed to resend OTP:", err);
-      }
-    }
-  };
-
-  const handleVerifyOtp = async () => {
-    const enteredOtp = otp.join("").trim();
-    if (enteredOtp.length === 6) {
-      try {
-        await dispatch(verifyEmailCode({ email, code: enteredOtp })).unwrap();
-        dispatch(setResetCredentials({ email, code: enteredOtp }));
-        setCurrentStage("password");
-      } catch (err) {
-        setOtpError(err as string);
-        setOtp(new Array(6).fill(""));
-      }
-    } else {
-      setOtpError("Please enter the complete OTP");
-    }
+  const handleVerifySuccess = (enteredOtp: string) => {
+    dispatch(setResetCredentials({ email, code: enteredOtp }));
+    setCurrentStage("password");
   };
 
   return (
@@ -174,7 +103,7 @@ export default function ForgetPassword() {
                 disabled={loading}
               >
                 {loading ? (
-                  <ActivityIndicator size="small" color={staticColors.white} />
+                  <ActivityIndicator size="small" color={colors.white} />
                 ) : (
                   <Text style={styles.confirmText}>Confirm</Text>
                 )}
@@ -190,67 +119,20 @@ export default function ForgetPassword() {
               style={styles.logo}
               resizeMode="contain"
             />
-            <Text style={textStyles.title}>Verification</Text>
-            <Text style={textStyles.subtitle}>
-              Enter the code sent to your email
-            </Text>
-            <View style={styles.timerBox}>
-              {timer > 0 ? (
-                <Text style={styles.timerText}>Resend code in {timer}s</Text>
-              ) : (
-                <Text style={styles.timerText}>Resend code now</Text>
-              )}
+            <View>
+              <Text style={textStyles.title}>Verification</Text>
             </View>
-            <View style={styles.otpContainer}>
-              {otp.map((digit, index) => (
-                <TextInput
-                  key={index}
-                  style={[styles.otpBox, otpError && styles.otpError]}
-                  keyboardType="numeric"
-                  maxLength={1}
-                  value={digit}
-                  onChangeText={(text) => handleChangeOtp(text, index)}
-                  onKeyPress={(e) => handleKeyPress(e, index)}
-                  ref={(ref) => (inputsRef.current[index] = ref)}
-                />
-              ))}
-            </View>
-            <Text style={styles.resendText}>
-              Didn't get the code?{" "}
-              <Text
-                style={[styles.resendLink, timer > 0 && styles.disabledResend]}
-                onPress={timer === 0 ? handleResend : undefined}
-              >
-                {loading ? (
-                  <ActivityIndicator size={12} color={staticColors.borderSecondaryLight} />
-                ) : (
-                  <Text>Resend</Text>
-                )}
-              </Text>
-            </Text>
-            {(otpError || error) && (
-              <Text style={styles.errorMessage}>{otpError || error}</Text>
-            )}
-
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={[styles.button, styles.cancelButton]}
-                onPress={handleStepBack}
-              >
-                <Text style={styles.cancelText}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.button, styles.confirmButton]}
-                onPress={handleVerifyOtp}
-                disabled={loading}
-              >
-                {loading ? (
-                  <ActivityIndicator size="small" color={staticColors.white} />
-                ) : (
-                  <Text style={styles.confirmText}>Verify</Text>
-                )}
-              </TouchableOpacity>
-            </View>
+            <OTPInput
+              email={email}
+              onVerifySuccess={handleVerifySuccess}
+              onStepBack={handleStepBack}
+              cancelText="Cancel"
+              confirmText="Verify"
+              cancelButtonStyle={styles.cancelButton}
+              confirmButtonStyle={styles.confirmButton}
+              cancelTextStyle={styles.cancelText}
+              confirmTextStyle={styles.confirmText}
+            />
           </>
         )}
 
@@ -309,48 +191,5 @@ const styles = StyleSheet.create({
   confirmText: {
     color: colors.white,
     fontFamily: "HelveticaBold",
-  },
-  timerBox: {
-    alignItems: "center",
-    ...spacingStyles.mt10,
-  },
-  timerText: {
-    fontSize: fontSizes.sm,
-    color: colors.darkGray,
-    fontWeight: "500",
-  },
-  otpContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    ...spacingStyles.mt20,
-    gap: gapSizes.md,
-  },
-  otpBox: {
-    width: 45,
-    height: 50,
-    borderWidth: 1,
-    borderRadius: 10,
-    textAlign: "center",
-    fontSize: fontSizes.lg,
-  },
-  otpError: {
-    borderColor: colors.errorColor,
-  },
-  resendText: {
-    fontSize: fontSizes.sm,
-    ...spacingStyles.my20,
-    color: colors.darkGray,
-  },
-  resendLink: {
-    color: colors.linkDefault,
-    fontWeight: "600",
-  },
-  disabledResend: {
-    color: colors.lightGray,
-  },
-  errorMessage: {
-    color: colors.errorColor,
-    fontSize: fontSizes.sm,
-    ...spacingStyles.mt10,
   },
 });
