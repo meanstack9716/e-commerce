@@ -27,10 +27,11 @@ import { useRouter } from "expo-router";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import fontSizes from "@/style/fontSizes";
 export default function ProfileScreen() {
   const [selectedSection, setSelectedSection] = useState("Profile");
   const router = useRouter();
-  const insets = useSafeAreaInsets(); 
+  const insets = useSafeAreaInsets();
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
@@ -48,24 +49,38 @@ export default function ProfileScreen() {
     };
   }, [selectedSection]);
 
-  const renderSectionContent = () => {
+  const getSelectedProfileSectionContent = () => {
     const sectionComponents: { [key: string]: React.ReactNode } = {
       Profile: (
         <>
           <ProfileHeader />
           <View style={styles.optionsContainer}>
             <ProfileOption
-              icon={<FontAwesome5 name="box-open" size={24} color={colors.textMuted} />}
+              icon={
+                <FontAwesome5
+                  name="box-open"
+                  size={24}
+                  color={colors.textMuted}
+                />
+              }
               label="Orders"
               subtitle="Check your order status"
             />
             <ProfileOption
-              icon={<MaterialIcons name="help" size={24} color={colors.textMuted} />}
+              icon={
+                <MaterialIcons name="help" size={24} color={colors.textMuted} />
+              }
               label="Help Center"
               subtitle="Help regarding your recent purchases"
             />
             <ProfileOption
-              icon={<Ionicons name="heart-outline" size={24} color={colors.textMuted} />}
+              icon={
+                <Ionicons
+                  name="heart-outline"
+                  size={24}
+                  color={colors.textMuted}
+                />
+              }
               label="Wishlist"
               subtitle="Your most loved styles"
             />
@@ -79,7 +94,7 @@ export default function ProfileScreen() {
                 />
               }
               label="Scan for coupon"
-              customStyle={{ ...spacingStyles.my25}}
+              customStyle={{ ...spacingStyles.my25 }}
             />
           </View>
           <FooterLinks onLinkPress={(link) => setSelectedSection(link)} />
@@ -117,49 +132,50 @@ export default function ProfileScreen() {
         <Text style={styles.headerTitle}>{selectedSection}</Text>
       </View>
 
-      <ScrollView style={styles.container}>{renderSectionContent()}</ScrollView>
+      <ScrollView style={styles.container}>
+        {getSelectedProfileSectionContent()}
+      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   backButton: {
-    ...spacingStyles.mr10
+    ...spacingStyles.mr10,
   },
   headerTitle: {
-    fontSize: 16,
+    fontSize: fontSizes.base,
     fontWeight: "bold",
-    color: colors.primaryColor,
+    color: colors.primary,
     fontFamily: "Arial",
   },
   container: {
     flex: 1,
-    backgroundColor: colors.whiteColor,
-    
+    backgroundColor: colors.white,
   },
   optionsContainer: {
-    backgroundColor: colors.backgroundSecondary,
+    backgroundColor: colors.bgSecondary,
   },
   versionText: {
-    fontSize: 13,
+    fontSize: fontSizes.sm,
     textAlign: "center",
     color: colors.textSecondary,
-    ...spacingStyles.py25
+    ...spacingStyles.py25,
   },
   topBar: {
     flexDirection: "row",
     alignItems: "center",
     ...spacingStyles.pl10,
-    backgroundColor: colors.whiteColor,
+    backgroundColor: colors.white,
     ...spacingStyles.py10,
     elevation: 4,
-    shadowColor: colors.shadowColor,
+    shadowColor: colors.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     zIndex: 10,
   },
-  qrIcon:{
-    ...spacingStyles.mt10
-  }
+  qrIcon: {
+    ...spacingStyles.mt10,
+  },
 });

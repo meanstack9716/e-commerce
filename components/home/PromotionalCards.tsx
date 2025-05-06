@@ -4,7 +4,7 @@ import {
   Entypo,
   FontAwesome,
   Ionicons,
-  Octicons,
+  MaterialIcons,
 } from "@expo/vector-icons";
 import React from "react";
 import {
@@ -17,6 +17,7 @@ import {
   Dimensions,
 } from "react-native";
 import staticColors from "@/style/staticColors";
+import fontSizes from "@/style/fontSizes";
 interface PromotionalCard {
   id: string;
   title: string;
@@ -75,7 +76,7 @@ const PromotionalCards: React.FC<PromotionalCardsProps> = ({
                 <View style={styles.cardContent}>
                   <View style={styles.cardtitleContent}>
                     <Text style={styles.cardTitle}>{card.title} </Text>
-                    <AntDesign name="right" size={8} color="#7a7a7a" />
+                    <AntDesign name="right" size={8} color={staticColors.lightGray} />
                   </View>
                   <Image
                     source={{ uri: card.imageUrl }}
@@ -97,7 +98,7 @@ const PromotionalCards: React.FC<PromotionalCardsProps> = ({
                       <Text style={styles.cardTitle}>
                         {remainingCards[colIndex * 2].title}
                       </Text>
-                      <AntDesign name="right" size={8} color="#7a7a7a" />
+                      <AntDesign name="right" size={8} color={staticColors.lightGray} />
                     </View>
                     <Image
                       source={{ uri: remainingCards[colIndex * 2].imageUrl }}
@@ -114,7 +115,7 @@ const PromotionalCards: React.FC<PromotionalCardsProps> = ({
                       <Text style={styles.cardTitle}>
                         {remainingCards[colIndex * 2 + 1].title}
                       </Text>
-                      <AntDesign name="right" size={8} color="#7a7a7a" />
+                      <AntDesign name="right" size={8} color={staticColors.lightGray} />
                     </View>
                     <Image
                       source={{
@@ -133,11 +134,11 @@ const PromotionalCards: React.FC<PromotionalCardsProps> = ({
       {/* Shipping info banner */}
       <View style={styles.shippingInfoContainer}>
         <View style={styles.sparkleLeft}>
-          <Ionicons name="star-sharp" size={24} color="#F7CD03" />
+          <Ionicons name="star-sharp" size={24} color={staticColors.lightYellow} />
         </View>
 
         <View style={styles.infoItem}>
-          <Octicons name="verified" size={18} color="#1B1650" />
+          <MaterialIcons name="verified" size={24} color={staticColors.primary} />
           <View style={styles.infoTextContainer}>
             <Text style={styles.infoTitle}>100%</Text>
             <Text style={styles.infoSubtitle}>Original Products</Text>
@@ -146,7 +147,7 @@ const PromotionalCards: React.FC<PromotionalCardsProps> = ({
 
         <View style={styles.divider} />
         <View style={styles.infoItem}>
-          <Entypo name="box" size={18} color="#1B1650" />
+          <Entypo name="box" size={18} color={staticColors.primary} />
           <View style={styles.infoTextContainer}>
             <Text style={styles.infoTitle}>Free Shipping</Text>
             <Text style={styles.infoSubtitle}>On All Orders</Text>
@@ -155,7 +156,7 @@ const PromotionalCards: React.FC<PromotionalCardsProps> = ({
 
         <View style={styles.divider} />
         <View style={styles.infoItem}>
-          <FontAwesome name="rupee" size={18} color="#1B1650" />
+          <FontAwesome name="rupee" size={18} color={staticColors.primary} />
           <View style={styles.infoTextContainer}>
             <Text style={styles.infoTitle}>Easy Returns</Text>
             <Text style={styles.infoSubtitle}>And Refunds</Text>
@@ -163,7 +164,7 @@ const PromotionalCards: React.FC<PromotionalCardsProps> = ({
         </View>
 
         <View style={styles.sparkleRight}>
-          <Ionicons name="star-sharp" size={24} color="#F7CD03" />
+          <Ionicons name="star-sharp" size={24} color={staticColors.lightYellow} />
         </View>
       </View>
     </View>
@@ -192,7 +193,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     ...spacingStyles.mb5,
     overflow: "hidden",
-    backgroundColor: staticColors.cardBackground,
+    backgroundColor: staticColors.bgCard,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -202,7 +203,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     ...spacingStyles.mb5,
     overflow: "hidden",
-    backgroundColor: staticColors.cardLightBackground,
+    backgroundColor: staticColors.bgCardLight,
   },
   cardContent: {
     flex: 1,
@@ -222,9 +223,9 @@ const styles = StyleSheet.create({
     gap: 2,
   },
   cardTitle: {
-    color: staticColors.cardTitleColor,
+    color: staticColors.darkGray,
     fontWeight: "600",
-    fontSize: 12,
+    fontSize: fontSizes.xs,
     ...spacingStyles.pl10,
   },
   bestSellerOverlay: {
@@ -237,9 +238,9 @@ const styles = StyleSheet.create({
     ...spacingStyles.px15,
   },
   bestSellerTitle: {
-    color: staticColors.primaryColor,
+    color: staticColors.primary,
     fontWeight: "800",
-    fontSize: 20,
+    fontSize: fontSizes.lg,
     lineHeight: 24,
   },
   starBadge: {
@@ -258,7 +259,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.mx10,
     position: "relative",
     borderWidth: 1,
-    borderColor: staticColors.lightColor,
+    borderColor: staticColors.textLightGray,
   },
   infoItem: {
     flexDirection: "row",
@@ -269,18 +270,18 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   infoTitle: {
-    fontSize: 12,
+    fontSize: fontSizes.xs,
     fontWeight: "bold",
-    color: staticColors.cardTitleColor,
+    color: staticColors.darkGray,
   },
   infoSubtitle: {
-    fontSize: 10,
-    color: staticColors.lightGray,
+    fontSize: fontSizes.xs,
+    color: staticColors.textLightGray,
   },
   divider: {
     width: 1,
     height: "90%",
-    backgroundColor: staticColors.lightGray,
+    backgroundColor: staticColors.textLightGray,
     ...spacingStyles.mx5,
   },
   sparkleLeft: {

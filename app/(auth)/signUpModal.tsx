@@ -26,6 +26,8 @@ import { Ionicons } from "@expo/vector-icons";
 import textStyles from "@/style/textStyles";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
+import fontSizes from "@/style/fontSizes";
+import images from "@/constants/images";
 
 interface SignUpModalProps {
   visible: boolean;
@@ -56,7 +58,7 @@ const SignUpModal: React.FC<SignUpModalProps> = ({
     errors,
     handleEmailValidation,
     handlePasswordValidation,
-    handlePasswordMatch,
+    handleConfirmPasswordMatch,
     resetErrors,
   } = useFieldValidation();
 
@@ -72,39 +74,37 @@ const SignUpModal: React.FC<SignUpModalProps> = ({
     }
   }, [registered, onClose, router, dispatch]);
 
-  const handleInputChange = (field: keyof FormData, value: string | boolean): void => {
-    setFormData(prevData => ({
+  const handleInputChange = (
+    field: keyof FormData,
+    value: string | boolean
+  ): void => {
+    setFormData((prevData) => ({
       ...prevData,
       [field]: value,
     }));
-  
-    if (typeof value === 'string') {
+
+    if (typeof value === "string") {
       switch (field) {
-        case 'email':
+        case "email":
           handleEmailValidation(value);
           break;
-        case 'password':
+        case "password":
           handlePasswordValidation(value);
           if (formData.confirmPassword) {
-            handlePasswordMatch(value, formData.confirmPassword);
+            handleConfirmPasswordMatch(value, formData.confirmPassword);
           }
           break;
-        case 'confirmPassword':
-          handlePasswordMatch(formData.password, value);
+        case "confirmPassword":
+          handleConfirmPasswordMatch(formData.password, value);
           break;
       }
     }
-  
-    if (field === 'termsAccepted') {
-    
-    }
   };
-  
 
   const handleSignUp = (): void => {
     handleEmailValidation(formData.email);
     handlePasswordValidation(formData.password);
-    handlePasswordMatch(formData.password, formData.confirmPassword);
+    handleConfirmPasswordMatch(formData.password, formData.confirmPassword);
 
     const hasErrors = !!(
       errors.email ||
@@ -162,13 +162,13 @@ const SignUpModal: React.FC<SignUpModalProps> = ({
                     <Ionicons
                       name="close"
                       size={24}
-                      color={staticColors.primaryColor}
+                      color={staticColors.primary}
                     />
                   </TouchableOpacity>
 
                   <View>
                     <Image
-                      source={require("../../assets/images/logo-blue.png")}
+                      source={images.logoBlue}
                       style={styles.image}
                       resizeMode="contain"
                     />
@@ -179,7 +179,7 @@ const SignUpModal: React.FC<SignUpModalProps> = ({
                     <TextField
                       label="Enter Your Email"
                       value={formData.email}
-                      onChangeText={(text) => handleInputChange('email', text)}
+                      onChangeText={(text) => handleInputChange("email", text)}
                       keyboardType="email-address"
                       error={errors.email}
                     />
@@ -187,21 +187,30 @@ const SignUpModal: React.FC<SignUpModalProps> = ({
                     <PasswordField
                       label="Password"
                       value={formData.password}
-                      onChangeText={(text) => handleInputChange('password', text)}
+                      onChangeText={(text) =>
+                        handleInputChange("password", text)
+                      }
                       error={errors.password}
                     />
 
                     <PasswordField
                       label="Confirm Password"
                       value={formData.confirmPassword}
-                      onChangeText={(text) => handleInputChange('confirmPassword', text)}
+                      onChangeText={(text) =>
+                        handleInputChange("confirmPassword", text)
+                      }
                       error={errors.confirmPassword}
                     />
                     {error && <Text style={styles.apiError}>{error}</Text>}
 
                     <TouchableOpacity
                       style={styles.termsContainer}
-                      onPress={() => handleInputChange('termsAccepted', !formData.termsAccepted)}
+                      onPress={() =>
+                        handleInputChange(
+                          "termsAccepted",
+                          !formData.termsAccepted
+                        )
+                      }
                     >
                       <View
                         style={[
@@ -256,21 +265,21 @@ const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
     justifyContent: "flex-end",
-    backgroundColor: staticColors.modalBackGround,
+    backgroundColor: staticColors.modalOverlayLight,
   },
   backdropTouchable: {
     flex: 1,
     justifyContent: "flex-end",
   },
   modalContent: {
-    backgroundColor: staticColors.whiteColor,
+    backgroundColor: staticColors.white,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     overflow: "hidden",
   },
   container: {
     width: "100%",
-    backgroundColor: staticColors.whiteColor,
+    backgroundColor: staticColors.white,
   },
   scrollContent: {
     ...spacingStyles.p25,
@@ -283,7 +292,7 @@ const styles = StyleSheet.create({
   subTitle: {
     ...textStyles.subtitle,
     textAlign: "center",
-    fontSize: 13,
+    fontSize: fontSizes.xs,
   },
   termsContainer: {
     flexDirection: "row",
@@ -294,26 +303,26 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     borderWidth: 1,
-    borderColor: staticColors.linkPrimaryColor,
+    borderColor: staticColors.linkPrimary,
     borderRadius: 4,
     marginRight: 8,
     justifyContent: "center",
     alignItems: "center",
   },
   checkboxChecked: {
-    backgroundColor: staticColors.primaryColor,
+    backgroundColor: staticColors.primary,
   },
   checkmark: {
-    color: staticColors.whiteColor,
-    fontSize: 12,
+    color: staticColors.white,
+    fontSize: fontSizes.xs,
   },
   termsText: {
-    fontSize: 12.5,
-    color: staticColors.cardTitleColor,
+    fontSize: fontSizes.xs,
+    color: staticColors.darkGray,
     flexShrink: 1,
   },
   link: {
-    color: staticColors.linkPrimaryColor,
+    color: staticColors.linkPrimary,
     fontWeight: "600",
   },
   signupContainer: {
@@ -325,7 +334,7 @@ const styles = StyleSheet.create({
     color: staticColors.textSecondary,
   },
   signupLink: {
-    color: staticColors.linkPrimaryColor,
+    color: staticColors.linkPrimary,
     fontWeight: "bold",
   },
   disabledButton: {
@@ -333,7 +342,7 @@ const styles = StyleSheet.create({
   },
   apiError: {
     color: staticColors.errorColor,
-    fontSize: 13,
+    fontSize: fontSizes.xs,
     marginTop: -10,
     textAlign: "left",
   },

@@ -11,6 +11,7 @@ import {
   Image,
   Pressable,
 } from "react-native";
+import fontSizes from "@/style/fontSizes";
 const cartItems = [
   {
     id: "1",
@@ -207,18 +208,18 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 60,
     paddingHorizontal: 16,
-    backgroundColor:colors.whiteColor,
+    backgroundColor:colors.white,
   },
   header: {
-    fontSize: 22,
+    fontSize: fontSizes.lg,
     fontWeight: "600",
     ...spacingStyles.mb20,
     textAlign: "center",
     fontFamily: "HelveticaBold",
     borderBottomWidth: 1,
-    borderColor: colors.lightColor,
+    borderColor: colors.lightGray,
     borderStyle: "dotted",
-    color:colors.primaryColor
+    color:colors.primary
   },
   modalOverlay: {
     flex: 1,
@@ -228,7 +229,7 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     width: "100%",
-    backgroundColor: colors.whiteColor,
+    backgroundColor: colors.white,
     ...spacingStyles.p20,
     alignItems: "center",
     elevation: 10,
@@ -243,7 +244,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.mb10
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: fontSizes.md,
     fontWeight: "600",
     textAlign: "center",
     ...spacingStyles.mb10
@@ -255,8 +256,8 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   modalPrice: {
-    fontSize: 16,
-    color: colors.primaryColor,
+    fontSize: fontSizes.base,
+    color: colors.primary,
   },
   modalButtonContainer: {
     flexDirection: "row",
@@ -271,18 +272,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   cancelButton: {
-    borderColor:colors.primaryColor,
+    borderColor:colors.primary,
     borderWidth:1,
   },
   removeButton: {
-    backgroundColor: colors.primaryColor,
+    backgroundColor: colors.primary,
   },
   cancelText:{
-    color:colors.primaryColor,
+    color:colors.primary,
     fontFamily:'Helvetica',
   },
   removeText:{
-    color:colors.whiteColor,
+    color:colors.white,
     fontFamily:'Helvetica',
   }
 

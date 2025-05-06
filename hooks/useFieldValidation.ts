@@ -76,7 +76,7 @@ export const useFieldValidation = () => {
     return password === confirmPassword;
   };
 
-  const handlePasswordMatch = (
+  const handleConfirmPasswordMatch = (
     password: string,
     confirmPassword: string,
     errorMessage: string = "Passwords don't match"
@@ -117,7 +117,7 @@ export const useFieldValidation = () => {
     handleFieldChange, 
     handleEmailValidation, 
     handlePasswordValidation, 
-    handlePasswordMatch ,
+    handleConfirmPasswordMatch ,
     handleLoginPasswordValidation,
     resetErrors
   };

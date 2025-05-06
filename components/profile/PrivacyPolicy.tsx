@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   title: {
     ...textStyles.title,
     borderBottomWidth: 1,
-    borderColor: colors.lightColor,
+    borderColor: colors.lightGray,
     borderStyle: "dotted",
     ...spacingStyles.pb10
   },

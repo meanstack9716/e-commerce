@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { StyleSheet } from "react-native";
+import fontSizes from "@/style/fontSizes";
 
 const Grievance = () => {
   return (
@@ -115,23 +116,23 @@ const styles = StyleSheet.create({
   title: {
     ...textStyles.title,
     borderBottomWidth: 1,
-    borderColor: colors.lightColor,
+    borderColor: colors.lightGray,
     borderStyle: "dotted",
   },
   heading: {
-    fontSize: 18,
+    fontSize: fontSizes.md,
     fontWeight: "semibold",
     ...spacingStyles.mb5
   },
   subHeading: {
-    fontSize: 16,
+    fontSize:fontSizes.base,
     fontWeight: "bold",
     ...spacingStyles.mt10,
     ...spacingStyles.mb5
   },
   text: {
     ...textStyles.subtitle,
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     ...spacingStyles.mb5
   },
   bold: {
@@ -141,7 +142,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.my10
   },
   linkText: {
-    color: colors.linkColor,
+    color: colors.linkDefault,
     textDecorationLine: "underline",
     ...spacingStyles.my5
   },

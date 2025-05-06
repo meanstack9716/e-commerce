@@ -11,6 +11,7 @@ import { router } from "expo-router";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
+import fontSizes from "@/style/fontSizes";
 
 interface NavbarProps {
   tabs: string[];
@@ -38,7 +39,7 @@ const Navbar: React.FC<NavbarProps> = ({ tabs, activeTab, setActiveTab }) => {
           >
             {tab === "Categories" ? (
               <View style={styles.categoryTab}>
-                <Ionicons name="grid-outline" size={20} color="#fff" />
+                <Ionicons name="grid-outline" size={20} color={staticColors.white} />
               </View>
             ) : (
               <Text
@@ -64,34 +65,34 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     ...spacingStyles.px10,
     borderBottomWidth: 1,
-    borderBottomColor: colors.lightColor,
+    borderBottomColor: colors.lightGray,
   },
   navItemWrapper: {
     alignItems: "center",
   },
   navItemText: {
-    fontSize: 16,
+    fontSize: fontSizes.base,
     fontWeight: "600",
-    color: staticColors.cardTitleColor,
+    color: staticColors.darkGray,
     fontFamily: "Helvetica",
   },
   activeLine: {
     ...spacingStyles.mt5,
     height: 2,
     width: "100%",
-    backgroundColor: colors.primaryColor,
+    backgroundColor: colors.primary,
     borderRadius: 1,
   },
   activeNavItemText: {
-    color: colors.primaryColor,
+    color: colors.primary,
     fontFamily: "HelveticaBold",
   },
   categoryTab: {
-    backgroundColor: colors.primaryColor,
+    backgroundColor: colors.primary,
    ...spacingStyles.p5,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: colors.whiteColor,
+    borderColor: colors.white,
     elevation: 3,
   },
 });

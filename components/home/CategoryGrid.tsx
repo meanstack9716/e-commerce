@@ -11,6 +11,7 @@ import data from "@/assets/data/products.json";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
+import fontSizes from "@/style/fontSizes";
 
 interface CategoryItem {
   id: string;
@@ -120,13 +121,13 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     overflow: "hidden",
     borderWidth: 1,
-    borderColor: staticColors.backgroundMuted,
-    backgroundColor: colors.whiteColor,
+    borderColor: staticColors.bgMuted,
+    backgroundColor: colors.white,
     justifyContent: "center",
     alignItems: "center",
   },
   activeImageContainer: {
-    borderColor: colors.primaryColor,
+    borderColor: colors.primary,
     borderWidth: 2,
   },
   categoryImage: {
@@ -135,12 +136,12 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
   },
   categoryTitle: {
-    fontSize: 12,
+    fontSize: fontSizes.xs,
     ...spacingStyles.mt5,
     textAlign: "center",
   },
   activeTitle: {
-    color: colors.primaryColor,
+    color: colors.primary,
     fontWeight: "700",
   },
 });

@@ -8,16 +8,9 @@ import {
   SafeAreaView,
   StatusBar,
   FlatList,
-  ScrollView,
   Image,
-  Platform,
 } from "react-native";
-import {
-  Ionicons,
-  Feather,
-  MaterialIcons,
-  FontAwesome6,
-} from "@expo/vector-icons";
+import { Ionicons, MaterialIcons, FontAwesome6 } from "@expo/vector-icons";
 import ProductCard from "@/components/home/ProductCard";
 import { router } from "expo-router";
 import data from "../../assets/data/products.json";
@@ -35,6 +28,7 @@ import BrandCard from "@/components/home/BrandCard";
 import staticColors from "@/style/staticColors";
 import OfferPriceCard from "@/components/home/OfferPriceCard";
 import PocketFriendlyBargain from "@/components/home/PocketFriendlyBargain";
+import fontSizes from "@/style/fontSizes";
 interface Product {
   id: string;
   image: string;
@@ -98,7 +92,7 @@ const HomeScreen: React.FC = () => {
     router.push("/profile");
   };
 
-  const toggleLike = (id: string) => {
+  const toggleLikedItem = (id: string) => {
     setLikedItems((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
@@ -112,7 +106,7 @@ const HomeScreen: React.FC = () => {
     <ProductCard
       {...item}
       liked={likedItems.includes(item.id)}
-      onLikePress={() => toggleLike(item.id)}
+      onLikePress={() => toggleLikedItem(item.id)}
     />
   );
 
@@ -153,7 +147,7 @@ const HomeScreen: React.FC = () => {
             <FontAwesome6
               name="location-dot"
               size={14}
-              color={colors.primaryColor}
+              color={colors.primary}
             />
             <Text style={[styles.addressText, { marginLeft: insets.left }]}>
               Add Delivery Address
@@ -162,7 +156,7 @@ const HomeScreen: React.FC = () => {
           <MaterialIcons
             name="keyboard-arrow-down"
             size={24}
-            color={colors.primaryColor}
+            color={colors.primary}
           />
         </View>
 
@@ -176,12 +170,16 @@ const HomeScreen: React.FC = () => {
             <TextInput
               placeholder="Search products..."
               style={styles.searchInput}
-              placeholderTextColor={staticColors.lightGray}
+              placeholderTextColor={staticColors.textLightGray}
               value={searchQuery}
               onChangeText={setSearchQuery}
             />
             <TouchableOpacity>
-              <Ionicons name="search" size={20} color="#999" />
+              <Ionicons
+                name="search"
+                size={20}
+                color={staticColors.textLightGray}
+              />
             </TouchableOpacity>
           </View>
 
@@ -189,24 +187,20 @@ const HomeScreen: React.FC = () => {
             style={styles.iconButton}
             onPress={handleUserIconPress}
           >
-            <MaterialIcons
-              name="notifications-none"
+            <Ionicons
+              name="notifications-outline"
               size={22}
-              color={colors.primaryColor}
+              color={colors.primary}
             />
           </TouchableOpacity>
           <TouchableOpacity style={styles.iconButton}>
-            <Feather name="heart" size={22} color={colors.primaryColor} />
+            <Ionicons name="heart-outline" size={22} color={colors.primary} />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.iconButton}
             onPress={handleUserIconPress}
           >
-            <FontAwesome6
-              name="user-circle"
-              size={22}
-              color={colors.primaryColor}
-            />
+            <FontAwesome6 name="user-circle" size={22} color={colors.primary} />
           </TouchableOpacity>
         </View>
 
@@ -230,10 +224,10 @@ const HomeScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: staticColors.homebackgroundColor,
+    backgroundColor: staticColors.bgPrimary,
   },
   contentWrapper: {
-    flex:1
+    flex: 1,
   },
   addressContainer: {
     flexDirection: "row",
@@ -244,29 +238,29 @@ const styles = StyleSheet.create({
   addressTextContainer: {
     flexDirection: "row",
     alignItems: "center",
-    gap:8
+    gap: 8,
   },
   addressText: {
-    fontSize: 13,
+    fontSize: fontSizes.sm,
     fontWeight: "500",
-    color: colors.primaryColor,
-    ...spacingStyles.mx5
+    color: colors.primary,
+    ...spacingStyles.mx5,
   },
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
     ...spacingStyles.mb10,
-    ...spacingStyles.px10
+    ...spacingStyles.px10,
   },
   searchInputContainer: {
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    borderColor: staticColors.lightColor,
+    borderColor: staticColors.lightGray,
     borderWidth: 1,
     borderRadius: 12,
     ...spacingStyles.px10,
-    backgroundColor: colors.whiteColor,
+    backgroundColor: colors.white,
     justifyContent: "space-between",
   },
 
@@ -274,24 +268,24 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     resizeMode: "contain",
-    ...spacingStyles.mr10
+    ...spacingStyles.mr10,
   },
 
   searchInput: {
     flex: 1,
     height: 40,
-    fontSize: 12,
-    color: staticColors.cardTitleColor,
+    fontSize: fontSizes.sm,
+    color: staticColors.darkGray,
   },
   iconButton: {
-    ...spacingStyles.ml15
+    ...spacingStyles.ml15,
   },
   flatListContent: {
-    ...spacingStyles.px10
+    ...spacingStyles.px10,
   },
   columnWrapper: {
     justifyContent: "space-between",
-    ...spacingStyles.mb10
+    ...spacingStyles.mb10,
   },
 });
 

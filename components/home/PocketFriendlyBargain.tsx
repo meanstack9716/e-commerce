@@ -12,6 +12,7 @@ import {
 import categoryData from "../../assets/data/pockeFriendly.json";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
+import fontSizes from "@/style/fontSizes";
 
 const CategoryCard: React.FC<{
   imageUrl: string;
@@ -127,13 +128,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
-    fontSize: 19,
+    fontSize: fontSizes.md,
     fontWeight: "bold",
-    color: staticColors.primaryColor,
+    color: staticColors.primary,
   },
   subtitle: {
-    fontSize: 14,
-    color: staticColors.lightGray,
+    fontSize: fontSizes.sm,
+    color: staticColors.textLightGray,
     fontWeight: "500",
     lineHeight: 15,
   },
@@ -167,19 +168,19 @@ const styles = StyleSheet.create({
     ...spacingStyles.p10,
   },
   priceLabel: {
-    fontSize: 16,
-    color: staticColors.whiteColor,
+    fontSize: fontSizes.base,
+    color: staticColors.white,
     fontWeight: "500",
   },
   price: {
-    fontSize: 22,
+    fontSize: fontSizes.lg,
     fontWeight: "bold",
-    color: staticColors.whiteColor,
+    color: staticColors.white,
   },
   category: {
-    fontSize: 15,
+    fontSize: fontSizes.sm,
     fontWeight: "600",
-    color: staticColors.whiteColor,
+    color: staticColors.white,
   },
   indicatorContainer: {
     alignItems: "center",
@@ -191,7 +192,7 @@ const styles = StyleSheet.create({
   },
   indicator: {
     height: 5,
-    backgroundColor: staticColors.primaryColor,
+    backgroundColor: staticColors.primary,
     borderRadius: 3,
   },
 });

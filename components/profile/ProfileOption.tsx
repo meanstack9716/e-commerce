@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import colors from '@/style/staticColors';
 import textStyles from '@/style/textStyles';
 import spacingStyles from '@/style/spacingStyles';
+import fontSizes from '@/style/fontSizes';
 
 interface Props {
   icon: ReactNode;
@@ -31,10 +32,10 @@ const styles = StyleSheet.create({
   option: {
     flexDirection: 'row',
     ...spacingStyles.p15,
-    borderBottomColor: colors.lightColor,
+    borderBottomColor: colors.lightGray,
     borderBottomWidth: 1,
     alignItems: 'center',
-    backgroundColor: colors.whiteColor,
+    backgroundColor: colors.white,
     justifyContent: 'space-between',
   },
   leftSection: {
@@ -47,11 +48,11 @@ const styles = StyleSheet.create({
   },
   label: {
     color: 'black',
-    fontSize: 15,
+    fontSize: fontSizes.sm,
     fontFamily:'helveticaRoundedBold'
   },
   subTitle:{
     ...textStyles.subtitle,
-    fontSize:13,
+    fontSize:fontSizes.sm
   }
 });

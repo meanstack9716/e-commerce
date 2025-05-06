@@ -11,6 +11,7 @@ import offerData from "../../assets/data/offers.json";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
+import fontSizes from "@/style/fontSizes";
 
 const { width } = Dimensions.get("window");
 
@@ -108,18 +109,18 @@ const styles = StyleSheet.create({
     ...spacingStyles.mt5,
   },
   heading: {
-    fontSize: 22,
+    fontSize: fontSizes.lg,
     fontWeight: "bold",
-    color: staticColors.primaryColor,
+    color: staticColors.primary,
     fontFamily: "helveticaBold",
   },
   subheading: {
-    fontSize: 12,
+    fontSize: fontSizes.xs,
     color: staticColors.textSecondary,
     ...spacingStyles.mb5,
   },
   timer: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     color: staticColors.textSecondary,
     flexDirection: "row",
     alignItems: "center",
@@ -141,23 +142,23 @@ const styles = StyleSheet.create({
   },
   timerText: {
     fontWeight: "600",
-    fontSize: 16,
-    color: staticColors.offerColor,
+    fontSize: fontSizes.base,
+    color: staticColors.brightRed,
   },
   timerLabel: {
-    fontSize: 15,
-    color: staticColors.offerColor,
+    fontSize: fontSizes.sm,
+    color: staticColors.brightRed,
   },
   list: {
     paddingVertical: 15,
   },
   card: {
     width: width * 0.4,
-    backgroundColor: colors.whiteColor,
+    backgroundColor: colors.white,
     borderRadius: 10,
     ...spacingStyles.mr10,
     overflow: "hidden",
-    borderColor: staticColors.lightColor,
+    borderColor: staticColors.lightGray,
     borderWidth: 1,
     ...spacingStyles.py10,
     alignItems: "center",
@@ -172,8 +173,8 @@ const styles = StyleSheet.create({
 
   brand: {
     fontWeight: "bold",
-    fontSize: 12,
-    color: staticColors.primaryColor,
+    fontSize: fontSizes.xs,
+    color: staticColors.primary,
   },
 
   image: {
@@ -184,15 +185,15 @@ const styles = StyleSheet.create({
   },
 
   tagline: {
-    fontSize: 12,
+    fontSize: fontSizes.xs,
     color: "#555",
     textAlign: "center",
     ...spacingStyles.mb2,
   },
 
   discount: {
-    fontSize: 13,
-    color: staticColors.offerColor,
+    fontSize:fontSizes.xs,
+    color: staticColors.brightRed,
     fontWeight: "bold",
     textAlign: "center",
   },

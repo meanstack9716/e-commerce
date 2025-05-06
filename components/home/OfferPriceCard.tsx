@@ -4,6 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign } from '@expo/vector-icons';
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
+import fontSizes from "@/style/fontSizes";
 
 interface OfferCardProps {
   topText: string;
@@ -86,12 +87,12 @@ const styles = StyleSheet.create({
     ...spacingStyles.py10
   },
   topText: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     fontWeight: "500",
     ...spacingStyles.mt25
   },
   priceText: {
-    fontSize: 23,
+    fontSize: fontSizes.lg,
     fontWeight: "700",
   },
   bottomRow: {
@@ -100,7 +101,7 @@ const styles = StyleSheet.create({
     gap:15
   },
   bottomText: {
-    fontSize: 16,
+    fontSize:fontSizes.base,
     fontWeight: "600",
   },
   arrow: {

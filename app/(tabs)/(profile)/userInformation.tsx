@@ -16,6 +16,9 @@ import { FontAwesome } from "@expo/vector-icons";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
+import fontSizes from "@/style/fontSizes";
+import images from "@/constants/images";
+import { pickImages } from "@/utils/imagePicker";
 
 const { height } = Dimensions.get("window");
 interface UserData {
@@ -35,17 +38,11 @@ const UserInformationScreen = () => {
   });
 
   const pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 0.7,
-    });
-
-    if (!result.canceled && result.assets?.length > 0) {
+    const uri = await pickImages();
+    if (uri) {
       setUserData((prevData) => ({
         ...prevData,
-        selectedImage: result.assets[0].uri,
+        selectedImage: uri,
       }));
     }
   };
@@ -64,7 +61,10 @@ const UserInformationScreen = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <LinearGradient colors={["#242555", "#1B7CA5"]} style={styles.topCurve}>
+      <LinearGradient
+        colors={[`${staticColors.indigoNavy}`, `${staticColors.ceruleanBlue}`]}
+        style={styles.topCurve}
+      >
         <Text style={styles.accountText}>Account Details!</Text>
       </LinearGradient>
 
@@ -76,14 +76,14 @@ const UserInformationScreen = () => {
           />
         ) : (
           <View style={[styles.avatar, styles.iconWrapper]}>
-            <FontAwesome name="user" size={50} color="#ccc" />
+            <FontAwesome name="user" size={50} color={staticColors.softGray} />
           </View>
         )}
         <Text style={styles.uploadText}>Tap to upload your image</Text>
       </TouchableOpacity>
 
       <View style={styles.rowInput}>
-        <View style={{ flex: 1 }}>
+        <View style={styles.textContainer}>
           <TextField
             label="First Name *"
             value={userData.firstName}
@@ -91,7 +91,7 @@ const UserInformationScreen = () => {
           />
         </View>
 
-        <View style={{ flex: 1 }}>
+        <View style={styles.textContainer}>
           <TextField
             label="Last Name *"
             value={userData.lastName}
@@ -115,10 +115,7 @@ const UserInformationScreen = () => {
             userData.gender === "male" && styles.selectedCard,
           ]}
         >
-          <Image
-            source={require("@/assets/images/images/gender-male.png")}
-            style={styles.cardImage}
-          />
+          <Image source={images.genderMale} style={styles.cardImage} />
           <Text style={styles.cardText}>Male</Text>
         </TouchableOpacity>
 
@@ -129,10 +126,8 @@ const UserInformationScreen = () => {
             userData.gender === "female" && styles.selectedCard,
           ]}
         >
-          <Image
-            source={require("@/assets/images/images/gender-female.png")}
-            style={styles.cardImage}
-          />
+          <Image source={images.genderFemale} style={styles.cardImage} />
+
           <Text style={styles.cardText}>Female</Text>
         </TouchableOpacity>
       </View>
@@ -154,9 +149,9 @@ export default UserInformationScreen;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.whiteColor,
+    backgroundColor: colors.white,
     alignItems: "center",
-    paddingHorizontal: 24,
+    ...spacingStyles.px25,
     paddingTop: height * 0.18,
     minHeight: "100%",
   },
@@ -173,35 +168,38 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   accountText: {
-    fontSize: 30,
+    fontSize: fontSizes["2xl"],
     fontWeight: "bold",
-    color: colors.whiteColor,
+    color: colors.white,
   },
   avatarWrapper: {
     alignItems: "center",
-    marginBottom: 16,
+    ...spacingStyles.mb15,
   },
   avatar: {
     width: 100,
     height: 100,
     borderRadius: 60,
-    marginBottom: 8,
+    ...spacingStyles.mb10,
     borderWidth: 2,
-    borderColor: colors.lightColor,
+    borderColor: colors.textLightGray,
     justifyContent: "center",
     alignItems: "center",
   },
   iconWrapper: {
-    backgroundColor: staticColors.lightColor,
+    backgroundColor: staticColors.textLightGray,
   },
   uploadText: {
-    fontSize: 15,
-    color: staticColors.lightGray,
-    marginBottom: 8,
+    fontSize: fontSizes.sm,
+    color: staticColors.textLightGray,
+    ...spacingStyles.mb10,
     fontWeight: "bold",
     borderBottomWidth: 2,
-    borderColor: colors.lightColor,
+    borderColor: colors.textLightGray,
     borderStyle: "dotted",
+  },
+  textContainer: {
+    flex: 1,
   },
   rowInput: {
     flexDirection: "row",
@@ -213,30 +211,30 @@ const styles = StyleSheet.create({
   },
   label: {
     fontWeight: "600",
-    marginBottom: 6,
+    ...spacingStyles.mb10,
     alignSelf: "flex-start",
-    color: staticColors.cardTitleColor,
+    color: staticColors.darkGray,
   },
   cardRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     gap: 15,
-    marginBottom: 20,
+    ...spacingStyles.mb20,
     width: "100%",
   },
 
   card: {
     flex: 1,
     alignItems: "center",
-    paddingVertical: 10,
+    ...spacingStyles.py15,
     borderWidth: 1,
-    borderColor: staticColors.lightColor,
+    borderColor: staticColors.lightGray,
     borderRadius: 12,
-    backgroundColor: colors.whiteColor,
+    backgroundColor: colors.white,
   },
 
   selectedCard: {
-    borderColor: staticColors.primaryColor,
+    borderColor: staticColors.primary,
     backgroundColor: staticColors.lightGreen,
   },
 
@@ -248,8 +246,8 @@ const styles = StyleSheet.create({
   },
 
   cardText: {
-    fontSize: 14,
-    color:staticColors.textSecondary,
+    fontSize: fontSizes.sm,
+    color: staticColors.textSecondary,
     fontFamily: "HelveticaBold",
   },
 
@@ -257,14 +255,14 @@ const styles = StyleSheet.create({
     width: "100%",
     ...spacingStyles.p10,
     borderWidth: 1,
-    borderColor: staticColors.lightColor,
+    borderColor: staticColors.lightGray,
     borderRadius: 10,
     marginBottom: 15,
   },
 
   dobText: {
-    fontSize: 16,
-    color: staticColors.cardTitleColor,
+    fontSize: fontSizes.base,
+    color: staticColors.darkGray,
   },
   helpContainer: {
     flexDirection: "row",
@@ -272,17 +270,17 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     ...spacingStyles.mt10,
     borderBottomWidth: 1,
-    borderColor: colors.lightColor,
+    borderColor: colors.lightGray,
     borderStyle: "dotted",
   },
   helpText: {
     marginTop: -5,
-    fontSize: 13,
-    color: "#878686",
+    fontSize: fontSizes.sm,
+    color: staticColors.darkGray,
   },
   helpLink: {
     marginTop: -5,
-    color: "#232454",
+    color: staticColors.linkDefault,
     fontWeight: "bold",
   },
 });

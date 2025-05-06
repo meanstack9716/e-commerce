@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
+import fontSizes from "@/style/fontSizes";
 
 type CartItemProps = {
   id: string;
@@ -51,7 +52,7 @@ const CartItem: React.FC<CartItemProps> = ({
         </TouchableOpacity>
         <Text style={styles.qtyText}>{quantity}</Text>
         <TouchableOpacity style={styles.qtyIncBtn} onPress={increaseQuantity}>
-          <Ionicons name="add" size={16} color="#fff" />
+          <Ionicons name="add" size={16} color={staticColors.white} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.deleteBtn} onPress={() => onDelete(id)}>
           <Ionicons name="trash-outline" size={20} color="#ff3b30" />
@@ -69,7 +70,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: colors.lightColor,
+    borderBottomColor: colors.lightGray,
   },
   itemImage: {
     width: 80,
@@ -82,7 +83,7 @@ const styles = StyleSheet.create({
   },
   itemTitle: {
     fontFamily:'HelveticaBold',
-    fontSize: 16,
+    fontSize:fontSizes.base,
   },
   itemSize: {
     color: staticColors.textMuted,
@@ -90,7 +91,7 @@ const styles = StyleSheet.create({
   },
   itemPrice: {
     fontWeight: "bold",
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     ...spacingStyles.mt5,
   },
   qtyContainer: {
@@ -102,7 +103,7 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 6,
-    backgroundColor: staticColors.primaryColor,
+    backgroundColor: staticColors.primary,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -110,7 +111,7 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 6,
-    borderColor:staticColors.primaryColor,
+    borderColor:staticColors.primary,
     borderWidth:1,
     justifyContent: "center",
     alignItems: "center",

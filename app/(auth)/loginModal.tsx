@@ -19,6 +19,8 @@ import { Ionicons } from "@expo/vector-icons";
 import textStyles from "@/style/textStyles";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
+import fontSizes from "@/style/fontSizes";
+import images from "@/constants/images";
 
 interface LoginModalProps {
   visible: boolean;
@@ -51,16 +53,18 @@ const LoginModal: React.FC<LoginModalProps> = ({
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const handleInputChange = (field: 'email' | 'password', text: string): void => {
+  const handleInputChange = (
+    field: "email" | "password",
+    text: string
+  ): void => {
     setFormData((prev) => ({ ...prev, [field]: text }));
-  
-    if (field === 'email') {
+
+    if (field === "email") {
       handleEmailValidation(text);
-    } else if (field === 'password') {
+    } else if (field === "password") {
       handleLoginPasswordValidation(text);
     }
   };
-  
 
   const handleLoginPress = async (): Promise<void> => {
     handleEmailValidation(formData.email);
@@ -103,11 +107,10 @@ const LoginModal: React.FC<LoginModalProps> = ({
           <TouchableWithoutFeedback>
             <View style={styles.modalContent}>
               <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-                <Ionicons name="close" size={24} color="#f1E2637" />
+                <Ionicons name="close" size={24} color={staticColors.darkGray} />
               </TouchableOpacity>
-
               <Image
-                source={require("../../assets/images/logo-blue.png")}
+                source={images.logoBlue}
                 style={styles.image}
                 resizeMode="contain"
               />
@@ -116,7 +119,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
               <TextField
                 label="Enter your Email"
                 value={formData.email}
-                onChangeText={(text) => handleInputChange('email', text)}
+                onChangeText={(text) => handleInputChange("email", text)}
                 keyboardType="email-address"
                 error={errors.email}
               />
@@ -124,7 +127,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
               <PasswordField
                 label="Password"
                 value={formData.password}
-                onChangeText={(text) => handleInputChange('password', text)}
+                onChangeText={(text) => handleInputChange("password", text)}
                 error={errors.password}
               />
               {error && <Text style={styles.apiError}>{error}</Text>}
@@ -185,11 +188,11 @@ const styles = StyleSheet.create({
   overlay: {
     flex: 1,
     alignItems: "center",
-    backgroundColor: staticColors.modalBackGround,
+    backgroundColor: staticColors.modalOverlayLight,
     justifyContent: "flex-end",
   },
   modalContent: {
-    backgroundColor: staticColors.whiteColor,
+    backgroundColor: staticColors.white,
     ...spacingStyles.p25,
     width: "100%",
     position: "relative",
@@ -212,12 +215,12 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: staticColors.errorColor,
-    fontSize: 12,
+    fontSize: fontSizes.xs,
     ...spacingStyles.mb10,
   },
   apiError: {
     color: staticColors.errorColor,
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     marginTop: -15,
     ...spacingStyles.mb15,
     textAlign: "left",
@@ -229,14 +232,14 @@ const styles = StyleSheet.create({
     ...spacingStyles.mb15,
   },
   checkmark: {
-    color: staticColors.whiteColor,
-    fontSize: 12,
+    color: staticColors.white,
+    fontSize: fontSizes.xs,
   },
   checkboxChecked: {
-    backgroundColor: staticColors.primaryColor,
+    backgroundColor: staticColors.primary,
   },
   forgotPasswordText: {
-    color: staticColors.linkPrimaryColor,
+    color: staticColors.linkPrimary,
     fontWeight: "600",
   },
   rememberMeContainer: {
@@ -247,7 +250,7 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     borderWidth: 1,
-    borderColor: staticColors.linkPrimaryColor,
+    borderColor: staticColors.linkPrimary,
     borderRadius: 4,
     ...spacingStyles.mr5,
     justifyContent: "center",
@@ -255,7 +258,7 @@ const styles = StyleSheet.create({
   },
   rememberMeText: {
     color: staticColors.textSecondary,
-    fontSize: 14,
+    fontSize: fontSizes.sm,
   },
   signupContainer: {
     flexDirection: "row",
@@ -265,7 +268,7 @@ const styles = StyleSheet.create({
     color: staticColors.textSecondary,
   },
   signupLink: {
-    color: staticColors.linkPrimaryColor,
+    color: staticColors.linkPrimary,
     fontWeight: "bold",
     ...spacingStyles.px5,
   },

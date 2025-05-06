@@ -11,6 +11,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
+import fontSizes from "@/style/fontSizes";
 
 export interface ProductCardProps {
   id: string;
@@ -41,7 +42,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           key={`full-${i}`}
           name="star"
           size={14}
-          color="#FFD700"
+          color={staticColors.lightYellow}
           style={styles.starIcon}
         />
       );
@@ -53,7 +54,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           key="half"
           name="star-half-o"
           size={14}
-          color="#FFD700"
+          color={staticColors.lightYellow}
           style={styles.starIcon}
         />
       );
@@ -84,7 +85,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           <FontAwesome
             name={liked ? "heart" : "heart-o"}
             size={18}
-            color={liked ? "red" : "#fff"}
+            color={liked ? "red" : `${staticColors.white}`}
           />
         </TouchableOpacity>
       </View>
@@ -116,7 +117,7 @@ export default ProductCard;
 const styles = StyleSheet.create({
   card: {
     width: Dimensions.get("window").width / 2 - 20,
-    backgroundColor: colors.whiteColor,
+    backgroundColor: colors.white,
     borderRadius: 8,
     overflow: "hidden",
   },
@@ -132,18 +133,15 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 10,
     right: 10,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    padding: 7,
-    borderRadius: 20,
   },
   cardContainer:{
     borderWidth: 1,
-    borderColor: colors.lightColor,
+    borderColor: colors.lightGray,
   },
   cardTitle: {
-    fontSize: 13,
+    fontSize: fontSizes.xs,
     fontWeight: "600",
-    color: staticColors.cardTitleColor,
+    color: staticColors.darkGray,
     height:43,
     ...spacingStyles.px10,
     ...spacingStyles.pt10,
@@ -159,14 +157,14 @@ const styles = StyleSheet.create({
     marginRight: 2,
   },
   ratingText: {
-    fontSize: 12,
-    color: staticColors.lightGray,
+    fontSize: fontSizes.xs,
+    color: staticColors.textLightGray,
     marginLeft: 4,
   },
   cardPrice: {
-    fontSize: 16,
+    fontSize: fontSizes.base,
     fontWeight: "700",
-    color: colors.primaryColor,
+    color: colors.primary,
     ...spacingStyles.px10,
     ...spacingStyles.pt5,
   },
@@ -176,8 +174,8 @@ const styles = StyleSheet.create({
     ...spacingStyles.my5
   },
   discountText: {
-    color: staticColors.discountColor,
-    fontSize: 10,
+    color: staticColors.DarkRed,
+    fontSize: fontSizes.xs,
     fontWeight: "bold",
   },
 });

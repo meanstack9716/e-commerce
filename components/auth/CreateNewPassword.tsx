@@ -13,6 +13,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { resetPassword } from "@/store/auth/authSlice";
 import textStyles from "@/style/textStyles";
 import spacingStyles from "@/style/spacingStyles";
+import fontSizes from "@/style/fontSizes";
 
 export default function CreateNewPassword() {
   const { errors, handlePasswordValidation, handlePasswordMatch } =
@@ -41,14 +42,7 @@ export default function CreateNewPassword() {
     handlePasswordMatch(newPassword, text);
   };
 
-  const handleSubmit = async () => {
-    console.log('Password reset payload:', {
-      email,
-      code,
-      password: newPassword,
-      password_confirmation: confirmPassword
-    });
-  
+  const handleSubmit = async () => {  
     try {
      await dispatch(
         resetPassword({
@@ -119,7 +113,7 @@ const styles = StyleSheet.create({
     height: 90,
   },
   infoText: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     color: "#555",
     textAlign: "center",
     width: "80%",

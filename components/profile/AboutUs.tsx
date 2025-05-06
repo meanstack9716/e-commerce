@@ -4,6 +4,7 @@ import ExpandableContent from "../ui/ExpandableContent";
 import textStyles from "@/style/textStyles";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
+import fontSizes from "@/style/fontSizes";
 
 const aboutUsData = [
   {
@@ -59,17 +60,17 @@ const AboutUs = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: staticColors.whiteColor,
+    backgroundColor: staticColors.white,
   },
   header: {
-    backgroundColor: staticColors.whiteColor,
+    backgroundColor: staticColors.white,
     ...spacingStyles.py25,
     alignItems: "center",
     justifyContent: "center",
     ...spacingStyles.mb20,
     borderBottomWidth: 1,
-    borderColor: staticColors.lightColor,
-    shadowColor: staticColors.shadowColor,
+    borderColor: staticColors.lightGray,
+    shadowColor: staticColors.black,
     shadowOpacity: 0.1,
     shadowRadius: 10,
     elevation: 5,
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     ...textStyles.subtitle,
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     textAlign: "center",
     lineHeight: 20,
     fontFamily: "Helvetica",
