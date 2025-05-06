@@ -134,8 +134,7 @@ const styles = StyleSheet.create({
   timerSegment: {
     backgroundColor: staticColors.lightPink,
     borderRadius: 6,
-    paddingVertical: 5,
-    paddingHorizontal: 8,
+    ...spacingStyles.p5,
     marginRight: 8,
     alignItems: "center",
     flexDirection: "row",
@@ -151,7 +150,7 @@ const styles = StyleSheet.create({
     color: staticColors.brightRed,
   },
   list: {
-    paddingVertical: 15,
+    ...spacingStyles.py10
   },
   card: {
     width: width * 0.4,
@@ -187,7 +186,7 @@ const styles = StyleSheet.create({
 
   tagline: {
     fontSize: fontSizes.xs,
-    color: "#555",
+    color: staticColors.textLightGray,
     textAlign: "center",
     ...spacingStyles.mb2,
   },

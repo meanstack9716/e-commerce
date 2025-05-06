@@ -1,3 +1,4 @@
+import fontSizes from '@/style/fontSizes';
 import spacingStyles from '@/style/spacingStyles';
 import staticColors from '@/style/staticColors';
 import React, { useState } from 'react';
@@ -61,7 +62,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.py15
   },
   header: {
-    fontSize: 18,
+    fontSize: fontSizes.md,
     fontWeight: "bold",
     ...spacingStyles.py5,
     color: staticColors.primary,
@@ -72,31 +73,31 @@ const styles = StyleSheet.create({
   ...spacingStyles.mb5
   },
   rating: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     fontWeight: 'bold',
     ...spacingStyles.mr10
   },
   ratingDetails: {
-    fontSize: 13,
-    color: staticColors.cardTitleColor
+    fontSize: fontSizes.xs,
+    color: staticColors.textLightGray
   },
   note: {
-    fontSize: 12,
+    fontSize: fontSizes.xs,
     color: staticColors.shadowColor,
     ...spacingStyles.mb20
   },
   sectionHeader: {
-    fontSize: 16,
+    fontSize: fontSizes.base,
     fontWeight: 'bold',
   },
   subHeader: {
-    fontSize: 13,
+    fontSize: fontSizes.xs,
     fontWeight: 'bold',
 ...spacingStyles.mb5,
     color:staticColors.shadowColor
   },
   detail: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     color: staticColors.shadowColor,
     
   },
@@ -104,8 +105,8 @@ const styles = StyleSheet.create({
   ...spacingStyles.pb5
   },
   viewMoreText: {
-    fontSize: 14,
-    color: staticColors.offerColor,
+    fontSize: fontSizes.sm,
+    color: staticColors.discountText,
     fontWeight: 'bold',
   },
 });

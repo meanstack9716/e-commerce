@@ -12,6 +12,7 @@ import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useLocation } from "@/utils/useLocation";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
+import fontSizes from "@/style/fontSizes";
 
 interface DeliveryAddressProps {
   onPinCodeFetched?: (pinCode: string) => void;
@@ -108,7 +109,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.p5
   },
   headerTitle: {
-    fontSize: 17,
+    fontSize: fontSizes.md,
     fontWeight: "bold",
     color: staticColors.primary,
     ...spacingStyles.ml10,
@@ -132,7 +133,7 @@ const styles = StyleSheet.create({
   },
   infoIcon: {
     color: "white",
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     fontWeight: "bold",
   },
   importantLabel: {
@@ -142,7 +143,7 @@ const styles = StyleSheet.create({
   importantText: {
     flex: 1,
     color: staticColors.darkYellow,
-    fontSize: 14,
+    fontSize: fontSizes.sm,
   },
   searchContainer: {
     flexDirection: "row",
@@ -159,7 +160,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     height: 40,
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     color: "#333",
   },
   locationOption: {
@@ -180,7 +181,7 @@ const styles = StyleSheet.create({
   },
   locationText: {
     color: staticColors.brightRed,
-    fontSize: 15,
+    fontSize: fontSizes.sm,
     fontWeight: "500",
   },
 });

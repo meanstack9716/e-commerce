@@ -81,7 +81,7 @@ const HomeScreen: React.FC = () => {
     setSelectedCategory(categoryId || null);
   };
 
-  const renderItem = ({ item }: { item: Profile }) => (
+  const renderProductItem = ({ item }: { item: Profile }) => (
     <ProductCard
       {...item}
       liked={likedProductItems.includes(item.id)}
@@ -92,6 +92,7 @@ const HomeScreen: React.FC = () => {
       })}
     />
   );
+  
 
   const ListHeader = () => (
     <>
@@ -194,7 +195,7 @@ const HomeScreen: React.FC = () => {
           data={getFilteredProducts()}
           numColumns={2}
           keyExtractor={(item) => item.id}
-          renderItem={renderItem}
+          renderItem={renderProductItem}
           ListHeaderComponent={ListHeader}
           contentContainerStyle={styles.flatListContent}
           columnWrapperStyle={styles.columnWrapper}

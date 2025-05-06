@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import fontSizes from "@/style/fontSizes";
 
 interface QualityCheckModalProps {
   isVisible: boolean;
@@ -32,7 +33,7 @@ const QualityCheckModal: React.FC<QualityCheckModalProps> = ({
           <View style={styles.modalHeader}>
             <Text style={styles.modalTitle}>Quality Check Process</Text>
             <TouchableOpacity onPress={onClose}>
-              <Ionicons name="close" size={24} color="#666" />
+              <Ionicons name="close" size={24} color={staticColors.textDarkGray} />
             </TouchableOpacity>
           </View>
           <View style={styles.modalContent}>
@@ -136,7 +137,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.mb20,
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: fontSizes.md,
     fontWeight: "bold",
     color: staticColors.primary,
   },
@@ -157,18 +158,18 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: fontSizes.base,
     fontWeight: "bold",
     color: staticColors.primary,
     ...spacingStyles.mb5,
   },
   sectionDescription: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     color: staticColors.textLightGray,
     lineHeight: 20,
   },
   footnote: {
-    fontSize: 12,
+    fontSize: fontSizes.xs,
     color: staticColors.darkGray,
     ...spacingStyles.mt5,
   },

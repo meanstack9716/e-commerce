@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
   },
   lengthValue: {
     fontWeight: "bold",
-    backgroundColor: "#eee",
+    backgroundColor: staticColors.lightGray,
     color: "#5b3ec8",
     borderRadius: 4,
   },
@@ -213,6 +213,6 @@ const styles = StyleSheet.create({
   measureText: {
     ...spacingStyles.mr10,
     fontSize: 13,
-    color: "#333",
+    color:staticColors.darkGray
   },
 });

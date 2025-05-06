@@ -13,6 +13,7 @@ import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import SimilarProducts from "@/components/productDetails/SimilarProducts";
 import { Profile } from "@/types/types";
+import fontSizes from "@/style/fontSizes";
 
 interface ViewSimilarModalProps {
   visible: boolean;
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.py10,
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: fontSizes.md,
     fontWeight: "bold",
     color: staticColors.primary,
   },
@@ -93,7 +94,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.p5,
   },
   placeholderText: {
-    fontSize: 16,
+    fontSize: fontSizes.base,
     color: staticColors.lightGray,
     textAlign: "center",
     ...spacingStyles.mt15,

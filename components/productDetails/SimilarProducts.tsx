@@ -12,6 +12,7 @@ import data from "@/assets/data/products.json";
 import { Profile } from "../../types/types";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
+import fontSizes from "@/style/fontSizes";
 
 const SimilarProducts = ({ currentProduct }: { currentProduct: Profile }) => {
   if (!currentProduct) return null;
@@ -117,7 +118,7 @@ const styles = StyleSheet.create({
   },
   noImageText: {
     color: staticColors.lightGray,
-    fontSize: 12,
+    fontSize: fontSizes.sm,
   },
   ratingContainer: {
     position: "absolute",
@@ -129,26 +130,26 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   star: {
-    fontSize: 12,
+    fontSize: fontSizes.xs,
     color: staticColors.shadowColor,
     fontWeight: "bold",
   },
   title: {
-    fontSize: 13,
+    fontSize: fontSizes.xs,
     fontWeight: "500",
     ...spacingStyles.mt5,
     ...spacingStyles.mx5,
     color: staticColors.darkGray,
   },
   price: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     fontWeight: "bold",
     ...spacingStyles.mt2,
     ...spacingStyles.mx5,
-    color: "#000",
+    color: staticColors.black,
   },
   addButton: {
-    paddingVertical: 6,
+    ...spacingStyles.py5,
     borderRadius: 20,
     ...spacingStyles.m5,
     borderWidth: 1,
@@ -157,7 +158,7 @@ const styles = StyleSheet.create({
   addButtonText: {
     color: staticColors.primary,
     textAlign: "center",
-    fontSize: 12,
+    fontSize: fontSizes.xs,
     fontWeight: "bold",
   },
 });

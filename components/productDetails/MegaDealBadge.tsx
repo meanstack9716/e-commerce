@@ -1,4 +1,5 @@
 import OfferDetailsModal from "@/modal/OfferDetailsModal";
+import fontSizes from "@/style/fontSizes";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { EvilIcons } from "@expo/vector-icons";
@@ -79,12 +80,12 @@ const styles = StyleSheet.create({
     height: 45,
   },
   getAtText: {
-    fontSize: 18,
+    fontSize: fontSizes.md,
     color: staticColors.darkGray,
     fontWeight: "bold",
   },
   priceText: {
-    fontSize: 16,
+    fontSize: fontSizes.base,
     fontWeight: "bold",
   },
   rightBadge: {
@@ -95,7 +96,7 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     color: staticColors.white,
-    fontSize: 13,
+    fontSize: fontSizes.xs,
     fontWeight: "600",
   },
   bottomRow: {
@@ -110,14 +111,14 @@ const styles = StyleSheet.create({
     borderColor: staticColors.borderLight,
   },
   couponText: {
-    fontSize: 13,
+    fontSize: fontSizes.xs,
     color: staticColors.darkGray,
   },
   bankOfferText: {
     fontWeight: "600",
   },
   detailsText: {
-    fontSize: 13,
+    fontSize: fontSizes.xs,
     fontWeight: "600",
     color: staticColors.discountText,
   },

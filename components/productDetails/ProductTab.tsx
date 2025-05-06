@@ -10,6 +10,7 @@ import {
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
+import fontSizes from "@/style/fontSizes";
 
 interface TabProps {
   activeTab: string;
@@ -66,7 +67,7 @@ const tabStyles = StyleSheet.create({
     borderColor: colors.primary,
   },
   tabText: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     color: staticColors.textLightGray,
   },
   activeTabText: {

@@ -5,6 +5,7 @@ import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import colors from "@/style/staticColors";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
+import fontSizes from "@/style/fontSizes";
 
 interface BottomActionsProps {
   onAddToCart?: () => void;
@@ -50,7 +51,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   addToCartText: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     color: staticColors.white,
     fontWeight: "bold",
     letterSpacing: 1.2,
@@ -68,7 +69,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   wishlist: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     color: staticColors.shadowColor,
     fontWeight: "bold",
     letterSpacing: 1.2,

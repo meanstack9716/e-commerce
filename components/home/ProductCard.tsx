@@ -67,7 +67,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
               <FontAwesome
                 name={liked ? "heart" : "heart-o"}
                 size={16}
-                color={liked ? "red" : "#999"}
+                color={liked ? "red" : `${staticColors.textLightGray}`}
               />
             </TouchableOpacity>
           </View>
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   },
   noImageText: {
     color: staticColors.lightGray,
-    fontSize: 14,
+    fontSize: fontSizes.md,
     fontWeight: "500",
   },
   cardContainer: {},

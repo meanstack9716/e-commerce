@@ -17,6 +17,7 @@ import {
 } from "@expo/vector-icons";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
+import fontSizes from "@/style/fontSizes";
 
 interface OfferDetailsModalProps {
   visible: boolean;
@@ -387,7 +388,7 @@ const styles = StyleSheet.create({
     gap: 15,
   },
   modalTitle: {
-    fontSize: 20,
+    fontSize: fontSizes['lg'],
     fontWeight: "bold",
     color: staticColors.darkGray,
   },
@@ -399,7 +400,7 @@ const styles = StyleSheet.create({
     color: staticColors.white,
   },
   modalDescription: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     ...spacingStyles.p5,
     textAlign: "center",
     color: staticColors.textLightGray,
@@ -421,17 +422,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   offerLabel: {
-    fontSize: 15,
+    fontSize: fontSizes.sm,
     fontWeight: "600",
     color: staticColors.darkGray,
   },
   offerValue: {
-    fontSize: 15,
+    fontSize: fontSizes.sm,
     fontWeight: "600",
     color: staticColors.darkGreen,
   },
   offerDetails: {
-    fontSize: 13,
+    fontSize: fontSizes.xs,
     color: staticColors.textLightGray,
   },
   detailsButton: {
@@ -441,7 +442,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   detailsButtonText: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     color: staticColors.discountText,
     fontWeight: "600",
   },
@@ -450,7 +451,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   bankIconPlaceholder: {
-    fontSize: 18,
+    fontSize: fontSizes.md,
     marginRight: 8,
   },
   moreOffersSection: {
@@ -484,12 +485,12 @@ const styles = StyleSheet.create({
     ...spacingStyles.mr5,
   },
   moreOffersText: {
-    fontSize: 16,
+    fontSize: fontSizes.base,
     fontWeight: "600",
     color: staticColors.darkGray,
   },
   viewLessText: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     color: staticColors.discountText,
     fontWeight: "600",
   },
@@ -504,7 +505,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.p10,
   },
   cardName: {
-    fontSize: 15,
+    fontSize: fontSizes.sm,
     fontWeight: "600",
     color: staticColors.darkGray,
   },
@@ -518,17 +519,17 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   bulletPoint: {
-    fontSize: 15,
+    fontSize: fontSizes.sm,
     ...spacingStyles.mx5,
     color: staticColors.shadowColor,
   },
   bulletText: {
-    fontSize: 12,
+    fontSize: fontSizes.xs,
     color: staticColors.textLightGray,
     flex: 1,
   },
   tandcText: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     color: staticColors.discountText,
     ...spacingStyles.ml10,
   },
@@ -536,11 +537,11 @@ const styles = StyleSheet.create({
     ...spacingStyles.mt10,
   },
   detailPoint: {
-    fontSize: 14,
-    color: staticColors.lightGray,
+    fontSize: fontSizes.sm,
+    color: staticColors.textLightGray,
   },
   modalText: {
-    fontSize: 13,
+    fontSize: fontSizes.xs,
     textAlign: "center",
     ...spacingStyles.mt10,
     ...spacingStyles.pt2,

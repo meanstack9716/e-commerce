@@ -27,7 +27,7 @@ const OfferCard: React.FC<OfferCardProps> = ({ topText, price, bottomText, color
         <Text style={[styles.priceText, { color }]}>₹{price}</Text>
         <View style={styles.bottomRow}>
           <Text style={styles.bottomText}>{bottomText}</Text>
-          <AntDesign name="arrowright" size={16} color="#000" style={styles.arrow} />
+          <AntDesign name="arrowright" size={16} color={staticColors.black} style={styles.arrow} />
         </View>
       </LinearGradient>
     </TouchableOpacity>

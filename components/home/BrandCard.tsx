@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   brandList: {
-    paddingVertical: 10,
+    ...spacingStyles.py10
   },
   brandCard: {
     width: width * 0.4,
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.bgMuted,
   },
   brandInfo: {
-    padding: 15,
+    ...spacingStyles.p15,
     alignItems: "center",
   },
   brandName: {

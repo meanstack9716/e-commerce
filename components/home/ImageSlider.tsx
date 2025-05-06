@@ -94,7 +94,7 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ slides }) => {
                 <Text style={styles.price}>{slide.price}</Text>
               </View>
               <TouchableOpacity style={styles.nextButton} onPress={nextSlide}>
-                <FontAwesome6 name="chevron-right" size={16} color="#1B1650" />
+                <FontAwesome6 name="chevron-right" size={16} color={staticColors.primary} />
               </TouchableOpacity>
             </View>
           ))}

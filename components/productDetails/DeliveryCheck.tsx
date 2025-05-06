@@ -12,6 +12,7 @@ import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import LocationModal from "@/modal/LocationModal";
 import * as Location from "expo-location";
+import fontSizes from "@/style/fontSizes";
 
 const ProductDetails = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -110,21 +111,21 @@ const ProductDetails = () => {
         onGrant={handleGrant}
       />
       <View style={styles.option}>
-        <MaterialIcons name="local-shipping" size={20} color="#000" />
+        <MaterialIcons name="local-shipping" size={20} color={staticColors.black}/>
         <Text style={{ flexShrink: 1 }}>
           <Text style={styles.boldText}>Express delivery</Text> might be
           available
         </Text>
       </View>
       <View style={styles.option}>
-        <MaterialIcons name="payment" size={20} color="#000" />
+        <MaterialIcons name="payment" size={20} color={staticColors.black} />
         <Text style={{ flexShrink: 1 }}>
           <Text style={styles.boldText}>Pay on delivery</Text> might be
           available
         </Text>
       </View>
       <View style={styles.option}>
-        <MaterialIcons name="refresh" size={20} color="#000" />
+        <MaterialIcons name="refresh" size={20} color={staticColors.black} />
         <Text style={{ flexShrink: 1 }}>
           <Text style={styles.boldText}>Hassle free 7, 15 and 30 days</Text>{" "}
           Return & Exchange might be available
@@ -167,13 +168,13 @@ const styles = StyleSheet.create({
     ...spacingStyles.px15,
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: fontSizes.md,
     fontWeight: "bold",
     ...spacingStyles.py5,
     color: staticColors.primary,
   },
   tableTitle: {
-    fontSize: 18,
+    fontSize: fontSizes.md,
     fontWeight: "bold",
     color: staticColors.primary,
   },
@@ -202,7 +203,7 @@ const styles = StyleSheet.create({
   },
   changeText: {
     color: staticColors.discountText,
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     fontWeight: "bold",
   },
   loadingContainer: {

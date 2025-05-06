@@ -10,6 +10,7 @@ import { useRouter, useLocalSearchParams } from "expo-router";
 import { Profile } from "@/types/types";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
+import fontSizes from "@/style/fontSizes";
 
 const screenWidth = Dimensions.get("window").width;
 const cardWidth = screenWidth / 2 - 22;
@@ -152,7 +153,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.p20,
   },
   messageText: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     textAlign: "center",
     color: staticColors.textLightGray,
   },

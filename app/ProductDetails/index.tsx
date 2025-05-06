@@ -39,7 +39,8 @@ const ProductDetailsScreen: React.FC = () => {
   const [showBackToTop, setShowBackToTop] = useState(false);
   const insets = useSafeAreaInsets();
   const flatListRef = useRef<FlatList>(null);
-
+  const screenHeight = Dimensions.get("window").height;
+  
   const originalPrice = product
     ? (parseFloat(product.price) * 1.15).toFixed(2)
     : "0";
@@ -71,7 +72,7 @@ const ProductDetailsScreen: React.FC = () => {
         key="full-star"
         name="star"
         size={16}
-        color="#FFD700"
+        color={staticColors.lightYellow}
         style={styles.starIcon}
       />
     );
@@ -84,7 +85,7 @@ const ProductDetailsScreen: React.FC = () => {
 
   const handleListScroll = (event: any) => {
     const offsetY = event.nativeEvent.contentOffset.y;
-    setShowBackToTop(offsetY > 1200);
+    setShowBackToTop(offsetY > screenHeight * 1.5);
   };
 
   const handleLikePress = () => {
@@ -208,7 +209,11 @@ const ProductDetailsScreen: React.FC = () => {
                 style={styles.viewSimilarButton}
                 onPress={handleViewSimilar}
               >
-                <Ionicons name="grid-outline" size={20} color="#000" />
+                <Ionicons
+                  name="grid-outline"
+                  size={20}
+                  color={staticColors.black}
+                />
                 <Text style={styles.viewSimilarText}>View Similar</Text>
               </TouchableOpacity>
               <View style={styles.ratingContainer}>
@@ -401,14 +406,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 10,
-    paddingHorizontal: 15,
+    ...spacingStyles.py10,
+    ...spacingStyles.px15,
     borderRadius: 25,
-    elevation: 5,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
   },
   backToTopText: {
     color: colors.white,

@@ -1,4 +1,5 @@
 import BottonActions from "@/components/productDetails/ProductActionButtons";
+import fontSizes from "@/style/fontSizes";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { Ionicons } from "@expo/vector-icons";
@@ -380,11 +381,11 @@ const styles = StyleSheet.create({
     gap:5
   },
   backArrow: {
-    fontSize: 24,
-    color: "#000",
+    fontSize: fontSizes['xl'],
+    color: staticColors.black,
   },
   headerText: {
-    fontSize: 18,
+    fontSize: fontSizes.md,
     fontWeight: "bold",
     color: staticColors.primary,
   },
@@ -404,18 +405,18 @@ const styles = StyleSheet.create({
   },
   productBrand: {
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: fontSizes.base,
     color: staticColors.shadowColor,
   },
   productType: {
     color: staticColors.darkGray,
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     ...spacingStyles.my2,
   },
   productPrice: {
-    color: staticColors.offerColor,
+    color: staticColors.discountText,
     fontWeight: "600",
-    fontSize: 14,
+    fontSize: fontSizes.sm,
   },
   originalPrice: {
     textDecorationLine: "line-through",
@@ -435,14 +436,14 @@ const styles = StyleSheet.create({
   },
   activeTab: {
     borderBottomWidth: 3,
-    borderBottomColor: staticColors.offerColor,
+    borderBottomColor: staticColors.discountText,
   },
   tabText: {
-    fontSize: 15,
+    fontSize:fontSizes.sm,
     color: staticColors.shadowColor,
   },
   activeTabText: {
-    color: staticColors.offerColor,
+    color: staticColors.discountText,
     fontWeight: "600",
   },
   contentScroll: {
@@ -453,7 +454,7 @@ const styles = StyleSheet.create({
    ...spacingStyles.mb15
   },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: fontSizes.base,
     fontWeight: "bold",
     color: staticColors.shadowColor,
     ...spacingStyles.mb10,
@@ -471,7 +472,7 @@ const styles = StyleSheet.create({
   },
   unitLabel: {
     color: staticColors.shadowColor,
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     marginRight: 8,
   },
   unitToggle: {
@@ -490,7 +491,7 @@ const styles = StyleSheet.create({
   },
   unitText: {
     color: staticColors.shadowColor,
-    fontSize: 14,
+    fontSize: fontSizes.sm,
   },
   activeUnitText: {
     color: staticColors.white,
@@ -506,7 +507,7 @@ const styles = StyleSheet.create({
   headerCell: {
     minWidth: 90,
     fontWeight: "500",
-    color: "#333",
+    color:staticColors.darkGray,
     textAlign: "center",
   },
   measurementHeader: {
@@ -516,12 +517,12 @@ const styles = StyleSheet.create({
   },
   headerTextMain: {
     fontWeight: "500",
-    color: "#333",
-    fontSize: 14,
+    color: staticColors.darkGray,
+    fontSize: fontSizes.sm,
   },
   headerTextUnit: {
-    fontSize: 12,
-    color: "#666",
+    fontSize: fontSizes.xs,
+    color: staticColors.textLightGray,
   },
   selectionCell: {
     minWidth: 30,
@@ -539,7 +540,7 @@ const styles = StyleSheet.create({
   },
   tableRow: {
     flexDirection: "row",
-    padding: 12,
+    ...spacingStyles.p10,
     alignItems: "center",
   },
   radioCircle: {
@@ -555,7 +556,7 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
     borderRadius: 6,
-    backgroundColor: staticColors.offerColor,
+    backgroundColor: staticColors.discountText,
   },
   rowDivider: {
     height: 1,
@@ -563,7 +564,7 @@ const styles = StyleSheet.create({
   },
   sellerInfo: {
     ...spacingStyles.m10,
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     color: staticColors.shadowColor,
   },
 });

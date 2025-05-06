@@ -11,6 +11,7 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import fontSizes from "@/style/fontSizes";
 
 interface GenuineProductModalProps {
   isVisible: boolean;
@@ -35,7 +36,7 @@ const GenuineProductModal: React.FC<GenuineProductModalProps> = ({
               <View style={styles.modalHeader}>
                 <Text style={styles.modalTitle}>Genuine Product</Text>
                 <TouchableOpacity onPress={onClose}>
-                  <Ionicons name="close" size={24} color="#666" />
+                  <Ionicons name="close" size={24} color={staticColors.textDarkGray} />
                 </TouchableOpacity>
               </View>
               <View style={styles.modalContent}>
@@ -81,12 +82,12 @@ const styles = StyleSheet.create({
     ...spacingStyles.mt5,
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: fontSizes.md,
     fontWeight: "bold",
     color: staticColors.primary,
   },
   closeButton: {
-    fontSize: 20,
+    fontSize:fontSizes['lg'],
     color: staticColors.shadowColor,
     fontWeight: "bold",
   },
@@ -103,7 +104,7 @@ const styles = StyleSheet.create({
   },
   modalText: {
     flex: 1,
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     color: staticColors.textLightGray,
     lineHeight: 20,
     flexWrap: "wrap",

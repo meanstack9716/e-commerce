@@ -16,6 +16,7 @@ import DeliveryAddressScreen from "@/components/productDetails/DeliveryAddress";
 import { Alert } from "react-native";
 import { useLocation } from "@/utils/useLocation";
 import spacingStyles from "@/style/spacingStyles";
+import fontSizes from "@/style/fontSizes";
 
 interface LocationModalProps {
   visible: boolean;
@@ -67,7 +68,7 @@ const LocationModal: React.FC<LocationModalProps> = ({
           <TouchableWithoutFeedback>
             <View style={styles.modalView}>
               <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-                <Ionicons name="close" size={24} color="#000" />
+                <Ionicons name="close" size={24} color={staticColors.black} />
               </TouchableOpacity>
 
               <View style={styles.headerContainer}>
@@ -110,7 +111,7 @@ const LocationModal: React.FC<LocationModalProps> = ({
                     value={pinCode}
                     onChangeText={handlePinCodeChange}
                     placeholder="Enter PIN Code"
-                    placeholderTextColor="#666"
+                    placeholderTextColor={staticColors.textDarkGray}
                     keyboardType="numeric"
                     maxLength={6}
                   />
@@ -208,13 +209,13 @@ const styles = StyleSheet.create({
     ...spacingStyles.mx10,
   },
   titleText: {
-    fontSize: 17,
+    fontSize: fontSizes.md,
     fontWeight: "bold",
     color: staticColors.primary,
     marginBottom: 5,
   },
   subtitleText: {
-    fontSize: 12,
+    fontSize: fontSizes.xs,
     color: staticColors.textLightGray,
   },
   grantButton: {
@@ -228,16 +229,16 @@ const styles = StyleSheet.create({
   },
   grantButtonText: {
     color: staticColors.white,
-    fontSize: 12,
+    fontSize: fontSizes.xs,
     fontWeight: "bold",
   },
   inputContainer: {
-    marginBottom: 15,
+   ...spacingStyles.mb15,
     ...spacingStyles.px20,
-    paddingTop: 15,
+   ...spacingStyles.pt15
   },
   inputLabel: {
-    fontSize: 15,
+    fontSize: fontSizes.sm,
     color: staticColors.primary,
     fontWeight: "bold",
   },
@@ -267,7 +268,7 @@ const styles = StyleSheet.create({
   },
   checkButtonText: {
     color: staticColors.shadowColor,
-    fontSize: 13,
+    fontSize:fontSizes.sm,
     fontWeight: "bold",
   },
   searchContainer: {
@@ -283,7 +284,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.mt5,
   },
   searchText: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     color: staticColors.discountText,
     ...spacingStyles.px5,
   },
