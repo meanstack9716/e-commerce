@@ -57,20 +57,20 @@ const tabStyles = StyleSheet.create({
     ...spacingStyles.py5,
     ...spacingStyles.px15,
     borderWidth: 1,
-    borderColor: staticColors.lightGray,
+    borderColor: staticColors.borderLight,
     borderRadius: 20,
     ...spacingStyles.mr10,
   },
   activeTab: {
-    backgroundColor: colors.primaryColor,
-    borderColor: colors.primaryColor,
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
   },
   tabText: {
     fontSize: 14,
-    color: staticColors.lightGray,
+    color: staticColors.textLightGray,
   },
   activeTabText: {
-    color: staticColors.whiteColor,
+    color: staticColors.white,
     fontWeight: "600",
   },
 });

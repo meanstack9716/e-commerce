@@ -1,4 +1,4 @@
-import BottonActions from "@/components/productDetails/BottonActions";
+import BottonActions from "@/components/productDetails/ProductActionButtons";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { Ionicons } from "@expo/vector-icons";
@@ -165,7 +165,7 @@ const SizeChartModal: React.FC<SizeChartModalProps> = ({
                 <Ionicons
                   name="arrow-back"
                   size={18}
-                  color={staticColors.primaryColor}
+                  color={staticColors.primary}
                 />
               </Text>
             </TouchableOpacity>
@@ -370,7 +370,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   modalContent: {
-    backgroundColor: staticColors.whiteColor,
+    backgroundColor: staticColors.white,
     ...spacingStyles.p15,
     flex: 1,
   },
@@ -386,7 +386,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 18,
     fontWeight: "bold",
-    color: staticColors.primaryColor,
+    color: staticColors.primary,
   },
   productInfo: {
     flexDirection: "row",
@@ -426,7 +426,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     ...spacingStyles.mb15,
     borderBottomWidth: 1,
-    borderBottomColor: staticColors.lightColor,
+    borderBottomColor: staticColors.lightGray,
   },
   tab: {
     flex: 1,
@@ -476,7 +476,7 @@ const styles = StyleSheet.create({
   },
   unitToggle: {
     flexDirection: "row",
-    backgroundColor: staticColors.lightColor,
+    backgroundColor: staticColors.lightGray,
     borderRadius: 20,
     ...spacingStyles.p2,
   },
@@ -486,14 +486,14 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   activeUnitButton: {
-    backgroundColor: staticColors.primaryColor,
+    backgroundColor: staticColors.primary,
   },
   unitText: {
     color: staticColors.shadowColor,
     fontSize: 14,
   },
   activeUnitText: {
-    color: staticColors.whiteColor,
+    color: staticColors.white,
   },
   tableScrollContainer: {},
   tableContainer: {},

@@ -1,9 +1,4 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-} from "react-native";
+import { View, Text, StyleSheet, Image } from "react-native";
 import React, { useState } from "react";
 import { Button } from "@/components/common/Button";
 import { useFieldValidation } from "@/hooks/useFieldValidation";
@@ -13,66 +8,58 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { resetPassword } from "@/store/auth/authSlice";
 import textStyles from "@/style/textStyles";
 import spacingStyles from "@/style/spacingStyles";
+import fontSizes from "@/style/fontSizes";
+import images from "@/constants/images";
 
 export default function CreateNewPassword() {
-  const { errors, handlePasswordValidation, handlePasswordMatch } =
+  const { errors, handlePasswordValidation, handleConfirmPasswordMatch } =
     useFieldValidation();
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const { email, code } = useAppSelector((state) => ({
-    email: state.auth.resetEmail || "",
-    code: state.auth.resetCode || "",
-  }));
-  const { resetPasswordLoading, error } = useAppSelector((state) => state.auth);
+  const [formState, setFormState] = useState({
+    newPassword: "",
+    confirmPassword: "",
+  });
 
-  const handlePasswordChange = (text: string) => {
-    setNewPassword(text);
-    handlePasswordValidation(text);
+  // Get email and code from global state 
+  const { resetEmail: email, resetCode: code, loading } = useAppSelector((state) => state.auth);
 
-    if (confirmPassword) {
-      handlePasswordMatch(text, confirmPassword);
+  const handleChange = (field: "newPassword" | "confirmPassword", value: string) => {
+    setFormState((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+
+    if (field === "newPassword") {
+      handlePasswordValidation(value);
+      if (formState.confirmPassword) {
+        handleConfirmPasswordMatch(value, formState.confirmPassword);
+      }
+    } else {
+      handleConfirmPasswordMatch(formState.newPassword, value);
     }
   };
 
-  const handleConfirmPasswordChange = (text: string) => {
-    setConfirmPassword(text);
-    handlePasswordMatch(newPassword, text);
-  };
-
   const handleSubmit = async () => {
-    console.log('Password reset payload:', {
-      email,
-      code,
-      password: newPassword,
-      password_confirmation: confirmPassword
-    });
-  
     try {
-     await dispatch(
+      await dispatch(
         resetPassword({
-          email: email.trim(),
-          code: code.toString().trim(),
-          password: newPassword,
-          password_confirmation: confirmPassword,
+          email: email!.trim(),
+          code: code!.toString().trim(),
+          password: formState.newPassword,
+          password_confirmation: formState.confirmPassword,
         })
-      )
-      .unwrap();
-      router.push("/login");
+      ).unwrap();
+      router.push("/categories");
     } catch (err) {
-      console.error('Reset failed:', err);
+      console.error("Reset failed:", err);
     }
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.imageWrapper}>
-        <Image
-          source={require("../../assets/images/favicon.png")}
-          style={styles.image}
-          resizeMode="contain"
-        />
+        <Image source={images.logo} style={styles.image} resizeMode="contain" />
       </View>
       <Text style={textStyles.title}>Create New Password</Text>
       <Text style={styles.infoText}>
@@ -82,18 +69,23 @@ export default function CreateNewPassword() {
       <View style={styles.inputGroup}>
         <PasswordField
           label="Enter New Password"
-          value={newPassword}
-          onChangeText={handlePasswordChange}
+          value={formState.newPassword}
+          onChangeText={(text) => handleChange("newPassword", text)}
           error={errors.password}
         />
         <PasswordField
           label="Confirm Password"
-          value={confirmPassword}
-          onChangeText={handleConfirmPasswordChange}
+          value={formState.confirmPassword}
+          onChangeText={(text) => handleChange("confirmPassword", text)}
           error={errors.confirmPassword}
         />
       </View>
-      <Button title="Save" onPress={handleSubmit} style={{ width: "90%" }} loading={resetPasswordLoading}/>
+      <Button
+        title="Save"
+        onPress={handleSubmit}
+        style={{ width: "90%" }}
+        loading={loading}
+      />
     </View>
   );
 }
@@ -112,20 +104,20 @@ const styles = StyleSheet.create({
     backgroundColor: "#CCDAF9",
     justifyContent: "center",
     alignItems: "center",
-    ...spacingStyles.mb10
+    ...spacingStyles.mb10,
   },
   image: {
     width: 80,
     height: 90,
   },
   infoText: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     color: "#555",
     textAlign: "center",
     width: "80%",
     ...spacingStyles.mb20,
     fontFamily: "Helvetica",
-    lineHeight:20
+    lineHeight: 20,
   },
   inputGroup: {
     width: "90%",

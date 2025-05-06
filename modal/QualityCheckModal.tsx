@@ -117,12 +117,12 @@ const QualityCheckModal: React.FC<QualityCheckModalProps> = ({
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
-    backgroundColor: staticColors.modalBackGround,
+    backgroundColor: staticColors.modalOverlayLight,
     justifyContent: "flex-end",
     alignItems: "center",
   },
   modalContainer: {
-    backgroundColor: staticColors.whiteColor,
+    backgroundColor: staticColors.white,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     width: "100%",
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: staticColors.primaryColor,
+    color: staticColors.primary,
   },
   modalContent: {
     flexDirection: "column",
@@ -159,12 +159,12 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: "bold",
-    color: staticColors.primaryColor,
+    color: staticColors.primary,
     ...spacingStyles.mb5,
   },
   sectionDescription: {
     fontSize: 14,
-    color: staticColors.darkGray,
+    color: staticColors.textLightGray,
     lineHeight: 20,
   },
   footnote: {

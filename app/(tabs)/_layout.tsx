@@ -1,13 +1,16 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { Image, Text, Platform, SafeAreaView } from "react-native";
+import { Image, Text, Platform, SafeAreaView, StyleSheet } from "react-native";
 import colors from "@/style/staticColors";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import staticColors from "@/style/staticColors";
+import fontSizes from "@/style/fontSizes";
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.whiteColor }}>
+    <SafeAreaView
+      style={[styles.safeAreaContainer, { paddingBottom: insets.bottom }]}
+    >
       <Tabs
         screenOptions={({ route }) => ({
           tabBarIcon: ({ color, size, focused }) => {
@@ -32,26 +35,21 @@ export default function TabLayout() {
 
             return <Ionicons name={iconName} size={size} color={color} />;
           },
-          tabBarActiveTintColor: colors.primaryColor,
-          tabBarInactiveTintColor: staticColors.lightGray,
+          tabBarActiveTintColor: colors.primary,
+          tabBarInactiveTintColor: staticColors.textLightGray,
           tabBarStyle: {
-            backgroundColor: colors.whiteColor,
+            backgroundColor: colors.white,
             borderTopWidth: 0,
-            elevation: 10,
-            shadowColor: staticColors.shadowColor,
-            shadowOffset: { width: 0, height: -3 },
-            shadowOpacity: 0.1,
-            shadowRadius: 5,
-            paddingTop: 4,
+
             height: Platform.OS === "ios" ? 60 + insets.bottom : 60,
             paddingBottom: Platform.OS === "ios" ? insets.bottom : 0,
           },
-          contentStyle: { backgroundColor: colors.whiteColor },
+          contentStyle: { backgroundColor: colors.white },
           tabBarLabel: ({ focused, color }) => (
             <Text
               style={{
                 fontFamily: focused ? "HelveticaBold" : "helvetica",
-                fontSize: 12,
+                fontSize: fontSizes.xs,
                 color,
               }}
             >
@@ -72,3 +70,9 @@ export default function TabLayout() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safeAreaContainer: {
+    flex: 1,
+  },
+});

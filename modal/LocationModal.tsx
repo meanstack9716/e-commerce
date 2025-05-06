@@ -74,7 +74,7 @@ const LocationModal: React.FC<LocationModalProps> = ({
                 <FontAwesome6
                   name="location-crosshairs"
                   size={22}
-                  color={staticColors.offerColor}
+                  color={staticColors.discountText}
                   style={styles.icon}
                 />
                 <View style={styles.textContainer}>
@@ -94,7 +94,7 @@ const LocationModal: React.FC<LocationModalProps> = ({
                   {isLoading ? (
                     <ActivityIndicator
                       size="small"
-                      color={staticColors.whiteColor}
+                      color={staticColors.white}
                     />
                   ) : (
                     <Text style={styles.grantButtonText}>Grant</Text>
@@ -128,7 +128,7 @@ const LocationModal: React.FC<LocationModalProps> = ({
                       style={[
                         styles.checkButtonText,
                         pinCode.length === 6 && {
-                          color: staticColors.offerColor,
+                          color: staticColors.discountText,
                         },
                       ]}
                     >
@@ -145,14 +145,14 @@ const LocationModal: React.FC<LocationModalProps> = ({
                 <FontAwesome6
                   name="map-location-dot"
                   size={20}
-                  color={staticColors.offerColor}
+                  color={staticColors.discountText}
                   style={styles.searchIcon}
                 />
                 <Text style={styles.searchText}>Search location</Text>
                 <Ionicons
                   name="chevron-forward"
                   size={13}
-                  color={staticColors.offerColor}
+                  color={staticColors.discountText}
                   style={styles.arrowIcon}
                 />
               </TouchableOpacity>
@@ -179,10 +179,10 @@ const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: "flex-end",
-    backgroundColor: staticColors.modalBackGround,
+    backgroundColor: staticColors.modalOverlayLight,
   },
   modalView: {
-    backgroundColor: staticColors.whiteColor,
+    backgroundColor: staticColors.white,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     ...spacingStyles.pb10,
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     flexDirection: "row",
-    backgroundColor: staticColors.backgroundSecondary,
+    backgroundColor: staticColors.bgSecondary,
     ...spacingStyles.p20,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
@@ -210,15 +210,15 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: 17,
     fontWeight: "bold",
-    color: staticColors.primaryColor,
+    color: staticColors.primary,
     marginBottom: 5,
   },
   subtitleText: {
     fontSize: 12,
-    color: staticColors.shadowColor,
+    color: staticColors.textLightGray,
   },
   grantButton: {
-    backgroundColor: staticColors.offerColor,
+    backgroundColor: staticColors.discountText,
     borderRadius: 20,
     ...spacingStyles.py5,
     ...spacingStyles.px15,
@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   grantButtonText: {
-    color: staticColors.whiteColor,
+    color: staticColors.white,
     fontSize: 12,
     fontWeight: "bold",
   },
@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
   },
   inputLabel: {
     fontSize: 15,
-    color: staticColors.primaryColor,
+    color: staticColors.primary,
     fontWeight: "bold",
   },
   inputWrapper: {
@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
     borderColor: staticColors.borderLight,
     borderRadius: 8,
     ...spacingStyles.p10,
-    backgroundColor: staticColors.backgroundSecondary,
+    backgroundColor: staticColors.bgSecondary,
   },
   checkButton: {
     position: "absolute",
@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
   },
   searchText: {
     fontSize: 14,
-    color: staticColors.offerColor,
+    color: staticColors.discountText,
     ...spacingStyles.px5,
   },
 });

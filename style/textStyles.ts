@@ -1,19 +1,20 @@
 import { StyleSheet } from "react-native";
 import colors from "./staticColors";
 import spacingStyles from "./spacingStyles";
+import fontSizes from "./fontSizes";
 
 const textStyles = StyleSheet.create({
   title: {
-    fontSize: 25,
+    fontSize: fontSizes.xl,
     fontFamily: "helveticaRoundedBold",
     ...spacingStyles.mt10,
     ...spacingStyles.mb5,
-    color: colors.primaryColor,
+    color: colors.primary,
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: fontSizes.base,
     fontFamily: "Helvetica",
-    color: colors.subTitle,
+    color: colors.textSecondary,
     ...spacingStyles.mb10
   },
 });

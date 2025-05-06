@@ -136,7 +136,7 @@ const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
                             : "keyboard-arrow-down"
                         }
                         size={18}
-                        color={staticColors.offerColor}
+                        color={staticColors.discountText}
                       />
                     </View>
                   </TouchableOpacity>
@@ -181,7 +181,7 @@ const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
                             : "keyboard-arrow-down"
                         }
                         size={18}
-                        color={staticColors.offerColor}
+                        color={staticColors.discountText}
                       />
                     </View>
                   </TouchableOpacity>
@@ -223,7 +223,7 @@ const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
                               : "keyboard-arrow-down"
                           }
                           size={18}
-                          color={staticColors.offerColor}
+                          color={staticColors.discountText}
                         />
                       </View>
                     </TouchableOpacity>
@@ -352,15 +352,15 @@ const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.2)",
+    backgroundColor: staticColors.modalOverlayLight,
     justifyContent: "flex-end",
   },
   modalContent: {
-    backgroundColor: staticColors.whiteColor,
+    backgroundColor: staticColors.white,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     ...spacingStyles.p15,
-    maxHeight: screenHeight * 0.5,
+    maxHeight: screenHeight * 0.45,
     flexGrow: 1,
   },
 
@@ -389,20 +389,20 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 20,
     fontWeight: "bold",
-    color: staticColors.cardTitleColor,
+    color: staticColors.darkGray,
   },
   modalSubtitle: {
     backgroundColor: staticColors.darkGreen,
     ...spacingStyles.px10,
     ...spacingStyles.py5,
     borderRadius: 10,
-    color: staticColors.whiteColor,
+    color: staticColors.white,
   },
   modalDescription: {
     fontSize: 14,
     ...spacingStyles.p5,
     textAlign: "center",
-    color: staticColors.textSecondary,
+    color: staticColors.textLightGray,
   },
   offersContainer: {
     flex: 1,
@@ -423,7 +423,7 @@ const styles = StyleSheet.create({
   offerLabel: {
     fontSize: 15,
     fontWeight: "600",
-    color: staticColors.cardTitleColor,
+    color: staticColors.darkGray,
   },
   offerValue: {
     fontSize: 15,
@@ -432,7 +432,7 @@ const styles = StyleSheet.create({
   },
   offerDetails: {
     fontSize: 13,
-    color: staticColors.lightGray,
+    color: staticColors.textLightGray,
   },
   detailsButton: {
     alignSelf: "flex-start",
@@ -442,7 +442,7 @@ const styles = StyleSheet.create({
   },
   detailsButtonText: {
     fontSize: 14,
-    color: staticColors.offerColor,
+    color: staticColors.discountText,
     fontWeight: "600",
   },
   bankRow: {
@@ -457,7 +457,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.mx10,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: staticColors.lightColor,
+    borderColor: staticColors.lightGray,
   },
   collapsedSection: {
     marginBottom: 0,
@@ -478,7 +478,7 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: staticColors.whiteColor,
+    backgroundColor: staticColors.white,
     justifyContent: "center",
     alignItems: "center",
     ...spacingStyles.mr5,
@@ -486,11 +486,11 @@ const styles = StyleSheet.create({
   moreOffersText: {
     fontSize: 16,
     fontWeight: "600",
-    color: staticColors.cardTitleColor,
+    color: staticColors.darkGray,
   },
   viewLessText: {
     fontSize: 14,
-    color: staticColors.offerColor,
+    color: staticColors.discountText,
     fontWeight: "600",
   },
 
@@ -499,14 +499,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   cardOfferSection: {
-    backgroundColor: staticColors.whiteColor,
+    backgroundColor: staticColors.white,
     borderRadius: 10,
     ...spacingStyles.p10,
   },
   cardName: {
     fontSize: 15,
     fontWeight: "600",
-    color: staticColors.cardTitleColor,
+    color: staticColors.darkGray,
   },
   cardOfferDetails: {
     borderBottomColor: staticColors.lightGray,
@@ -524,12 +524,12 @@ const styles = StyleSheet.create({
   },
   bulletText: {
     fontSize: 12,
-    color: staticColors.lightGray,
+    color: staticColors.textLightGray,
     flex: 1,
   },
   tandcText: {
     fontSize: 14,
-    color: staticColors.offerColor,
+    color: staticColors.discountText,
     ...spacingStyles.ml10,
   },
   expandedDetails: {

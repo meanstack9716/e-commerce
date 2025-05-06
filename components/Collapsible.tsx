@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import colors from '@/style/staticColors';
-import textStyles from '@/style/textStyles';
 import spacingStyles from '@/style/spacingStyles';
 
 if (Platform.OS === 'android') {
@@ -39,7 +38,7 @@ export default function Collapsible({ title, children }: Props) {
           <AntDesign
             name={expanded ? 'up' : 'down'}
             size={16}
-            color={colors.lightColor}
+            color={colors.lightGray}
           />
         </View>
       </TouchableOpacity>
@@ -52,7 +51,7 @@ const styles = StyleSheet.create({
   container: {
     ...spacingStyles.mb15,
     borderBottomWidth: 1,
-    borderColor: colors.lightColor,
+    borderColor: colors.lightGray,
     ...spacingStyles.pb10
   },
   header: {

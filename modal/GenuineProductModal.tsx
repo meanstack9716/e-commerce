@@ -61,12 +61,12 @@ const GenuineProductModal: React.FC<GenuineProductModalProps> = ({
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
-    backgroundColor: staticColors.modalBackGround,
+    backgroundColor: staticColors.modalOverlayLight,
     justifyContent: "flex-end",
     alignItems: "center",
   },
   modalContainer: {
-    backgroundColor: staticColors.whiteColor,
+    backgroundColor: staticColors.white,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     width: "100%",
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: staticColors.primaryColor,
+    color: staticColors.primary,
   },
   closeButton: {
     fontSize: 20,
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
   modalText: {
     flex: 1,
     fontSize: 14,
-    color: staticColors.darkGray,
+    color: staticColors.textLightGray,
     lineHeight: 20,
     flexWrap: "wrap",
   },

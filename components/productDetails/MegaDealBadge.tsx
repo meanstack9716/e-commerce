@@ -38,7 +38,7 @@ const DealBanner = () => {
         </Text>
         <View style={styles.detailsSections}>
           <Text style={styles.detailsText}>Details</Text>
-          <EvilIcons name="chevron-right" size={20} color={staticColors.offerColor} />
+          <EvilIcons name="chevron-right" size={20} color={staticColors.discountText} />
         </View>
       </TouchableOpacity>
 
@@ -56,7 +56,6 @@ export default DealBanner;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: staticColors.lightLavender,
     borderRadius: 10,
     ...spacingStyles.mx15,
     ...spacingStyles.mt15,
@@ -81,7 +80,7 @@ const styles = StyleSheet.create({
   },
   getAtText: {
     fontSize: 18,
-    color: staticColors.cardTitleColor,
+    color: staticColors.darkGray,
     fontWeight: "bold",
   },
   priceText: {
@@ -92,15 +91,15 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.darkGreen,
     ...spacingStyles.px10,
     ...spacingStyles.py5,
-    borderRadius: 8,
+    borderRadius: 10,
   },
   badgeText: {
-    color: staticColors.whiteColor,
+    color: staticColors.white,
     fontSize: 13,
     fontWeight: "600",
   },
   bottomRow: {
-    backgroundColor: staticColors.whiteColor,
+    backgroundColor: staticColors.white,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -112,7 +111,7 @@ const styles = StyleSheet.create({
   },
   couponText: {
     fontSize: 13,
-    color: staticColors.cardTitleColor,
+    color: staticColors.darkGray,
   },
   bankOfferText: {
     fontWeight: "600",
@@ -120,7 +119,7 @@ const styles = StyleSheet.create({
   detailsText: {
     fontSize: 13,
     fontWeight: "600",
-    color: staticColors.offerColor,
+    color: staticColors.discountText,
   },
   detailsSections:{
     flexDirection:'row',

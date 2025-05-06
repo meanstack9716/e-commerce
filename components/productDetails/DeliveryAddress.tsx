@@ -40,7 +40,7 @@ const DeliveryAddress: React.FC<DeliveryAddressProps> = ({
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={onCloseModal}>
-          <Ionicons name="arrow-back" size={24} color={staticColors.cardTitleColor} />
+          <Ionicons name="arrow-back" size={24} color={staticColors.primary} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>SELECT DELIVERY ADDRESS</Text>
       </View>
@@ -80,9 +80,9 @@ const DeliveryAddress: React.FC<DeliveryAddressProps> = ({
       >
         <View style={styles.locationIconContainer}>
           {isLoading ? (
-            <ActivityIndicator size="small" color={staticColors.offerColor} />
+            <ActivityIndicator size="small" color={staticColors.discountText} />
           ) : (
-            <MaterialIcons name="my-location" size={20} color={staticColors.offerColor} />
+            <MaterialIcons name="my-location" size={20} color={staticColors.discountText} />
           )}
         </View>
         <Text style={styles.locationText}>
@@ -97,7 +97,7 @@ const DeliveryAddress: React.FC<DeliveryAddressProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: staticColors.whiteColor,
+    backgroundColor: staticColors.white,
   },
   header: {
     flexDirection: "row",
@@ -110,14 +110,14 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 17,
     fontWeight: "bold",
-    color: staticColors.primaryColor,
+    color: staticColors.primary,
     ...spacingStyles.ml10,
     flex: 1,
   },
   importantContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: staticColors.lightYellow,
+    backgroundColor: staticColors.lightGray,
     ...spacingStyles.py10,
     ...spacingStyles.px15
   },
@@ -173,13 +173,13 @@ const styles = StyleSheet.create({
     height: 30,
     borderRadius: 15,
     borderWidth: 1,
-    borderColor: staticColors.offerColor,
+    borderColor: staticColors.brightRed,
     justifyContent: "center",
     alignItems: "center",
     ...spacingStyles.mr10
   },
   locationText: {
-    color: staticColors.offerColor,
+    color: staticColors.brightRed,
     fontSize: 15,
     fontWeight: "500",
   },

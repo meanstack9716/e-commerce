@@ -18,7 +18,7 @@ import data from "../../assets/data/products.json";
 import spacingStyles from "@/style/spacingStyles";
 import MegaDealBadge from "@/components/productDetails/MegaDealBadge";
 import SizeSelector from "@/components/productDetails/SizeSelector";
-import BottonActions from "@/components/productDetails/BottonActions";
+import BottonActions from "@/components/productDetails/ProductActionButtons";
 import DeliveryCheck from "@/components/productDetails/DeliveryCheck";
 import ReturnPolicy from "./ReturnPolicy";
 import SimilarProducts from "@/components/productDetails/SimilarProducts";
@@ -109,7 +109,7 @@ const ProductDetailsScreen: React.FC = () => {
       <SafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
         <View style={styles.header}>
           <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
-            <Ionicons name="arrow-back" size={24} color={colors.primaryColor} />
+            <Ionicons name="arrow-back" size={24} color={colors.primary} />
           </TouchableOpacity>
         </View>
         <View style={styles.loadingContainer}>
@@ -122,7 +122,13 @@ const ProductDetailsScreen: React.FC = () => {
   const dummyData = [{ key: "dummy" }];
 
   return (
-    <SafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
+    <SafeAreaView
+      style={[
+        styles.container,
+        { paddingTop: insets.top },
+        { paddingBottom: insets.bottom },
+      ]}
+    >
       <FlatList
         ref={flatListRef}
         data={dummyData}
@@ -139,18 +145,14 @@ const ProductDetailsScreen: React.FC = () => {
                 onPress={handleGoBack}
                 style={styles.backButton}
               >
-                <Ionicons
-                  name="arrow-back"
-                  size={20}
-                  color={colors.primaryColor}
-                />
+                <Ionicons name="arrow-back" size={20} color={colors.primary} />
               </TouchableOpacity>
               <View style={styles.headerRight}>
                 <TouchableOpacity style={styles.iconButton}>
                   <Ionicons
                     name="bag-handle-outline"
                     size={20}
-                    color={colors.primaryColor}
+                    color={colors.primary}
                   />
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -160,7 +162,7 @@ const ProductDetailsScreen: React.FC = () => {
                   <FontAwesome
                     name={liked ? "heart" : "heart-o"}
                     size={20}
-                    color={liked ? "red" : colors.primaryColor}
+                    color={liked ? "red" : colors.primary}
                   />
                 </TouchableOpacity>
               </View>
@@ -247,10 +249,10 @@ const ProductDetailsScreen: React.FC = () => {
       />
       {showBackToTop ? (
         <TouchableOpacity
-          style={styles.backToTopButton}
+          style={[styles.backToTopButton, { bottom: insets.bottom + 10 }]}
           onPress={handleBackToTop}
         >
-          <Ionicons name="arrow-up" size={24} color={colors.whiteColor} />
+          <Ionicons name="arrow-up" size={24} color={colors.white} />
           <Text style={styles.backToTopText}>Back to Top</Text>
         </TouchableOpacity>
       ) : (
@@ -268,7 +270,7 @@ const ProductDetailsScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: staticColors.lightColor,
+    backgroundColor: staticColors.bgMuted,
   },
   loadingContainer: {
     flex: 1,
@@ -277,7 +279,7 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     fontSize: 16,
-    color: colors.primaryColor,
+    color: colors.primary,
   },
   header: {
     flexDirection: "row",
@@ -324,7 +326,7 @@ const styles = StyleSheet.create({
   viewSimilarButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: staticColors.backgroundSecondary,
+    backgroundColor: staticColors.bgSecondary,
     ...spacingStyles.py5,
     ...spacingStyles.px10,
     borderRadius: 10,
@@ -340,7 +342,7 @@ const styles = StyleSheet.create({
   ratingContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: staticColors.backgroundSecondary,
+    backgroundColor: staticColors.bgSecondary,
     ...spacingStyles.py5,
     ...spacingStyles.px10,
     borderRadius: 10,
@@ -373,30 +375,30 @@ const styles = StyleSheet.create({
   discountedPrice: {
     fontSize: 18,
     fontWeight: "bold",
-    color: colors.primaryColor,
+    color: colors.primary,
   },
   originalPrice: {
     fontSize: 14,
     textDecorationLine: "line-through",
-    color: staticColors.lightGray,
+    color: staticColors.softGray,
   },
   discount: {
     fontSize: 14,
-    color: colors.offerColor,
+    color: colors.brightRed,
     fontWeight: "bold",
   },
   heading: {
     fontSize: 18,
     fontWeight: "bold",
     ...spacingStyles.mb10,
-    color: staticColors.cardTitleColor,
+    color: staticColors.primary,
     ...spacingStyles.px15,
   },
   backToTopButton: {
     position: "absolute",
-    bottom: 20,
+    bottom: 0,
     right: 20,
-    backgroundColor: colors.primaryColor,
+    backgroundColor: colors.primary,
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: 10,
@@ -409,7 +411,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
   },
   backToTopText: {
-    color: colors.whiteColor,
+    color: colors.white,
     fontSize: 16,
     fontWeight: "bold",
     marginLeft: 5,

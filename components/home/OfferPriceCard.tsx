@@ -4,6 +4,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign } from '@expo/vector-icons';
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
+import fontSizes from "@/style/fontSizes";
+import gapSizes from "@/style/gapSizes";
 
 interface OfferCardProps {
   topText: string;
@@ -16,7 +18,7 @@ const OfferCard: React.FC<OfferCardProps> = ({ topText, price, bottomText, color
   return (
     <TouchableOpacity style={styles.cardContainer}>
       <LinearGradient
-        colors={['#f7faff', '#c8d7f7']}
+        colors={[`${staticColors.skyBlue}`, `${staticColors.softSkyBlue}`]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={styles.card}
@@ -86,21 +88,21 @@ const styles = StyleSheet.create({
     ...spacingStyles.py10
   },
   topText: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     fontWeight: "500",
     ...spacingStyles.mt25
   },
   priceText: {
-    fontSize: 23,
+    fontSize: fontSizes.lg,
     fontWeight: "700",
   },
   bottomRow: {
     flexDirection: "column",
     alignItems:'center',
-    gap:15
+    gap:gapSizes.md
   },
   bottomText: {
-    fontSize: 16,
+    fontSize:fontSizes.base,
     fontWeight: "600",
   },
   arrow: {

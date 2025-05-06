@@ -9,6 +9,7 @@ import {
   Platform,
 } from "react-native";
 import staticColors from "@/style/staticColors";
+import fontSizes from "@/style/fontSizes";
 
 interface TextFieldProps extends TextInputProps {
   label?: string;
@@ -36,7 +37,7 @@ const TextField: React.FC<TextFieldProps> = ({
     onBlur?.(e);
   };
 
-  const isFloating = isFocused || !!value;
+  const isLabelActive  = isFocused || value;
 
   return (
     <View style={styles.wrapper}>
@@ -45,7 +46,7 @@ const TextField: React.FC<TextFieldProps> = ({
           <Text
             style={[
               styles.label,
-              isFloating ? styles.labelFloating : styles.labelStatic,
+              isLabelActive  ? styles.labelFloating : styles.labelStatic,
               isFocused && styles.labelFocused,
               error && styles.labelError,
             ]}
@@ -85,22 +86,22 @@ const styles = StyleSheet.create({
   label: {
     position: "absolute",
     left: 12,
-    color: staticColors.lightGray,
-    backgroundColor: staticColors.whiteColor,
+    color: staticColors.textLightGray,
+    backgroundColor: staticColors.white,
     zIndex: 1,
    ...spacingStyles.px5
   },
   labelStatic: {
     top: 12,
-    fontSize: 12,
+    fontSize: fontSizes.xs
   },
   labelFloating: {
     top: -8,
-    fontSize: 13,
+    fontSize: fontSizes.xs,
     fontWeight: "bold",
   },
   labelFocused: {
-    color: staticColors.primaryColor,
+    color: staticColors.primary,
     fontWeight: "bold",
   },
   labelError: {
@@ -108,14 +109,14 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: staticColors.lightColor,
+    borderColor: staticColors.lightGray,
     borderRadius: 6,
     ...spacingStyles.p10,
     paddingVertical: Platform.OS === "ios" ? 8 : 5,
-    fontSize: 14,
+    fontSize:fontSizes.sm
   },
   inputFocused: {
-    borderColor: staticColors.primaryColor,
+    borderColor: staticColors.primary,
   },
   inputError: {
     borderColor: staticColors.errorColor,
@@ -124,7 +125,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.mt5,
     ...spacingStyles.ml5,
     color: staticColors.errorColor,
-    fontSize: 13,
+    fontSize: fontSizes.xs
   },
 });
   

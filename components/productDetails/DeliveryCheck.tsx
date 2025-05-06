@@ -76,7 +76,7 @@ const ProductDetails = () => {
       <View style={styles.inputContainer}>
         {isLoading ? (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="small" color={staticColors.offerColor} />
+            <ActivityIndicator size="small" color={staticColors.discountText} />
             <Text style={styles.loadingText}>Fetching your location...</Text>
           </View>
         ) : (
@@ -85,7 +85,7 @@ const ProductDetails = () => {
               ref={textInputRef}
               style={[styles.input, pinCode && { paddingRight: 70 }]}
               placeholder="Enter PIN Code"
-              placeholderTextColor={staticColors.primaryColor}
+              placeholderTextColor={staticColors.primary}
               value={pinCode}
               onFocus={!pinCode ? handleTextInputPress : undefined}
               editable={!pinCode ? true : false}
@@ -170,12 +170,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     ...spacingStyles.py5,
-    color: staticColors.primaryColor,
+    color: staticColors.primary,
   },
   tableTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: staticColors.primaryColor,
+    color: staticColors.primary,
   },
   inputContainer: {
     flexDirection: "row",
@@ -194,14 +194,14 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     ...spacingStyles.p10,
-    color: staticColors.primaryColor,
+    color: staticColors.primary,
   },
   changeButton: {
     position: "absolute",
     right: 10,
   },
   changeText: {
-    color: staticColors.offerColor,
+    color: staticColors.discountText,
     fontSize: 14,
     fontWeight: "bold",
   },
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     ...spacingStyles.ml10,
-    color: staticColors.primaryColor,
+    color: staticColors.primary,
   },
   option: {
     flexDirection: "row",

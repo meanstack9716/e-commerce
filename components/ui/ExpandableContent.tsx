@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import Collapsible from "../Collapsible";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
+import fontSizes from "@/style/fontSizes";
 interface ExpandableContentProps {
   heading: string;
   description: string;
@@ -34,34 +35,29 @@ const ExpandableContent: React.FC<ExpandableContentProps> = ({
 
 const styles = StyleSheet.create({
   faqContainer: {
-    backgroundColor: staticColors.whiteColor,
+    backgroundColor: staticColors.white,
     borderRadius: 8,
-    shadowColor: staticColors.lightColor,
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.2,
-    shadowRadius: 6,
-    elevation: 4,
   },
   headingRow: {
     flexDirection: "row",
     alignItems: "center",
   },
   number: {
-    fontSize: 16,
+    fontSize: fontSizes.base,
     fontWeight: "bold",
     color: "black",
     ...spacingStyles.mr5,
   },
   heading: {
-    fontSize: 15,
+    fontSize: fontSizes.sm,
     fontFamily:'HelveticaBold',
-    color: staticColors.cardTitleColor,
+    color: staticColors.darkGray,
     flexShrink: 1,
   },
   answer: {
     textAlign: "justify",
-    fontSize: 14,
-    color: staticColors.lightGray,
+    fontSize: fontSizes.sm,
+    color: staticColors.textLightGray,
     fontFamily:'Helvetica'
   },
 });

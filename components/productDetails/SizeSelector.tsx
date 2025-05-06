@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   sizeChart: {
-    color: staticColors.offerColor,
+    color: staticColors.discountText,
     fontWeight: "600",
     fontSize: 14,
   },
@@ -163,10 +163,10 @@ const styles = StyleSheet.create({
     borderColor: staticColors.borderLight,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: staticColors.whiteColor,
+    backgroundColor: staticColors.white,
   },
   disabledButton: {
-    backgroundColor: staticColors.backgroundMuted,
+    backgroundColor: staticColors.white,
     borderColor: staticColors.borderSecondaryLight,
   },
   selectedButton: {
@@ -182,17 +182,17 @@ const styles = StyleSheet.create({
     textDecorationLine: "line-through",
   },
   selectedText: {
-    color: staticColors.whiteColor,
+    color: staticColors.white,
   },
   leftText: {
     fontSize: 12,
-    color:staticColors.offerColor,
+    color:staticColors.discountText,
    ...spacingStyles.mt5
   },
   lengthBox: {
     ...spacingStyles.p10,
     borderWidth: 1,
-    borderColor: staticColors.lightColor,
+    borderColor: staticColors.lightGray,
     borderRadius: 12,
   },
   lengthLabel: {

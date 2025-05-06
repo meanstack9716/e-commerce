@@ -11,6 +11,8 @@ import { FontAwesome } from "@expo/vector-icons";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
+import fontSizes from "@/style/fontSizes";
+import gapSizes from "@/style/gapSizes";
 
 export interface ProductCardProps {
   id: string;
@@ -49,7 +51,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
             </View>
           )}
           <View style={styles.starOverlay}>
-            <FontAwesome name="star" size={14} color="#FFD700" />
+            <FontAwesome name="star" size={14} color={staticColors.lightYellow} />
             <Text style={styles.ratingText}>({star.toFixed(1)})</Text>
           </View>
         </View>
@@ -97,7 +99,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   noImageContainer: {
-    backgroundColor: staticColors.backgroundMuted,
+    backgroundColor: staticColors.errorColor,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -115,9 +117,9 @@ const styles = StyleSheet.create({
     ...spacingStyles.pt10,
   },
   cardTitle: {
-    fontSize: 13,
+    fontSize: fontSizes.xs,
     fontWeight: "600",
-    color: staticColors.cardTitleColor,
+    color: staticColors.darkGray,
     flex: 1,
     lineHeight: 18,
   },
@@ -130,31 +132,31 @@ const styles = StyleSheet.create({
     left: 8,
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor:staticColors.whiteColor,
+    backgroundColor:staticColors.white,
     ...spacingStyles.px10,
     ...spacingStyles.py5,
     borderRadius: 8,
   },
   ratingText: {
-    fontSize: 12,
-    color: staticColors.lightGray,
+    fontSize: fontSizes.xs,
+    color: staticColors.textLightGray,
     marginLeft: 4,
   },
   cardPrice: {
-    fontSize: 16,
+    fontSize: fontSizes.base,
     fontWeight: "700",
-    color: colors.primaryColor,
+    color: colors.primary,
   },
   discountBadge: {
     flexDirection: "row",
     ...spacingStyles.mx10,
     ...spacingStyles.my5,
     alignItems: "center",
-    gap: 5,  // Changed from string "5" to number 5
+    gap:gapSizes.xs
   },
   discountText: {
-    color: staticColors.discountColor,
-    fontSize: 12,
+    color: staticColors.DarkRed,
+    fontSize: fontSizes.xs,
     fontWeight: "bold",
   },
 });

@@ -1,55 +1,67 @@
 export default {
-  whiteColor: "#ffffff",
-  primaryColor: "#1E2637",
-  // Backgrounds
-  backgroundSecondary: "#f5f5f5",
-  backgroundMuted: "#f0f0f0",
-  offerbackgroundColor: "#d9dcfa",
-  homebackgroundColor: "#f5fbff",
+  // Primary Colors
+  primary: "#1E2637",
+  white: "#ffffff",
+  black: "#000000",
 
-  // Text colors
+  // Background Colors
+  bgPrimary: "#f5fbff",
+  bgSecondary: "#f5f5f5",
+  bgMuted: "#f0f0f0",
+  bgOffer: "#d9dcfa",
+  bgCard: "#f5f5fc",
+  bgCardLight: "#faf5f5",
+
+  // Text Colors
   textSecondary: "#616161",
   textMuted: "#8a8a8a",
-  textInverse: "#ffffff",
-  subTitle: "#7d7c7c",
-  offerColor: "#dc2626",
-  cardTitleColor: "#333",
-  lightGray: "#999",
-  darkGray: "#666",
-  lightGreen: "#e6ffe6",
-  cardBackground:"#f1f0ff",
-  lightPink:"#fee2e2",
-  secondaryGray:'#e3e3e3',
-  darkGreen:"#00C853",
-  lightLavender:"#F5F3FF",
-  darkPink:'#d81b60',
-  lightYellow:'#FFF8E1',
-  darkYellow:'#F57C00',
-  // Borders
+  textSubtitle: "#7d7c7c",
+  textLightGray: "#999999",
+  textDarkGray: "#666666",
+
+  // Border Colors
   borderLight: "#e0e0e0",
   borderDark: "#bdbdbd",
   borderSecondaryLight:'#ddd',
 
-  // Buttons
+  // Button Colors
   buttonPrimary: "#1E2637",
-  buttonPrimaryText: "#ffffff",
   buttonSecondary: "#6c757d",
-  buttonDanger: "#dc3545",
+  buttonSecondaryText: "#ffffff",
+  DarkRed: "#dc3545",
 
-  // Shadows
-  shadowColor: "#000000",
-  discountColor: "#dc3545",
-  modalBackGround:"rgba(0, 0, 0, 0.08)",
-  // Alerts
-  success: "#28a745",
-  warning: "#ffc107",
-  info: "#17a2b8",
-
-  //link
-  linkPrimaryColor: "#0C4A6E",
-  linkColor: "#007aff",
-
-  //error
+  // Alert Colors
+  alertSuccess: "#28a745",
+  alertWarning: "#ffc107",
+  infoColor: "#17a2b8",
   errorColor: "red",
-  lightColor: "#eee",
+
+  // Shadow
+  shadowColor: "#000000",
+
+  // Discount & Offer
+  discountText: "#dc3545",
+
+  // Modal
+  modalOverlayLight: "rgba(0, 0, 0, 0.025)",
+
+  // Links
+  linkPrimary: "#0C4A6E",
+  linkDefault: "#007aff",
+
+  // Misc
+  lightGray: "#eee",
+  darkGray:'#333',
+  brightRed: "#dc2626", 
+  lightPink: "#fee2e2",
+  lightGreen: "#e6ffe6",
+  secondaryGray:'#e3e3e3',
+  lightYellow:"#F7CD03",
+  indigoNavy:"#242555",
+  ceruleanBlue:"#1B7CA5",
+  softGray:'#ccc',
+  skyBlue:'#f7faff',
+  softSkyBlue:'#c8d7f7',
+  darkYellow:'#F57C00',
+  darkGreen:"#00C853",
 };

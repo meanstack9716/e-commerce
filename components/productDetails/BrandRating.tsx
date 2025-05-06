@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     ...spacingStyles.py5,
-    color: staticColors.primaryColor,
+    color: staticColors.primary,
   },
   ratingContainer: {
     flexDirection: 'row',

@@ -238,7 +238,7 @@ export default function FAQs() {
 const styles = StyleSheet.create({
   container: {
     ...spacingStyles.p25,
-    backgroundColor: colors.whiteColor
+    backgroundColor: colors.white
   },
   section: {
     ...spacingStyles.mb20

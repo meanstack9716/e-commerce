@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
   messageText: {
     fontSize: 14,
     textAlign: "center",
-    color: staticColors.darkGray,
+    color: staticColors.textLightGray,
   },
 });
 
