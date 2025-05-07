@@ -35,6 +35,7 @@ import images from "@/constants/images";
 import { useSelector, useDispatch } from "react-redux";
 import { useAppDispatch } from "@/store/hooks";
 import { fetchCategories } from "@/store/category/categoriesSlice";
+import FullScreenLoader from "@/components/common/FullScreenLoader";
 
 const HomeScreen: React.FC = () => {
   const [likedProductItems, setLikedProductItems] = useState<string[]>([]);
@@ -45,9 +46,11 @@ const HomeScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
   const dispatch = useAppDispatch();
 
-  const { data: categories, loading, error } = useSelector(
-    (state: any) => state.categories
-  );
+  const {
+    data: categories,
+    loading,
+    error,
+  } = useSelector((state: any) => state.categories);
 
   useEffect(() => {
     dispatch(fetchCategories());
@@ -68,16 +71,22 @@ const HomeScreen: React.FC = () => {
   const getFilteredProducts = () => {
     let filtered = productData.products;
 
-    if (activeProductTab && activeProductTab !== "All" && activeProductTab !== "Categories" && tabs.includes(activeProductTab)) {
+    if (
+      activeProductTab &&
+      activeProductTab !== "All" &&
+      activeProductTab !== "Categories" &&
+      tabs.includes(activeProductTab)
+    ) {
       const activeCategory = categories.find(
         (cat: any) => cat.name.toLowerCase() === activeProductTab.toLowerCase()
       );
       if (activeCategory) {
-        const subCategoryIds = activeCategory.sub_categories.map((sub: any) => sub.id);
+        const subCategoryIds = activeCategory.sub_categories.map(
+          (sub: any) => sub.id
+        );
         filtered = filtered.filter((product) =>
           product.categories.some(
-            (cat) =>
-              cat === activeCategory.id || subCategoryIds.includes(cat)
+            (cat) => cat === activeCategory.id || subCategoryIds.includes(cat)
           )
         );
       }
@@ -125,7 +134,6 @@ const HomeScreen: React.FC = () => {
       }
     />
   );
-  
 
   const ListHeader = () => (
     <>
@@ -154,6 +162,7 @@ const HomeScreen: React.FC = () => {
           },
         ]}
       >
+        <FullScreenLoader visible={loading} />
         <StatusBar
           barStyle="dark-content"
           translucent
@@ -222,14 +231,13 @@ const HomeScreen: React.FC = () => {
           </TouchableOpacity>
         </View>
 
-        {loading ? (
-          <Text>Loading categories...</Text>
-        ) : error ? (
-          <Text>Error: {error}</Text>
-        ) : tabs.length > 1 ? (
-          <Navbar tabs={tabs} activeTab={activeProductTab} setActiveTab={setActiveProductTab} />
-        ) : (
-          <Text>No categories available</Text>
+        {error && <Text>Error: {error}</Text>}
+        {tabs.length > 1 && !error && (
+          <Navbar
+            tabs={tabs}
+            activeTab={activeProductTab}
+            setActiveTab={setActiveProductTab}
+          />
         )}
 
         <FlatList
