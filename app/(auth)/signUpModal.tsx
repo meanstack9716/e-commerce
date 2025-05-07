@@ -69,10 +69,13 @@ const SignUpModal: React.FC<SignUpModalProps> = ({
   useEffect(() => {
     if (registered) {
       onClose();
-      onLoginPress();
+      router.push({
+        pathname: "/otpScreen",
+        params: { email: formData.email },
+      });
       dispatch(resetRegistration());
     }
-  }, [registered, onClose, router, dispatch]);
+  }, [registered, onClose, router, dispatch, formData.email]);
 
   const handleInputChange = (
     field: keyof FormData,

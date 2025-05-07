@@ -91,7 +91,6 @@ const OTPInput: React.FC<OTPInputProps> = ({
     }
 
     try {
-      await dispatch(verifyEmailCode({ email, code: enteredOtp })).unwrap();
       onVerifySuccess(enteredOtp); 
     } catch (err) {
       setOtpError((err as string) || "Invalid OTP");

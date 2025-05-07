@@ -47,6 +47,7 @@ export default function RootLayout() {
           <Stack.Screen name="+not-found" />
           <Stack.Screen name="/categories" />
           <Stack.Screen name="/ProductDetails" />
+          <Stack.Screen name="/home" />
         </Stack>
         <StatusBar style="auto" />
       </ThemeProvider>

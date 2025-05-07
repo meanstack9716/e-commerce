@@ -79,10 +79,12 @@ const LoginModal: React.FC<LoginModalProps> = ({
           password: formData.password,
         })
       );
-
       if (loginUser.fulfilled.match(resultAction)) {
         onClose();
-        router.push("/userInformation");
+        router.push({
+          pathname: "/otpScreen",
+          params: { email: formData.email },
+        });
       }
     }
   };
@@ -107,7 +109,11 @@ const LoginModal: React.FC<LoginModalProps> = ({
           <TouchableWithoutFeedback>
             <View style={styles.modalContent}>
               <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-                <Ionicons name="close" size={24} color={staticColors.darkGray} />
+                <Ionicons
+                  name="close"
+                  size={24}
+                  color={staticColors.darkGray}
+                />
               </TouchableOpacity>
               <Image
                 source={images.logoBlue}
