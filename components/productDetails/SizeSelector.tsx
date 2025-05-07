@@ -1,7 +1,3 @@
-import SizeChartModal from "@/modal/SizeChartModal";
-import fontSizes from "@/style/fontSizes";
-import spacingStyles from "@/style/spacingStyles";
-import staticColors from "@/style/staticColors";
 import React, { useState } from "react";
 import {
   View,
@@ -10,6 +6,10 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
+import SizeChartModal from "@/modal/SizeChartModal";
+import fontSizes from "@/style/fontSizes";
+import spacingStyles from "@/style/spacingStyles";
+import staticColors from "@/style/staticColors";
 
 type SizeInfo = {
   label: string;

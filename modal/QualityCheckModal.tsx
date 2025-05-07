@@ -1,5 +1,3 @@
-import spacingStyles from "@/style/spacingStyles";
-import staticColors from "@/style/staticColors";
 import React from "react";
 import {
   View,
@@ -9,6 +7,8 @@ import {
   Modal,
   TouchableOpacity,
 } from "react-native";
+import spacingStyles from "@/style/spacingStyles";
+import staticColors from "@/style/staticColors";
 import { Ionicons } from "@expo/vector-icons";
 import fontSizes from "@/style/fontSizes";
 import { IMAGE_URIS } from "@/constants/imageLinks";
