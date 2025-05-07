@@ -8,12 +8,12 @@ import {
   Image,
   StyleSheet,
 } from "react-native";
-import BottonActions from "@/components/productDetails/ProductActionButtons";
 import fontSizes from "@/style/fontSizes";
 import gapSizes from "@/style/gapSizes";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { Ionicons } from "@expo/vector-icons";
+import ProductActionButtons from "@/components/productDetails/ProductActionButtons";
 
 interface SizeChartModalProps {
   visible: boolean;
@@ -361,7 +361,7 @@ const SizeChartModal: React.FC<SizeChartModalProps> = ({
           </ScrollView>
         </View>
 
-        <BottonActions containerStyle={{ backgroundColor: "white" }} />
+        <ProductActionButtons containerStyle={{ backgroundColor: "white" }} />
       </View>
     </Modal>
   );
