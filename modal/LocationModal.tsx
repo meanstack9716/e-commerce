@@ -12,11 +12,10 @@ import {
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import staticColors from "@/style/staticColors";
 import DeliveryAddressScreen from "@/components/productDetails/DeliveryAddress";
-
-import { Alert } from "react-native";
 import { useLocation } from "@/utils/useLocation";
 import spacingStyles from "@/style/spacingStyles";
 import fontSizes from "@/style/fontSizes";
+import LocationAlertModal from "./LocationAlertModal";
 
 interface LocationModalProps {
   visible: boolean;
@@ -32,7 +31,12 @@ const LocationModal: React.FC<LocationModalProps> = ({
   const [pinCode, setPinCode] = useState<string>("");
   const [addressModalVisible, setAddressModalVisible] =
     useState<boolean>(false);
-  const { requestLocationPermission, isLoading } = useLocation();
+  const {
+    requestLocationPermission,
+    isLoading,
+    locationModal,
+    hideLocationModal,
+  } = useLocation();
 
   const handlePinCodeChange = (text: string) => {
     const numericText = text.replace(/[^0-9]/g, "").slice(0, 6);
@@ -43,8 +47,6 @@ const LocationModal: React.FC<LocationModalProps> = ({
     if (pinCode.length === 6) {
       onGrant(pinCode);
       onClose();
-    } else {
-      Alert.alert("Invalid PIN Code", "Please enter a valid 6-digit PIN code");
     }
   };
 
@@ -172,6 +174,13 @@ const LocationModal: React.FC<LocationModalProps> = ({
           onCloseModal={() => setAddressModalVisible(false)}
         />
       </Modal>
+      <LocationAlertModal
+        visible={locationModal.visible}
+        title={locationModal.title}
+        message={locationModal.message}
+        onConfirm={locationModal.onConfirm}
+        onCancel={locationModal.onCancel}
+      />
     </Modal>
   );
 };
@@ -233,9 +242,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   inputContainer: {
-   ...spacingStyles.mb15,
+    ...spacingStyles.mb15,
     ...spacingStyles.px20,
-   ...spacingStyles.pt15
+    ...spacingStyles.pt15,
   },
   inputLabel: {
     fontSize: fontSizes.sm,
@@ -268,7 +277,7 @@ const styles = StyleSheet.create({
   },
   checkButtonText: {
     color: staticColors.shadowColor,
-    fontSize:fontSizes.sm,
+    fontSize: fontSizes.sm,
     fontWeight: "bold",
   },
   searchContainer: {

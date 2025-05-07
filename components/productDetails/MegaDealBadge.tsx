@@ -1,11 +1,11 @@
+import React, { useState } from "react";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { EXTRA_DISCOUNT, PRODUCT_PRICE } from "@/constants/constants";
 import OfferDetailsModal from "@/modal/OfferDetailsModal";
 import fontSizes from "@/style/fontSizes";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { EvilIcons } from "@expo/vector-icons";
-import React, { useState } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 
 const DealBanner = () => {
   const [isOfferModalVisible, setIsOfferModalVisible] = useState(false);
@@ -40,7 +40,11 @@ const DealBanner = () => {
         </Text>
         <View style={styles.detailsSections}>
           <Text style={styles.detailsText}>Details</Text>
-          <EvilIcons name="chevron-right" size={20} color={staticColors.discountText} />
+          <EvilIcons
+            name="chevron-right"
+            size={20}
+            color={staticColors.discountText}
+          />
         </View>
       </TouchableOpacity>
 
@@ -123,7 +127,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: staticColors.discountText,
   },
-  detailsSections:{
-    flexDirection:'row',
-  }
+  detailsSections: {
+    flexDirection: "row",
+  },
 });

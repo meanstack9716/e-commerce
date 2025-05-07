@@ -11,63 +11,42 @@ import { MaterialIcons } from "@expo/vector-icons";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import LocationModal from "@/modal/LocationModal";
-import * as Location from "expo-location";
 import fontSizes from "@/style/fontSizes";
 import gapSizes from "@/style/gapSizes";
+import { getCurrentPinCode } from "@/utils/currentLocation";
 
 const ProductDetails = () => {
-  const [modalVisible, setModalVisible] = useState(false);
+  const [isLocationModalVisible, setIsLocationModalVisible] = useState(false);
   const [pinCode, setPinCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const textInputRef = useRef<TextInput>(null);
 
   useEffect(() => {
-    checkLocationPermission();
-  }, []);
-
-  const checkLocationPermission = async () => {
-    try {
+    const fetchPinCode = async () => {
       setIsLoading(true);
-      const { status } = await Location.getForegroundPermissionsAsync();
-
-      if (status === "granted") {
-        const isLocationEnabled = await Location.hasServicesEnabledAsync();
-
-        if (isLocationEnabled) {
-          const location = await Location.getCurrentPositionAsync({
-            accuracy: Location.Accuracy.High,
-          });
-
-          const [address] = await Location.reverseGeocodeAsync({
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-          });
-
-          const fetchedPinCode = address?.postalCode || "";
-          if (fetchedPinCode) {
-            setPinCode(fetchedPinCode);
-          }
-        }
+      const PinCode = await getCurrentPinCode();
+      if (PinCode) {
+        setPinCode(PinCode);
       }
-    } catch (error) {
-      console.error("Error checking location permission:", error);
-    } finally {
       setIsLoading(false);
-    }
-  };
+    };
+  
+    fetchPinCode();
+  }, []);
+  
 
   const handleCloseModal = () => {
-    setModalVisible(false);
+    setIsLocationModalVisible(false);
     if (textInputRef.current) {
       textInputRef.current.blur();
     }
   };
 
-  const handleTextInputPress = () => {
-    setModalVisible(true);
+  const handleAddressTextInput = () => {
+    setIsLocationModalVisible(true);
   };
 
-  const handleGrant = (fetchedPinCode: string) => {
+  const handleGrantButton = (fetchedPinCode: string) => {
     setPinCode(fetchedPinCode);
     handleCloseModal();
   };
@@ -89,14 +68,14 @@ const ProductDetails = () => {
               placeholder="Enter PIN Code"
               placeholderTextColor={staticColors.primary}
               value={pinCode}
-              onFocus={!pinCode ? handleTextInputPress : undefined}
+              onFocus={!pinCode ? handleAddressTextInput : undefined}
               editable={!pinCode ? true : false}
               accessibilityLabel="PIN code input"
             />
             {pinCode && (
               <TouchableOpacity
                 style={styles.changeButton}
-                onPress={handleTextInputPress}
+                onPress={handleAddressTextInput}
                 accessibilityLabel="Change PIN code"
               >
                 <Text style={styles.changeText}>Change</Text>
@@ -107,9 +86,9 @@ const ProductDetails = () => {
       </View>
 
       <LocationModal
-        visible={modalVisible}
+        visible={isLocationModalVisible}
         onClose={handleCloseModal}
-        onGrant={handleGrant}
+        onGrant={handleGrantButton}
       />
       <View style={styles.option}>
         <MaterialIcons name="local-shipping" size={20} color={staticColors.black}/>
@@ -120,7 +99,7 @@ const ProductDetails = () => {
       </View>
       <View style={styles.option}>
         <MaterialIcons name="payment" size={20} color={staticColors.black} />
-        <Text style={{ flexShrink: 1 }}>
+        <Text style={{ flexShrink: 1 }}>  
           <Text style={styles.boldText}>Pay on delivery</Text> might be
           available
         </Text>
@@ -223,7 +202,7 @@ const styles = StyleSheet.create({
   option: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 10,
+    ...spacingStyles.mb10,
     gap: gapSizes.md,
   },
   sectiontable: {
