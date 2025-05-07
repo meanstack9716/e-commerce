@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { Ionicons, MaterialIcons, FontAwesome6 } from "@expo/vector-icons";
 import ProductCard from "@/components/home/ProductCard";
-import { router } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import data from "../../assets/data/products.json";
 import Navbar from "@/components/home/Navbar";
 import CategoryGrid from "@/components/home/CategoryGrid";
@@ -28,37 +28,14 @@ import BrandCard from "@/components/home/BrandCard";
 import staticColors from "@/style/staticColors";
 import OfferPriceCard from "@/components/home/OfferPriceCard";
 import PocketFriendlyBargain from "@/components/home/PocketFriendlyCategory";
+import { Profile, ProductData } from "@/types/types";
 import fontSizes from "@/style/fontSizes";
 import gapSizes from "@/style/gapSizes";
 import images from "@/constants/images";
-interface Product {
-  id: string;
-  image: string;
-  title: string;
-  price: string;
-  star: number;
-  categories: string[];
-}
-
-interface Category {
-  id: string;
-  title: string;
-  imageUrl: string;
-  isActive?: boolean;
-}
-
-interface ProductData {
-  categories: {
-    All: Category[];
-    Men: Category[];
-    Women: Category[];
-  };
-  products: Product[];
-}
 
 const HomeScreen: React.FC = () => {
   const [likedProductItems, setLikedProductItems] = useState<string[]>([]);
-  const [activeTab, setActiveTab] = useState<string>("All");
+  const [activeProductTab, setActiveProductTab] = useState<string>("All");
   const [productSearchQuery, setProductSearchQuery] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const productData = data as ProductData;
@@ -66,8 +43,8 @@ const HomeScreen: React.FC = () => {
   const getFilteredProducts = () => {
     let filtered = productData.products;
 
-    if (activeTab !== "All") {
-      const tabLower = activeTab.toLowerCase();
+    if (activeProductTab !== "All") {
+      const tabLower = activeProductTab.toLowerCase();
       filtered = filtered.filter((product) =>
         product.categories.includes(tabLower)
       );
@@ -104,19 +81,24 @@ const HomeScreen: React.FC = () => {
     setSelectedCategory(categoryId || null);
   };
 
-  const renderItem = ({ item }: { item: Product }) => (
+  const renderProductItem = ({ item }: { item: Profile }) => (
     <ProductCard
       {...item}
       liked={likedProductItems.includes(item.id)}
       onLikePress={() => toggleProductLike(item.id)}
+      onPress={() => router.push({
+        pathname: "/ProductDetails",
+        params: { id: item.id }
+      })}
     />
   );
+  
 
   const ListHeader = () => (
     <>
-      {activeTab !== "Categories" && (
+      {activeProductTab !== "Categories" && (
         <CategoryGrid
-          activeTab={activeTab}
+          activeTab={activeProductTab}
           onCategorySelect={handleCategorySelect}
         />
       )}
@@ -173,7 +155,7 @@ const HomeScreen: React.FC = () => {
             <TextInput
               placeholder="Search products..."
               style={styles.searchInput}
-              placeholderTextColor={staticColors.textLightGray}
+              placeholderTextColor={staticColors.lightGray}
               value={productSearchQuery}
               onChangeText={setProductSearchQuery}
             />
@@ -181,7 +163,7 @@ const HomeScreen: React.FC = () => {
               <Ionicons
                 name="search"
                 size={20}
-                color={staticColors.textLightGray}
+                color={staticColors.lightGray}
               />
             </TouchableOpacity>
           </View>
@@ -207,13 +189,13 @@ const HomeScreen: React.FC = () => {
           </TouchableOpacity>
         </View>
 
-        <Navbar tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
+        <Navbar tabs={tabs} activeTab={activeProductTab} setActiveTab={setActiveProductTab} />
 
         <FlatList
           data={getFilteredProducts()}
           numColumns={2}
           keyExtractor={(item) => item.id}
-          renderItem={renderItem}
+          renderItem={renderProductItem}
           ListHeaderComponent={ListHeader}
           contentContainerStyle={styles.flatListContent}
           columnWrapperStyle={styles.columnWrapper}
@@ -266,14 +248,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     justifyContent: "space-between",
   },
-
   logo: {
     width: 20,
     height: 20,
     resizeMode: "contain",
     ...spacingStyles.mr10,
   },
-
   searchInput: {
     flex: 1,
     height: 40,

@@ -22,6 +22,7 @@ export default {
   // Border Colors
   borderLight: "#e0e0e0",
   borderDark: "#bdbdbd",
+  borderSecondaryLight:'#ddd',
 
   // Button Colors
   buttonPrimary: "#1E2637",
@@ -61,4 +62,7 @@ export default {
   softGray:'#ccc',
   skyBlue:'#f7faff',
   softSkyBlue:'#c8d7f7',
+  darkYellow:'#F57C00',
+  darkGreen:"#00C853",
+  LightSkyBlue:"#CCDAF9"
 };

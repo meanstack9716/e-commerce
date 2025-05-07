@@ -3,6 +3,7 @@ import React from "react";
 import { Text, TouchableOpacity, StyleSheet, ViewStyle, TextStyle, ActivityIndicator } from "react-native";
 import colors from "@/style/staticColors";
 import fontSizes from "@/style/fontSizes";
+import staticColors from "@/style/staticColors";
 interface ButtonProps {
   title: string;
   onPress: () => void;
@@ -28,7 +29,7 @@ export const Button: React.FC<ButtonProps> = ({
       disabled={disabled}
     >
       {loading ? (
-        <ActivityIndicator size="small" color="#fff" />
+        <ActivityIndicator size="small" color={staticColors.white} />
       ) : (
         <Text style={[styles.text, textStyle]}>{title}</Text>
       )}

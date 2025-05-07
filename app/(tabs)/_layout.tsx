@@ -8,7 +8,9 @@ import fontSizes from "@/style/fontSizes";
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
   return (
-    <SafeAreaView style={styles.safeAreaContainer}>
+    <SafeAreaView
+      style={[styles.safeAreaContainer, { paddingBottom: insets.bottom }]}
+    >
       <Tabs
         screenOptions={({ route }) => ({
           tabBarIcon: ({ color, size, focused }) => {
@@ -38,12 +40,7 @@ export default function TabLayout() {
           tabBarStyle: {
             backgroundColor: colors.white,
             borderTopWidth: 0,
-            elevation: 10,
-            shadowColor: staticColors.black,
-            shadowOffset: { width: 0, height: -3 },
-            shadowOpacity: 0.1,
-            shadowRadius: 5,
-            paddingTop: 4,
+
             height: Platform.OS === "ios" ? 60 + insets.bottom : 60,
             paddingBottom: Platform.OS === "ios" ? insets.bottom : 0,
           },
@@ -77,6 +74,5 @@ export default function TabLayout() {
 const styles = StyleSheet.create({
   safeAreaContainer: {
     flex: 1,
-    backgroundColor: colors.white,
   },
 });

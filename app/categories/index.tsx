@@ -222,7 +222,7 @@ const CategoriesScreen: React.FC = () => {
       <View style={styles.header}>
         <View style={styles.headerContain}>
           <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
-            <Ionicons name="arrow-back" size={20} color="#333" />
+            <Ionicons name="arrow-back" size={20} color={staticColors.darkGray} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>
             {categoryTitle ? categoryTitle : "Categories"}
@@ -231,10 +231,10 @@ const CategoriesScreen: React.FC = () => {
 
         <View style={styles.headerRight}>
           <TouchableOpacity style={styles.iconButton}>
-            <Ionicons name="heart-outline" size={22} color="#333" />
+            <Ionicons name="heart-outline" size={22} color={staticColors.darkGray} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.iconButton}>
-            <Ionicons name="bag-outline" size={22} color="#333" />
+            <Ionicons name="bag-outline" size={22} color={staticColors.darkGray} />
             <View style={styles.badge}>
               <Text style={styles.badgeText}>0</Text>
             </View>
