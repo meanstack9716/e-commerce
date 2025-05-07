@@ -303,7 +303,7 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.xs,
     textAlign: "center",
     ...spacingStyles.mt5,
-    fontWeight: "600",
+    fontWeight:"600",
     color: staticColors.darkGray,
   },
   selectedSidebarText: {
