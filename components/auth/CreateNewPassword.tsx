@@ -10,6 +10,7 @@ import textStyles from "@/style/textStyles";
 import spacingStyles from "@/style/spacingStyles";
 import fontSizes from "@/style/fontSizes";
 import images from "@/constants/images";
+import staticColors from "@/style/staticColors";
 
 export default function CreateNewPassword() {
   const { errors, handlePasswordValidation, handleConfirmPasswordMatch } =
@@ -101,7 +102,7 @@ const styles = StyleSheet.create({
     width: 140,
     height: 140,
     borderRadius: 70,
-    backgroundColor: "#CCDAF9",
+    backgroundColor: staticColors.LightSkyBlue,
     justifyContent: "center",
     alignItems: "center",
     ...spacingStyles.mb10,
@@ -112,7 +113,7 @@ const styles = StyleSheet.create({
   },
   infoText: {
     fontSize: fontSizes.sm,
-    color: "#555",
+    color: staticColors.LightSkyBlue,
     textAlign: "center",
     width: "80%",
     ...spacingStyles.mb20,

@@ -14,7 +14,7 @@ const textStyles = StyleSheet.create({
   subtitle: {
     fontSize: fontSizes.base,
     fontFamily: "Helvetica",
-    color: colors.textSubtitle,
+    color: colors.textSecondary,
     ...spacingStyles.mb10
   },
 });

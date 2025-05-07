@@ -222,7 +222,7 @@ export default function ForgetPassword() {
                 onPress={timer === 0 ? handleResend : undefined}
               >
                 {loading ? (
-                  <ActivityIndicator size={12} color="#ddd" />
+                  <ActivityIndicator size={12} color={staticColors.borderSecondaryLight} />
                 ) : (
                   <Text>Resend</Text>
                 )}

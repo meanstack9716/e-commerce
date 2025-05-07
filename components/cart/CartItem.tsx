@@ -49,7 +49,7 @@ const CartItem: React.FC<CartItemProps> = ({
       </View>
       <View style={styles.qtyContainer}>
         <TouchableOpacity style={styles.qtyDecBtn} onPress={decreaseQuantity}>
-          <Ionicons name="remove" size={16} color="#000" />
+          <Ionicons name="remove" size={16} color={staticColors.black} />
         </TouchableOpacity>
         <Text style={styles.qtyText}>{quantity}</Text>
         <TouchableOpacity style={styles.qtyIncBtn} onPress={increaseQuantity}>
