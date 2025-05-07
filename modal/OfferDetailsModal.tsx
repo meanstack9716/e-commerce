@@ -17,6 +17,8 @@ import {
 } from "@expo/vector-icons";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
+import fontSizes from "@/style/fontSizes";
+import gapSizes from "@/style/gapSizes";
 
 interface OfferDetailsModalProps {
   visible: boolean;
@@ -136,7 +138,7 @@ const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
                             : "keyboard-arrow-down"
                         }
                         size={18}
-                        color={staticColors.offerColor}
+                        color={staticColors.discountText}
                       />
                     </View>
                   </TouchableOpacity>
@@ -181,7 +183,7 @@ const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
                             : "keyboard-arrow-down"
                         }
                         size={18}
-                        color={staticColors.offerColor}
+                        color={staticColors.discountText}
                       />
                     </View>
                   </TouchableOpacity>
@@ -223,7 +225,7 @@ const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
                               : "keyboard-arrow-down"
                           }
                           size={18}
-                          color={staticColors.offerColor}
+                          color={staticColors.discountText}
                         />
                       </View>
                     </TouchableOpacity>
@@ -352,15 +354,15 @@ const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.2)",
+    backgroundColor: staticColors.modalOverlayLight,
     justifyContent: "flex-end",
   },
   modalContent: {
-    backgroundColor: staticColors.whiteColor,
+    backgroundColor: staticColors.white,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     ...spacingStyles.p15,
-    maxHeight: screenHeight * 0.5,
+    maxHeight: screenHeight * 0.45,
     flexGrow: 1,
   },
 
@@ -384,25 +386,25 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     ...spacingStyles.pt10,
-    gap: 15,
+    gap: gapSizes.lg,
   },
   modalTitle: {
-    fontSize: 20,
+    fontSize: fontSizes['lg'],
     fontWeight: "bold",
-    color: staticColors.cardTitleColor,
+    color: staticColors.darkGray,
   },
   modalSubtitle: {
     backgroundColor: staticColors.darkGreen,
     ...spacingStyles.px10,
     ...spacingStyles.py5,
     borderRadius: 10,
-    color: staticColors.whiteColor,
+    color: staticColors.white,
   },
   modalDescription: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     ...spacingStyles.p5,
     textAlign: "center",
-    color: staticColors.textSecondary,
+    color: staticColors.textLightGray,
   },
   offersContainer: {
     flex: 1,
@@ -421,18 +423,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   offerLabel: {
-    fontSize: 15,
+    fontSize: fontSizes.sm,
     fontWeight: "600",
-    color: staticColors.cardTitleColor,
+    color: staticColors.darkGray,
   },
   offerValue: {
-    fontSize: 15,
+    fontSize: fontSizes.sm,
     fontWeight: "600",
     color: staticColors.darkGreen,
   },
   offerDetails: {
-    fontSize: 13,
-    color: staticColors.lightGray,
+    fontSize: fontSizes.xs,
+    color: staticColors.textLightGray,
   },
   detailsButton: {
     alignSelf: "flex-start",
@@ -441,8 +443,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   detailsButtonText: {
-    fontSize: 14,
-    color: staticColors.offerColor,
+    fontSize: fontSizes.sm,
+    color: staticColors.discountText,
     fontWeight: "600",
   },
   bankRow: {
@@ -450,14 +452,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   bankIconPlaceholder: {
-    fontSize: 18,
+    fontSize: fontSizes.md,
     marginRight: 8,
   },
   moreOffersSection: {
     ...spacingStyles.mx10,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: staticColors.lightColor,
+    borderColor: staticColors.lightGray,
   },
   collapsedSection: {
     marginBottom: 0,
@@ -478,19 +480,19 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: staticColors.whiteColor,
+    backgroundColor: staticColors.white,
     justifyContent: "center",
     alignItems: "center",
     ...spacingStyles.mr5,
   },
   moreOffersText: {
-    fontSize: 16,
+    fontSize: fontSizes.base,
     fontWeight: "600",
-    color: staticColors.cardTitleColor,
+    color: staticColors.darkGray,
   },
   viewLessText: {
-    fontSize: 14,
-    color: staticColors.offerColor,
+    fontSize: fontSizes.sm,
+    color: staticColors.discountText,
     fontWeight: "600",
   },
 
@@ -499,14 +501,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   cardOfferSection: {
-    backgroundColor: staticColors.whiteColor,
+    backgroundColor: staticColors.white,
     borderRadius: 10,
     ...spacingStyles.p10,
   },
   cardName: {
-    fontSize: 15,
+    fontSize: fontSizes.sm,
     fontWeight: "600",
-    color: staticColors.cardTitleColor,
+    color: staticColors.darkGray,
   },
   cardOfferDetails: {
     borderBottomColor: staticColors.lightGray,
@@ -518,29 +520,29 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   bulletPoint: {
-    fontSize: 15,
+    fontSize: fontSizes.sm,
     ...spacingStyles.mx5,
     color: staticColors.shadowColor,
   },
   bulletText: {
-    fontSize: 12,
-    color: staticColors.lightGray,
+    fontSize: fontSizes.xs,
+    color: staticColors.textLightGray,
     flex: 1,
   },
   tandcText: {
-    fontSize: 14,
-    color: staticColors.offerColor,
+    fontSize: fontSizes.sm,
+    color: staticColors.discountText,
     ...spacingStyles.ml10,
   },
   expandedDetails: {
     ...spacingStyles.mt10,
   },
   detailPoint: {
-    fontSize: 14,
-    color: staticColors.lightGray,
+    fontSize: fontSizes.sm,
+    color: staticColors.textLightGray,
   },
   modalText: {
-    fontSize: 13,
+    fontSize: fontSizes.xs,
     textAlign: "center",
     ...spacingStyles.mt10,
     ...spacingStyles.pt2,

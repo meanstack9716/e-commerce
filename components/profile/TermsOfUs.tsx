@@ -4,6 +4,7 @@ import ExpandableContent from "../ui/ExpandableContent";
 import colors from "@/style/staticColors";
 import textStyles from "@/style/textStyles";
 import spacingStyles from "@/style/spacingStyles";
+import fontSizes from "@/style/fontSizes";
 
 const TermsOfUs = () => {
   const termsData = [
@@ -87,9 +88,9 @@ const styles = StyleSheet.create({
   },
   paragraph: {
     textAlign: "justify",
-    fontSize: 13,
+    fontSize: fontSizes.xs,
     lineHeight: 20,
-    color: colors.subTitle,
+    color: colors.textSubtitle,
     ...spacingStyles.mb20,
   },
 });

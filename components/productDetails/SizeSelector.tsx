@@ -1,8 +1,15 @@
 import SizeChartModal from "@/modal/SizeChartModal";
+import fontSizes from "@/style/fontSizes";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
 
 type SizeInfo = {
   label: string;
@@ -40,16 +47,15 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
   const [selectedSize, setSelectedSize] = useState<string>("M");
   const [showSizeChart, setShowSizeChart] = useState(false);
 
-  // Call onSizeSelect when the component mounts to set the default size
   useEffect(() => {
-    onSizeSelect(selectedSize); // Set default size "M" in parent
-  }, []); // Empty dependency array to run only on mount
+    onSizeSelect(selectedSize); 
+  }, []); 
 
   const handleSizeClick = (size: SizeInfo) => {
     if (size.left > 0) {
       setSelectedSize(size.label);
-      onSizeSelect(size.label); // Update parent state
-      console.log("Selected Size:", size.label); // Debug log
+      onSizeSelect(size.label); 
+      console.log("Selected Size:", size.label); 
     }
   };
 
@@ -145,15 +151,15 @@ const styles = StyleSheet.create({
     ...spacingStyles.m10,
   },
   labelText: {
-    fontSize: 16,
+    fontSize: fontSizes.base,
   },
   bold: {
     fontWeight: "bold",
   },
   sizeChart: {
-    color: staticColors.offerColor,
+    color: staticColors.discountText,
     fontWeight: "600",
-    fontSize: 14,
+    fontSize: fontSizes.sm,
   },
   sizeScroll: {},
   sizeOption: {
@@ -168,10 +174,10 @@ const styles = StyleSheet.create({
     borderColor: staticColors.borderLight,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: staticColors.whiteColor,
+    backgroundColor: staticColors.white,
   },
   disabledButton: {
-    backgroundColor: staticColors.backgroundMuted,
+    backgroundColor: staticColors.white,
     borderColor: staticColors.borderSecondaryLight,
   },
   selectedButton: {
@@ -179,7 +185,7 @@ const styles = StyleSheet.create({
     borderColor: staticColors.shadowColor,
   },
   sizeLabel: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     fontWeight: "600",
   },
   disabledText: {
@@ -187,26 +193,26 @@ const styles = StyleSheet.create({
     textDecorationLine: "line-through",
   },
   selectedText: {
-    color: staticColors.whiteColor,
+    color: staticColors.white,
   },
   leftText: {
     fontSize: 12,
-    color: staticColors.offerColor,
-    ...spacingStyles.mt5,
+    color:staticColors.discountText,
+   ...spacingStyles.mt5
   },
   lengthBox: {
     ...spacingStyles.p10,
     borderWidth: 1,
-    borderColor: staticColors.lightColor,
+    borderColor: staticColors.lightGray,
     borderRadius: 12,
   },
   lengthLabel: {
-    fontSize: 14,
+    fontSize: fontSizes.xs,
     color: "#555",
   },
   lengthValue: {
     fontWeight: "bold",
-    backgroundColor: "#eee",
+    backgroundColor: staticColors.lightGray,
     color: "#5b3ec8",
     borderRadius: 4,
   },
@@ -216,7 +222,7 @@ const styles = StyleSheet.create({
   },
   measureText: {
     ...spacingStyles.mr10,
-    fontSize: 13,
-    color: "#333",
+    fontSize: fontSizes.xs,
+    color:staticColors.darkGray
   },
 });

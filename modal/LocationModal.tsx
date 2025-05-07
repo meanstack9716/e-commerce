@@ -12,10 +12,10 @@ import {
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import staticColors from "@/style/staticColors";
 import DeliveryAddressScreen from "@/components/productDetails/DeliveryAddress";
-
-import { Alert } from "react-native";
 import { useLocation } from "@/utils/useLocation";
 import spacingStyles from "@/style/spacingStyles";
+import fontSizes from "@/style/fontSizes";
+import LocationAlertModal from "./LocationAlertModal";
 
 interface LocationModalProps {
   visible: boolean;
@@ -31,7 +31,12 @@ const LocationModal: React.FC<LocationModalProps> = ({
   const [pinCode, setPinCode] = useState<string>("");
   const [addressModalVisible, setAddressModalVisible] =
     useState<boolean>(false);
-  const { requestLocationPermission, isLoading } = useLocation();
+  const {
+    requestLocationPermission,
+    isLoading,
+    locationModal,
+    hideLocationModal,
+  } = useLocation();
 
   const handlePinCodeChange = (text: string) => {
     const numericText = text.replace(/[^0-9]/g, "").slice(0, 6);
@@ -42,8 +47,6 @@ const LocationModal: React.FC<LocationModalProps> = ({
     if (pinCode.length === 6) {
       onGrant(pinCode);
       onClose();
-    } else {
-      Alert.alert("Invalid PIN Code", "Please enter a valid 6-digit PIN code");
     }
   };
 
@@ -67,14 +70,14 @@ const LocationModal: React.FC<LocationModalProps> = ({
           <TouchableWithoutFeedback>
             <View style={styles.modalView}>
               <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-                <Ionicons name="close" size={24} color="#000" />
+                <Ionicons name="close" size={24} color={staticColors.black} />
               </TouchableOpacity>
 
               <View style={styles.headerContainer}>
                 <FontAwesome6
                   name="location-crosshairs"
                   size={22}
-                  color={staticColors.offerColor}
+                  color={staticColors.discountText}
                   style={styles.icon}
                 />
                 <View style={styles.textContainer}>
@@ -94,7 +97,7 @@ const LocationModal: React.FC<LocationModalProps> = ({
                   {isLoading ? (
                     <ActivityIndicator
                       size="small"
-                      color={staticColors.whiteColor}
+                      color={staticColors.white}
                     />
                   ) : (
                     <Text style={styles.grantButtonText}>Grant</Text>
@@ -110,7 +113,7 @@ const LocationModal: React.FC<LocationModalProps> = ({
                     value={pinCode}
                     onChangeText={handlePinCodeChange}
                     placeholder="Enter PIN Code"
-                    placeholderTextColor="#666"
+                    placeholderTextColor={staticColors.textDarkGray}
                     keyboardType="numeric"
                     maxLength={6}
                   />
@@ -128,7 +131,7 @@ const LocationModal: React.FC<LocationModalProps> = ({
                       style={[
                         styles.checkButtonText,
                         pinCode.length === 6 && {
-                          color: staticColors.offerColor,
+                          color: staticColors.discountText,
                         },
                       ]}
                     >
@@ -145,14 +148,14 @@ const LocationModal: React.FC<LocationModalProps> = ({
                 <FontAwesome6
                   name="map-location-dot"
                   size={20}
-                  color={staticColors.offerColor}
+                  color={staticColors.discountText}
                   style={styles.searchIcon}
                 />
                 <Text style={styles.searchText}>Search location</Text>
                 <Ionicons
                   name="chevron-forward"
                   size={13}
-                  color={staticColors.offerColor}
+                  color={staticColors.discountText}
                   style={styles.arrowIcon}
                 />
               </TouchableOpacity>
@@ -171,6 +174,13 @@ const LocationModal: React.FC<LocationModalProps> = ({
           onCloseModal={() => setAddressModalVisible(false)}
         />
       </Modal>
+      <LocationAlertModal
+        visible={locationModal.visible}
+        title={locationModal.title}
+        message={locationModal.message}
+        onConfirm={locationModal.onConfirm}
+        onCancel={locationModal.onCancel}
+      />
     </Modal>
   );
 };
@@ -179,10 +189,10 @@ const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: "flex-end",
-    backgroundColor: staticColors.modalBackGround,
+    backgroundColor: staticColors.modalOverlayLight,
   },
   modalView: {
-    backgroundColor: staticColors.whiteColor,
+    backgroundColor: staticColors.white,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     ...spacingStyles.pb10,
@@ -195,7 +205,7 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     flexDirection: "row",
-    backgroundColor: staticColors.backgroundSecondary,
+    backgroundColor: staticColors.bgSecondary,
     ...spacingStyles.p20,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
@@ -208,17 +218,17 @@ const styles = StyleSheet.create({
     ...spacingStyles.mx10,
   },
   titleText: {
-    fontSize: 17,
+    fontSize: fontSizes.md,
     fontWeight: "bold",
-    color: staticColors.primaryColor,
+    color: staticColors.primary,
     marginBottom: 5,
   },
   subtitleText: {
-    fontSize: 12,
-    color: staticColors.shadowColor,
+    fontSize: fontSizes.xs,
+    color: staticColors.textLightGray,
   },
   grantButton: {
-    backgroundColor: staticColors.offerColor,
+    backgroundColor: staticColors.discountText,
     borderRadius: 20,
     ...spacingStyles.py5,
     ...spacingStyles.px15,
@@ -227,18 +237,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   grantButtonText: {
-    color: staticColors.whiteColor,
-    fontSize: 12,
+    color: staticColors.white,
+    fontSize: fontSizes.xs,
     fontWeight: "bold",
   },
   inputContainer: {
-    marginBottom: 15,
+    ...spacingStyles.mb15,
     ...spacingStyles.px20,
-    paddingTop: 15,
+    ...spacingStyles.pt15,
   },
   inputLabel: {
-    fontSize: 15,
-    color: staticColors.primaryColor,
+    fontSize: fontSizes.sm,
+    color: staticColors.primary,
     fontWeight: "bold",
   },
   inputWrapper: {
@@ -252,7 +262,7 @@ const styles = StyleSheet.create({
     borderColor: staticColors.borderLight,
     borderRadius: 8,
     ...spacingStyles.p10,
-    backgroundColor: staticColors.backgroundSecondary,
+    backgroundColor: staticColors.bgSecondary,
   },
   checkButton: {
     position: "absolute",
@@ -267,7 +277,7 @@ const styles = StyleSheet.create({
   },
   checkButtonText: {
     color: staticColors.shadowColor,
-    fontSize: 13,
+    fontSize: fontSizes.sm,
     fontWeight: "bold",
   },
   searchContainer: {
@@ -283,8 +293,8 @@ const styles = StyleSheet.create({
     ...spacingStyles.mt5,
   },
   searchText: {
-    fontSize: 14,
-    color: staticColors.offerColor,
+    fontSize: fontSizes.sm,
+    color: staticColors.discountText,
     ...spacingStyles.px5,
   },
 });

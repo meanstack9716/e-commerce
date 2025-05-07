@@ -1,8 +1,8 @@
+import React from "react";
+import { Modal, View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { Ionicons } from "@expo/vector-icons";
-import React from "react";
-import { Modal, View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
 interface ConfirmationModalProps {
   visible: boolean;
@@ -39,7 +39,11 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
               style={styles.closeIcon}
               onPress={onFirstButtonPress}
             >
-              <Ionicons name="close-outline" size={24} color={staticColors.shadowColor} />
+              <Ionicons
+                name="close-outline"
+                size={24}
+                color={staticColors.shadowColor}
+              />
             </TouchableOpacity>
           </View>
 
@@ -73,11 +77,11 @@ export default ConfirmationModal;
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: staticColors.modalBackGround,
+    backgroundColor: staticColors.modalOverlayLight,
     justifyContent: "flex-end",
   },
   modalContainer: {
-    backgroundColor: staticColors.whiteColor,
+    backgroundColor: staticColors.white,
     ...spacingStyles.px20,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
@@ -97,7 +101,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: staticColors.darkGray,
     ...spacingStyles.pb5,
-    borderBottomColor: staticColors.lightColor,
+    borderBottomColor: staticColors.lightGray,
     borderBottomWidth: 1,
   },
   buttonContainer: {
@@ -112,7 +116,7 @@ const styles = StyleSheet.create({
   },
   firstButtonText: {
     fontSize: 12,
-    color: staticColors.offerColor,
+    color: staticColors.discountText,
     textAlign: "center",
   },
   secondButton: {

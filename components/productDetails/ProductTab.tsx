@@ -10,6 +10,7 @@ import {
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
+import fontSizes from "@/style/fontSizes";
 
 interface TabProps {
   activeTab: string;
@@ -57,20 +58,20 @@ const tabStyles = StyleSheet.create({
     ...spacingStyles.py5,
     ...spacingStyles.px15,
     borderWidth: 1,
-    borderColor: staticColors.lightGray,
+    borderColor: staticColors.borderLight,
     borderRadius: 20,
     ...spacingStyles.mr10,
   },
   activeTab: {
-    backgroundColor: colors.primaryColor,
-    borderColor: colors.primaryColor,
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
   },
   tabText: {
-    fontSize: 14,
-    color: staticColors.lightGray,
+    fontSize: fontSizes.sm,
+    color: staticColors.textLightGray,
   },
   activeTabText: {
-    color: staticColors.whiteColor,
+    color: staticColors.white,
     fontWeight: "600",
   },
 });

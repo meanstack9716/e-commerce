@@ -1,16 +1,16 @@
+import React, { useState } from "react";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { EXTRA_DISCOUNT, PRODUCT_PRICE } from "@/constants/constants";
 import OfferDetailsModal from "@/modal/OfferDetailsModal";
+import fontSizes from "@/style/fontSizes";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { EvilIcons } from "@expo/vector-icons";
-import React, { useState } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 
 const DealBanner = () => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const productPrice = "294";
-  const extraDiscount = "90";
+  const [isOfferModalVisible, setIsOfferModalVisible] = useState(false);
   const toggleModal = () => {
-    setModalVisible(!modalVisible);
+    setIsOfferModalVisible(!isOfferModalVisible);
   };
 
   return (
@@ -23,12 +23,12 @@ const DealBanner = () => {
             resizeMode="contain"
           />
           <Text style={styles.getAtText}>
-            Get at <Text style={styles.priceText}>₹{productPrice}</Text>
+            Get at <Text style={styles.priceText}>₹{PRODUCT_PRICE}</Text>
           </Text>
         </View>
 
         <View style={styles.rightBadge}>
-          <Text style={styles.badgeText}>Extra ₹{extraDiscount} Off</Text>
+          <Text style={styles.badgeText}>Extra ₹{EXTRA_DISCOUNT} Off</Text>
         </View>
       </View>
 
@@ -38,15 +38,19 @@ const DealBanner = () => {
         </Text>
         <View style={styles.detailsSections}>
           <Text style={styles.detailsText}>Details</Text>
-          <EvilIcons name="chevron-right" size={20} color={staticColors.offerColor} />
+          <EvilIcons
+            name="chevron-right"
+            size={20}
+            color={staticColors.discountText}
+          />
         </View>
       </TouchableOpacity>
 
       <OfferDetailsModal
-        visible={modalVisible}
+        visible={isOfferModalVisible}
         onClose={toggleModal}
-        offerPrice={productPrice}
-        extraDiscount={extraDiscount}
+        offerPrice={PRODUCT_PRICE}
+        extraDiscount={EXTRA_DISCOUNT}
       />
     </View>
   );
@@ -56,7 +60,6 @@ export default DealBanner;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: staticColors.lightLavender,
     borderRadius: 10,
     ...spacingStyles.mx15,
     ...spacingStyles.mt15,
@@ -80,27 +83,27 @@ const styles = StyleSheet.create({
     height: 45,
   },
   getAtText: {
-    fontSize: 18,
-    color: staticColors.cardTitleColor,
+    fontSize: fontSizes.md,
+    color: staticColors.darkGray,
     fontWeight: "bold",
   },
   priceText: {
-    fontSize: 16,
+    fontSize: fontSizes.base,
     fontWeight: "bold",
   },
   rightBadge: {
     backgroundColor: staticColors.darkGreen,
     ...spacingStyles.px10,
     ...spacingStyles.py5,
-    borderRadius: 8,
+    borderRadius: 10,
   },
   badgeText: {
-    color: staticColors.whiteColor,
-    fontSize: 13,
+    color: staticColors.white,
+    fontSize: fontSizes.xs,
     fontWeight: "600",
   },
   bottomRow: {
-    backgroundColor: staticColors.whiteColor,
+    backgroundColor: staticColors.white,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -111,18 +114,18 @@ const styles = StyleSheet.create({
     borderColor: staticColors.borderLight,
   },
   couponText: {
-    fontSize: 13,
-    color: staticColors.cardTitleColor,
+    fontSize: fontSizes.xs,
+    color: staticColors.darkGray,
   },
   bankOfferText: {
     fontWeight: "600",
   },
   detailsText: {
-    fontSize: 13,
+    fontSize: fontSizes.xs,
     fontWeight: "600",
-    color: staticColors.offerColor,
+    color: staticColors.discountText,
   },
-  detailsSections:{
-    flexDirection:'row',
-  }
+  detailsSections: {
+    flexDirection: "row",
+  },
 });

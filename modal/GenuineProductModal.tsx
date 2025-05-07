@@ -1,5 +1,3 @@
-import spacingStyles from "@/style/spacingStyles";
-import staticColors from "@/style/staticColors";
 import React from "react";
 import {
   View,
@@ -10,7 +8,10 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from "react-native";
+import spacingStyles from "@/style/spacingStyles";
+import staticColors from "@/style/staticColors";
 import { Ionicons } from "@expo/vector-icons";
+import fontSizes from "@/style/fontSizes";
 
 interface GenuineProductModalProps {
   isVisible: boolean;
@@ -35,7 +36,7 @@ const GenuineProductModal: React.FC<GenuineProductModalProps> = ({
               <View style={styles.modalHeader}>
                 <Text style={styles.modalTitle}>Genuine Product</Text>
                 <TouchableOpacity onPress={onClose}>
-                  <Ionicons name="close" size={24} color="#666" />
+                  <Ionicons name="close" size={24} color={staticColors.textDarkGray} />
                 </TouchableOpacity>
               </View>
               <View style={styles.modalContent}>
@@ -61,12 +62,12 @@ const GenuineProductModal: React.FC<GenuineProductModalProps> = ({
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
-    backgroundColor: staticColors.modalBackGround,
+    backgroundColor: staticColors.modalOverlayLight,
     justifyContent: "flex-end",
     alignItems: "center",
   },
   modalContainer: {
-    backgroundColor: staticColors.whiteColor,
+    backgroundColor: staticColors.white,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     width: "100%",
@@ -81,12 +82,12 @@ const styles = StyleSheet.create({
     ...spacingStyles.mt5,
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: fontSizes.md,
     fontWeight: "bold",
-    color: staticColors.primaryColor,
+    color: staticColors.primary,
   },
   closeButton: {
-    fontSize: 20,
+    fontSize:fontSizes['lg'],
     color: staticColors.shadowColor,
     fontWeight: "bold",
   },
@@ -98,13 +99,13 @@ const styles = StyleSheet.create({
   modalImage: {
     width: 60,
     height: 60,
-    marginRight: 10,
+    ...spacingStyles.mr10,
     resizeMode: "contain",
   },
   modalText: {
     flex: 1,
-    fontSize: 14,
-    color: staticColors.darkGray,
+    fontSize: fontSizes.sm,
+    color: staticColors.textLightGray,
     lineHeight: 20,
     flexWrap: "wrap",
   },

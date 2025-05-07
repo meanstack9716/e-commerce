@@ -12,6 +12,7 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import colors from '@/style/staticColors';
 import spacingStyles from '@/style/spacingStyles';
 import staticColors from '@/style/staticColors';
+import fontSizes from '@/style/fontSizes';
 
 const { width } = Dimensions.get('window');
 const SLIDER_WIDTH = width - 40;
@@ -93,7 +94,7 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ slides }) => {
                 <Text style={styles.price}>{slide.price}</Text>
               </View>
               <TouchableOpacity style={styles.nextButton} onPress={nextSlide}>
-                <FontAwesome6 name="chevron-right" size={16} color="#1B1650" />
+                <FontAwesome6 name="chevron-right" size={16} color={staticColors.primary} />
               </TouchableOpacity>
             </View>
           ))}
@@ -160,29 +161,29 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
   brandText: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     fontWeight: '600',
-    color: staticColors.cardTitleColor,
+    color: staticColors.darkGray,
   },
   title: {
-    fontSize: 22,
+    fontSize: fontSizes.lg,
     fontWeight: 'bold',
-    color: colors.whiteColor,
+    color: colors.white,
     textShadowColor: 'rgba(0, 0, 0, 0.75)',
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 3,
   },
   subtitle: {
-    fontSize: 14,
-    color: colors.whiteColor,
+    fontSize: fontSizes.sm,
+    color: colors.white,
     textShadowColor: 'rgba(0, 0, 0, 0.75)',
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 3,
   },
   price: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     fontWeight: 'bold',
-    color: colors.whiteColor,
+    color: colors.white,
     textShadowColor: 'rgba(0, 0, 0, 0.75)',
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 3,
@@ -196,11 +197,11 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor:staticColors.lightColor,
+    backgroundColor:staticColors.lightGray,
     ...spacingStyles.mx2
   },
   paginationDotActive: {
-    backgroundColor: staticColors.lightGray,
+    backgroundColor: staticColors.textLightGray,
   },
   nextButton: {
     position: 'absolute',
@@ -209,7 +210,7 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: colors.whiteColor,
+    backgroundColor: colors.white,
     justifyContent: 'center',
     alignItems: 'center',
   },

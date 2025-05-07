@@ -13,6 +13,7 @@ import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import SimilarProducts from "@/components/productDetails/SimilarProducts";
 import { Profile } from "@/types/types";
+import fontSizes from "@/style/fontSizes";
 
 interface ViewSimilarModalProps {
   visible: boolean;
@@ -42,7 +43,7 @@ const ViewSimilarModal: React.FC<ViewSimilarModalProps> = ({
                   <Ionicons
                     name="close"
                     size={24}
-                    color={staticColors.primaryColor}
+                    color={staticColors.primary}
                   />
                 </TouchableOpacity>
               </View>
@@ -66,12 +67,12 @@ const ViewSimilarModal: React.FC<ViewSimilarModalProps> = ({
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
-    backgroundColor: staticColors.modalBackGround,
+    backgroundColor: staticColors.modalOverlayLight,
     justifyContent: "flex-end",
     alignItems: "center",
   },
   modalContent: {
-    backgroundColor: staticColors.lightColor,
+    backgroundColor: staticColors.white,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     width: "100%",
@@ -85,15 +86,15 @@ const styles = StyleSheet.create({
     ...spacingStyles.py10,
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: fontSizes.md,
     fontWeight: "bold",
-    color: staticColors.primaryColor,
+    color: staticColors.primary,
   },
   closeButton: {
     ...spacingStyles.p5,
   },
   placeholderText: {
-    fontSize: 16,
+    fontSize: fontSizes.base,
     color: staticColors.lightGray,
     textAlign: "center",
     ...spacingStyles.mt15,

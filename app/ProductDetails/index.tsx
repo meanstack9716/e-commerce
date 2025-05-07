@@ -18,7 +18,6 @@ import data from "../../assets/data/products.json";
 import spacingStyles from "@/style/spacingStyles";
 import MegaDealBadge from "@/components/productDetails/MegaDealBadge";
 import SizeSelector from "@/components/productDetails/SizeSelector";
-import BottonActions from "@/components/productDetails/BottonActions";
 import DeliveryCheck from "@/components/productDetails/DeliveryCheck";
 import ReturnPolicy from "./ReturnPolicy";
 import SimilarProducts from "@/components/productDetails/SimilarProducts";
@@ -27,15 +26,18 @@ import BrandRating from "@/components/productDetails/BrandRating";
 import ViewSimilarModal from "@/modal/ViewSimilarModal";
 import ProductList from "@/components/productDetails/ProductList";
 import { useCart } from "@/components/addToBag/cartContext";
+import ProductActionButtons from "@/components/productDetails/ProductActionButtons";
+import fontSizes from "@/style/fontSizes";
+import gapSizes from "@/style/gapSizes";
 
 const { width: screenWidth } = Dimensions.get("window");
 
 const ProductDetailsScreen: React.FC = () => {
   const params = useLocalSearchParams();
   const { id } = params;
-  const [liked, setLiked] = useState(false);
+  const [isProductLiked, setISProductLiked] = useState(false);
   const [product, setProduct] = useState<Profile | null>(null);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isViewSimilarModalVisible, setViewSimilarModalVisible] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const insets = useSafeAreaInsets();
@@ -50,6 +52,8 @@ const ProductDetailsScreen: React.FC = () => {
       router.push("/cart");
     }
   };
+  const screenHeight = Dimensions.get("window").height;
+  
   const originalPrice = product
     ? (parseFloat(product.price) * 1.15).toFixed(2)
     : "0";
@@ -59,16 +63,16 @@ const ProductDetailsScreen: React.FC = () => {
 
   useEffect(() => {
     const products = data.products || data;
-    const rawProductData = products.find((p) => p.id === id);
+    const selectedProductData = products.find((p) => p.id === id);
 
-    if (rawProductData) {
+    if (selectedProductData) {
       const normalizedProduct: Profile = {
-        id: rawProductData.id,
-        images: rawProductData.images,
-        title: rawProductData.title || "Product Title",
-        price: rawProductData.price,
-        star: rawProductData.star,
-        categories: rawProductData.categories || [],
+        id: selectedProductData.id,
+        images: selectedProductData.images,
+        title: selectedProductData.title || "Product Title",
+        price: selectedProductData.price,
+        star: selectedProductData.star,
+        categories: selectedProductData.categories || [],
       };
       setProduct(normalizedProduct);
     }
@@ -81,7 +85,7 @@ const ProductDetailsScreen: React.FC = () => {
         key="full-star"
         name="star"
         size={16}
-        color="#FFD700"
+        color={staticColors.lightYellow}
         style={styles.starIcon}
       />
     );
@@ -94,11 +98,11 @@ const ProductDetailsScreen: React.FC = () => {
 
   const handleListScroll = (event: any) => {
     const offsetY = event.nativeEvent.contentOffset.y;
-    setShowBackToTop(offsetY > 1400);
+    setShowBackToTop(offsetY > screenHeight * 1.5);
   };
 
   const handleLikePress = () => {
-    setLiked((prev) => !prev);
+    setISProductLiked((prev) => !prev);
   };
 
   const handleGoBack = () => {
@@ -106,7 +110,7 @@ const ProductDetailsScreen: React.FC = () => {
   };
 
   const handleViewSimilar = () => {
-    setIsModalVisible(true);
+    setViewSimilarModalVisible(true);
   };
 
   const handleBackToTop = () => {
@@ -119,7 +123,7 @@ const ProductDetailsScreen: React.FC = () => {
       <SafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
         <View style={styles.header}>
           <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
-            <Ionicons name="arrow-back" size={24} color={colors.primaryColor} />
+            <Ionicons name="arrow-back" size={24} color={colors.primary} />
           </TouchableOpacity>
         </View>
         <View style={styles.loadingContainer}>
@@ -132,7 +136,13 @@ const ProductDetailsScreen: React.FC = () => {
   const dummyData = [{ key: "dummy" }];
 
   return (
-    <SafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
+    <SafeAreaView
+      style={[
+        styles.container,
+        { paddingTop: insets.top },
+        { paddingBottom: insets.bottom },
+      ]}
+    >
       <FlatList
         ref={flatListRef}
         data={dummyData}
@@ -149,18 +159,14 @@ const ProductDetailsScreen: React.FC = () => {
                 onPress={handleGoBack}
                 style={styles.backButton}
               >
-                <Ionicons
-                  name="arrow-back"
-                  size={20}
-                  color={colors.primaryColor}
-                />
+                <Ionicons name="arrow-back" size={20} color={colors.primary} />
               </TouchableOpacity>
               <View style={styles.headerRight}>
                 <TouchableOpacity style={styles.iconButton}>
                   <Ionicons
                     name="bag-handle-outline"
                     size={20}
-                    color={colors.primaryColor}
+                    color={colors.primary}
                   />
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -168,9 +174,9 @@ const ProductDetailsScreen: React.FC = () => {
                   style={styles.iconButton}
                 >
                   <FontAwesome
-                    name={liked ? "heart" : "heart-o"}
+                    name={isProductLiked ? "heart" : "heart-o"}
                     size={20}
-                    color={liked ? "red" : colors.primaryColor}
+                    color={isProductLiked ? colors.DarkRed : colors.primary}
                   />
                 </TouchableOpacity>
               </View>
@@ -216,7 +222,11 @@ const ProductDetailsScreen: React.FC = () => {
                 style={styles.viewSimilarButton}
                 onPress={handleViewSimilar}
               >
-                <Ionicons name="grid-outline" size={20} color="#000" />
+                <Ionicons
+                  name="grid-outline"
+                  size={20}
+                  color={staticColors.black}
+                />
                 <Text style={styles.viewSimilarText}>View Similar</Text>
               </TouchableOpacity>
               <View style={styles.ratingContainer}>
@@ -258,18 +268,19 @@ const ProductDetailsScreen: React.FC = () => {
       />
       {showBackToTop ? (
         <TouchableOpacity
-          style={styles.backToTopButton}
+          style={[styles.backToTopButton, { bottom: insets.bottom + 10 }]}
           onPress={handleBackToTop}
         >
-          <Ionicons name="arrow-up" size={24} color={colors.whiteColor} />
+          <Ionicons name="arrow-up" size={24} color={colors.white} />
           <Text style={styles.backToTopText}>Back to Top</Text>
         </TouchableOpacity>
       ) : (
-        <BottonActions onAddToCart={handleAddToCart} />
+        <ProductActionButtons onAddToCart={handleAddToCart} />
+        
       )}
       <ViewSimilarModal
-        visible={isModalVisible}
-        onClose={() => setIsModalVisible(false)}
+        visible={isViewSimilarModalVisible}
+        onClose={() => setViewSimilarModalVisible(false)}
         currentProduct={product}
       />
     </SafeAreaView>
@@ -279,7 +290,7 @@ const ProductDetailsScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: staticColors.lightColor,
+    backgroundColor: staticColors.bgMuted,
   },
   loadingContainer: {
     flex: 1,
@@ -287,8 +298,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   loadingText: {
-    fontSize: 16,
-    color: colors.primaryColor,
+    fontSize: fontSizes.base,
+    color: colors.primary,
   },
   header: {
     flexDirection: "row",
@@ -301,7 +312,7 @@ const styles = StyleSheet.create({
   },
   headerRight: {
     flexDirection: "row",
-    gap: 10,
+    gap: gapSizes.md,
   },
   iconButton: {
     ...spacingStyles.ml15,
@@ -315,8 +326,8 @@ const styles = StyleSheet.create({
   dotContainer: {
     flexDirection: "row",
     justifyContent: "center",
-    marginTop: 10,
-    gap: 2,
+    ...spacingStyles.mt10,
+    gap: gapSizes.xs,
   },
   dot: {
     width: 8,
@@ -335,7 +346,7 @@ const styles = StyleSheet.create({
   viewSimilarButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: staticColors.backgroundSecondary,
+    backgroundColor: staticColors.bgSecondary,
     ...spacingStyles.py5,
     ...spacingStyles.px10,
     borderRadius: 10,
@@ -345,13 +356,13 @@ const styles = StyleSheet.create({
   },
   viewSimilarText: {
     ...spacingStyles.ml5,
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     color: staticColors.shadowColor,
   },
   ratingContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: staticColors.backgroundSecondary,
+    backgroundColor: staticColors.bgSecondary,
     ...spacingStyles.py5,
     ...spacingStyles.px10,
     borderRadius: 10,
@@ -366,64 +377,59 @@ const styles = StyleSheet.create({
     ...spacingStyles.m2,
   },
   ratingCount: {
-    fontSize: 12,
+    fontSize: fontSizes.xs,
   },
   detailsContainer: {
     ...spacingStyles.px15,
     ...spacingStyles.ml5,
   },
   title: {
-    fontSize: 18,
+    fontSize: fontSizes.md,
     fontWeight: "bold",
   },
   priceContainer: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
+    gap: gapSizes.md,
   },
   discountedPrice: {
-    fontSize: 18,
+    fontSize: fontSizes.md,
     fontWeight: "bold",
-    color: colors.primaryColor,
+    color: colors.primary,
   },
   originalPrice: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     textDecorationLine: "line-through",
-    color: staticColors.lightGray,
+    color: staticColors.softGray,
   },
   discount: {
-    fontSize: 14,
-    color: colors.offerColor,
+    fontSize: fontSizes.sm,
+    color: colors.brightRed,
     fontWeight: "bold",
   },
   heading: {
-    fontSize: 18,
+    fontSize: fontSizes.md,
     fontWeight: "bold",
     ...spacingStyles.mb10,
-    color: staticColors.cardTitleColor,
+    color: staticColors.primary,
     ...spacingStyles.px15,
   },
   backToTopButton: {
     position: "absolute",
-    bottom: 20,
+    bottom: 0,
     right: 20,
-    backgroundColor: colors.primaryColor,
+    backgroundColor: colors.primary,
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 10,
-    paddingHorizontal: 15,
+    ...spacingStyles.py10,
+    ...spacingStyles.px15,
     borderRadius: 25,
-    elevation: 5,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
   },
   backToTopText: {
-    color: colors.whiteColor,
-    fontSize: 16,
+    color: colors.white,
+    fontSize: fontSizes.base,
     fontWeight: "bold",
-    marginLeft: 5,
+    ...spacingStyles.ml5
   },
 });
 

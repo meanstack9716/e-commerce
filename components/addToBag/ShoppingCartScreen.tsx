@@ -1,8 +1,9 @@
-import DeliveryModal from "@/modal/DeliveryModal";
-import spacingStyles from "@/style/spacingStyles";
-import staticColors from "@/style/staticColors";
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
+import DeliveryModal from "@/modal/DeliveryModal";
+import fontSizes from "@/style/fontSizes";
+import spacingStyles from "@/style/spacingStyles";
+import staticColors from "@/style/staticColors";
 
 const ShoppingCartScreen: React.FC = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -52,10 +53,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     ...spacingStyles.px20,
   },
-  deliveryText: { fontSize: 14, color: staticColors.shadowColor },
+  deliveryText: { fontSize: fontSizes.sm, color: staticColors.shadowColor },
   enterPincode: {
-    fontSize: 14,
-    color: staticColors.offerColor,
+    fontSize: fontSizes.sm,
+    color: staticColors.discountText,
     fontWeight: "bold",
   },
 });

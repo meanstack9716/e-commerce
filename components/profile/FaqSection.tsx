@@ -4,6 +4,7 @@ import ExpandableContent from "../ui/ExpandableContent";
 import colors from "@/style/staticColors";
 import textStyles from "@/style/textStyles";
 import spacingStyles from "@/style/spacingStyles";
+import fontSizes from "@/style/fontSizes";
 type FaqItem = {
   heading: string;
   description: string;
@@ -50,7 +51,7 @@ export default FaqSection;
 const styles = StyleSheet.create({
   headingContainer: {
     borderBottomWidth: 1,
-    borderColor: colors.lightColor,
+    borderColor: colors.lightGray,
     borderStyle: "dotted",
     ...spacingStyles.mb15
   },
@@ -61,15 +62,15 @@ const styles = StyleSheet.create({
     ...spacingStyles.mb10,
     alignSelf: "flex-end",
     borderWidth: 1,
-    borderColor: colors.lightColor,
+    borderColor: colors.lightGray,
   },
   buttonText: {
     color: colors.buttonPrimary,
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     fontFamily:'HelveticaBold'
   },
   answer: {
-    fontSize: 14,
+    fontSize:fontSizes.sm,
     color: colors.buttonSecondary,
     ...spacingStyles.pt10
   },

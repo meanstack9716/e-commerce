@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,18 +8,11 @@ import {
   SafeAreaView,
   StatusBar,
   FlatList,
-  ScrollView,
   Image,
-  Platform,
 } from "react-native";
-import {
-  Ionicons,
-  Feather,
-  MaterialIcons,
-  FontAwesome6,
-} from "@expo/vector-icons";
+import { Ionicons, MaterialIcons, FontAwesome6 } from "@expo/vector-icons";
 import ProductCard from "@/components/home/ProductCard";
-import { router, useNavigation } from "expo-router";
+import { router } from "expo-router";
 import data from "../../assets/data/products.json";
 import Navbar from "@/components/home/Navbar";
 import CategoryGrid from "@/components/home/CategoryGrid";
@@ -34,24 +27,69 @@ import spacingStyles from "@/style/spacingStyles";
 import BrandCard from "@/components/home/BrandCard";
 import staticColors from "@/style/staticColors";
 import OfferPriceCard from "@/components/home/OfferPriceCard";
-import PocketFriendlyBargain from "@/components/home/PocketFriendlyBargain";
-import { Profile, ProductData } from "../../types/types";
+import PocketFriendlyBargain from "@/components/home/PocketFriendlyCategory";
+import { Profile, ProductData } from "@/types/types";
+import fontSizes from "@/style/fontSizes";
+import gapSizes from "@/style/gapSizes";
+import images from "@/constants/images";
+import { useSelector, useDispatch } from "react-redux";
+import { useAppDispatch } from "@/store/hooks";
+import { fetchCategories } from "@/store/category/categoriesSlice";
+import FullScreenLoader from "@/components/common/FullScreenLoader";
 
 const HomeScreen: React.FC = () => {
-  const [likedItems, setLikedItems] = useState<string[]>([]);
-  const [activeTab, setActiveTab] = useState<string>("All");
-  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [likedProductItems, setLikedProductItems] = useState<string[]>([]);
+  const [activeProductTab, setActiveProductTab] = useState<string>("All");
+  const [productSearchQuery, setProductSearchQuery] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const productData = data as ProductData;
   const insets = useSafeAreaInsets();
+  const dispatch = useAppDispatch();
+
+  const {
+    data: categories,
+    loading,
+    error,
+  } = useSelector((state: any) => state.categories);
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
+
+  const tabs = [
+    "All",
+    ...categories.slice(0, 3).map((cat: any) => cat.name),
+    "Categories",
+  ];
+
+  useEffect(() => {
+    if (!activeProductTab && tabs.length > 0) {
+      setActiveProductTab("All");
+    }
+  }, [tabs, activeProductTab]);
+
   const getFilteredProducts = () => {
     let filtered = productData.products;
 
-    if (activeTab !== "All") {
-      const tabLower = activeTab.toLowerCase();
-      filtered = filtered.filter((product) =>
-        product.categories.includes(tabLower)
+    if (
+      activeProductTab &&
+      activeProductTab !== "All" &&
+      activeProductTab !== "Categories" &&
+      tabs.includes(activeProductTab)
+    ) {
+      const activeCategory = categories.find(
+        (cat: any) => cat.name.toLowerCase() === activeProductTab.toLowerCase()
       );
+      if (activeCategory) {
+        const subCategoryIds = activeCategory.sub_categories.map(
+          (sub: any) => sub.id
+        );
+        filtered = filtered.filter((product) =>
+          product.categories.some(
+            (cat) => cat === activeCategory.id || subCategoryIds.includes(cat)
+          )
+        );
+      }
     }
 
     if (selectedCategory) {
@@ -60,23 +98,21 @@ const HomeScreen: React.FC = () => {
       );
     }
 
-    if (searchQuery) {
+    if (productSearchQuery) {
       filtered = filtered.filter((product) =>
-        product.title.toLowerCase().includes(searchQuery.toLowerCase())
+        product.title.toLowerCase().includes(productSearchQuery.toLowerCase())
       );
     }
 
     return filtered;
   };
 
-  const tabs = ["All", "Men", "Women", "Kids", "Categories"];
-
   const handleUserIconPress = () => {
     router.push("/profile");
   };
 
-  const toggleLike = (id: string) => {
-    setLikedItems((prev) =>
+  const toggleProductLike = (id: string) => {
+    setLikedProductItems((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
@@ -85,23 +121,25 @@ const HomeScreen: React.FC = () => {
     setSelectedCategory(categoryId || null);
   };
 
-  const renderItem = ({ item }: { item: Profile }) => (
+  const renderProductItem = ({ item }: { item: Profile }) => (
     <ProductCard
       {...item}
-      liked={likedItems.includes(item.id)}
-      onLikePress={() => toggleLike(item.id)}
-      onPress={() => router.push({
-        pathname: "/ProductDetails",
-        params: { id: item.id }
-      })}
+      liked={likedProductItems.includes(item.id)}
+      onLikePress={() => toggleProductLike(item.id)}
+      onPress={() =>
+        router.push({
+          pathname: "/ProductDetails",
+          params: { id: item.id },
+        })
+      }
     />
   );
 
   const ListHeader = () => (
     <>
-      {activeTab !== "Categories" && (
+      {activeProductTab !== "Categories" && (
         <CategoryGrid
-          activeTab={activeTab}
+          activeTab={activeProductTab}
           onCategorySelect={handleCategorySelect}
         />
       )}
@@ -124,6 +162,7 @@ const HomeScreen: React.FC = () => {
           },
         ]}
       >
+        <FullScreenLoader visible={loading} />
         <StatusBar
           barStyle="dark-content"
           translucent
@@ -134,7 +173,7 @@ const HomeScreen: React.FC = () => {
             <FontAwesome6
               name="location-dot"
               size={14}
-              color={colors.primaryColor}
+              color={colors.primary}
             />
             <Text style={[styles.addressText, { marginLeft: insets.left }]}>
               Add Delivery Address
@@ -143,26 +182,31 @@ const HomeScreen: React.FC = () => {
           <MaterialIcons
             name="keyboard-arrow-down"
             size={24}
-            color={colors.primaryColor}
+            color={colors.primary}
           />
         </View>
 
         <View style={styles.searchContainer}>
           <View style={styles.searchInputContainer}>
             <Image
-              source={require("../../assets/images/favicon.png")}
+              source={images.logo}
               style={styles.logo}
               resizeMode="contain"
             />
+
             <TextInput
               placeholder="Search products..."
               style={styles.searchInput}
               placeholderTextColor={staticColors.lightGray}
-              value={searchQuery}
-              onChangeText={setSearchQuery}
+              value={productSearchQuery}
+              onChangeText={setProductSearchQuery}
             />
             <TouchableOpacity>
-              <Ionicons name="search" size={20} color="#999" />
+              <Ionicons
+                name="search"
+                size={20}
+                color={staticColors.lightGray}
+              />
             </TouchableOpacity>
           </View>
 
@@ -170,34 +214,37 @@ const HomeScreen: React.FC = () => {
             style={styles.iconButton}
             onPress={handleUserIconPress}
           >
-            <MaterialIcons
-              name="notifications-none"
+            <Ionicons
+              name="notifications-outline"
               size={22}
-              color={colors.primaryColor}
+              color={colors.primary}
             />
           </TouchableOpacity>
           <TouchableOpacity style={styles.iconButton}>
-            <Feather name="heart" size={22} color={colors.primaryColor} />
+            <Ionicons name="heart-outline" size={22} color={colors.primary} />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.iconButton}
             onPress={handleUserIconPress}
           >
-            <FontAwesome6
-              name="user-circle"
-              size={22}
-              color={colors.primaryColor}
-            />
+            <FontAwesome6 name="user-circle" size={22} color={colors.primary} />
           </TouchableOpacity>
         </View>
 
-        <Navbar tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
+        {error && <Text>Error: {error}</Text>}
+        {tabs.length > 1 && !error && (
+          <Navbar
+            tabs={tabs}
+            activeTab={activeProductTab}
+            setActiveTab={setActiveProductTab}
+          />
+        )}
 
         <FlatList
           data={getFilteredProducts()}
           numColumns={2}
           keyExtractor={(item) => item.id}
-          renderItem={renderItem}
+          renderItem={renderProductItem}
           ListHeaderComponent={ListHeader}
           contentContainerStyle={styles.flatListContent}
           columnWrapperStyle={styles.columnWrapper}
@@ -211,10 +258,10 @@ const HomeScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: staticColors.homebackgroundColor,
+    backgroundColor: staticColors.bgPrimary,
   },
   contentWrapper: {
-    flex: 1
+    flex: 1,
   },
   addressContainer: {
     flexDirection: "row",
@@ -225,52 +272,52 @@ const styles = StyleSheet.create({
   addressTextContainer: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 8
+    gap: gapSizes.md,
   },
   addressText: {
-    fontSize: 13,
+    fontSize: fontSizes.sm,
     fontWeight: "500",
-    color: colors.primaryColor,
-    ...spacingStyles.mx5
+    color: colors.primary,
+    ...spacingStyles.mx5,
   },
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
     ...spacingStyles.mb10,
-    ...spacingStyles.px10
+    ...spacingStyles.px10,
   },
   searchInputContainer: {
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    borderColor: staticColors.lightColor,
+    borderColor: staticColors.lightGray,
     borderWidth: 1,
     borderRadius: 12,
     ...spacingStyles.px10,
-    backgroundColor: colors.whiteColor,
+    backgroundColor: colors.white,
     justifyContent: "space-between",
   },
   logo: {
     width: 20,
     height: 20,
     resizeMode: "contain",
-    ...spacingStyles.mr10
+    ...spacingStyles.mr10,
   },
   searchInput: {
     flex: 1,
     height: 40,
-    fontSize: 12,
-    color: staticColors.cardTitleColor,
+    fontSize: fontSizes.sm,
+    color: staticColors.darkGray,
   },
   iconButton: {
-    ...spacingStyles.ml15
+    ...spacingStyles.ml15,
   },
   flatListContent: {
-    ...spacingStyles.px10
+    ...spacingStyles.px10,
   },
   columnWrapper: {
     justifyContent: "space-between",
-    ...spacingStyles.mb10
+    ...spacingStyles.mb10,
   },
 });
 

@@ -13,6 +13,8 @@ import NothingShoppingBagContent from "./NothingShoppingBagContent";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import ConfirmationModal from "@/modal/ConfirmationModal";
+import fontSizes from "@/style/fontSizes";
+import { textTruncate } from "@/utils/textTruncate";
 
 type CartItem = {
   id: string;
@@ -117,20 +119,18 @@ const ProductInfoSection: React.FC = () => {
               styles.checkboxImage,
               {
                 borderColor:
-                  selectedItems > 0 ? staticColors.offerColor : "#000000",
+                  selectedItems > 0
+                    ? staticColors.discountText
+                    : staticColors.black,
                 backgroundColor: item.isSelected
-                  ? staticColors.offerColor
-                  : staticColors.whiteColor,
+                  ? staticColors.discountText
+                  : staticColors.white,
               },
             ]}
             onPress={() => toggleItemSelection(item.id)}
           >
             {item.isSelected && (
-              <Ionicons
-                name="checkmark"
-                size={16}
-                color={staticColors.whiteColor}
-              />
+              <Ionicons name="checkmark" size={16} color={staticColors.white} />
             )}
           </TouchableOpacity>
         </View>
@@ -138,7 +138,7 @@ const ProductInfoSection: React.FC = () => {
         <View style={styles.cartItemDetails}>
           <View style={styles.titleContainer}>
             <Text style={styles.cartItemTitle} numberOfLines={1}>
-              {item.title}
+              {textTruncate(item.title ,4)}
             </Text>
             <TouchableOpacity
               style={styles.cutIcon}
@@ -147,7 +147,7 @@ const ProductInfoSection: React.FC = () => {
               <Ionicons
                 name="close-outline"
                 size={22}
-                color={staticColors.cardTitleColor}
+                color={staticColors.textSubtitle}
               />
             </TouchableOpacity>
           </View>
@@ -169,7 +169,7 @@ const ProductInfoSection: React.FC = () => {
                 <Ionicons
                   name="chevron-down"
                   size={12}
-                  color={staticColors.cardTitleColor}
+                  color={staticColors.textSubtitle}
                 />
               </View>
             )}
@@ -178,7 +178,7 @@ const ProductInfoSection: React.FC = () => {
               <Ionicons
                 name="chevron-down"
                 size={12}
-                color={staticColors.cardTitleColor}
+                color={staticColors.textSubtitle}
               />
             </View>
           </View>
@@ -218,12 +218,12 @@ const ProductInfoSection: React.FC = () => {
             {
               borderColor:
                 selectedItems > 0
-                  ? staticColors.offerColor
+                  ? staticColors.discountText
                   : staticColors.shadowColor,
               backgroundColor:
                 selectedItems > 0
-                  ? staticColors.offerColor
-                  : staticColors.whiteColor,
+                  ? staticColors.discountText
+                  : staticColors.white,
             },
           ]}
         >
@@ -231,7 +231,7 @@ const ProductInfoSection: React.FC = () => {
             <Ionicons
               name="checkmark"
               size={17}
-              color={staticColors.whiteColor}
+              color={staticColors.white}
               style={styles.headerCheckbox}
             />
           )}
@@ -245,7 +245,7 @@ const ProductInfoSection: React.FC = () => {
           <Ionicons
             name="share-social-outline"
             size={20}
-            color={staticColors.cardTitleColor}
+            color={staticColors.textSubtitle}
           />
         </TouchableOpacity>
         <TouchableOpacity
@@ -255,14 +255,14 @@ const ProductInfoSection: React.FC = () => {
           <Ionicons
             name="trash-outline"
             size={20}
-            color={staticColors.cardTitleColor}
+            color={staticColors.textSubtitle}
           />
         </TouchableOpacity>
         <TouchableOpacity style={styles.headerIcon}>
           <Ionicons
             name="heart-outline"
             size={20}
-            color={staticColors.cardTitleColor}
+            color={staticColors.textSubtitle}
           />
         </TouchableOpacity>
       </View>
@@ -312,14 +312,14 @@ const ProductInfoSection: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: staticColors.backgroundSecondary,
+    backgroundColor: staticColors.bgSecondary,
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     ...spacingStyles.p20,
-    backgroundColor: staticColors.whiteColor,
+    backgroundColor: staticColors.white,
   },
   headerLeft: {
     flexDirection: "row",
@@ -329,9 +329,9 @@ const styles = StyleSheet.create({
     ...spacingStyles.mr5,
   },
   headerText: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     fontWeight: "500",
-    color: staticColors.cardTitleColor,
+    color: staticColors.textSubtitle,
   },
   headerRight: {
     flexDirection: "row",
@@ -344,7 +344,7 @@ const styles = StyleSheet.create({
   },
   cartItem: {
     flexDirection: "row",
-    backgroundColor: staticColors.whiteColor,
+    backgroundColor: staticColors.white,
     borderRadius: 8,
     ...spacingStyles.p10,
     ...spacingStyles.m10,
@@ -382,15 +382,15 @@ const styles = StyleSheet.create({
     ...spacingStyles.ml10,
   },
   cartItemTitle: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     fontWeight: "bold",
-    color: staticColors.cardTitleColor,
-    marginBottom: 5,
+    color: staticColors.textSecondary,
+    ...spacingStyles.mb5
   },
   sellerText: {
     fontSize: 12,
     color: staticColors.shadowColor,
-    marginBottom: 5,
+    ...spacingStyles.mb5
   },
   sizeQtyContainer: {
     flexDirection: "row",
@@ -399,7 +399,7 @@ const styles = StyleSheet.create({
   sizeContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: staticColors.backgroundSecondary,
+    backgroundColor: staticColors.bgSecondary,
     ...spacingStyles.px5,
     ...spacingStyles.py5,
     borderRadius: 4,
@@ -408,7 +408,7 @@ const styles = StyleSheet.create({
   qtyContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: staticColors.backgroundSecondary,
+    backgroundColor: staticColors.bgSecondary,
     ...spacingStyles.px5,
     ...spacingStyles.py5,
     borderRadius: 4,
@@ -416,29 +416,29 @@ const styles = StyleSheet.create({
   },
   sizeQtyText: {
     fontSize: 12,
-    color: staticColors.cardTitleColor,
-    marginRight: 5,
+    color: staticColors.textSubtitle,
+    ...spacingStyles.mr5
   },
   priceContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 5,
+    ...spacingStyles.mb5
   },
   cartItemPrice: {
     fontSize: 14,
     fontWeight: "bold",
-    color: staticColors.cardTitleColor,
+    color: staticColors.textSubtitle,
     ...spacingStyles.mr10,
   },
   originalPrice: {
-    fontSize: 12,
-    color: staticColors.lightGray,
+    fontSize: fontSizes.xs,
+    color: staticColors.textSubtitle,
     textDecorationLine: "line-through",
-    marginRight: 8,
+    ...spacingStyles.mr10
   },
   discountText: {
-    fontSize: 12,
-    color: staticColors.offerColor,
+    fontSize:fontSizes.xs,
+    color: staticColors.discountText,
     backgroundColor: staticColors.lightPink,
     ...spacingStyles.py5,
     ...spacingStyles.px5,
@@ -450,8 +450,8 @@ const styles = StyleSheet.create({
     ...spacingStyles.mb5,
   },
   returnPolicyText: {
-    fontSize: 12,
-    color: staticColors.lightGray,
+    fontSize: fontSizes.xs,
+    color: staticColors.textDarkGray,
     ...spacingStyles.ml5,
   },
   titleContainer: {
@@ -460,7 +460,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   cutIcon: {
-    marginLeft: 5,
+    ...spacingStyles.ml5
   },
 });
 

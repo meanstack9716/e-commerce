@@ -24,24 +24,27 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import colors from "@/style/staticColors";
 import textStyles from "@/style/textStyles";
 import spacingStyles from "@/style/spacingStyles";
-
+import images from "../../constants/images";
+import staticColors from "@/style/staticColors";
+import fontSizes from "@/style/fontSizes";
+import gapSizes from "@/style/gapSizes";
 export default function ForgetPassword() {
   const router = useRouter();
   const { errors, handleEmailValidation } = useFieldValidation();
-  const [step, setStep] = useState<"email" | "otp" | "password">("email");
+  const [currentStage, setCurrentStage] = useState<
+    "email" | "otp" | "password"
+  >("email");
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const inputsRef = useRef<Array<TextInput | null>>([]);
   const dispatch = useAppDispatch();
   const [timer, setTimer] = useState(30);
   const [otpError, setOtpError] = useState("");
-  const { error, sendCodeLoading, verifyCodeLoading } = useAppSelector(
-    (state) => state.auth
-  );
+  const { error, loading } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
-    if (step === "otp" && timer > 0) {
+    if (currentStage === "otp" && timer > 0) {
       interval = setInterval(() => {
         setTimer((prev) => prev - 1);
       }, 1000);
@@ -49,11 +52,11 @@ export default function ForgetPassword() {
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [step, timer]);
+  }, [currentStage, timer]);
 
-  const handleCancel = () => {
-    if (step === "otp") {
-      setStep("email");
+  const handleStepBack = () => {
+    if (currentStage === "otp") {
+      setCurrentStage("email");
       setOtp(new Array(6).fill(""));
       setTimer(30);
       setOtpError("");
@@ -78,14 +81,14 @@ export default function ForgetPassword() {
 
     try {
       await dispatch(sendEmailCode(email)).unwrap();
-      setStep("otp");
+      setCurrentStage("otp");
     } catch (error) {
       console.error("Failed to send email code", error);
     }
   };
 
   const handleChangeOtp = (text: string, index: number) => {
-    if (/^\d$/.test(text)) {
+    if ((text)) {
       const newOtp = [...otp];
       newOtp[index] = text;
       setOtp(newOtp);
@@ -129,7 +132,7 @@ export default function ForgetPassword() {
       try {
         await dispatch(verifyEmailCode({ email, code: enteredOtp })).unwrap();
         dispatch(setResetCredentials({ email, code: enteredOtp }));
-        setStep("password");
+        setCurrentStage("password");
       } catch (err) {
         setOtpError(err as string);
         setOtp(new Array(6).fill(""));
@@ -143,10 +146,10 @@ export default function ForgetPassword() {
     <SafeAreaView style={styles.container}>
       <View style={styles.spacer} />
       <View style={styles.innerContainer}>
-        {step === "email" && (
+        {currentStage === "email" && (
           <>
             <Image
-              source={require("../../assets/images/favicon.png")}
+              source={images.logo}
               style={styles.logo}
               resizeMode="contain"
             />
@@ -161,17 +164,17 @@ export default function ForgetPassword() {
             <View style={styles.buttonContainer}>
               <TouchableOpacity
                 style={[styles.button, styles.cancelButton]}
-                onPress={handleCancel}
+                onPress={handleStepBack}
               >
                 <Text style={styles.cancelText}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.button, styles.confirmButton]}
                 onPress={handleConfirmEmail}
-                disabled={sendCodeLoading}
+                disabled={loading}
               >
-                {sendCodeLoading ? (
-                  <ActivityIndicator size="small" color="#fff" />
+                {loading ? (
+                  <ActivityIndicator size="small" color={staticColors.white} />
                 ) : (
                   <Text style={styles.confirmText}>Confirm</Text>
                 )}
@@ -180,10 +183,10 @@ export default function ForgetPassword() {
           </>
         )}
 
-        {step === "otp" && (
+        {currentStage === "otp" && (
           <>
             <Image
-              source={require("../../assets/images/favicon.png")}
+              source={images.logo}
               style={styles.logo}
               resizeMode="contain"
             />
@@ -218,8 +221,8 @@ export default function ForgetPassword() {
                 style={[styles.resendLink, timer > 0 && styles.disabledResend]}
                 onPress={timer === 0 ? handleResend : undefined}
               >
-                {sendCodeLoading ? (
-                  <ActivityIndicator size={12} color="#ddd" />
+                {loading ? (
+                  <ActivityIndicator size={12} color={staticColors.borderSecondaryLight} />
                 ) : (
                   <Text>Resend</Text>
                 )}
@@ -232,17 +235,17 @@ export default function ForgetPassword() {
             <View style={styles.buttonContainer}>
               <TouchableOpacity
                 style={[styles.button, styles.cancelButton]}
-                onPress={handleCancel}
+                onPress={handleStepBack}
               >
                 <Text style={styles.cancelText}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.button, styles.confirmButton]}
                 onPress={handleVerifyOtp}
-                disabled={verifyCodeLoading}
+                disabled={loading}
               >
-                {verifyCodeLoading ? (
-                  <ActivityIndicator size="small" color="#fff" />
+                {loading ? (
+                  <ActivityIndicator size="small" color={staticColors.white} />
                 ) : (
                   <Text style={styles.confirmText}>Verify</Text>
                 )}
@@ -251,7 +254,7 @@ export default function ForgetPassword() {
           </>
         )}
 
-        {step === "password" && <CreateNewPassword />}
+        {currentStage === "password" && <CreateNewPassword />}
       </View>
     </SafeAreaView>
   );
@@ -260,7 +263,7 @@ export default function ForgetPassword() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.whiteColor,
+    backgroundColor: colors.white,
   },
   spacer: {
     height: 40,
@@ -269,7 +272,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     ...spacingStyles.px25,
-  ...spacingStyles.mt20,
+    ...spacingStyles.mt20,
   },
   logo: {
     width: 120,
@@ -283,7 +286,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
-    gap: 15,
+    gap: gapSizes.xl,
     ...spacingStyles.mt15,
   },
   button: {
@@ -294,17 +297,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   cancelButton: {
-    backgroundColor: colors.lightColor,
+    backgroundColor: colors.lightGray,
   },
   confirmButton: {
-    backgroundColor: colors.primaryColor,
+    backgroundColor: colors.primary,
   },
   cancelText: {
-    color: colors.primaryColor,
+    color: colors.primary,
     fontFamily: "HelveticaBold",
   },
   confirmText: {
-    color: colors.whiteColor,
+    color: colors.white,
     fontFamily: "HelveticaBold",
   },
   timerBox: {
@@ -312,15 +315,15 @@ const styles = StyleSheet.create({
     ...spacingStyles.mt10,
   },
   timerText: {
-    fontSize: 14,
-    color: colors.backgroundMuted,
+    fontSize: fontSizes.sm,
+    color: colors.darkGray,
     fontWeight: "500",
   },
   otpContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     ...spacingStyles.mt20,
-    gap: 10,
+    gap: gapSizes.md,
   },
   otpBox: {
     width: 45,
@@ -328,26 +331,26 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     textAlign: "center",
-    fontSize: 20,
+    fontSize: fontSizes.lg,
   },
   otpError: {
     borderColor: colors.errorColor,
   },
   resendText: {
-    fontSize: 15,
+    fontSize: fontSizes.sm,
     ...spacingStyles.my20,
-    color: colors.backgroundMuted,
+    color: colors.darkGray,
   },
   resendLink: {
-    color: colors.linkColor,
+    color: colors.linkDefault,
     fontWeight: "600",
   },
   disabledResend: {
-    color: colors.backgroundMuted,
+    color: colors.lightGray,
   },
   errorMessage: {
     color: colors.errorColor,
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     ...spacingStyles.mt10,
   },
 });

@@ -1,10 +1,3 @@
-import ProductInfoScreen from "@/components/addToBag/ProductInfoSection";
-import ShoppingCartScreen from "@/components/addToBag/ShoppingCartScreen";
-import { Button } from "@/components/common/Button";
-import spacingStyles from "@/style/spacingStyles";
-import staticColors from "@/style/staticColors";
-import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
 import React, { useEffect } from "react";
 import {
   View,
@@ -14,35 +7,53 @@ import {
   BackHandler,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import ProductInfoScreen from "@/components/addToBag/ProductInfoSection";
+import ShoppingCartScreen from "@/components/addToBag/ShoppingCartScreen";
+import { Button } from "@/components/common/Button";
+import spacingStyles from "@/style/spacingStyles";
+import staticColors from "@/style/staticColors";
+import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
+
+import fontSizes from "@/style/fontSizes";
 
 const ShoppingBagScreen: React.FC = () => {
   const handleGoBack = () => {
     router.back();
   };
-
   useEffect(() => {
-    const onBackPress = () => {
-      handleGoBack();
-      return true;
-    };
-    BackHandler.addEventListener("hardwareBackPress", onBackPress);
-    return () => {
-      BackHandler.removeEventListener("hardwareBackPress", onBackPress);
-    };
+    const handleHardwareBackPress = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        handleGoBack();
+        return true;
+      }
+    );
+
+    return () => handleHardwareBackPress.remove();
   }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerContain}>
           <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
-            <Ionicons name="arrow-back" size={20} color="#333" />
+            <Ionicons
+              name="arrow-back"
+              size={20}
+              color={staticColors.darkGray}
+            />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>SHOPPING BAG</Text>
         </View>
 
         <TouchableOpacity style={styles.iconButton}>
-          <Ionicons name="heart-outline" size={22} color="#333" />
+          <Ionicons
+            name="heart-outline"
+            size={22}
+            color={staticColors.darkGray}
+          />
         </TouchableOpacity>
       </View>
       <ShoppingCartScreen />
@@ -61,7 +72,7 @@ const ShoppingBagScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: staticColors.whiteColor,
+    backgroundColor: staticColors.bgSecondary,
   },
   header: {
     flexDirection: "row",
@@ -77,25 +88,24 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   headerTitle: {
-    fontSize: 16,
+    fontSize: fontSizes.base,
     fontWeight: "500",
     color: staticColors.darkGray,
   },
   iconButton: {
     ...spacingStyles.ml10,
   },
-  content: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 20,
-  },
   PlaceButton: {
-    backgroundColor: staticColors.primaryColor,
+    backgroundColor: staticColors.primary,
     ...spacingStyles.p15,
     borderRadius: 0,
+    marginBottom: 0,
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
-  PlaceText: { fontSize: 16, letterSpacing: 1 },
+  PlaceText: { fontSize: fontSizes.base, letterSpacing: 1 },
 });
 
 export default ShoppingBagScreen;

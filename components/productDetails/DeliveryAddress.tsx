@@ -12,6 +12,8 @@ import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useLocation } from "@/utils/useLocation";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
+import fontSizes from "@/style/fontSizes";
+import LocationAlertModal from "@/modal/LocationAlertModal";
 
 interface DeliveryAddressProps {
   onPinCodeFetched?: (pinCode: string) => void;
@@ -22,7 +24,12 @@ const DeliveryAddress: React.FC<DeliveryAddressProps> = ({
   onPinCodeFetched,
   onCloseModal,
 }) => {
-  const { requestLocationPermission, isLoading } = useLocation();
+  const {
+    requestLocationPermission,
+    isLoading,
+    locationModal,
+    hideLocationModal,
+  } = useLocation();
 
   const handleUseCurrentLocation = () => {
     requestLocationPermission((pinCode: string) => {
@@ -40,7 +47,7 @@ const DeliveryAddress: React.FC<DeliveryAddressProps> = ({
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={onCloseModal}>
-          <Ionicons name="arrow-back" size={24} color={staticColors.cardTitleColor} />
+          <Ionicons name="arrow-back" size={24} color={staticColors.primary} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>SELECT DELIVERY ADDRESS</Text>
       </View>
@@ -80,16 +87,26 @@ const DeliveryAddress: React.FC<DeliveryAddressProps> = ({
       >
         <View style={styles.locationIconContainer}>
           {isLoading ? (
-            <ActivityIndicator size="small" color={staticColors.offerColor} />
+            <ActivityIndicator size="small" color={staticColors.discountText} />
           ) : (
-            <MaterialIcons name="my-location" size={20} color={staticColors.offerColor} />
+            <MaterialIcons
+              name="my-location"
+              size={20}
+              color={staticColors.discountText}
+            />
           )}
         </View>
         <Text style={styles.locationText}>
           {isLoading ? "Fetching Location..." : "Use my current Location"}
         </Text>
       </TouchableOpacity>
-
+      <LocationAlertModal
+        visible={locationModal.visible}
+        title={locationModal.title}
+        message={locationModal.message}
+        onConfirm={locationModal.onConfirm}
+        onCancel={locationModal.onCancel}
+      />
     </SafeAreaView>
   );
 };
@@ -97,29 +114,29 @@ const DeliveryAddress: React.FC<DeliveryAddressProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: staticColors.whiteColor,
+    backgroundColor: staticColors.white,
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
-    ...spacingStyles.p10
+    ...spacingStyles.p10,
   },
   backButton: {
-    ...spacingStyles.p5
+    ...spacingStyles.p5,
   },
   headerTitle: {
-    fontSize: 17,
+    fontSize: fontSizes.md,
     fontWeight: "bold",
-    color: staticColors.primaryColor,
+    color: staticColors.primary,
     ...spacingStyles.ml10,
     flex: 1,
   },
   importantContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: staticColors.lightYellow,
+    backgroundColor: staticColors.lightGray,
     ...spacingStyles.py10,
-    ...spacingStyles.px15
+    ...spacingStyles.px15,
   },
   infoIconContainer: {
     width: 20,
@@ -128,11 +145,11 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.darkYellow,
     justifyContent: "center",
     alignItems: "center",
-    ...spacingStyles.mr10
+    ...spacingStyles.mr10,
   },
   infoIcon: {
     color: "white",
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     fontWeight: "bold",
   },
   importantLabel: {
@@ -142,45 +159,45 @@ const styles = StyleSheet.create({
   importantText: {
     flex: 1,
     color: staticColors.darkYellow,
-    fontSize: 14,
+    fontSize: fontSizes.sm,
   },
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
-    borderColor:staticColors.borderLight,
+    borderColor: staticColors.borderLight,
     borderRadius: 8,
     ...spacingStyles.m15,
-    ...spacingStyles.px10
+    ...spacingStyles.px10,
   },
   searchIcon: {
-    ...spacingStyles.mr5
+    ...spacingStyles.mr5,
   },
   searchInput: {
     flex: 1,
     height: 40,
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     color: "#333",
   },
   locationOption: {
     flexDirection: "row",
     alignItems: "center",
     ...spacingStyles.px15,
-    ...spacingStyles.py5
+    ...spacingStyles.py5,
   },
   locationIconContainer: {
     width: 30,
     height: 30,
     borderRadius: 15,
     borderWidth: 1,
-    borderColor: staticColors.offerColor,
+    borderColor: staticColors.brightRed,
     justifyContent: "center",
     alignItems: "center",
-    ...spacingStyles.mr10
+    ...spacingStyles.mr10,
   },
   locationText: {
-    color: staticColors.offerColor,
-    fontSize: 15,
+    color: staticColors.brightRed,
+    fontSize: fontSizes.sm,
     fontWeight: "500",
   },
 });
