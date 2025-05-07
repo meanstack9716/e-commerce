@@ -18,7 +18,6 @@ import data from "../../assets/data/products.json";
 import spacingStyles from "@/style/spacingStyles";
 import MegaDealBadge from "@/components/productDetails/MegaDealBadge";
 import SizeSelector from "@/components/productDetails/SizeSelector";
-import BottonActions from "@/components/productDetails/ProductActionButtons";
 import DeliveryCheck from "@/components/productDetails/DeliveryCheck";
 import ReturnPolicy from "./ReturnPolicy";
 import SimilarProducts from "@/components/productDetails/SimilarProducts";
@@ -263,7 +262,7 @@ const ProductDetailsScreen: React.FC = () => {
           <Text style={styles.backToTopText}>Back to Top</Text>
         </TouchableOpacity>
       ) : (
-        <BottonActions />
+        <ProductDetailsScreen />
       )}
       <ViewSimilarModal
         visible={isViewSimilarModalVisible}
