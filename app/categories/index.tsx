@@ -21,8 +21,9 @@ import staticColors from "@/style/staticColors";
 import { useAppDispatch } from "@/store/hooks";
 import { RootState } from "@/store/store";
 import { fetchCategories } from "@/store/category/categoriesSlice";
-import FullScreenLoader from "@/components/common/FullScreenLoader";
 import { CategoryItem , SubSubCategory  } from "@/types/types";
+import fontSizes from "@/style/fontSizes";
+import FullScreenLoader from "@/components/common/FullScreenLoader";
 const CategoriesScreen: React.FC = () => {
   const params = useLocalSearchParams();
   const { categoryId, categoryTitle } = params;
@@ -54,11 +55,17 @@ const CategoriesScreen: React.FC = () => {
       router.back();
       return true;
     };
-    BackHandler.addEventListener("hardwareBackPress", onBackPress);
+  
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      onBackPress
+    );
+  
     return () => {
-      BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+      backHandler.remove();
     };
   }, []);
+  
 
   const handleCategorySelect = (categoryId: string) => {
     setSelectedCategory(categoryId);
@@ -159,7 +166,7 @@ const CategoriesScreen: React.FC = () => {
       <View style={styles.header}>
         <View style={styles.headerContain}>
           <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
-            <Ionicons name="arrow-back" size={20} color="#333" />
+            <Ionicons name="arrow-back" size={20} color={staticColors.darkGray} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>
             {categoryTitle ? categoryTitle : "Categories"}
@@ -167,10 +174,10 @@ const CategoriesScreen: React.FC = () => {
         </View>
         <View style={styles.headerRight}>
           <TouchableOpacity style={styles.iconButton}>
-            <Ionicons name="heart-outline" size={22} color="#333" />
+            <Ionicons name="heart-outline" size={22} color={staticColors.darkGray} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.iconButton}>
-            <Ionicons name="bag-outline" size={22} color="#333" />
+            <Ionicons name="bag-outline" size={22} color={staticColors.darkGray} />
             <View style={styles.badge}>
               <Text style={styles.badgeText}>0</Text>
             </View>
@@ -208,7 +215,7 @@ const CategoriesScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.whiteColor,
+    backgroundColor: colors.white,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
   header: {
@@ -226,7 +233,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   headerTitle: {
-    fontSize: 16,
+    fontSize: fontSizes.base,
     fontWeight: "500",
     color: staticColors.darkGray,
   },
@@ -241,7 +248,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: -8,
     top: -8,
-    backgroundColor: colors.primaryColor,
+    backgroundColor: colors.primary,
     borderRadius: 10,
     width: 18,
     height: 18,
@@ -249,8 +256,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   badgeText: {
-    color: colors.whiteColor,
-    fontSize: 10,
+    color: colors.white,
+    fontSize: fontSizes.xs,
     fontWeight: "bold",
   },
   contentContainer: {
@@ -264,7 +271,7 @@ const styles = StyleSheet.create({
   },
   sidebar: {
     width: 90,
-    backgroundColor: staticColors.homebackgroundColor,
+    backgroundColor: staticColors.bgPrimary,
   },
   sidebarItem: {
     alignItems: "center",
@@ -282,10 +289,10 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
   },
   selectedSidebarBorder: {
-    backgroundColor: colors.primaryColor,
+    backgroundColor: colors.primary,
   },
   selectedSidebarItem: {
-    backgroundColor: colors.whiteColor,
+    backgroundColor: colors.white,
   },
   sidebarImage: {
     width: 55,
@@ -294,16 +301,16 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
   },
   sidebarText: {
-    fontSize: 11,
+    fontSize: fontSizes.xs,
     textAlign: "center",
     ...spacingStyles.mt5,
     fontWeight: "600",
-    color: staticColors.cardTitleColor,
+    color: staticColors.darkGray,
   },
   selectedSidebarText: {
-    color: colors.primaryColor,
+    color: colors.primary,
     fontWeight: "700",
-    fontSize: 13,
+    fontSize: fontSizes.sm,
   },
   mainContent: {
     flex: 1,
@@ -314,10 +321,10 @@ const styles = StyleSheet.create({
     ...spacingStyles.mb5,
   },
   sectionTitle: {
-    fontSize: 15,
+    fontSize: fontSizes.sm,
     fontFamily: "HelveticaBold",
     ...spacingStyles.mx10,
-    color: colors.primaryColor,
+    color: colors.primary,
   },
   spotlightGrid: {
     flexDirection: "row",
@@ -337,7 +344,7 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 40,
     overflow: "hidden",
-    backgroundColor: staticColors.backgroundMuted,
+    backgroundColor: staticColors.bgMuted,
   },
   spotlightImage: {
     width: "100%",
@@ -345,10 +352,10 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
   },
   spotlightTitle: {
-    fontSize: 12,
+    fontSize: fontSizes.xs,
     textAlign: "center",
     ...spacingStyles.mt8,
-    color: colors.primaryColor,
+    color: colors.primary,
     fontWeight: "600",
   },
   errorText: {
@@ -361,13 +368,13 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   retryButton: {
-    backgroundColor: colors.primaryColor,
+    backgroundColor: colors.primary,
     padding: 10,
     borderRadius: 5,
     marginTop: 10,
   },
   retryButtonText: {
-    color: colors.whiteColor,
+    color: colors.white,
     fontWeight: "bold",
   },
 });

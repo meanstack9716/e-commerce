@@ -11,61 +11,42 @@ import { MaterialIcons } from "@expo/vector-icons";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import LocationModal from "@/modal/LocationModal";
-import * as Location from "expo-location";
+import fontSizes from "@/style/fontSizes";
+import gapSizes from "@/style/gapSizes";
+import { getCurrentPinCode } from "@/utils/currentLocation";
 
 const ProductDetails = () => {
-  const [modalVisible, setModalVisible] = useState(false);
+  const [isLocationModalVisible, setIsLocationModalVisible] = useState(false);
   const [pinCode, setPinCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const textInputRef = useRef<TextInput>(null);
 
   useEffect(() => {
-    checkLocationPermission();
-  }, []);
-
-  const checkLocationPermission = async () => {
-    try {
+    const fetchPinCode = async () => {
       setIsLoading(true);
-      const { status } = await Location.getForegroundPermissionsAsync();
-
-      if (status === "granted") {
-        const isLocationEnabled = await Location.hasServicesEnabledAsync();
-
-        if (isLocationEnabled) {
-          const location = await Location.getCurrentPositionAsync({
-            accuracy: Location.Accuracy.High,
-          });
-
-          const [address] = await Location.reverseGeocodeAsync({
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-          });
-
-          const fetchedPinCode = address?.postalCode || "";
-          if (fetchedPinCode) {
-            setPinCode(fetchedPinCode);
-          }
-        }
+      const PinCode = await getCurrentPinCode();
+      if (PinCode) {
+        setPinCode(PinCode);
       }
-    } catch (error) {
-      console.error("Error checking location permission:", error);
-    } finally {
       setIsLoading(false);
-    }
-  };
+    };
+  
+    fetchPinCode();
+  }, []);
+  
 
   const handleCloseModal = () => {
-    setModalVisible(false);
+    setIsLocationModalVisible(false);
     if (textInputRef.current) {
       textInputRef.current.blur();
     }
   };
 
-  const handleTextInputPress = () => {
-    setModalVisible(true);
+  const handleAddressTextInput = () => {
+    setIsLocationModalVisible(true);
   };
 
-  const handleGrant = (fetchedPinCode: string) => {
+  const handleGrantButton = (fetchedPinCode: string) => {
     setPinCode(fetchedPinCode);
     handleCloseModal();
   };
@@ -76,7 +57,7 @@ const ProductDetails = () => {
       <View style={styles.inputContainer}>
         {isLoading ? (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="small" color={staticColors.offerColor} />
+            <ActivityIndicator size="small" color={staticColors.discountText} />
             <Text style={styles.loadingText}>Fetching your location...</Text>
           </View>
         ) : (
@@ -85,16 +66,16 @@ const ProductDetails = () => {
               ref={textInputRef}
               style={[styles.input, pinCode && { paddingRight: 70 }]}
               placeholder="Enter PIN Code"
-              placeholderTextColor={staticColors.primaryColor}
+              placeholderTextColor={staticColors.primary}
               value={pinCode}
-              onFocus={!pinCode ? handleTextInputPress : undefined}
-              editable={false}
+              onFocus={!pinCode ? handleAddressTextInput : undefined}
+              editable={!pinCode ? true : false}
               accessibilityLabel="PIN code input"
             />
             {pinCode && (
               <TouchableOpacity
                 style={styles.changeButton}
-                onPress={handleTextInputPress}
+                onPress={handleAddressTextInput}
                 accessibilityLabel="Change PIN code"
               >
                 <Text style={styles.changeText}>Change</Text>
@@ -105,26 +86,26 @@ const ProductDetails = () => {
       </View>
 
       <LocationModal
-        visible={modalVisible}
+        visible={isLocationModalVisible}
         onClose={handleCloseModal}
-        onGrant={handleGrant}
+        onGrant={handleGrantButton}
       />
       <View style={styles.option}>
-        <MaterialIcons name="local-shipping" size={20} color="#000" />
+        <MaterialIcons name="local-shipping" size={20} color={staticColors.black}/>
         <Text style={{ flexShrink: 1 }}>
           <Text style={styles.boldText}>Express delivery</Text> might be
           available
         </Text>
       </View>
       <View style={styles.option}>
-        <MaterialIcons name="payment" size={20} color="#000" />
-        <Text style={{ flexShrink: 1 }}>
+        <MaterialIcons name="payment" size={20} color={staticColors.black} />
+        <Text style={{ flexShrink: 1 }}>  
           <Text style={styles.boldText}>Pay on delivery</Text> might be
           available
         </Text>
       </View>
       <View style={styles.option}>
-        <MaterialIcons name="refresh" size={20} color="#000" />
+        <MaterialIcons name="refresh" size={20} color={staticColors.black} />
         <Text style={{ flexShrink: 1 }}>
           <Text style={styles.boldText}>Hassle free 7, 15 and 30 days</Text>{" "}
           Return & Exchange might be available
@@ -164,18 +145,18 @@ const ProductDetails = () => {
 
 const styles = StyleSheet.create({
   container: {
-    ...spacingStyles.px20,
+    ...spacingStyles.px15,
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: fontSizes.md,
     fontWeight: "bold",
     ...spacingStyles.py5,
-    color: staticColors.primaryColor,
+    color: staticColors.primary,
   },
   tableTitle: {
-    fontSize: 18,
+    fontSize: fontSizes.md,
     fontWeight: "bold",
-    color: staticColors.primaryColor,
+    color: staticColors.primary,
   },
   inputContainer: {
     flexDirection: "row",
@@ -194,15 +175,15 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     ...spacingStyles.p10,
-    color: staticColors.primaryColor,
+    color: staticColors.primary,
   },
   changeButton: {
     position: "absolute",
     right: 10,
   },
   changeText: {
-    color: staticColors.offerColor,
-    fontSize: 14,
+    color: staticColors.discountText,
+    fontSize: fontSizes.sm,
     fontWeight: "bold",
   },
   loadingContainer: {
@@ -216,17 +197,17 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     ...spacingStyles.ml10,
-    color: staticColors.primaryColor,
+    color: staticColors.primary,
   },
   option: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 10,
-    gap: 10,
+    ...spacingStyles.mb10,
+    gap: gapSizes.md,
   },
   sectiontable: {
     flexDirection: "column",
-    gap: 5,
+    gap: gapSizes.sm,
     ...spacingStyles.py10,
   },
   details: {

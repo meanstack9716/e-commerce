@@ -1,5 +1,3 @@
-import spacingStyles from "@/style/spacingStyles";
-import staticColors from "@/style/staticColors";
 import React from "react";
 import {
   View,
@@ -9,7 +7,11 @@ import {
   Modal,
   TouchableOpacity,
 } from "react-native";
+import spacingStyles from "@/style/spacingStyles";
+import staticColors from "@/style/staticColors";
 import { Ionicons } from "@expo/vector-icons";
+import fontSizes from "@/style/fontSizes";
+import { IMAGE_URIS } from "@/constants/imageLinks";
 
 interface QualityCheckModalProps {
   isVisible: boolean;
@@ -32,17 +34,20 @@ const QualityCheckModal: React.FC<QualityCheckModalProps> = ({
           <View style={styles.modalHeader}>
             <Text style={styles.modalTitle}>Quality Check Process</Text>
             <TouchableOpacity onPress={onClose}>
-              <Ionicons name="close" size={24} color="#666" />
+              <Ionicons
+                name="close"
+                size={24}
+                color={staticColors.textDarkGray}
+              />
             </TouchableOpacity>
           </View>
           <View style={styles.modalContent}>
             <View style={styles.section}>
               <Image
-                source={{
-                  uri: "https://cdni.iconscout.com/illustration/premium/thumb/shopping-target-illustration-download-in-svg-png-gif-file-formats--audience-behavior-consumer-targeting-market-lead-generation-pack-business-illustrations-9209228.png?f=webp",
-                }}
+                source={{ uri: IMAGE_URIS.shoppingTargetGraphic }}
                 style={styles.sectionImage}
               />
+
               <View style={styles.sectionText}>
                 <Text style={styles.sectionTitle}>Sample Check</Text>
                 <Text style={styles.sectionDescription}>
@@ -54,9 +59,7 @@ const QualityCheckModal: React.FC<QualityCheckModalProps> = ({
 
             <View style={styles.section}>
               <Image
-                source={{
-                  uri: "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQGfqQRpbiRM4CCgT--YGdHwP2jNbmOt53fOoIKEuuu2CZLAIaZ",
-                }}
+                source={{ uri: IMAGE_URIS.genuineProductBadge }}
                 style={styles.sectionImage}
               />
               <View style={styles.sectionText}>
@@ -70,9 +73,7 @@ const QualityCheckModal: React.FC<QualityCheckModalProps> = ({
 
             <View style={styles.section}>
               <Image
-                source={{
-                  uri: "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSVTZyQ_tYEIASoFg0w1L-YcNQzhqkDJLzjuKjE4OT6uKNVZZIg",
-                }}
+                source={{ uri: IMAGE_URIS.marketingConceptArt }}
                 style={styles.sectionImage}
               />
               <View style={styles.sectionText}>
@@ -86,9 +87,7 @@ const QualityCheckModal: React.FC<QualityCheckModalProps> = ({
 
             <View style={styles.section}>
               <Image
-                source={{
-                  uri: "https://img.freepik.com/premium-vector/colorful-cartoon-medical-beauty-bottles-with-plus-sign_1280751-75391.jpg",
-                }}
+                source={{ uri: IMAGE_URIS.beautyHealthProducts }}
                 style={styles.sectionImage}
               />
               <View style={styles.sectionText}>
@@ -117,12 +116,12 @@ const QualityCheckModal: React.FC<QualityCheckModalProps> = ({
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
-    backgroundColor: staticColors.modalBackGround,
+    backgroundColor: staticColors.modalOverlayLight,
     justifyContent: "flex-end",
     alignItems: "center",
   },
   modalContainer: {
-    backgroundColor: staticColors.whiteColor,
+    backgroundColor: staticColors.white,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     width: "100%",
@@ -136,9 +135,9 @@ const styles = StyleSheet.create({
     ...spacingStyles.mb20,
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: fontSizes.md,
     fontWeight: "bold",
-    color: staticColors.primaryColor,
+    color: staticColors.primary,
   },
   modalContent: {
     flexDirection: "column",
@@ -157,18 +156,18 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: fontSizes.base,
     fontWeight: "bold",
-    color: staticColors.primaryColor,
+    color: staticColors.primary,
     ...spacingStyles.mb5,
   },
   sectionDescription: {
-    fontSize: 14,
-    color: staticColors.darkGray,
+    fontSize: fontSizes.sm,
+    color: staticColors.textLightGray,
     lineHeight: 20,
   },
   footnote: {
-    fontSize: 12,
+    fontSize: fontSizes.xs,
     color: staticColors.darkGray,
     ...spacingStyles.mt5,
   },

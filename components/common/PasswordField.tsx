@@ -11,6 +11,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
+import fontSizes from "@/style/fontSizes";
 
 interface PasswordFieldProps extends TextInputProps {
   label?: string;
@@ -98,22 +99,22 @@ const styles = StyleSheet.create({
   label: {
     position: "absolute",
     left: 12,
-    color: staticColors.lightGray,
-    backgroundColor: staticColors.whiteColor,
+    color: staticColors.textLightGray,
+    backgroundColor: staticColors.white,
     zIndex: 1,
     paddingHorizontal: 4,
   },
   labelStatic: {
     top: 12,
-    fontSize: 12,
+    fontSize:fontSizes.sm
   },
   labelFloating: {
     top: -8,
-    fontSize: 13,
+    fontSize: fontSizes.sm,
     fontWeight: "bold",
   },
   labelFocused: {
-    color: staticColors.primaryColor,
+    color: staticColors.primary,
     fontWeight: "bold",
   },
   labelError: {
@@ -124,14 +125,14 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: staticColors.lightColor,
+    borderColor: staticColors.lightGray,
     borderRadius: 6,
     ...spacingStyles.p10,
     paddingVertical: Platform.OS === "ios" ? 8 : 5,
-    fontSize: 14,
+    fontSize: fontSizes.sm
   },
   inputFocused: {
-    borderColor: staticColors.primaryColor,
+    borderColor: staticColors.primary,
   },
   inputError: {
     borderColor: staticColors.errorColor, 
@@ -143,7 +144,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: staticColors.errorColor,
-    fontSize: 12,
+    fontSize: fontSizes.sm,
     ...spacingStyles.mt5,
   },
 });

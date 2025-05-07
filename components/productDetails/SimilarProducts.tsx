@@ -7,23 +7,27 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import { router } from "expo-router"; 
+import { router } from "expo-router";
 import data from "@/assets/data/products.json";
 import { Profile } from "../../types/types";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
+import fontSizes from "@/style/fontSizes";
+import { textTruncate } from "@/utils/textTruncate";
+import { commonStyles } from "@/style/commonStyle";
+import { FontAwesome } from "@expo/vector-icons";
 
 const SimilarProducts = ({ currentProduct }: { currentProduct: Profile }) => {
   if (!currentProduct) return null;
 
-  const rawProducts = data.products || data;
+  const allProductData = data.products || data;
 
-  const allProducts: Profile[] = rawProducts.map((item) => ({
+  const allProducts: Profile[] = allProductData.map((item) => ({
     ...item,
     title: item.title ?? "Untitled Product",
   }));
 
-  const similar = allProducts.filter((product) => {
+  const similarProducts = allProducts.filter((product) => {
     if (product.id === currentProduct.id) return false;
 
     const sharedCategory = product.categories.some((cat) =>
@@ -33,28 +37,18 @@ const SimilarProducts = ({ currentProduct }: { currentProduct: Profile }) => {
     return sharedCategory;
   });
 
-  const limitedSimilar = similar.slice(0, 6);
-
+  const limitedSimilar = similarProducts.slice(0, 6);
   if (limitedSimilar.length === 0) return null;
 
-  const truncateTitle = (title: string) => {
-    const words = title.split(" ");
-    if (words.length > 2) {
-      return `${words.slice(0, 2).join(" ")}...`;
-    }
-    return title;
-  };
-
-  const handleProductPress = (productId: string) => {
+  const navigateToProductDetails = (productId: string) => {
     router.push({
-      pathname: "/ProductDetails", 
+      pathname: "/ProductDetails",
       params: { id: productId },
     });
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Similar Products</Text>
       <FlatList
         horizontal
         data={limitedSimilar}
@@ -63,15 +57,32 @@ const SimilarProducts = ({ currentProduct }: { currentProduct: Profile }) => {
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.card}
-            onPress={() => handleProductPress(item.id)}
+            onPress={() => navigateToProductDetails(item.id)}
           >
-            <View style={styles.imageContainer}>
-              <Image source={{ uri: item.image }} style={styles.image} />
-              <View style={styles.ratingContainer}>
-                <Text style={styles.star}>{item.star} ★</Text>
+            <View style={commonStyles.imageContainer}>
+              {item.images && item.images.length > 0 ? (
+                <Image source={{ uri: item.images[0] }} style={styles.image} />
+              ) : (
+                <View
+                  style={[styles.image, commonStyles.imagePlaceholderContainer]}
+                >
+                  <Text style={commonStyles.imagePlaceholderText}>
+                    No image
+                  </Text>
+                </View>
+              )}
+              <View style={commonStyles.ratingContainer}>
+                <Text >
+                  {item.star}{" "}
+                  <FontAwesome
+                    name="star"
+                    size={14}
+                    color={staticColors.lightYellow}
+                  />
+                </Text>
               </View>
             </View>
-            <Text style={styles.title}>{truncateTitle(item.title)}</Text>
+            <Text style={[commonStyles.cardTitle , styles.title]}>{textTruncate(item.title)}</Text>
             <Text style={styles.price}>₹{item.price}</Text>
             <TouchableOpacity style={styles.addButton}>
               <Text style={styles.addButtonText}>Add to Bag</Text>
@@ -85,13 +96,7 @@ const SimilarProducts = ({ currentProduct }: { currentProduct: Profile }) => {
 
 const styles = StyleSheet.create({
   container: {
-    ...spacingStyles.px20,
-  },
-  heading: {
-    fontSize: 16,
-    fontWeight: "bold",
-    ...spacingStyles.mb10,
-    color: staticColors.cardTitleColor,
+    ...spacingStyles.px15,
   },
   card: {
     ...spacingStyles.mr10,
@@ -99,53 +104,33 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     overflow: "hidden",
   },
-  imageContainer: {
-    position: "relative",
-  },
   image: {
     width: "100%",
     height: 190,
     borderRadius: 10,
   },
-  ratingContainer: {
-    position: "absolute",
-    bottom: 8,
-    left: 8,
-    backgroundColor: staticColors.whiteColor,
-    ...spacingStyles.px5,
-    ...spacingStyles.py2,
-    borderRadius: 4,
-  },
-  star: {
-    fontSize: 12,
-    color: staticColors.shadowColor,
-    fontWeight: "bold",
-  },
   title: {
-    fontSize: 13,
-    fontWeight: "500",
     ...spacingStyles.mt5,
     ...spacingStyles.mx5,
-    color: staticColors.cardTitleColor,
   },
   price: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     fontWeight: "bold",
     ...spacingStyles.mt2,
     ...spacingStyles.mx5,
-    color: "#000",
+    color: staticColors.black,
   },
   addButton: {
-    paddingVertical: 6,
+    ...spacingStyles.py5,
     borderRadius: 20,
     ...spacingStyles.m5,
     borderWidth: 1,
-    borderColor: staticColors.primaryColor,
+    borderColor: staticColors.primary,
   },
   addButtonText: {
-    color: staticColors.primaryColor,
+    color: staticColors.primary,
     textAlign: "center",
-    fontSize: 12,
+    fontSize: fontSizes.xs,
     fontWeight: "bold",
   },
 });

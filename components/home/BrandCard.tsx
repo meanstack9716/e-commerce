@@ -12,6 +12,7 @@ import { StatusBar } from "expo-status-bar";
 import brandData from "../../assets/data/brand.json";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
+import fontSizes from "@/style/fontSizes";
 const { width } = Dimensions.get("window");
 
 interface Brand {
@@ -63,41 +64,41 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   sectionTitle: {
-    fontSize: 22,
+    fontSize: fontSizes.lg,
     fontWeight: "bold",
-    color: staticColors.primaryColor,
+    color: staticColors.primary,
     fontFamily: "helveticaBold",
     textAlign: "center",
   },
   brandList: {
-    paddingVertical: 10,
+    ...spacingStyles.py10
   },
   brandCard: {
     width: width * 0.4,
     ...spacingStyles.mr15,
     borderRadius: 10,
-    backgroundColor: staticColors.whiteColor,
+    backgroundColor: staticColors.white,
     overflow: "hidden",
     elevation: 1,
   },
   brandImage: {
     width: "100%",
     height: 200,
-    backgroundColor: staticColors.backgroundMuted,
+    backgroundColor: staticColors.bgMuted,
   },
   brandInfo: {
-    padding: 15,
+    ...spacingStyles.p15,
     alignItems: "center",
   },
   brandName: {
-    fontSize: 16,
+    fontSize:fontSizes.base,
     fontWeight: "600",
-    color: staticColors.cardTitleColor,
+    color: staticColors.darkGray,
     textAlign: "center",
   },
   brandCategory: {
-    fontSize: 14,
-    color: staticColors.lightGray,
+    fontSize: fontSizes.sm,
+    color: staticColors.textLightGray,
     ...spacingStyles.mt2,
   },
 });

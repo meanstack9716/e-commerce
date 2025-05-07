@@ -16,30 +16,34 @@ import { FontAwesome } from "@expo/vector-icons";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
+import fontSizes from "@/style/fontSizes";
+import images from "@/constants/images";
+import { pickImages } from "@/utils/imagePicker";
+import gapSizes from "@/style/gapSizes";
 
 const { height } = Dimensions.get("window");
-
+interface UserData {
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  gender: "male" | "female" | null;
+  selectedImage: string | null;
+}
 const UserInformationScreen = () => {
-  const [userData, setUserData] = useState({
+  const [userData, setUserData] = useState<UserData>({
     firstName: "",
     lastName: "",
     phoneNumber: "",
-    gender: null as "male" | "female" | null,
-    selectedImage: null as string | null,
+    gender: null,
+    selectedImage: null,
   });
 
   const pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 0.7,
-    });
-
-    if (!result.canceled && result.assets?.length > 0) {
+    const uri = await pickImages();
+    if (uri) {
       setUserData((prevData) => ({
         ...prevData,
-        selectedImage: result.assets[0].uri,
+        selectedImage: uri,
       }));
     }
   };
@@ -56,16 +60,12 @@ const UserInformationScreen = () => {
     }));
   };
 
-  const handleSelectionChange = (field: "gender", value: "male" | "female") => {
-    setUserData((prevData) => ({
-      ...prevData,
-      [field]: value,
-    }));
-  };
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <LinearGradient colors={["#242555", "#1B7CA5"]} style={styles.topCurve}>
+      <LinearGradient
+        colors={[`${staticColors.indigoNavy}`, `${staticColors.ceruleanBlue}`]}
+        style={styles.topCurve}
+      >
         <Text style={styles.accountText}>Account Details!</Text>
       </LinearGradient>
 
@@ -77,14 +77,14 @@ const UserInformationScreen = () => {
           />
         ) : (
           <View style={[styles.avatar, styles.iconWrapper]}>
-            <FontAwesome name="user" size={50} color="#ccc" />
+            <FontAwesome name="user" size={50} color={staticColors.softGray} />
           </View>
         )}
         <Text style={styles.uploadText}>Tap to upload your image</Text>
       </TouchableOpacity>
 
       <View style={styles.rowInput}>
-        <View style={{ flex: 1 }}>
+        <View style={styles.textContainer}>
           <TextField
             label="First Name *"
             value={userData.firstName}
@@ -92,7 +92,7 @@ const UserInformationScreen = () => {
           />
         </View>
 
-        <View style={{ flex: 1 }}>
+        <View style={styles.textContainer}>
           <TextField
             label="Last Name *"
             value={userData.lastName}
@@ -110,30 +110,25 @@ const UserInformationScreen = () => {
       <Text style={styles.label}>Select Gender</Text>
       <View style={styles.cardRow}>
         <TouchableOpacity
-          onPress={() => handleSelectionChange("gender", "male")}
+          onPress={() => handleInputChange("gender", "male")}
           style={[
             styles.card,
             userData.gender === "male" && styles.selectedCard,
           ]}
         >
-          <Image
-            source={require("@/assets/images/images/gender-male.png")}
-            style={styles.cardImage}
-          />
+          <Image source={images.genderMale} style={styles.cardImage} />
           <Text style={styles.cardText}>Male</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => handleSelectionChange("gender", "female")}
+          onPress={() => handleInputChange("gender", "female")}
           style={[
             styles.card,
             userData.gender === "female" && styles.selectedCard,
           ]}
         >
-          <Image
-            source={require("@/assets/images/images/gender-female.png")}
-            style={styles.cardImage}
-          />
+          <Image source={images.genderFemale} style={styles.cardImage} />
+
           <Text style={styles.cardText}>Female</Text>
         </TouchableOpacity>
       </View>
@@ -155,9 +150,9 @@ export default UserInformationScreen;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.whiteColor,
+    backgroundColor: colors.white,
     alignItems: "center",
-    paddingHorizontal: 24,
+    ...spacingStyles.px25,
     paddingTop: height * 0.18,
     minHeight: "100%",
   },
@@ -167,7 +162,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: height * 0.25,
-    backgroundColor: "#7881FC",
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
     zIndex: -1,
@@ -175,98 +169,87 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   accountText: {
-    fontSize: 30,
+    fontSize: fontSizes["2xl"],
     fontWeight: "bold",
-    color: colors.whiteColor,
+    color: colors.white,
   },
   avatarWrapper: {
     alignItems: "center",
-    marginBottom: 16,
+    ...spacingStyles.mb15,
   },
   avatar: {
     width: 100,
     height: 100,
     borderRadius: 60,
-    marginBottom: 8,
+    ...spacingStyles.mb10,
     borderWidth: 2,
-    borderColor: colors.lightColor,
+    borderColor: colors.textLightGray,
     justifyContent: "center",
     alignItems: "center",
   },
   iconWrapper: {
-    backgroundColor: "#f1f1f1",
+    backgroundColor: staticColors.textLightGray,
   },
   uploadText: {
-    fontSize: 15,
-    color: "#666",
-    marginBottom: 8,
+    fontSize: fontSizes.sm,
+    color: staticColors.textLightGray,
+    ...spacingStyles.mb10,
     fontWeight: "bold",
     borderBottomWidth: 2,
-    borderColor: colors.lightColor,
+    borderColor: colors.textLightGray,
     borderStyle: "dotted",
+  },
+  textContainer: {
+    flex: 1,
   },
   rowInput: {
     flexDirection: "row",
     width: "100%",
-    gap: 15,
+    gap: gapSizes.lg,
   },
   buttonWrapper: {
     width: "80%",
   },
   label: {
     fontWeight: "600",
-    marginBottom: 6,
+    ...spacingStyles.mb10,
     alignSelf: "flex-start",
-    color: staticColors.cardTitleColor,
+    color: staticColors.darkGray,
   },
   cardRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    gap: 15,
-    marginBottom: 20,
+    gap: gapSizes.lg,
+    ...spacingStyles.mb20,
     width: "100%",
   },
 
   card: {
     flex: 1,
     alignItems: "center",
-    paddingVertical: 10,
+    ...spacingStyles.py15,
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: staticColors.lightGray,
     borderRadius: 12,
-    backgroundColor: colors.whiteColor,
+    backgroundColor: colors.white,
   },
 
   selectedCard: {
-    borderColor: "#232454",
-    backgroundColor: "#E8F6FF",
+    borderColor: staticColors.primary,
+    backgroundColor: staticColors.lightGreen,
   },
 
   cardImage: {
     width: 60,
     height: 55,
-    marginBottom: 8,
+   ...spacingStyles.mb10,
     resizeMode: "contain",
   },
 
   cardText: {
-    fontSize: 14,
-    color: "#1A1651",
+    fontSize: fontSizes.sm,
+    color: staticColors.textSecondary,
     fontFamily: "HelveticaBold",
-  },
-
-  dobPicker: {
-    width: "100%",
-    ...spacingStyles.p10,
-    borderWidth: 1,
-    borderColor:staticColors.lightColor,
-    borderRadius: 10,
-    marginBottom: 15,
-  },
-
-  dobText: {
-    fontSize: 16,
-    color:staticColors.cardTitleColor,
   },
   helpContainer: {
     flexDirection: "row",
@@ -274,19 +257,17 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     ...spacingStyles.mt10,
     borderBottomWidth: 1,
-    borderColor: colors.lightColor,
+    borderColor: colors.lightGray,
     borderStyle: "dotted",
   },
   helpText: {
     marginTop: -5,
-    fontSize: 13,
-    color: "#878686",
+    fontSize: fontSizes.sm,
+    color: staticColors.darkGray,
   },
   helpLink: {
     marginTop: -5,
-    color: "#232454",
+    color: staticColors.linkDefault,
     fontWeight: "bold",
   },
 });
-
-

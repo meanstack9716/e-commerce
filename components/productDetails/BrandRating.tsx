@@ -1,13 +1,15 @@
-import spacingStyles from '@/style/spacingStyles';
-import staticColors from '@/style/staticColors';
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import React, { useState } from "react";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { PRODUCT_CODE } from "@/constants/constants";
+import fontSizes from "@/style/fontSizes";
+import spacingStyles from "@/style/spacingStyles";
+import staticColors from "@/style/staticColors";
 
 export default function BrandRating() {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isBrandInfoExpanded, setIsBrandInfoExpanded] = useState(false);
 
   const toggleExpanded = () => {
-    setIsExpanded(!isExpanded);
+    setIsBrandInfoExpanded(!isBrandInfoExpanded);
   };
 
   return (
@@ -24,16 +26,15 @@ export default function BrandRating() {
       </Text>
 
       <Text style={styles.sectionHeader}>MORE INFORMATION</Text>
-
-      <Text style={styles.subHeader}>Product Code: 32361470</Text>
+      <Text style={styles.subHeader}>Product Code: {PRODUCT_CODE}</Text>
 
       <TouchableOpacity onPress={toggleExpanded} style={styles.viewMoreButton}>
         <Text style={styles.viewMoreText}>
-          {isExpanded ? 'View Less' : 'View More'}
+          {isBrandInfoExpanded ? "View Less" : "View More"}
         </Text>
       </TouchableOpacity>
 
-      {isExpanded && (
+      {isBrandInfoExpanded && (
         <>
           <Text style={styles.subHeader}>Manufacturer Detail</Text>
           <Text style={styles.detail}>
@@ -57,54 +58,54 @@ export default function BrandRating() {
 
 const styles = StyleSheet.create({
   container: {
-    ...spacingStyles.px20,
+    ...spacingStyles.px15,
+    ...spacingStyles.py15,
   },
   header: {
-    fontSize: 18,
+    fontSize: fontSizes.md,
     fontWeight: "bold",
     ...spacingStyles.py5,
-    color: staticColors.primaryColor,
+    color: staticColors.primary,
   },
   ratingContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  ...spacingStyles.mb5
+    flexDirection: "row",
+    alignItems: "center",
+    ...spacingStyles.mb5,
   },
   rating: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    ...spacingStyles.mr10
+    fontSize: fontSizes.sm,
+    fontWeight: "bold",
+    ...spacingStyles.mr10,
   },
   ratingDetails: {
-    fontSize: 13,
-    color: staticColors.cardTitleColor
+    fontSize: fontSizes.xs,
+    color: staticColors.textLightGray,
   },
   note: {
-    fontSize: 12,
+    fontSize: fontSizes.xs,
     color: staticColors.shadowColor,
-    ...spacingStyles.mb20
+    ...spacingStyles.mb20,
   },
   sectionHeader: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: fontSizes.base,
+    fontWeight: "bold",
   },
   subHeader: {
-    fontSize: 13,
-    fontWeight: 'bold',
-...spacingStyles.mb5,
-    color:staticColors.shadowColor
+    fontSize: fontSizes.xs,
+    fontWeight: "bold",
+    ...spacingStyles.mb5,
+    color: staticColors.shadowColor,
   },
   detail: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     color: staticColors.shadowColor,
-    
   },
   viewMoreButton: {
-  ...spacingStyles.pb5
+    ...spacingStyles.pb5,
   },
   viewMoreText: {
-    fontSize: 14,
-    color: staticColors.offerColor,
-    fontWeight: 'bold',
+    fontSize: fontSizes.sm,
+    color: staticColors.discountText,
+    fontWeight: "bold",
   },
 });

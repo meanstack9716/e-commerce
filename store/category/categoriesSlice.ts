@@ -20,7 +20,7 @@ export const fetchCategories = createAsyncThunk(
   "categories/fetchCategories",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${apiUrl}/api/categories/list`);
+      const response = await axios.get(`${apiUrl}/categories/list`);
       if (!Array.isArray(response.data.data)) {
         throw new Error("Invalid response format: expected an array");
       }

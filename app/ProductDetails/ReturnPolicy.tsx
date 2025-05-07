@@ -1,19 +1,23 @@
-import GenuineProductModal from "@/modal/GenuineProductModal";
-import QualityCheckModal from "@/modal/QualityCheckModal";
-import spacingStyles from "@/style/spacingStyles";
-import staticColors from "@/style/staticColors";
 import React, { useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import GenuineProductModal from "@/modal/GenuineProductModal";
+import QualityCheckModal from "@/modal/QualityCheckModal";
+import fontSizes from "@/style/fontSizes";
+import spacingStyles from "@/style/spacingStyles";
+import staticColors from "@/style/staticColors";
 
 const ReturnPolicy: React.FC = () => {
-  const [isModalVisible, setModalVisible] = useState(false);
-  const [isQualityModalVisible, setQualityModalVisible] = useState(false);
+  const [isGenuineProductModalVisible, setGenuineProductModalVisible] =
+    useState(false);
+  const [isQualityCheckModalVisible, setQualityCheckModalVisible] =
+    useState(false);
+
   return (
     <View style={styles.container}>
       <View style={styles.badgeRow}>
         <TouchableOpacity
           style={styles.badgeContainer}
-          onPress={() => setModalVisible(true)}
+          onPress={() => setGenuineProductModalVisible(true)}
         >
           <Image
             source={{
@@ -23,7 +27,10 @@ const ReturnPolicy: React.FC = () => {
           />
           <Text style={styles.badgeText}>Genuine Product</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.badgeContainer}  onPress={() => setQualityModalVisible(true)}>
+        <TouchableOpacity
+          style={styles.badgeContainer}
+          onPress={() => setQualityCheckModalVisible(true)}
+        >
           <Image
             source={{
               uri: "https://cdn-icons-png.flaticon.com/512/3098/3098533.png",
@@ -39,12 +46,12 @@ const ReturnPolicy: React.FC = () => {
         7 days.
       </Text>
       <GenuineProductModal
-        isVisible={isModalVisible}
-        onClose={() => setModalVisible(false)}
+        isVisible={isGenuineProductModalVisible}
+        onClose={() => setGenuineProductModalVisible(false)}
       />
       <QualityCheckModal
-        isVisible={isQualityModalVisible}
-        onClose={() => setQualityModalVisible(false)}
+        isVisible={isQualityCheckModalVisible}
+        onClose={() => setQualityCheckModalVisible(false)}
       />
     </View>
   );
@@ -70,19 +77,19 @@ const styles = StyleSheet.create({
     height: 50,
   },
   badgeText: {
-    color: staticColors.darkPink,
-    fontSize: 15,
+    color: staticColors.discountText,
+    fontSize: fontSizes.base,
     fontWeight: "bold",
     textAlign: "center",
   },
   returnText: {
-    fontSize: 16,
+    fontSize: fontSizes.base,
     fontWeight: "bold",
-    color: staticColors.cardTitleColor,
+    color: staticColors.textDarkGray,
     ...spacingStyles.px15,
   },
   subText: {
-    fontSize: 12,
+    fontSize: fontSizes.xs,
     color: staticColors.darkGray,
     ...spacingStyles.px15,
   },

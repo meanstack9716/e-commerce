@@ -7,14 +7,15 @@ import {
   StyleSheet,
   TextInput,
   ActivityIndicator,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import staticColors from "@/style/staticColors";
 import DeliveryAddressScreen from "@/components/productDetails/DeliveryAddress";
-
-import { Alert } from "react-native";
 import { useLocation } from "@/utils/useLocation";
 import spacingStyles from "@/style/spacingStyles";
+import fontSizes from "@/style/fontSizes";
+import LocationAlertModal from "./LocationAlertModal";
 
 interface LocationModalProps {
   visible: boolean;
@@ -28,8 +29,14 @@ const LocationModal: React.FC<LocationModalProps> = ({
   onGrant,
 }) => {
   const [pinCode, setPinCode] = useState<string>("");
-  const [addressModalVisible, setAddressModalVisible] = useState<boolean>(false);
-  const { requestLocationPermission, isLoading } = useLocation();
+  const [addressModalVisible, setAddressModalVisible] =
+    useState<boolean>(false);
+  const {
+    requestLocationPermission,
+    isLoading,
+    locationModal,
+    hideLocationModal,
+  } = useLocation();
 
   const handlePinCodeChange = (text: string) => {
     const numericText = text.replace(/[^0-9]/g, "").slice(0, 6);
@@ -40,8 +47,6 @@ const LocationModal: React.FC<LocationModalProps> = ({
     if (pinCode.length === 6) {
       onGrant(pinCode);
       onClose();
-    } else {
-      Alert.alert("Invalid PIN Code", "Please enter a valid 6-digit PIN code");
     }
   };
 
@@ -60,99 +65,122 @@ const LocationModal: React.FC<LocationModalProps> = ({
       visible={visible}
       onRequestClose={onClose}
     >
-      <View style={styles.centeredView}>
-        <View style={styles.modalView}>
-          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            <Ionicons name="close" size={24} color="#000" />
-          </TouchableOpacity>
+      <TouchableWithoutFeedback onPress={onClose}>
+        <View style={styles.centeredView}>
+          <TouchableWithoutFeedback>
+            <View style={styles.modalView}>
+              <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+                <Ionicons name="close" size={24} color={staticColors.black} />
+              </TouchableOpacity>
 
-          <View style={styles.headerContainer}>
-            <FontAwesome6
-              name="location-crosshairs"
-              size={22}
-              color={staticColors.offerColor}
-              style={styles.icon}
-            />
-            <View style={styles.textContainer}>
-              <Text style={styles.titleText}>Location permission is off</Text>
-              <Text style={styles.subtitleText}>
-                Granting location permission will ensure accurate address and
-                hassle free delivery
-              </Text>
-            </View>
-            <TouchableOpacity
-              style={styles.grantButton}
-              onPress={handleGrantLocation}
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <ActivityIndicator size="small" color={staticColors.whiteColor} />
-              ) : (
-                <Text style={styles.grantButtonText}>Grant</Text>
-              )}
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Select Delivery Location</Text>
-            <View style={styles.inputWrapper}>
-              <TextInput
-                style={styles.input}
-                value={pinCode}
-                onChangeText={handlePinCodeChange}
-                placeholder="Enter PIN Code"
-                placeholderTextColor="#666"
-                keyboardType="numeric"
-                maxLength={6}
-              />
-              <TouchableOpacity
-                style={[
-                  styles.checkButton,
-                  pinCode.length === 6 ? styles.activeCheckButton : styles.inactiveCheckButton,
-                ]}
-                onPress={handleCheckPincode}
-                disabled={pinCode.length !== 6}
-              >
-                <Text
-                  style={[
-                    styles.checkButtonText,
-                    pinCode.length === 6 && { color: staticColors.offerColor },
-                  ]}
+              <View style={styles.headerContainer}>
+                <FontAwesome6
+                  name="location-crosshairs"
+                  size={22}
+                  color={staticColors.discountText}
+                  style={styles.icon}
+                />
+                <View style={styles.textContainer}>
+                  <Text style={styles.titleText}>
+                    Location permission is off
+                  </Text>
+                  <Text style={styles.subtitleText}>
+                    Granting location permission will ensure accurate address
+                    and hassle free delivery
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  style={styles.grantButton}
+                  onPress={handleGrantLocation}
+                  disabled={isLoading}
                 >
-                  Check Pincode
-                </Text>
+                  {isLoading ? (
+                    <ActivityIndicator
+                      size="small"
+                      color={staticColors.white}
+                    />
+                  ) : (
+                    <Text style={styles.grantButtonText}>Grant</Text>
+                  )}
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Select Delivery Location</Text>
+                <View style={styles.inputWrapper}>
+                  <TextInput
+                    style={styles.input}
+                    value={pinCode}
+                    onChangeText={handlePinCodeChange}
+                    placeholder="Enter PIN Code"
+                    placeholderTextColor={staticColors.textDarkGray}
+                    keyboardType="numeric"
+                    maxLength={6}
+                  />
+                  <TouchableOpacity
+                    style={[
+                      styles.checkButton,
+                      pinCode.length === 6
+                        ? styles.activeCheckButton
+                        : styles.inactiveCheckButton,
+                    ]}
+                    onPress={handleCheckPincode}
+                    disabled={pinCode.length !== 6}
+                  >
+                    <Text
+                      style={[
+                        styles.checkButtonText,
+                        pinCode.length === 6 && {
+                          color: staticColors.discountText,
+                        },
+                      ]}
+                    >
+                      Check Pincode
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              <TouchableOpacity
+                style={styles.searchContainer}
+                onPress={() => setAddressModalVisible(true)}
+              >
+                <FontAwesome6
+                  name="map-location-dot"
+                  size={20}
+                  color={staticColors.discountText}
+                  style={styles.searchIcon}
+                />
+                <Text style={styles.searchText}>Search location</Text>
+                <Ionicons
+                  name="chevron-forward"
+                  size={13}
+                  color={staticColors.discountText}
+                  style={styles.arrowIcon}
+                />
               </TouchableOpacity>
             </View>
-          </View>
-
-          <TouchableOpacity
-            style={styles.searchContainer}
-            onPress={() => setAddressModalVisible(true)}
-          >
-            <FontAwesome6
-              name="map-location-dot"
-              size={20}
-              color={staticColors.offerColor}
-              style={styles.searchIcon}
-            />
-            <Text style={styles.searchText}>Search location</Text>
-            <Ionicons
-              name="chevron-forward"
-              size={13}
-              color={staticColors.offerColor}
-              style={styles.arrowIcon}
-            />
-          </TouchableOpacity>
+          </TouchableWithoutFeedback>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
       <Modal
         animationType="slide"
         transparent={true}
         visible={addressModalVisible}
         onRequestClose={() => setAddressModalVisible(false)}
       >
-        <DeliveryAddressScreen onPinCodeFetched={onGrant} onCloseModal={() => setAddressModalVisible(false)} />
+        <DeliveryAddressScreen
+          onPinCodeFetched={onGrant}
+          onCloseModal={() => setAddressModalVisible(false)}
+        />
       </Modal>
+      <LocationAlertModal
+        visible={locationModal.visible}
+        title={locationModal.title}
+        message={locationModal.message}
+        onConfirm={locationModal.onConfirm}
+        onCancel={locationModal.onCancel}
+      />
     </Modal>
   );
 };
@@ -161,46 +189,46 @@ const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: "flex-end",
-    backgroundColor: staticColors.modalBackGround,
+    backgroundColor: staticColors.modalOverlayLight,
   },
   modalView: {
-    backgroundColor: staticColors.whiteColor,
+    backgroundColor: staticColors.white,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    ...spacingStyles.pb10
+    ...spacingStyles.pb10,
   },
   closeButton: {
     position: "absolute",
     right: 10,
     top: -30,
-    ...spacingStyles.p5
+    ...spacingStyles.p5,
   },
   headerContainer: {
     flexDirection: "row",
-    backgroundColor: staticColors.backgroundSecondary,
+    backgroundColor: staticColors.bgSecondary,
     ...spacingStyles.p20,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
   },
   icon: {
-    ...spacingStyles.mt2
+    ...spacingStyles.mt2,
   },
   textContainer: {
     flex: 1,
-   ...spacingStyles.mx10
+    ...spacingStyles.mx10,
   },
   titleText: {
-    fontSize: 17,
+    fontSize: fontSizes.md,
     fontWeight: "bold",
-    color: staticColors.primaryColor,
+    color: staticColors.primary,
     marginBottom: 5,
   },
   subtitleText: {
-    fontSize: 12,
-    color: staticColors.shadowColor,
+    fontSize: fontSizes.xs,
+    color: staticColors.textLightGray,
   },
   grantButton: {
-    backgroundColor: staticColors.offerColor,
+    backgroundColor: staticColors.discountText,
     borderRadius: 20,
     ...spacingStyles.py5,
     ...spacingStyles.px15,
@@ -209,24 +237,24 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   grantButtonText: {
-    color: staticColors.whiteColor,
-    fontSize: 12,
+    color: staticColors.white,
+    fontSize: fontSizes.xs,
     fontWeight: "bold",
   },
   inputContainer: {
-    marginBottom: 15,
+    ...spacingStyles.mb15,
     ...spacingStyles.px20,
-    paddingTop: 15,
+    ...spacingStyles.pt15,
   },
   inputLabel: {
-    fontSize: 15,
-    color: staticColors.primaryColor,
+    fontSize: fontSizes.sm,
+    color: staticColors.primary,
     fontWeight: "bold",
   },
   inputWrapper: {
     flexDirection: "row",
     alignItems: "center",
-    ...spacingStyles.mt10
+    ...spacingStyles.mt10,
   },
   input: {
     flex: 1,
@@ -234,12 +262,12 @@ const styles = StyleSheet.create({
     borderColor: staticColors.borderLight,
     borderRadius: 8,
     ...spacingStyles.p10,
-    backgroundColor: staticColors.backgroundSecondary,
+    backgroundColor: staticColors.bgSecondary,
   },
   checkButton: {
     position: "absolute",
     right: 10,
-    ...spacingStyles.px10
+    ...spacingStyles.px10,
   },
   activeCheckButton: {
     opacity: 1,
@@ -249,25 +277,25 @@ const styles = StyleSheet.create({
   },
   checkButtonText: {
     color: staticColors.shadowColor,
-    fontSize: 13,
+    fontSize: fontSizes.sm,
     fontWeight: "bold",
   },
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-start",
-    ...spacingStyles.px20
+    ...spacingStyles.px20,
   },
   searchIcon: {
-    ...spacingStyles.mr10
+    ...spacingStyles.mr10,
   },
   arrowIcon: {
-    ...spacingStyles.mt5
+    ...spacingStyles.mt5,
   },
   searchText: {
-    fontSize: 14,
-    color: staticColors.offerColor,
-    ...spacingStyles.px5
+    fontSize: fontSizes.sm,
+    color: staticColors.discountText,
+    ...spacingStyles.px5,
   },
 });
 

@@ -25,7 +25,7 @@ export const useFieldValidation = () => {
   };
 
   const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
   };
 
@@ -43,7 +43,7 @@ export const useFieldValidation = () => {
         ...prev, 
         email: errorMessage 
       }));
-    } else {
+    } else {  
       setErrors((prev) => ({ ...prev, email: "" }));
     }
   };
@@ -76,7 +76,7 @@ export const useFieldValidation = () => {
     return password === confirmPassword;
   };
 
-  const handlePasswordMatch = (
+  const handleConfirmPasswordMatch = (
     password: string,
     confirmPassword: string,
     errorMessage: string = "Passwords don't match"
@@ -117,7 +117,7 @@ export const useFieldValidation = () => {
     handleFieldChange, 
     handleEmailValidation, 
     handlePasswordValidation, 
-    handlePasswordMatch ,
+    handleConfirmPasswordMatch ,
     handleLoginPasswordValidation,
     resetErrors
   };

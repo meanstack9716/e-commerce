@@ -18,7 +18,7 @@ const FullScreenLoader: React.FC<FullScreenLoaderProps> = ({
     <Modal visible={visible} transparent={transparent} >
       <View style={styles.container}>
         <View style={styles.loaderContainer}>
-          <ActivityIndicator size="large" color={colors.primaryColor} />
+          <ActivityIndicator size="large" color={colors.primary} />
         </View>
       </View>
     </Modal>
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: staticColors.modalBackGround,
+    backgroundColor: staticColors.modalOverlayLight,
   },
   loaderContainer: {
     alignItems: "center",

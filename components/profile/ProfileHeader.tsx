@@ -5,6 +5,7 @@ import LoginModal from "@/app/(auth)/loginModal";
 import SignUpModal from "@/app/(auth)/signUpModal";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
+import fontSizes from "@/style/fontSizes";
 
 const ProfileHeader: React.FC = () => {
   const router = useRouter();
@@ -97,7 +98,7 @@ const styles = StyleSheet.create({
   avatarContainer: {
     width: 120,
     height: 125,
-    backgroundColor: colors.whiteColor,
+    backgroundColor: colors.white,
     borderRadius: 5,
     borderColor: colors.borderLight,
     borderWidth: 1,
@@ -122,9 +123,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   loginText: {
-    color: colors.buttonPrimaryText,
+    color: colors.white,
     fontWeight: "bold",
-    fontSize: 13,
+    fontSize: fontSizes.xs
   },
 });
 
