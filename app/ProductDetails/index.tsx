@@ -25,35 +25,39 @@ import { Profile } from "../../types/types";
 import BrandRating from "@/components/productDetails/BrandRating";
 import ViewSimilarModal from "@/modal/ViewSimilarModal";
 import ProductList from "@/components/productDetails/ProductList";
-import { useCart } from "@/components/addToBag/cartContext";
 import ProductActionButtons from "@/components/productDetails/ProductActionButtons";
 import fontSizes from "@/style/fontSizes";
 import gapSizes from "@/style/gapSizes";
+import { useDispatch } from "react-redux";
+import { addToCart } from "@/store/cart/cartSlice";
 
 const { width: screenWidth } = Dimensions.get("window");
-
+const screenHeight = Dimensions.get("window").height;
 const ProductDetailsScreen: React.FC = () => {
   const params = useLocalSearchParams();
   const { id } = params;
-  const [isProductLiked, setISProductLiked] = useState(false);
+  const [isProductLiked, setIsProductLiked] = useState(false);
   const [product, setProduct] = useState<Profile | null>(null);
-  const [isViewSimilarModalVisible, setViewSimilarModalVisible] = useState(false);
+  const [isViewSimilarModalVisible, setViewSimilarModalVisible] =
+    useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const insets = useSafeAreaInsets();
   const flatListRef = useRef<FlatList>(null);
-  
-  const [selectedSize, setSelectedSize] = useState<string | undefined>(undefined);
-  const { addToCart } = useCart();
+  const [selectedSize, setSelectedSize] = useState<string | undefined>(
+    undefined
+  );
+  const dispatch = useDispatch();
   const handleAddToCart = () => {
     if (product) {
-      addToCart(product, selectedSize);
-      console.log(`Added product ${product.id} to cart with size ${selectedSize}`);
+      dispatch(addToCart({ product, selectedSize }));
+      console.log(
+        `Added product ${product.id} to cart with size ${selectedSize}`
+      );
       router.push("/cart");
     }
   };
-  const screenHeight = Dimensions.get("window").height;
-  
+
   const originalPrice = product
     ? (parseFloat(product.price) * 1.15).toFixed(2)
     : "0";
@@ -102,7 +106,7 @@ const ProductDetailsScreen: React.FC = () => {
   };
 
   const handleLikePress = () => {
-    setISProductLiked((prev) => !prev);
+    setIsProductLiked((prev) => !prev);
   };
 
   const handleGoBack = () => {
@@ -115,7 +119,7 @@ const ProductDetailsScreen: React.FC = () => {
 
   const handleBackToTop = () => {
     flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
-    setShowBackToTop(false); 
+    setShowBackToTop(false);
   };
 
   if (!product) {
@@ -150,7 +154,7 @@ const ProductDetailsScreen: React.FC = () => {
         renderItem={() => null}
         showsVerticalScrollIndicator={false}
         onScroll={handleListScroll}
-        scrollEventThrottle={16} 
+        scrollEventThrottle={16}
         ListHeaderComponent={
           <>
             {/* Header */}
@@ -276,7 +280,6 @@ const ProductDetailsScreen: React.FC = () => {
         </TouchableOpacity>
       ) : (
         <ProductActionButtons onAddToCart={handleAddToCart} />
-        
       )}
       <ViewSimilarModal
         visible={isViewSimilarModalVisible}
@@ -287,6 +290,7 @@ const ProductDetailsScreen: React.FC = () => {
   );
 };
 
+// Styles remain the same
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -429,7 +433,7 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: fontSizes.base,
     fontWeight: "bold",
-    ...spacingStyles.ml5
+    ...spacingStyles.ml5,
   },
 });
 

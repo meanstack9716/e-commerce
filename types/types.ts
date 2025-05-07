@@ -5,6 +5,11 @@ export interface Profile {
   price: string;
   star: number;
   categories: string[];
+  quantity?: number; 
+  selectedSize?: string; 
+  isSelected?: boolean;
+  seller?: string; 
+  originalPrice?: string; 
 }
 
 export interface SubSubCategory {

@@ -16,8 +16,10 @@ import fontSizes from "@/style/fontSizes";
 import { textTruncate } from "@/utils/textTruncate";
 import { commonStyles } from "@/style/commonStyle";
 import { FontAwesome } from "@expo/vector-icons";
-
+import { useDispatch } from "react-redux";
+import { addToCart } from "@/store/cart/cartSlice";
 const SimilarProducts = ({ currentProduct }: { currentProduct: Profile }) => {
+  const dispatch = useDispatch();
   if (!currentProduct) return null;
 
   const allProductData = data.products || data;
@@ -47,6 +49,12 @@ const SimilarProducts = ({ currentProduct }: { currentProduct: Profile }) => {
     });
   };
 
+  const handleAddToCart = (product: Profile) => {
+    dispatch(addToCart({ product: product, selectedSize: undefined }));
+    console.log(`Added product ${product.id} to cart`);
+    router.push("/cart");
+  };
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -72,7 +80,7 @@ const SimilarProducts = ({ currentProduct }: { currentProduct: Profile }) => {
                 </View>
               )}
               <View style={commonStyles.ratingContainer}>
-                <Text >
+                <Text>
                   {item.star}{" "}
                   <FontAwesome
                     name="star"
@@ -82,9 +90,14 @@ const SimilarProducts = ({ currentProduct }: { currentProduct: Profile }) => {
                 </Text>
               </View>
             </View>
-            <Text style={[commonStyles.cardTitle , styles.title]}>{textTruncate(item.title)}</Text>
+            <Text style={[commonStyles.cardTitle, styles.title]}>
+              {textTruncate(item.title)}
+            </Text>
             <Text style={styles.price}>₹{item.price}</Text>
-            <TouchableOpacity style={styles.addButton}>
+            <TouchableOpacity
+              style={styles.addButton}
+              onPress={() => handleAddToCart(item)}
+            >
               <Text style={styles.addButtonText}>Add to Bag</Text>
             </TouchableOpacity>
           </TouchableOpacity>

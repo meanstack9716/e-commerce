@@ -8,34 +8,25 @@ import {
   StyleSheet,
   FlatList,
 } from "react-native";
-import { useCart } from "./cartContext";
 import NothingShoppingBagContent from "./NothingShoppingBagContent";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import ConfirmationModal from "@/modal/ConfirmationModal";
 import fontSizes from "@/style/fontSizes";
 import { textTruncate } from "@/utils/textTruncate";
-
-type CartItem = {
-  id: string;
-  title: string;
-  price: string;
-  images: string[];
-  quantity: number;
-  selectedSize?: string;
-  seller?: string;
-  originalPrice?: string;
-  isSelected?: boolean;
-};
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import {
+  deleteSelectedItems,
+  moveToWishlist,
+  removeFromCart,
+  toggleItemSelection,
+} from "@/store/cart/cartSlice";
+import { Profile } from "@/types/types";
 
 const ProductInfoSection: React.FC = () => {
-  const {
-    cartItems,
-    toggleItemSelection,
-    removeFromCart,
-    deleteSelectedItems,
-    moveToWishlist,
-  } = useCart();
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state: RootState) => state.cart.cartItems);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
   const [deleteAllModalVisible, setDeleteAllModalVisible] = useState(false);
@@ -43,14 +34,17 @@ const ProductInfoSection: React.FC = () => {
   const selectedItems = cartItems.filter((item) => item.isSelected).length;
   const totalPrice = cartItems
     .filter((item) => item.isSelected)
-    .reduce((sum, item) => sum + parseFloat(item.price) * item.quantity, 0)
+    .reduce(
+      (sum, item) => sum + parseFloat(item.price) * (item.quantity || 1),
+      0
+    )
     .toLocaleString("en-IN");
 
   const toggleAllItems = () => {
     const shouldSelect = selectedItems === 0;
     cartItems.forEach((item) => {
       if (item.isSelected !== shouldSelect) {
-        toggleItemSelection(item.id);
+        dispatch(toggleItemSelection(item.id));
       }
     });
   };
@@ -62,7 +56,7 @@ const ProductInfoSection: React.FC = () => {
 
   const confirmRemove = () => {
     if (selectedItemId) {
-      removeFromCart(selectedItemId);
+      dispatch(removeFromCart(selectedItemId));
     }
     setModalVisible(false);
     setSelectedItemId(null);
@@ -70,7 +64,7 @@ const ProductInfoSection: React.FC = () => {
 
   const handleMoveToWishlist = () => {
     if (selectedItemId) {
-      moveToWishlist([selectedItemId]);
+      dispatch(moveToWishlist([selectedItemId]));
     }
     setModalVisible(false);
     setSelectedItemId(null);
@@ -83,7 +77,7 @@ const ProductInfoSection: React.FC = () => {
   };
 
   const confirmDeleteSelected = () => {
-    deleteSelectedItems();
+    dispatch(deleteSelectedItems());
     setDeleteAllModalVisible(false);
   };
 
@@ -92,12 +86,12 @@ const ProductInfoSection: React.FC = () => {
       .filter((item) => item.isSelected)
       .map((item) => item.id);
     if (selectedItemIds.length > 0) {
-      moveToWishlist(selectedItemIds);
+      dispatch(moveToWishlist(selectedItemIds));
     }
     setDeleteAllModalVisible(false);
   };
 
-  const renderCartItem = ({ item }: { item: CartItem }) => {
+  const renderCartItem = ({ item }: { item: Profile }) => {
     const discount = item.originalPrice
       ? (
           ((parseFloat(item.originalPrice) - parseFloat(item.price)) /
@@ -127,7 +121,7 @@ const ProductInfoSection: React.FC = () => {
                   : staticColors.white,
               },
             ]}
-            onPress={() => toggleItemSelection(item.id)}
+            onPress={() => dispatch(toggleItemSelection(item.id))}
           >
             {item.isSelected && (
               <Ionicons name="checkmark" size={16} color={staticColors.white} />
@@ -174,7 +168,7 @@ const ProductInfoSection: React.FC = () => {
               </View>
             )}
             <View style={styles.qtyContainer}>
-              <Text style={styles.sizeQtyText}>Qty: {item.quantity}</Text>
+              <Text style={styles.sizeQtyText}>Qty: {item.quantity || 1}</Text>
               <Ionicons
                 name="chevron-down"
                 size={12}
@@ -309,6 +303,7 @@ const ProductInfoSection: React.FC = () => {
   );
 };
 
+// Styles remain the same
 const styles = StyleSheet.create({
   container: {
     flex: 1,
