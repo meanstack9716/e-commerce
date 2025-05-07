@@ -1,3 +1,4 @@
+import fontSizes from '@/style/fontSizes';
 import spacingStyles from '@/style/spacingStyles';
 import staticColors from '@/style/staticColors';
 import React from 'react';
@@ -33,13 +34,13 @@ const styles = StyleSheet.create({
   ...spacingStyles.mb15
   },
   mainText: {
-    fontSize: 20,
+    fontSize: fontSizes.lg,
     fontWeight: 'bold',
-    color: staticColors.cardTitleColor,
+    color: staticColors.textSubtitle,
     textAlign: 'center',
   },
   subText: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     color: staticColors.lightGray,
     textAlign: 'center',
   },

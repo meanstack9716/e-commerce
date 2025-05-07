@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   container: {
     ...spacingStyles.mt5,
     ...spacingStyles.px25,
-    ...spacingStyles.pb,
+    ...spacingStyles.pb10,
   },
   link: {
     fontSize:fontSizes.xs,

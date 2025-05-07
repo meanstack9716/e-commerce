@@ -1,7 +1,3 @@
-import SizeChartModal from "@/modal/SizeChartModal";
-import fontSizes from "@/style/fontSizes";
-import spacingStyles from "@/style/spacingStyles";
-import staticColors from "@/style/staticColors";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -10,6 +6,10 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
+import SizeChartModal from "@/modal/SizeChartModal";
+import fontSizes from "@/style/fontSizes";
+import spacingStyles from "@/style/spacingStyles";
+import staticColors from "@/style/staticColors";
 
 type SizeInfo = {
   label: string;
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     color: staticColors.white,
   },
   leftText: {
-    fontSize: 12,
+    fontSize: fontSizes.xs,
     color:staticColors.discountText,
    ...spacingStyles.mt5
   },

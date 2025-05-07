@@ -3,6 +3,7 @@ import { Modal, View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { Ionicons } from "@expo/vector-icons";
+import fontSizes from "@/style/fontSizes";
 
 interface ConfirmationModalProps {
   visible: boolean;
@@ -94,11 +95,11 @@ const styles = StyleSheet.create({
   },
   closeIcon: {},
   title: {
-    fontSize: 16,
+    fontSize:fontSizes.base,
     fontWeight: "bold",
   },
   message: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     color: staticColors.darkGray,
     ...spacingStyles.pb5,
     borderBottomColor: staticColors.lightGray,
@@ -115,7 +116,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   firstButtonText: {
-    fontSize: 12,
+    fontSize: fontSizes.xs,
     color: staticColors.discountText,
     textAlign: "center",
   },
@@ -125,7 +126,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   secondButtonText: {
-    fontSize: 12,
+    fontSize: fontSizes.xs,
     color: staticColors.darkGray,
     textAlign: "center",
   },

@@ -138,7 +138,7 @@ const ProductInfoSection: React.FC = () => {
         <View style={styles.cartItemDetails}>
           <View style={styles.titleContainer}>
             <Text style={styles.cartItemTitle} numberOfLines={1}>
-              {textTruncate(item.title ,4)}
+              {textTruncate(item.title, 4)}
             </Text>
             <TouchableOpacity
               style={styles.cutIcon}
@@ -385,12 +385,12 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.sm,
     fontWeight: "bold",
     color: staticColors.textSecondary,
-    ...spacingStyles.mb5
+    ...spacingStyles.mb5,
   },
   sellerText: {
-    fontSize: 12,
+    fontSize: fontSizes.xs,
     color: staticColors.shadowColor,
-    ...spacingStyles.mb5
+    ...spacingStyles.mb5,
   },
   sizeQtyContainer: {
     flexDirection: "row",
@@ -415,17 +415,17 @@ const styles = StyleSheet.create({
     ...spacingStyles.mr10,
   },
   sizeQtyText: {
-    fontSize: 12,
+    fontSize: fontSizes.xs,
     color: staticColors.textSubtitle,
-    ...spacingStyles.mr5
+    ...spacingStyles.mr5,
   },
   priceContainer: {
     flexDirection: "row",
     alignItems: "center",
-    ...spacingStyles.mb5
+    ...spacingStyles.mb5,
   },
   cartItemPrice: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     fontWeight: "bold",
     color: staticColors.textSubtitle,
     ...spacingStyles.mr10,
@@ -434,10 +434,10 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.xs,
     color: staticColors.textSubtitle,
     textDecorationLine: "line-through",
-    ...spacingStyles.mr10
+    ...spacingStyles.mr10,
   },
   discountText: {
-    fontSize:fontSizes.xs,
+    fontSize: fontSizes.xs,
     color: staticColors.discountText,
     backgroundColor: staticColors.lightPink,
     ...spacingStyles.py5,
@@ -460,7 +460,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   cutIcon: {
-    ...spacingStyles.ml5
+    ...spacingStyles.ml5,
   },
 });
 

@@ -1,6 +1,3 @@
-import spacingStyles from "@/style/spacingStyles";
-import staticColors from "@/style/staticColors";
-import { FontAwesome6, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
   View,
@@ -10,8 +7,12 @@ import {
   TextInput,
   ActivityIndicator,
 } from "react-native";
+import spacingStyles from "@/style/spacingStyles";
+import staticColors from "@/style/staticColors";
+import { FontAwesome6, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import DeliveryAddressScreen from "@/components/productDetails/DeliveryAddress";
 import { useLocation } from "@/utils/useLocation";
+import fontSizes from "@/style/fontSizes";
 
 interface DeliveryModalProps {
   onClose: () => void;
@@ -80,8 +81,8 @@ const DeliveryModal: React.FC<DeliveryModalProps> = ({
                   styles.checkButtonText,
                   {
                     color: isPinCodeValid
-                      ? staticColors.offerColor
-                      : staticColors.cardTitleColor,
+                      ? staticColors.discountText
+                      : staticColors.textSubtitle,
                   },
                 ]}
               >
@@ -99,14 +100,14 @@ const DeliveryModal: React.FC<DeliveryModalProps> = ({
             {isLoading ? (
               <ActivityIndicator
                 size="small"
-                color={staticColors.offerColor}
+                color={staticColors.discountText}
                 style={styles.searchIcon}
               />
             ) : (
               <MaterialIcons
                 name="my-location"
                 size={22}
-                color={staticColors.offerColor}
+                color={staticColors.discountText}
                 style={styles.searchIcon}
               />
             )}
@@ -120,14 +121,14 @@ const DeliveryModal: React.FC<DeliveryModalProps> = ({
             <FontAwesome6
               name="map-location-dot"
               size={20}
-              color={staticColors.offerColor}
+              color={staticColors.discountText}
               style={styles.searchIcon}
             />
             <Text style={styles.searchText}>Search location</Text>
             <Ionicons
               name="chevron-forward"
               size={13}
-              color={staticColors.offerColor}
+              color={staticColors.discountText}
               style={styles.arrowIcon}
             />
           </TouchableOpacity>
@@ -146,10 +147,10 @@ const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
     justifyContent: "flex-end",
-    backgroundColor: staticColors.modalBackGround,
+    backgroundColor: staticColors.modalOverlayLight,
   },
   modalContent: {
-    backgroundColor: staticColors.whiteColor,
+    backgroundColor: staticColors.white,
     ...spacingStyles.px20,
     ...spacingStyles.pt15,
     borderTopLeftRadius: 20,
@@ -161,8 +162,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     ...spacingStyles.mb10,
   },
-  modalTitle: { fontSize: 17, fontWeight: "bold" },
-  closeIcon: { fontSize: 18, color: staticColors.shadowColor },
+  modalTitle: { fontSize: fontSizes.base, fontWeight: "bold" },
+  closeIcon: { fontSize: fontSizes.md, color: staticColors.shadowColor },
   inputContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -175,16 +176,16 @@ const styles = StyleSheet.create({
     ...spacingStyles.py2,
   },
   inputField: {
-    color: staticColors.cardTitleColor,
-    flex: 1, // Ensure input takes available space
+    color: staticColors.textSubtitle,
+    flex: 1,
   },
   checkButton: {
     padding: 10,
   },
   disabledButton: {
-    opacity: 0.5, // Visual feedback for disabled state
+    opacity: 0.5, 
   },
-  checkButtonText: { fontSize: 14, fontWeight: "bold" },
+  checkButtonText: { fontSize: fontSizes.sm, fontWeight: "bold" },
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -198,8 +199,8 @@ const styles = StyleSheet.create({
     ...spacingStyles.mt5,
   },
   searchText: {
-    fontSize: 14,
-    color: staticColors.offerColor,
+    fontSize: fontSizes.sm,
+    color: staticColors.discountText,
     ...spacingStyles.px5,
   },
 });
