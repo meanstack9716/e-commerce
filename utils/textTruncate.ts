@@ -1,4 +1,4 @@
-export const textTruncat = (
+export const textTruncate = (
     text: string,
     maxWords: number = 2,
     truncateIndicator: string = "..."

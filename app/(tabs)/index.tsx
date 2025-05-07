@@ -35,7 +35,7 @@ import images from "@/constants/images";
 
 const HomeScreen: React.FC = () => {
   const [likedProductItems, setLikedProductItems] = useState<string[]>([]);
-  const [activeTab, setActiveTab] = useState<string>("All");
+  const [activeProductTab, setActiveProductTab] = useState<string>("All");
   const [productSearchQuery, setProductSearchQuery] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const productData = data as ProductData;
@@ -43,8 +43,8 @@ const HomeScreen: React.FC = () => {
   const getFilteredProducts = () => {
     let filtered = productData.products;
 
-    if (activeTab !== "All") {
-      const tabLower = activeTab.toLowerCase();
+    if (activeProductTab !== "All") {
+      const tabLower = activeProductTab.toLowerCase();
       filtered = filtered.filter((product) =>
         product.categories.includes(tabLower)
       );
@@ -96,9 +96,9 @@ const HomeScreen: React.FC = () => {
 
   const ListHeader = () => (
     <>
-      {activeTab !== "Categories" && (
+      {activeProductTab !== "Categories" && (
         <CategoryGrid
-          activeTab={activeTab}
+          activeTab={activeProductTab}
           onCategorySelect={handleCategorySelect}
         />
       )}
@@ -189,7 +189,7 @@ const HomeScreen: React.FC = () => {
           </TouchableOpacity>
         </View>
 
-        <Navbar tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
+        <Navbar tabs={tabs} activeTab={activeProductTab} setActiveTab={setActiveProductTab} />
 
         <FlatList
           data={getFilteredProducts()}
