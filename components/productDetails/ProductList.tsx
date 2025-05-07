@@ -11,6 +11,7 @@ import { Profile } from "@/types/types";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import fontSizes from "@/style/fontSizes";
+
 const screenWidth = Dimensions.get("window").width;
 const cardWidth = screenWidth / 2 - 22;
 const ProductScreen: React.FC = () => {

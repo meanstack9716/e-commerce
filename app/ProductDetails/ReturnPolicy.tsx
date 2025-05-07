@@ -1,15 +1,17 @@
+import React, { useState } from "react";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import GenuineProductModal from "@/modal/GenuineProductModal";
 import QualityCheckModal from "@/modal/QualityCheckModal";
 import fontSizes from "@/style/fontSizes";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import React, { useState } from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 
 const ReturnPolicy: React.FC = () => {
-  const [isGenuineProductModalVisible, setGenuineProductModalVisible] = useState(false);
-  const [isQualityCheckModalVisible, setQualityCheckModalVisible] = useState(false);
-  
+  const [isGenuineProductModalVisible, setGenuineProductModalVisible] =
+    useState(false);
+  const [isQualityCheckModalVisible, setQualityCheckModalVisible] =
+    useState(false);
+
   return (
     <View style={styles.container}>
       <View style={styles.badgeRow}>
@@ -25,7 +27,10 @@ const ReturnPolicy: React.FC = () => {
           />
           <Text style={styles.badgeText}>Genuine Product</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.badgeContainer}  onPress={() => setQualityCheckModalVisible(true)}>
+        <TouchableOpacity
+          style={styles.badgeContainer}
+          onPress={() => setQualityCheckModalVisible(true)}
+        >
           <Image
             source={{
               uri: "https://cdn-icons-png.flaticon.com/512/3098/3098533.png",

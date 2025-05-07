@@ -34,7 +34,7 @@ const { width: screenWidth } = Dimensions.get("window");
 const ProductDetailsScreen: React.FC = () => {
   const params = useLocalSearchParams();
   const { id } = params;
-  const [liked, setLiked] = useState(false);
+  const [isProductLiked, setISProductLiked] = useState(false);
   const [product, setProduct] = useState<Profile | null>(null);
   const [isViewSimilarModalVisible, setViewSimilarModalVisible] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -91,7 +91,7 @@ const ProductDetailsScreen: React.FC = () => {
   };
 
   const handleLikePress = () => {
-    setLiked((prev) => !prev);
+    setISProductLiked((prev) => !prev);
   };
 
   const handleGoBack = () => {
@@ -163,9 +163,9 @@ const ProductDetailsScreen: React.FC = () => {
                   style={styles.iconButton}
                 >
                   <FontAwesome
-                    name={liked ? "heart" : "heart-o"}
+                    name={isProductLiked ? "heart" : "heart-o"}
                     size={20}
-                    color={liked ? "red" : colors.primary}
+                    color={isProductLiked ? colors.DarkRed : colors.primary}
                   />
                 </TouchableOpacity>
               </View>

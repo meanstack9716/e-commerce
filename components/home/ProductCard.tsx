@@ -15,7 +15,7 @@ import fontSizes from "@/style/fontSizes";
 import gapSizes from "@/style/gapSizes";
 import { DISCOUNT_PERCENTAGE } from "@/constants/constants";
 import { commonStyles } from "@/style/commonStyle";
-import { textTruncatHelper } from "@/utils/textTruncatHelpers";
+import { textTruncat } from "@/utils/textTruncat";
 
 export interface ProductCardProps {
   id: string;
@@ -66,7 +66,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         <View>
           <View style={styles.titleRow}>
             <Text style={commonStyles.cardTitle} numberOfLines={2}>
-            {textTruncatHelper(title,3)}
+            {textTruncat(title,3)}
             </Text>
             <TouchableOpacity
               style={styles.inlineLikeButton}

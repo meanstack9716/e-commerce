@@ -13,7 +13,7 @@ import { Profile } from "../../types/types";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import fontSizes from "@/style/fontSizes";
-import { textTruncatHelper } from "@/utils/textTruncatHelpers";
+import { textTruncat } from "@/utils/textTruncat";
 import { commonStyles } from "@/style/commonStyle";
 import { FontAwesome } from "@expo/vector-icons";
 
@@ -82,7 +82,7 @@ const SimilarProducts = ({ currentProduct }: { currentProduct: Profile }) => {
                 </Text>
               </View>
             </View>
-            <Text style={[commonStyles.cardTitle , styles.title]}>{textTruncatHelper(item.title)}</Text>
+            <Text style={[commonStyles.cardTitle , styles.title]}>{textTruncat(item.title)}</Text>
             <Text style={styles.price}>₹{item.price}</Text>
             <TouchableOpacity style={styles.addButton}>
               <Text style={styles.addButtonText}>Add to Bag</Text>

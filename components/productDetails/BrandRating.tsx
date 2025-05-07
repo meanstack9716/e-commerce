@@ -1,9 +1,9 @@
+import React, { useState } from "react";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { PRODUCT_CODE } from "@/constants/constants";
 import fontSizes from "@/style/fontSizes";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import React, { useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 
 export default function BrandRating() {
   const [isBrandInfoExpanded, setIsBrandInfoExpanded] = useState(false);

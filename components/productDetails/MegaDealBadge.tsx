@@ -9,8 +9,6 @@ import { EvilIcons } from "@expo/vector-icons";
 
 const DealBanner = () => {
   const [isOfferModalVisible, setIsOfferModalVisible] = useState(false);
-  const productPrice = PRODUCT_PRICE;
-  const extraDiscount = EXTRA_DISCOUNT;
   const toggleModal = () => {
     setIsOfferModalVisible(!isOfferModalVisible);
   };
@@ -25,12 +23,12 @@ const DealBanner = () => {
             resizeMode="contain"
           />
           <Text style={styles.getAtText}>
-            Get at <Text style={styles.priceText}>₹{productPrice}</Text>
+            Get at <Text style={styles.priceText}>₹{PRODUCT_PRICE}</Text>
           </Text>
         </View>
 
         <View style={styles.rightBadge}>
-          <Text style={styles.badgeText}>Extra ₹{extraDiscount} Off</Text>
+          <Text style={styles.badgeText}>Extra ₹{EXTRA_DISCOUNT} Off</Text>
         </View>
       </View>
 
@@ -51,8 +49,8 @@ const DealBanner = () => {
       <OfferDetailsModal
         visible={isOfferModalVisible}
         onClose={toggleModal}
-        offerPrice={productPrice}
-        extraDiscount={extraDiscount}
+        offerPrice={PRODUCT_PRICE}
+        extraDiscount={EXTRA_DISCOUNT}
       />
     </View>
   );
