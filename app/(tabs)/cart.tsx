@@ -16,22 +16,15 @@ import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 
 import fontSizes from "@/style/fontSizes";
+import useBackHandler from "@/utils/useBackHandler";
 
 const ShoppingBagScreen: React.FC = () => {
   const handleGoBack = () => {
     router.back();
+    return true;
   };
-  useEffect(() => {
-    const handleHardwareBackPress = BackHandler.addEventListener(
-      "hardwareBackPress",
-      () => {
-        handleGoBack();
-        return true;
-      }
-    );
 
-    return () => handleHardwareBackPress.remove();
-  }, []);
+  useBackHandler(handleGoBack);
 
   return (
     <SafeAreaView style={styles.container}>
