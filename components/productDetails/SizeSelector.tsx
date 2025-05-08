@@ -25,7 +25,6 @@ interface SizeSelectorProps {
     star: number;
     categories: string[];
   } | null;
-  originalPrice: string;
   onSizeChartOpen?: () => void;
   onSizeSelect: (size: string) => void;
 }
@@ -41,7 +40,6 @@ const sizes: SizeInfo[] = [
 
 const SizeSelector: React.FC<SizeSelectorProps> = ({
   product,
-  originalPrice,
   onSizeSelect,
 }) => {
   const [selectedSize, setSelectedSize] = useState<string>("M");
@@ -55,7 +53,6 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
     if (size.left > 0) {
       setSelectedSize(size.label);
       onSizeSelect(size.label); 
-      console.log("Selected Size:", size.label); 
     }
   };
 
@@ -77,7 +74,6 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
               ? {
                   title: product.title,
                   price: product.price,
-                  originalPrice: originalPrice,
                   image: product.images && product.images.length > 0 ? product.images[0] : "",
                 }
               : null

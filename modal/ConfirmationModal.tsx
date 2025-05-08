@@ -9,8 +9,8 @@ interface ConfirmationModalProps {
   visible: boolean;
   title: string;
   message: string;
-  firstButtonText: string;
-  secondButtonText: string;
+  primaryButtonText: string;
+  secondaryButtonText: string;
   onFirstButtonPress: () => void;
   onSecondButtonPress: () => void;
   onClose: () => void;
@@ -20,11 +20,11 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   visible,
   title,
   message,
-  firstButtonText,
-  secondButtonText,
+  primaryButtonText,
+  secondaryButtonText,
   onFirstButtonPress,
   onSecondButtonPress,
-  onClose
+  onClose,
 }) => {
   return (
     <Modal
@@ -38,10 +38,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
           {/* Header with Title and Close Icon */}
           <View style={styles.header}>
             <Text style={styles.title}>{title}</Text>
-            <TouchableOpacity
-              style={styles.closeIcon}
-              onPress={onClose}
-            >
+            <TouchableOpacity style={styles.closeIcon} onPress={onClose}>
               <Ionicons
                 name="close-outline"
                 size={24}
@@ -59,14 +56,14 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
               onPress={onSecondButtonPress}
               style={styles.secondButton}
             >
-              <Text style={styles.secondButtonText}>{secondButtonText}</Text>
+              <Text style={styles.secondButtonText}>{secondaryButtonText}</Text>
             </TouchableOpacity>
-            <View style={styles.separator} />
+
             <TouchableOpacity
               onPress={onFirstButtonPress}
               style={styles.firstButton}
             >
-              <Text style={styles.firstButtonText}>{firstButtonText}</Text>
+              <Text style={styles.firstButtonText}>{primaryButtonText}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -97,7 +94,7 @@ const styles = StyleSheet.create({
   },
   closeIcon: {},
   title: {
-    fontSize:fontSizes.base,
+    fontSize: fontSizes.base,
     fontWeight: "bold",
   },
   message: {
@@ -109,10 +106,13 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: "row",
-    justifyContent: "center",
+    ...spacingStyles.py5,
     alignItems: "center",
   },
   firstButton: {
+    borderLeftWidth: 1,
+    width: "50%",
+    borderLeftColor: staticColors.lightGray,
     ...spacingStyles.px15,
     ...spacingStyles.py10,
     alignItems: "center",
@@ -123,8 +123,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   secondButton: {
+    width: "50%",
     ...spacingStyles.px15,
-    ...spacingStyles.py10,
+
     alignItems: "center",
   },
   secondButtonText: {

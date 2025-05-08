@@ -28,7 +28,7 @@ import BrandCard from "@/components/home/BrandCard";
 import staticColors from "@/style/staticColors";
 import OfferPriceCard from "@/components/home/OfferPriceCard";
 import PocketFriendlyBargain from "@/components/home/PocketFriendlyCategory";
-import { Profile, ProductData } from "@/types/types";
+import { Product, ProductData } from "@/types/types";
 import fontSizes from "@/style/fontSizes";
 import gapSizes from "@/style/gapSizes";
 import images from "@/constants/images";
@@ -121,7 +121,7 @@ const HomeScreen: React.FC = () => {
     setSelectedCategory(categoryId || null);
   };
 
-  const renderProductItem = ({ item }: { item: Profile }) => (
+  const renderProductItem = ({ item }: { item: Product }) => (
     <ProductCard
       {...item}
       liked={likedProductItems.includes(item.id)}

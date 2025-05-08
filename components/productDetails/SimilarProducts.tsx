@@ -9,22 +9,26 @@ import {
 } from "react-native";
 import { router } from "expo-router";
 import data from "@/assets/data/products.json";
-import { Profile } from "../../types/types";
+import { Product } from "../../types/types";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import fontSizes from "@/style/fontSizes";
 import { textTruncate } from "@/utils/textTruncate";
 import { commonStyles } from "@/style/commonStyle";
 import { FontAwesome } from "@expo/vector-icons";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "@/store/cart/cartSlice";
-const SimilarProducts = ({ currentProduct }: { currentProduct: Profile }) => {
+import { RootState } from "@/store/store";
+const SimilarProducts = ({ currentProduct }: { currentProduct: Product }) => {
   const dispatch = useDispatch();
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
   if (!currentProduct) return null;
 
   const allProductData = data.products || data;
 
-  const allProducts: Profile[] = allProductData.map((item) => ({
+  const allProducts: Product[] = allProductData.map((item) => ({
     ...item,
     title: item.title ?? "Untitled Product",
   }));
@@ -49,8 +53,10 @@ const SimilarProducts = ({ currentProduct }: { currentProduct: Profile }) => {
     });
   };
 
-  const handleAddToCart = (product: Profile) => {
-    dispatch(addToCart({ product: product, selectedSize: undefined }));
+  const handleAddToCart = (product: Product) => {
+    dispatch(
+      addToCart({ product: product, selectedSize: undefined, isAuthenticated })
+    );
     router.push("/cart");
   };
 

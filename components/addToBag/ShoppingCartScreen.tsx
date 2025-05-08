@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
-import DeliveryAddressModal from "@/modal/DeliveryAddressModal";
+import DeliveryAddressModal from "@/modal/AddressSelectorModal";
 import fontSizes from "@/style/fontSizes";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";

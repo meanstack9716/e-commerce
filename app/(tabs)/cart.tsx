@@ -4,7 +4,7 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  BackHandler,
+
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ProductInfoScreen from "@/components/addToBag/ProductInfoSection";

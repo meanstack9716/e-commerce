@@ -21,15 +21,16 @@ import SizeSelector from "@/components/productDetails/SizeSelector";
 import DeliveryCheck from "@/components/productDetails/DeliveryCheck";
 import ReturnPolicy from "./ReturnPolicy";
 import SimilarProducts from "@/components/productDetails/SimilarProducts";
-import { Profile } from "../../types/types";
+import { Product } from "../../types/types";
 import BrandRating from "@/components/productDetails/BrandRating";
 import ViewSimilarModal from "@/modal/ViewSimilarModal";
 import ProductList from "@/components/productDetails/ProductList";
 import ProductActionButtons from "@/components/productDetails/ProductActionButtons";
 import fontSizes from "@/style/fontSizes";
 import gapSizes from "@/style/gapSizes";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "@/store/cart/cartSlice";
+import { RootState } from "@/store/store";
 
 const { width: screenWidth } = Dimensions.get("window");
 const screenHeight = Dimensions.get("window").height;
@@ -37,7 +38,7 @@ const ProductDetailsScreen: React.FC = () => {
   const params = useLocalSearchParams();
   const { id } = params;
   const [isProductLiked, setIsProductLiked] = useState(false);
-  const [product, setProduct] = useState<Profile | null>(null);
+  const [product, setProduct] = useState<Product | null>(null);
   const [isViewSimilarModalVisible, setViewSimilarModalVisible] =
     useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -47,28 +48,24 @@ const ProductDetailsScreen: React.FC = () => {
   const [selectedSize, setSelectedSize] = useState<string | undefined>(
     undefined
   );
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
   const dispatch = useDispatch();
   const handleAddToCart = () => {
     if (product) {
-      dispatch(addToCart({ product, selectedSize }));
+      dispatch(addToCart({ product, selectedSize, isAuthenticated }));
 
       router.push("/cart");
     }
   };
-
-  const originalPrice = product
-    ? (parseFloat(product.price) * 1.15).toFixed(2)
-    : "0";
-  const discount = product
-    ? (parseFloat(originalPrice) - parseFloat(product.price)).toFixed(2)
-    : "0";
 
   useEffect(() => {
     const products = data.products || data;
     const selectedProductData = products.find((p) => p.id === id);
 
     if (selectedProductData) {
-      const normalizedProduct: Profile = {
+      const normalizedProduct: Product = {
         id: selectedProductData.id,
         images: selectedProductData.images,
         title: selectedProductData.title || "Product Title",
@@ -243,16 +240,14 @@ const ProductDetailsScreen: React.FC = () => {
             <View style={styles.detailsContainer}>
               <Text style={styles.title}>{product.title}</Text>
               <View style={styles.priceContainer}>
-                <Text style={styles.originalPrice}>MRP ₹{originalPrice}</Text>
                 <Text style={styles.discountedPrice}>₹{product.price}</Text>
-                <Text style={styles.discount}>(Rs.{discount} OFF)</Text>
+                <Text style={styles.discount}>(Rs.{product.discount} OFF)</Text>
               </View>
             </View>
 
             <MegaDealBadge />
             <SizeSelector
               product={product}
-              originalPrice={originalPrice}
               onSizeChartOpen={() => {}}
               onSizeSelect={setSelectedSize}
             />
@@ -398,11 +393,6 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.md,
     fontWeight: "bold",
     color: colors.primary,
-  },
-  originalPrice: {
-    fontSize: fontSizes.sm,
-    textDecorationLine: "line-through",
-    color: staticColors.softGray,
   },
   discount: {
     fontSize: fontSizes.sm,

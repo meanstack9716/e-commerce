@@ -22,14 +22,26 @@ import {
   removeFromCart,
   toggleItemSelection,
 } from "@/store/cart/cartSlice";
-import { Profile } from "@/types/types";
+import { Product } from "@/types/types";
 
 const ProductInfoSection: React.FC = () => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state: RootState) => state.cart.cartItems);
-  const [singleProductRemoveModalVisible, setSingleProductRemoveModalVisible] = useState(false);
-  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
-  const [remomeAllSelecetedModalVisible, setRemomeAllSelecetedModalVisible] = useState(false);
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
+
+  const [isConfirmationModalVisible, setIsConfirmationModalVisible] =
+    useState(false);
+  const [confirmationModalDetails, setConfirmationModalDetails] = useState<{
+    message: string;
+    onPrimaryAction: () => void;
+    onSecondaryAction: () => void;
+  }>({
+    message: "",
+    onPrimaryAction: () => {},
+    onSecondaryAction: () => {},
+  });
 
   const selectedItems = cartItems.filter((item) => item.isSelected).length;
   const totalPrice = cartItems
@@ -44,71 +56,56 @@ const ProductInfoSection: React.FC = () => {
     const shouldSelect = selectedItems === 0;
     cartItems.forEach((item) => {
       if (item.isSelected !== shouldSelect) {
-        dispatch(toggleItemSelection(item.id));
+        dispatch(toggleItemSelection({ id: item.id, isAuthenticated }));
       }
     });
   };
 
   const handleRemoveItemConfirmationModal = (itemId: string) => {
-    setSelectedItemId(itemId);
-    setSingleProductRemoveModalVisible(true);
-  };
-
-  const confirmProductRemove = () => {
-    if (selectedItemId) {
-      dispatch(removeFromCart(selectedItemId));
-    }
-    setSingleProductRemoveModalVisible(false);
-    setSelectedItemId(null);
-  };
-
-  const handleMoveToWishlist = () => {
-    if (selectedItemId) {
-      dispatch(moveToWishlist([selectedItemId]));
-    }
-    setSingleProductRemoveModalVisible(false);
-    setSelectedItemId(null);
+    setConfirmationModalDetails({
+      message: "Do you want to add this item to your wishlist?",
+      onPrimaryAction: () => {
+        dispatch(moveToWishlist({ ids: [itemId], isAuthenticated }));
+        setIsConfirmationModalVisible(false);
+      },
+      onSecondaryAction: () => {
+        dispatch(removeFromCart({ id: itemId, isAuthenticated }));
+        setIsConfirmationModalVisible(false);
+      },
+    });
+    setIsConfirmationModalVisible(true);
   };
 
   const handleDeleteSelectedProduct = () => {
     if (selectedItems > 0) {
-      setRemomeAllSelecetedModalVisible(true);
+      const selectedItemIds = cartItems
+        .filter((item) => item.isSelected)
+        .map((item) => item.id);
+      setConfirmationModalDetails({
+        message: `Do you want to add ${selectedItems} item(s) to your wishlist?`,
+        onPrimaryAction: () => {
+          dispatch(moveToWishlist({ ids: selectedItemIds, isAuthenticated }));
+          setIsConfirmationModalVisible(false);
+        },
+        onSecondaryAction: () => {
+          dispatch(deleteSelectedItems({ isAuthenticated }));
+          setIsConfirmationModalVisible(false);
+        },
+      });
+      setIsConfirmationModalVisible(true);
     }
   };
 
-  const confirmDeleteSelectedProduct = () => {
-    dispatch(deleteSelectedItems());
-    setRemomeAllSelecetedModalVisible(false);
+  const handleCloseModal = () => {
+    setIsConfirmationModalVisible(false);
+    setConfirmationModalDetails({
+      message: "",
+      onPrimaryAction: () => {},
+      onSecondaryAction: () => {},
+    });
   };
 
-  const moveSelectedToWishlist = () => {
-    const selectedItemIds = cartItems
-      .filter((item) => item.isSelected)
-      .map((item) => item.id);
-    if (selectedItemIds.length > 0) {
-      dispatch(moveToWishlist(selectedItemIds));
-    }
-    setRemomeAllSelecetedModalVisible(false);
-  };
-
-  const handleCloseSingleProductModal = () => {
-    setSingleProductRemoveModalVisible(false);
-    setSelectedItemId(null);
-  };
-
-  const handleCloseDeleteAllProductModal = () => {
-    setRemomeAllSelecetedModalVisible(false);
-  };
-
-  const renderCartItem = ({ item }: { item: Profile }) => {
-    const discount = item.originalPrice
-      ? (
-          ((parseFloat(item.originalPrice) - parseFloat(item.price)) /
-            parseFloat(item.originalPrice)) *
-          100
-        ).toFixed(0) + "% OFF"
-      : null;
-
+  const renderCartItem = ({ item }: { item: Product }) => {
     return (
       <View style={styles.cartItem}>
         <View style={styles.imageContainer}>
@@ -130,7 +127,9 @@ const ProductInfoSection: React.FC = () => {
                   : staticColors.white,
               },
             ]}
-            onPress={() => dispatch(toggleItemSelection(item.id))}
+            onPress={() =>
+              dispatch(toggleItemSelection({ id: item.id, isAuthenticated }))
+            }
           >
             {item.isSelected && (
               <Ionicons name="checkmark" size={16} color={staticColors.white} />
@@ -190,12 +189,9 @@ const ProductInfoSection: React.FC = () => {
             <Text style={styles.cartItemPrice}>
               ₹{parseFloat(item.price).toLocaleString("en-IN")}
             </Text>
-            {item.originalPrice && (
-              <Text style={styles.originalPrice}>
-                ₹{parseFloat(item.originalPrice).toLocaleString("en-IN")}
-              </Text>
+            {item.discount && (
+              <Text style={styles.discountText}>{item.discount}</Text>
             )}
-            {discount && <Text style={styles.discountText}>{discount}</Text>}
           </View>
 
           <View style={styles.returnPolicy}>
@@ -290,31 +286,19 @@ const ProductInfoSection: React.FC = () => {
       )}
 
       <ConfirmationModal
-        visible={singleProductRemoveModalVisible}
+        visible={isConfirmationModalVisible}
         title="Add to Wishlist"
-        message="Do you want to add this item to your wishlist?"
-        firstButtonText="ADD TO WISHLIST"
-        secondButtonText="REMOVE"
-        onFirstButtonPress={handleMoveToWishlist}
-        onSecondButtonPress={confirmProductRemove}
-        onClose={handleCloseSingleProductModal}
-      />
-
-      <ConfirmationModal
-        visible={remomeAllSelecetedModalVisible}
-        title="Add to Wishlist"
-        message={`Do you want to add ${selectedItems} item(s) to your wishlist?`}
-        firstButtonText="ADD TO WISHLIST"
-        secondButtonText="REMOVE"
-        onFirstButtonPress={moveSelectedToWishlist}
-        onSecondButtonPress={confirmDeleteSelectedProduct}
-        onClose={handleCloseDeleteAllProductModal}
+        message={confirmationModalDetails.message}
+        primaryButtonText="ADD TO WISHLIST"
+        secondaryButtonText="REMOVE"
+        onFirstButtonPress={confirmationModalDetails.onPrimaryAction}
+        onSecondButtonPress={confirmationModalDetails.onSecondaryAction}
+        onClose={handleCloseModal}
       />
     </View>
   );
 };
 
-// Styles remain the same
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -434,12 +418,6 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.sm,
     fontWeight: "bold",
     color: staticColors.textSubtitle,
-    ...spacingStyles.mr10,
-  },
-  originalPrice: {
-    fontSize: fontSizes.xs,
-    color: staticColors.textSubtitle,
-    textDecorationLine: "line-through",
     ...spacingStyles.mr10,
   },
   discountText: {

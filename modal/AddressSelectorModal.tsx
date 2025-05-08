@@ -13,19 +13,23 @@ import { FontAwesome6, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import DeliveryAddressScreen from "@/components/productDetails/DeliveryAddress";
 import { useLocation } from "@/utils/useLocation";
 import fontSizes from "@/style/fontSizes";
+import { isPinCodeValid } from "@/hooks/usePinCodeValidation";
+import LocationAlertModal from "./LocationAlertModal";
 
-interface DeliveryModalProps {
+interface AddressSelectorModalProps {
+  visible: boolean;
   onClose: () => void;
   onPinCodeSelect: (pinCode: string) => void;
 }
 
-const AddressSelectorModal: React.FC<DeliveryModalProps> = ({
+const AddressSelectorModal: React.FC<AddressSelectorModalProps> = ({
+  visible,
   onClose,
   onPinCodeSelect,
 }) => {
   const [addressModalVisible, setAddressModalVisible] = useState(false);
   const [selectedPinCode, setSelectedPinCode] = useState<string>("");
-  const { requestLocationPermission, isLoading } = useLocation();
+  const { requestLocationPermission, isLoading, locationModal } = useLocation();
 
   const handleCurrentLocation = (pinCode: string) => {
     onPinCodeSelect(pinCode);
@@ -37,18 +41,16 @@ const AddressSelectorModal: React.FC<DeliveryModalProps> = ({
     requestLocationPermission((pinCode: string) => {
       setSelectedPinCode(pinCode);
       onPinCodeSelect(pinCode);
-      onClose(); 
+      onClose();
     });
   };
 
   const handleCheckPincode = () => {
-    if (isPinCodeValid) {
+    if (isPinCodeValid(selectedPinCode)) {
       onPinCodeSelect(selectedPinCode);
-      onClose(); 
+      onClose();
     }
   };
-
-  const isPinCodeValid = selectedPinCode && selectedPinCode.length === 6;
 
   return (
     <View style={styles.modalContainer}>
@@ -71,7 +73,10 @@ const AddressSelectorModal: React.FC<DeliveryModalProps> = ({
             />
 
             <TouchableOpacity
-              style={[styles.checkButton, !isPinCodeValid && styles.disabledButton]}
+              style={[
+                styles.checkButton,
+                !isPinCodeValid && styles.disabledButton,
+              ]}
               disabled={!isPinCodeValid}
               onPress={handleCheckPincode}
             >
@@ -79,7 +84,7 @@ const AddressSelectorModal: React.FC<DeliveryModalProps> = ({
                 style={[
                   styles.checkButtonText,
                   {
-                    color: isPinCodeValid
+                    color: isPinCodeValid(selectedPinCode)
                       ? staticColors.discountText
                       : staticColors.textSubtitle,
                   },
@@ -138,6 +143,14 @@ const AddressSelectorModal: React.FC<DeliveryModalProps> = ({
           onCloseModal={() => setAddressModalVisible(false)}
         />
       )}
+
+      <LocationAlertModal
+        visible={locationModal.visible}
+        title={locationModal.title}
+        message={locationModal.message}
+        onConfirm={locationModal.onConfirm}
+        onCancel={locationModal.onCancel}
+      />
     </View>
   );
 };
@@ -182,7 +195,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   disabledButton: {
-    opacity: 0.5, 
+    opacity: 0.5,
   },
   checkButtonText: { fontSize: fontSizes.sm, fontWeight: "bold" },
   searchContainer: {

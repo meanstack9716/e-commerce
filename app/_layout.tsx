@@ -11,11 +11,29 @@ import { useEffect } from "react";
 import { Provider } from "react-redux";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { store } from "@/store/store";
+import { useCartStorage } from "@/hooks/useCartStorage";
 
 SplashScreen.preventAutoHideAsync();
 
-export default function RootLayout() {
+function AppLayout() {
   const colorScheme = useColorScheme();
+ useCartStorage();
+
+  return (
+    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="(auth)" />
+        <Stack.Screen name="+not-found" />
+        <Stack.Screen name="/categories" />
+        <Stack.Screen name="/ProductDetails" />
+      </Stack>
+      <StatusBar style="auto" />
+    </ThemeProvider>
+  );
+}
+
+export default function RootLayout() {
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
     HelveticaBold: require("../assets/fonts/Helvetica/Helvetica-Bold.ttf"),
@@ -32,22 +50,11 @@ export default function RootLayout() {
     }
   }, [loaded]);
 
-  if (!loaded) {
-    return null;
-  }
+  if (!loaded) return null;
 
   return (
     <Provider store={store}>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-          <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="(tabs)" />
-            <Stack.Screen name="(auth)" />
-            <Stack.Screen name="+not-found" />
-            <Stack.Screen name="/categories" />
-            <Stack.Screen name="/ProductDetails" />
-          </Stack>
-          <StatusBar style="auto" />
-        </ThemeProvider>
+      <AppLayout />
     </Provider>
   );
 }
