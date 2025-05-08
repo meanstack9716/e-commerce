@@ -27,8 +27,7 @@ const DeliveryAddressModal: React.FC<DeliveryModalProps> = ({
   const [selectedPinCode, setSelectedPinCode] = useState<string>("");
   const { requestLocationPermission, isLoading } = useLocation();
 
-  const handleGrant = (pinCode: string) => {
-    console.log("Pincode from address screen:", pinCode);
+  const handleCurrentLocation = (pinCode: string) => {
     onPinCodeSelect(pinCode);
     setSelectedPinCode(pinCode);
     onClose();
@@ -135,7 +134,7 @@ const DeliveryAddressModal: React.FC<DeliveryModalProps> = ({
         </View>
       ) : (
         <DeliveryAddressScreen
-          onPinCodeFetched={handleGrant}
+          onPinCodeFetched={handleCurrentLocation}
           onCloseModal={() => setAddressModalVisible(false)}
         />
       )}

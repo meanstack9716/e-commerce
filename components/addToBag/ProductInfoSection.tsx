@@ -27,9 +27,9 @@ import { Profile } from "@/types/types";
 const ProductInfoSection: React.FC = () => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state: RootState) => state.cart.cartItems);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [singleProductRemoveModalVisible, setSingleProductRemoveModalVisible] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
-  const [deleteAllModalVisible, setDeleteAllModalVisible] = useState(false);
+  const [remomeAllSelecetedModalVisible, setRemomeAllSelecetedModalVisible] = useState(false);
 
   const selectedItems = cartItems.filter((item) => item.isSelected).length;
   const totalPrice = cartItems
@@ -49,16 +49,16 @@ const ProductInfoSection: React.FC = () => {
     });
   };
 
-  const handleRemoveClick = (itemId: string) => {
+  const handleRemoveItemConfirmationModal = (itemId: string) => {
     setSelectedItemId(itemId);
-    setModalVisible(true);
+    setSingleProductRemoveModalVisible(true);
   };
 
-  const confirmRemove = () => {
+  const confirmProductRemove = () => {
     if (selectedItemId) {
       dispatch(removeFromCart(selectedItemId));
     }
-    setModalVisible(false);
+    setSingleProductRemoveModalVisible(false);
     setSelectedItemId(null);
   };
 
@@ -66,19 +66,19 @@ const ProductInfoSection: React.FC = () => {
     if (selectedItemId) {
       dispatch(moveToWishlist([selectedItemId]));
     }
-    setModalVisible(false);
+    setSingleProductRemoveModalVisible(false);
     setSelectedItemId(null);
   };
 
-  const handleDeleteSelectedClick = () => {
+  const handleDeleteSelectedProduct = () => {
     if (selectedItems > 0) {
-      setDeleteAllModalVisible(true);
+      setRemomeAllSelecetedModalVisible(true);
     }
   };
 
-  const confirmDeleteSelected = () => {
+  const confirmDeleteSelectedProduct = () => {
     dispatch(deleteSelectedItems());
-    setDeleteAllModalVisible(false);
+    setRemomeAllSelecetedModalVisible(false);
   };
 
   const moveSelectedToWishlist = () => {
@@ -88,7 +88,16 @@ const ProductInfoSection: React.FC = () => {
     if (selectedItemIds.length > 0) {
       dispatch(moveToWishlist(selectedItemIds));
     }
-    setDeleteAllModalVisible(false);
+    setRemomeAllSelecetedModalVisible(false);
+  };
+
+  const handleCloseSingleProductModal = () => {
+    setSingleProductRemoveModalVisible(false);
+    setSelectedItemId(null);
+  };
+
+  const handleCloseDeleteAllProductModal = () => {
+    setRemomeAllSelecetedModalVisible(false);
   };
 
   const renderCartItem = ({ item }: { item: Profile }) => {
@@ -136,7 +145,7 @@ const ProductInfoSection: React.FC = () => {
             </Text>
             <TouchableOpacity
               style={styles.cutIcon}
-              onPress={() => handleRemoveClick(item.id)}
+              onPress={() => handleRemoveItemConfirmationModal(item.id)}
             >
               <Ionicons
                 name="close-outline"
@@ -244,7 +253,7 @@ const ProductInfoSection: React.FC = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.headerIcon}
-          onPress={handleDeleteSelectedClick}
+          onPress={handleDeleteSelectedProduct}
         >
           <Ionicons
             name="trash-outline"
@@ -281,23 +290,25 @@ const ProductInfoSection: React.FC = () => {
       )}
 
       <ConfirmationModal
-        visible={modalVisible}
+        visible={singleProductRemoveModalVisible}
         title="Add to Wishlist"
         message="Do you want to add this item to your wishlist?"
         firstButtonText="ADD TO WISHLIST"
         secondButtonText="REMOVE"
         onFirstButtonPress={handleMoveToWishlist}
-        onSecondButtonPress={confirmRemove}
+        onSecondButtonPress={confirmProductRemove}
+        onClose={handleCloseSingleProductModal}
       />
 
       <ConfirmationModal
-        visible={deleteAllModalVisible}
+        visible={remomeAllSelecetedModalVisible}
         title="Add to Wishlist"
         message={`Do you want to add ${selectedItems} item(s) to your wishlist?`}
         firstButtonText="ADD TO WISHLIST"
         secondButtonText="REMOVE"
         onFirstButtonPress={moveSelectedToWishlist}
-        onSecondButtonPress={confirmDeleteSelected}
+        onSecondButtonPress={confirmDeleteSelectedProduct}
+        onClose={handleCloseDeleteAllProductModal}
       />
     </View>
   );

@@ -11,7 +11,6 @@ const ShoppingCartScreen: React.FC = () => {
   const [selectedPinCode, setSelectedPinCode] = useState<string | null>(null);
 
   const handlePinCodeSelect = (pinCode: string) => {
-    console.log("Selected Pincode:", pinCode);
     setSelectedPinCode(pinCode);
   };
 

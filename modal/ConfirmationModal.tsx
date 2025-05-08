@@ -13,6 +13,7 @@ interface ConfirmationModalProps {
   secondButtonText: string;
   onFirstButtonPress: () => void;
   onSecondButtonPress: () => void;
+  onClose: () => void;
 }
 
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
@@ -23,13 +24,14 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   secondButtonText,
   onFirstButtonPress,
   onSecondButtonPress,
+  onClose
 }) => {
   return (
     <Modal
       transparent
       visible={visible}
       animationType="slide"
-      onRequestClose={onFirstButtonPress}
+      onRequestClose={onClose}
     >
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
@@ -38,7 +40,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
             <Text style={styles.title}>{title}</Text>
             <TouchableOpacity
               style={styles.closeIcon}
-              onPress={onFirstButtonPress}
+              onPress={onClose}
             >
               <Ionicons
                 name="close-outline"
