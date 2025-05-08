@@ -50,7 +50,6 @@ const cartSlice = createSlice({
       state.cartItems = state.cartItems.filter((item) => !item.isSelected);
     },
     moveToWishlist: (state, action: PayloadAction<string[]>) => {
-      console.log(`Moved items to wishlist: ${action.payload}`);
       state.cartItems = state.cartItems.filter(
         (item) => !action.payload.includes(item.id)
       );

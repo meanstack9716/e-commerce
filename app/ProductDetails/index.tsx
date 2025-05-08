@@ -51,9 +51,7 @@ const ProductDetailsScreen: React.FC = () => {
   const handleAddToCart = () => {
     if (product) {
       dispatch(addToCart({ product, selectedSize }));
-      console.log(
-        `Added product ${product.id} to cart with size ${selectedSize}`
-      );
+
       router.push("/cart");
     }
   };
