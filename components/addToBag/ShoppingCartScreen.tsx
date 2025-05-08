@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
-import DeliveryModal from "@/modal/DeliveryModal";
+import DeliveryAddressModal from "@/modal/DeliveryAddressModal";
 import fontSizes from "@/style/fontSizes";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 
 const ShoppingCartScreen: React.FC = () => {
-  const [modalVisible, setModalVisible] = useState(false);
+  const [isDeliveryAddressModalVisible, setIsDeliveryAddressModalVisible] =
+    useState(false);
   const [selectedPinCode, setSelectedPinCode] = useState<string | null>(null);
 
   const handlePinCodeSelect = (pinCode: string) => {
@@ -18,7 +19,7 @@ const ShoppingCartScreen: React.FC = () => {
     <View>
       <TouchableOpacity
         style={styles.deliverySection}
-        onPress={() => setModalVisible(true)}
+        onPress={() => setIsDeliveryAddressModalVisible(true)}
       >
         <Text style={styles.deliveryText}>
           {selectedPinCode
@@ -34,11 +35,11 @@ const ShoppingCartScreen: React.FC = () => {
       <Modal
         animationType="slide"
         transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
+        visible={isDeliveryAddressModalVisible}
+        onRequestClose={() => setIsDeliveryAddressModalVisible(false)}
       >
-        <DeliveryModal
-          onClose={() => setModalVisible(false)}
+        <DeliveryAddressModal
+          onClose={() => setIsDeliveryAddressModalVisible(false)}
           onPinCodeSelect={handlePinCodeSelect}
         />
       </Modal>

@@ -51,7 +51,6 @@ const SimilarProducts = ({ currentProduct }: { currentProduct: Profile }) => {
 
   const handleAddToCart = (product: Profile) => {
     dispatch(addToCart({ product: product, selectedSize: undefined }));
-    console.log(`Added product ${product.id} to cart`);
     router.push("/cart");
   };
 

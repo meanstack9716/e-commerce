@@ -1,15 +1,16 @@
+import { IMAGE_URIS } from '@/constants/imageLinks';
 import fontSizes from '@/style/fontSizes';
 import spacingStyles from '@/style/spacingStyles';
 import staticColors from '@/style/staticColors';
 import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 
-const NothingShoppingBagContent: React.FC = () => {
+const EmptyShoppingBagMessage: React.FC = () => {
   return (
     <View style={styles.content}>
       <Image
         source={{
-          uri: 'https://cdn-icons-png.flaticon.com/256/2374/2374718.png',
+          uri:IMAGE_URIS.EMPTYBAGIMAGE
         }}
         style={styles.bagImage}
       />
@@ -41,9 +42,9 @@ const styles = StyleSheet.create({
   },
   subText: {
     fontSize: fontSizes.sm,
-    color: staticColors.lightGray,
+    color: staticColors.textLightGray,
     textAlign: 'center',
   },
 });
 
-export default NothingShoppingBagContent;
+export default EmptyShoppingBagMessage;

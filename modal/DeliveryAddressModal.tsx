@@ -19,7 +19,7 @@ interface DeliveryModalProps {
   onPinCodeSelect: (pinCode: string) => void;
 }
 
-const DeliveryModal: React.FC<DeliveryModalProps> = ({
+const DeliveryAddressModal: React.FC<DeliveryModalProps> = ({
   onClose,
   onPinCodeSelect,
 }) => {
@@ -205,4 +205,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DeliveryModal;
+export default DeliveryAddressModal;

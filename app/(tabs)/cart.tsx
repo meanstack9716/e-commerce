@@ -23,7 +23,7 @@ const ShoppingBagScreen: React.FC = () => {
     router.back();
     return true;
   };
-
+  
   useBackHandler(handleGoBack);
 
   return (

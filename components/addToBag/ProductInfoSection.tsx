@@ -8,7 +8,7 @@ import {
   StyleSheet,
   FlatList,
 } from "react-native";
-import NothingShoppingBagContent from "./NothingShoppingBagContent";
+import EmptyShoppingBagMessage from "./EmptyShoppingBagMessage";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import ConfirmationModal from "@/modal/ConfirmationModal";
@@ -266,7 +266,7 @@ const ProductInfoSection: React.FC = () => {
   return (
     <View style={styles.container}>
       {cartItems.length === 0 ? (
-        <NothingShoppingBagContent />
+        <EmptyShoppingBagMessage />
       ) : (
         <FlatList
           data={cartItems}
