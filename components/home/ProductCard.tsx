@@ -13,47 +13,49 @@ import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import fontSizes from "@/style/fontSizes";
 import gapSizes from "@/style/gapSizes";
-import { DISCOUNT_PERCENTAGE } from "@/constants/constants";
 import { commonStyles } from "@/style/commonStyle";
 import { textTruncate } from "@/utils/textTruncate";
 
 export interface ProductCardProps {
   id: string;
-  images: string[];
   title: string;
-  price: string;
-  star: number;
+  final_price?: number;
+  discount_percent?: number;
+  thumbnail_url: string;
+  images?: string[];
+  star?: number;
   liked: boolean;
-  cardWidth?: number;
   onLikePress: () => void;
   onPress: () => void;
+  cardWidth?: number;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
-  images,
+  id,
   title,
-  price,
-  star,
+  final_price,
+  discount_percent,
+  thumbnail_url,
+  images,
+  star = 4.5,
   liked,
   onLikePress,
   onPress,
   cardWidth,
 }) => {
-  const discountPercentage =
-    Math.floor(Math.random() * DISCOUNT_PERCENTAGE) + 10;
-  const imageToShow = images && images.length > 0 ? images[0] : null;
 
   return (
     <View style={[styles.card, cardWidth ? { width: cardWidth } : {}]}>
       <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
         <View style={commonStyles.imageContainer}>
-          {imageToShow ? (
-            <Image source={{ uri: imageToShow }} style={styles.cardImage} />
-          ) : (
-            <View style={[styles.cardImage, commonStyles.imagePlaceholderContainer]}>
-              <Text style={commonStyles.imagePlaceholderText}>No image</Text>
-            </View>
-          )}
+          <Image
+            source={{
+              uri:
+                thumbnail_url ||
+                (images && images.length > 0 ? images[0] : undefined),
+            }}
+            style={styles.cardImage}
+          />
           <View style={styles.starOverlay}>
             <FontAwesome
               name="star"
@@ -66,7 +68,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         <View>
           <View style={styles.titleRow}>
             <Text style={commonStyles.cardTitle} numberOfLines={2}>
-            {textTruncate(title,3)}
+              {textTruncate(title, 3)}
             </Text>
             <TouchableOpacity
               style={styles.inlineLikeButton}
@@ -81,10 +83,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
           </View>
 
           <View style={styles.discountBadge}>
-            <Text style={styles.cardPrice}>${price}</Text>
-            {discountPercentage ? (
-              <Text style={styles.discountText}>{discountPercentage}% OFF</Text>
-            ) : null}
+            <Text style={styles.cardPrice}>₹{final_price}</Text>
+            {discount_percent && discount_percent > 0 && (
+              <Text style={styles.discountText}>{discount_percent}% OFF</Text>
+            )}
           </View>
         </View>
       </TouchableOpacity>

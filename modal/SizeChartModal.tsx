@@ -20,8 +20,7 @@ interface SizeChartModalProps {
   onClose: () => void;
   product: {
     title: string;
-    price: string;
-    originalPrice: string;
+    price?: number;
     image: string;
   } | null;
 }
@@ -184,10 +183,7 @@ const SizeChartModal: React.FC<SizeChartModalProps> = ({
               <Text style={styles.productBrand}>RAREISM</Text>
               <Text style={styles.productType}>{product.title}</Text>
               <Text style={styles.productPrice}>
-                ₹{product.price}{" "}
-                <Text style={styles.originalPrice}>
-                  ₹{product.originalPrice}
-                </Text>
+                ₹{product.price}
               </Text>
             </View>
           </View>
@@ -418,11 +414,6 @@ const styles = StyleSheet.create({
     color: staticColors.discountText,
     fontWeight: "600",
     fontSize: fontSizes.sm,
-  },
-  originalPrice: {
-    textDecorationLine: "line-through",
-    color: staticColors.darkGray,
-    fontWeight: "400",
   },
   tabContainer: {
     flexDirection: "row",

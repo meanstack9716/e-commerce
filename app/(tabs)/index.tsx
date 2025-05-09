@@ -13,7 +13,6 @@ import {
 import { Ionicons, MaterialIcons, FontAwesome6 } from "@expo/vector-icons";
 import ProductCard from "@/components/home/ProductCard";
 import { router } from "expo-router";
-import data from "../../assets/data/products.json";
 import Navbar from "@/components/home/Navbar";
 import CategoryGrid from "@/components/home/CategoryGrid";
 import ImageSlider from "@/components/home/ImageSlider";
@@ -28,13 +27,14 @@ import BrandCard from "@/components/home/BrandCard";
 import staticColors from "@/style/staticColors";
 import OfferPriceCard from "@/components/home/OfferPriceCard";
 import PocketFriendlyBargain from "@/components/home/PocketFriendlyCategory";
-import { Profile, ProductData } from "@/types/types";
+import { Profile } from "@/types/types";
 import fontSizes from "@/style/fontSizes";
 import gapSizes from "@/style/gapSizes";
 import images from "@/constants/images";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useAppDispatch } from "@/store/hooks";
 import { fetchCategories } from "@/store/category/categoriesSlice";
+import { fetchProducts } from "@/store/product/productsSlice";
 import FullScreenLoader from "@/components/common/FullScreenLoader";
 
 const HomeScreen: React.FC = () => {
@@ -42,18 +42,24 @@ const HomeScreen: React.FC = () => {
   const [activeProductTab, setActiveProductTab] = useState<string>("All");
   const [productSearchQuery, setProductSearchQuery] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const productData = data as ProductData;
   const insets = useSafeAreaInsets();
   const dispatch = useAppDispatch();
 
   const {
     data: categories,
-    loading,
-    error,
+    loading: categoriesLoading,
+    error: categoriesError,
   } = useSelector((state: any) => state.categories);
+
+  const {
+    data: products,
+    loading: productsLoading,
+    error: productsError,
+  } = useSelector((state: any) => state.products);
 
   useEffect(() => {
     dispatch(fetchCategories());
+    dispatch(fetchProducts());
   }, [dispatch]);
 
   const tabs = [
@@ -69,7 +75,7 @@ const HomeScreen: React.FC = () => {
   }, [tabs, activeProductTab]);
 
   const getFilteredProducts = () => {
-    let filtered = productData.products;
+    let filtered = products;
 
     if (
       activeProductTab &&
@@ -84,7 +90,7 @@ const HomeScreen: React.FC = () => {
         const subCategoryIds = activeCategory.sub_categories.map(
           (sub: any) => sub.id
         );
-        filtered = filtered.filter((product) =>
+        filtered = filtered.filter((product: Profile) =>
           product.categories.some(
             (cat) => cat === activeCategory.id || subCategoryIds.includes(cat)
           )
@@ -93,13 +99,13 @@ const HomeScreen: React.FC = () => {
     }
 
     if (selectedCategory) {
-      filtered = filtered.filter((product) =>
+      filtered = filtered.filter((product: Profile) =>
         product.categories.includes(selectedCategory)
       );
     }
 
     if (productSearchQuery) {
-      filtered = filtered.filter((product) =>
+      filtered = filtered.filter((product: Profile) =>
         product.title.toLowerCase().includes(productSearchQuery.toLowerCase())
       );
     }
@@ -143,14 +149,17 @@ const HomeScreen: React.FC = () => {
           onCategorySelect={handleCategorySelect}
         />
       )}
-      <ImageSlider slides={bannerData} />
-      <PromotionalCards cards={promotionalData.promotionalCards} />
-      <OfferCardCarousel />
-      <BrandCard />
+      {/* <ImageSlider slides={bannerData} /> */}
+      {/* <PromotionalCards cards={promotionalData.promotionalCards} /> */}
+      {/* <OfferCardCarousel /> */}
+      {/* <BrandCard />
       <OfferPriceCard />
-      <PocketFriendlyBargain />
+      <PocketFriendlyBargain /> */}
     </>
   );
+
+  const isLoading = categoriesLoading || productsLoading;
+  const hasError = categoriesError || productsError;
 
   return (
     <View style={styles.container}>
@@ -162,7 +171,7 @@ const HomeScreen: React.FC = () => {
           },
         ]}
       >
-        <FullScreenLoader visible={loading} />
+        <FullScreenLoader visible={isLoading} />
         <StatusBar
           barStyle="dark-content"
           translucent
@@ -231,8 +240,8 @@ const HomeScreen: React.FC = () => {
           </TouchableOpacity>
         </View>
 
-        {error && <Text>Error: {error}</Text>}
-        {tabs.length > 1 && !error && (
+        {hasError && <Text style={styles.errorText}>Error: {hasError}</Text>}
+        {tabs.length > 1 && !hasError && (
           <Navbar
             tabs={tabs}
             activeTab={activeProductTab}
@@ -249,6 +258,13 @@ const HomeScreen: React.FC = () => {
           contentContainerStyle={styles.flatListContent}
           columnWrapperStyle={styles.columnWrapper}
           showsVerticalScrollIndicator={false}
+          ListEmptyComponent={() => (
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>
+                {isLoading ? "Loading products..." : "No products Available"}
+              </Text>
+            </View>
+          )}
         />
       </SafeAreaView>
     </View>
@@ -318,6 +334,20 @@ const styles = StyleSheet.create({
   columnWrapper: {
     justifyContent: "space-between",
     ...spacingStyles.mb10,
+  },
+  errorText: {
+    color: staticColors.discountText,
+    textAlign: "center",
+    ...spacingStyles.my10,
+    fontSize: fontSizes.md,
+  },
+  emptyContainer: {
+    padding: 20,
+    alignItems: "center",
+  },
+  emptyText: {
+    fontSize: fontSizes.md,
+    color: staticColors.textLightGray,
   },
 });
 
