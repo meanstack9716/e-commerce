@@ -16,9 +16,10 @@ import spacingStyles from "@/style/spacingStyles";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { sendEmailCode } from "@/store/auth/authSlice";
 import { AppDispatch } from "@/store/store";
-import { OTPInputProps } from "@/types/types";
+import { OtpInputProps } from "@/types/types";
+import { OTP_RESEND_TIMER } from "@/constants/constants";
 
-const OTPInput: React.FC<OTPInputProps> = ({
+const OtpInput: React.FC<OtpInputProps> = ({
   email,
   onVerifySuccess,
   onStepBack,
@@ -27,7 +28,7 @@ const OTPInput: React.FC<OTPInputProps> = ({
 }) => {
   const [otp, setOtp] = useState<string[]>(new Array(6).fill(""));
   const [otpError, setOtpError] = useState("");
-  const [timer, setTimer] = useState(30);
+  const [timer, setTimer] = useState(OTP_RESEND_TIMER);
   const inputsRef = useRef<Array<TextInput | null>>([]);
   const dispatch: AppDispatch = useAppDispatch();
   const { loading, error } = useAppSelector((state) => state.auth);
@@ -70,7 +71,7 @@ const OTPInput: React.FC<OTPInputProps> = ({
     if (timer === 0) {
       try {
         await dispatch(sendEmailCode(email)).unwrap();
-        setTimer(30);
+        setTimer(OTP_RESEND_TIMER);
         setOtp(new Array(6).fill(""));
         setOtpError("");
       } catch (err) {
@@ -157,7 +158,7 @@ const OTPInput: React.FC<OTPInputProps> = ({
   );
 };
 
-export default OTPInput;
+export default OtpInput;
 
 const styles = StyleSheet.create({
   container: {

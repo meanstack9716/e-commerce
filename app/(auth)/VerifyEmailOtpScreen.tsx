@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import colors from "@/style/staticColors";
-import OTPInput from "@/components/common/OtpInput";
+import OtpInput from "@/components/common/OtpInput";
 import images from "@/constants/images";
 import spacingStyles from "@/style/spacingStyles";
 import fontSizes from "@/style/fontSizes";
@@ -51,7 +51,7 @@ const VerifyEmailOtpScreen = () => {
         </Text>
 
         {/* OTP Input Component */}
-        <OTPInput
+        <OtpInput
           email={email}
           onVerifySuccess={handleVerifySuccess}
           onStepBack={handleStepBack}

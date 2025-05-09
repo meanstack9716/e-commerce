@@ -17,7 +17,6 @@ import {
   clearAuthError,
   sendEmailCode,
   setResetCode,
-
   setResetEmail,
 } from "@/store/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -131,10 +130,6 @@ export default function ForgetPassword() {
               onStepBack={handleStepBack}
               cancelText="Cancel"
               confirmText="Verify"
-              cancelButtonStyle={styles.cancelButton}
-              confirmButtonStyle={styles.confirmButton}
-              cancelTextStyle={styles.cancelText}
-              confirmTextStyle={styles.confirmText}
             />
           </>
         )}

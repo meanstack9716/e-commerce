@@ -37,14 +37,10 @@ export interface ProductData {
   products: Profile[];
 }
 
-export type OTPInputProps = {
+export type OtpInputProps = {
   email: string;
   onVerifySuccess: (enteredOtp: string) => void;
   onStepBack: () => void;
   cancelText?: string;
   confirmText?: string;
-  cancelButtonStyle?: object;
-  confirmButtonStyle?: object;
-  cancelTextStyle?: object;
-  confirmTextStyle?: object;
 };
