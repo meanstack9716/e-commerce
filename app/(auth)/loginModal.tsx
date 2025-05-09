@@ -82,7 +82,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
       if (loginUser.fulfilled.match(resultAction)) {
         onClose();
         router.push({
-          pathname: "/otpScreen",
+          pathname: "/VerifyEmailOtpScreen",
           params: { email: formData.email },
         });
       }

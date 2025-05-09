@@ -1,11 +1,33 @@
 import { useState } from "react";
 import * as Location from "expo-location";
-import { Alert, Linking, Platform } from "react-native";
+import { Linking, Platform } from "react-native";
 
 export const useLocation = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [modalData, setModalData] = useState<{
+    visible: boolean;
+    title: string;
+    message: string;
+    onConfirm: () => void;
+    onCancel?: () => void;
+  }>({ visible: false, title: "", message: "", onConfirm: () => {} });
 
-  const requestLocationPermission = async (onSuccess: (pinCode: string) => void): Promise<void> => {
+  const showModal = (
+    title: string,
+    message: string,
+    onConfirm: () => void,
+    onCancel?: () => void
+  ) => {
+    setModalData({ visible: true, title, message, onConfirm, onCancel });
+  };
+
+  const hideModal = () => {
+    setModalData((prev) => ({ ...prev, visible: false }));
+  };
+
+  const requestLocationPermission = async (
+    onSuccess: (pinCode: string) => void
+  ): Promise<void> => {
     try {
       setIsLoading(true);
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -16,63 +38,60 @@ export const useLocation = () => {
           const location = await Location.getCurrentPositionAsync({
             accuracy: Location.Accuracy.High,
           });
-          const { latitude, longitude } = location.coords;
-
-          const [address] = await Location.reverseGeocodeAsync({
-            latitude,
-            longitude,
-          });
-
+          const [address] = await Location.reverseGeocodeAsync(location.coords);
           const fetchedPinCode = address?.postalCode || "";
+
           if (fetchedPinCode) {
             onSuccess(fetchedPinCode);
           } else {
-            Alert.alert(
+            showModal(
               "PIN Code Not Found",
-              "We couldn't determine your PIN code. Please enter it manually."
+              "We couldn't determine your PIN code. Please enter it manually.",
+              hideModal
             );
           }
         } else {
-          Alert.alert(
+          showModal(
             "Location Services Disabled",
             "Please enable location services to proceed.",
-            [
-              { text: "Cancel", style: "cancel" },
-              {
-                text: "Open Settings",
-                onPress: () => {
-                  if (Platform.OS === "ios") {
-                    Linking.openURL("App-Prefs:Privacy&path=LOCATION");
-                  } else {
-                    Linking.openSettings();
-                  }
-                },
-              },
-            ]
+            () => {
+              hideModal();
+              if (Platform.OS === "ios") {
+                Linking.openURL("App-Prefs:Privacy&path=LOCATION");
+              } else {
+                Linking.openSettings();
+              }
+            },
+            hideModal
           );
         }
       } else {
-        Alert.alert(
+        showModal(
           "Permission Denied",
           "Location permission is required to ensure accurate address and hassle-free delivery. Please grant the permission.",
-          [
-            { text: "Cancel", style: "cancel" },
-            {
-              text: "Open Settings",
-              onPress: () => {
-                Linking.openSettings();
-              },
-            },
-          ]
+          () => {
+            hideModal();
+            Linking.openSettings();
+          },
+          hideModal
         );
       }
-      setIsLoading(false);
     } catch (error) {
-      console.error("Error requesting location permission:", error);
-      Alert.alert("Error", "An error occurred while requesting location permission.");
+      console.error("Location Error", error);
+      showModal(
+        "Error",
+        "An error occurred while fetching location.",
+        hideModal
+      );
+    } finally {
       setIsLoading(false);
     }
   };
 
-  return { requestLocationPermission, isLoading };
+  return {
+    requestLocationPermission,
+    isLoading,
+    locationModal: modalData,
+    hideLocationModal: hideModal,
+  };
 };

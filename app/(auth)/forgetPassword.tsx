@@ -16,7 +16,9 @@ import { useFieldValidation } from "@/hooks/useFieldValidation";
 import {
   clearAuthError,
   sendEmailCode,
-  setResetCredentials,
+  setResetCode,
+
+  setResetEmail,
 } from "@/store/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import colors from "@/style/staticColors";
@@ -67,7 +69,8 @@ export default function ForgetPassword() {
   };
 
   const handleVerifySuccess = (enteredOtp: string) => {
-    dispatch(setResetCredentials({ email, code: enteredOtp }));
+    dispatch(setResetEmail(email));
+    dispatch(setResetCode(enteredOtp));
     setCurrentStage("password");
   };
 

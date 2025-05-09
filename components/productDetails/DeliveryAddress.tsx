@@ -13,6 +13,7 @@ import { useLocation } from "@/utils/useLocation";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import fontSizes from "@/style/fontSizes";
+import LocationAlertModal from "@/modal/LocationAlertModal";
 
 interface DeliveryAddressProps {
   onPinCodeFetched?: (pinCode: string) => void;
@@ -23,7 +24,12 @@ const DeliveryAddress: React.FC<DeliveryAddressProps> = ({
   onPinCodeFetched,
   onCloseModal,
 }) => {
-  const { requestLocationPermission, isLoading } = useLocation();
+  const {
+    requestLocationPermission,
+    isLoading,
+    locationModal,
+    hideLocationModal,
+  } = useLocation();
 
   const handleUseCurrentLocation = () => {
     requestLocationPermission((pinCode: string) => {
@@ -83,14 +89,24 @@ const DeliveryAddress: React.FC<DeliveryAddressProps> = ({
           {isLoading ? (
             <ActivityIndicator size="small" color={staticColors.discountText} />
           ) : (
-            <MaterialIcons name="my-location" size={20} color={staticColors.discountText} />
+            <MaterialIcons
+              name="my-location"
+              size={20}
+              color={staticColors.discountText}
+            />
           )}
         </View>
         <Text style={styles.locationText}>
           {isLoading ? "Fetching Location..." : "Use my current Location"}
         </Text>
       </TouchableOpacity>
-
+      <LocationAlertModal
+        visible={locationModal.visible}
+        title={locationModal.title}
+        message={locationModal.message}
+        onConfirm={locationModal.onConfirm}
+        onCancel={locationModal.onCancel}
+      />
     </SafeAreaView>
   );
 };
@@ -103,10 +119,10 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     alignItems: "center",
-    ...spacingStyles.p10
+    ...spacingStyles.p10,
   },
   backButton: {
-    ...spacingStyles.p5
+    ...spacingStyles.p5,
   },
   headerTitle: {
     fontSize: fontSizes.md,
@@ -120,7 +136,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: staticColors.lightGray,
     ...spacingStyles.py10,
-    ...spacingStyles.px15
+    ...spacingStyles.px15,
   },
   infoIconContainer: {
     width: 20,
@@ -129,7 +145,7 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.darkYellow,
     justifyContent: "center",
     alignItems: "center",
-    ...spacingStyles.mr10
+    ...spacingStyles.mr10,
   },
   infoIcon: {
     color: "white",
@@ -149,13 +165,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
-    borderColor:staticColors.borderLight,
+    borderColor: staticColors.borderLight,
     borderRadius: 8,
     ...spacingStyles.m15,
-    ...spacingStyles.px10
+    ...spacingStyles.px10,
   },
   searchIcon: {
-    ...spacingStyles.mr5
+    ...spacingStyles.mr5,
   },
   searchInput: {
     flex: 1,
@@ -167,7 +183,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     ...spacingStyles.px15,
-    ...spacingStyles.py5
+    ...spacingStyles.py5,
   },
   locationIconContainer: {
     width: 30,
@@ -177,7 +193,7 @@ const styles = StyleSheet.create({
     borderColor: staticColors.brightRed,
     justifyContent: "center",
     alignItems: "center",
-    ...spacingStyles.mr10
+    ...spacingStyles.mr10,
   },
   locationText: {
     color: staticColors.brightRed,

@@ -18,7 +18,6 @@ import data from "../../assets/data/products.json";
 import spacingStyles from "@/style/spacingStyles";
 import MegaDealBadge from "@/components/productDetails/MegaDealBadge";
 import SizeSelector from "@/components/productDetails/SizeSelector";
-import BottonActions from "@/components/productDetails/ProductActionButtons";
 import DeliveryCheck from "@/components/productDetails/DeliveryCheck";
 import ReturnPolicy from "./ReturnPolicy";
 import SimilarProducts from "@/components/productDetails/SimilarProducts";
@@ -26,15 +25,17 @@ import { Profile } from "../../types/types";
 import BrandRating from "@/components/productDetails/BrandRating";
 import ViewSimilarModal from "@/modal/ViewSimilarModal";
 import ProductList from "@/components/productDetails/ProductList";
+import fontSizes from "@/style/fontSizes";
+import gapSizes from "@/style/gapSizes";
 
 const { width: screenWidth } = Dimensions.get("window");
 
 const ProductDetailsScreen: React.FC = () => {
   const params = useLocalSearchParams();
   const { id } = params;
-  const [liked, setLiked] = useState(false);
+  const [isProductLiked, setISProductLiked] = useState(false);
   const [product, setProduct] = useState<Profile | null>(null);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isViewSimilarModalVisible, setViewSimilarModalVisible] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const insets = useSafeAreaInsets();
@@ -50,16 +51,16 @@ const ProductDetailsScreen: React.FC = () => {
 
   useEffect(() => {
     const products = data.products || data;
-    const rawProductData = products.find((p) => p.id === id);
+    const selectedProductData = products.find((p) => p.id === id);
 
-    if (rawProductData) {
+    if (selectedProductData) {
       const normalizedProduct: Profile = {
-        id: rawProductData.id,
-        images: rawProductData.images,
-        title: rawProductData.title || "Product Title",
-        price: rawProductData.price,
-        star: rawProductData.star,
-        categories: rawProductData.categories || [],
+        id: selectedProductData.id,
+        images: selectedProductData.images,
+        title: selectedProductData.title || "Product Title",
+        price: selectedProductData.price,
+        star: selectedProductData.star,
+        categories: selectedProductData.categories || [],
       };
       setProduct(normalizedProduct);
     }
@@ -89,7 +90,7 @@ const ProductDetailsScreen: React.FC = () => {
   };
 
   const handleLikePress = () => {
-    setLiked((prev) => !prev);
+    setISProductLiked((prev) => !prev);
   };
 
   const handleGoBack = () => {
@@ -97,7 +98,7 @@ const ProductDetailsScreen: React.FC = () => {
   };
 
   const handleViewSimilar = () => {
-    setIsModalVisible(true);
+    setViewSimilarModalVisible(true);
   };
 
   const handleBackToTop = () => {
@@ -161,9 +162,9 @@ const ProductDetailsScreen: React.FC = () => {
                   style={styles.iconButton}
                 >
                   <FontAwesome
-                    name={liked ? "heart" : "heart-o"}
+                    name={isProductLiked ? "heart" : "heart-o"}
                     size={20}
-                    color={liked ? "red" : colors.primary}
+                    color={isProductLiked ? colors.DarkRed : colors.primary}
                   />
                 </TouchableOpacity>
               </View>
@@ -261,11 +262,11 @@ const ProductDetailsScreen: React.FC = () => {
           <Text style={styles.backToTopText}>Back to Top</Text>
         </TouchableOpacity>
       ) : (
-        <BottonActions />
+        <ProductDetailsScreen />
       )}
       <ViewSimilarModal
-        visible={isModalVisible}
-        onClose={() => setIsModalVisible(false)}
+        visible={isViewSimilarModalVisible}
+        onClose={() => setViewSimilarModalVisible(false)}
         currentProduct={product}
       />
     </SafeAreaView>
@@ -283,7 +284,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   loadingText: {
-    fontSize: 16,
+    fontSize: fontSizes.base,
     color: colors.primary,
   },
   header: {
@@ -297,7 +298,7 @@ const styles = StyleSheet.create({
   },
   headerRight: {
     flexDirection: "row",
-    gap: 10,
+    gap: gapSizes.md,
   },
   iconButton: {
     ...spacingStyles.ml15,
@@ -311,8 +312,8 @@ const styles = StyleSheet.create({
   dotContainer: {
     flexDirection: "row",
     justifyContent: "center",
-    marginTop: 10,
-    gap: 2,
+    ...spacingStyles.mt10,
+    gap: gapSizes.xs,
   },
   dot: {
     width: 8,
@@ -341,7 +342,7 @@ const styles = StyleSheet.create({
   },
   viewSimilarText: {
     ...spacingStyles.ml5,
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     color: staticColors.shadowColor,
   },
   ratingContainer: {
@@ -362,38 +363,38 @@ const styles = StyleSheet.create({
     ...spacingStyles.m2,
   },
   ratingCount: {
-    fontSize: 12,
+    fontSize: fontSizes.xs,
   },
   detailsContainer: {
     ...spacingStyles.px15,
     ...spacingStyles.ml5,
   },
   title: {
-    fontSize: 18,
+    fontSize: fontSizes.md,
     fontWeight: "bold",
   },
   priceContainer: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
+    gap: gapSizes.md,
   },
   discountedPrice: {
-    fontSize: 18,
+    fontSize: fontSizes.md,
     fontWeight: "bold",
     color: colors.primary,
   },
   originalPrice: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     textDecorationLine: "line-through",
     color: staticColors.softGray,
   },
   discount: {
-    fontSize: 14,
+    fontSize: fontSizes.sm,
     color: colors.brightRed,
     fontWeight: "bold",
   },
   heading: {
-    fontSize: 18,
+    fontSize: fontSizes.md,
     fontWeight: "bold",
     ...spacingStyles.mb10,
     color: staticColors.primary,
@@ -412,9 +413,9 @@ const styles = StyleSheet.create({
   },
   backToTopText: {
     color: colors.white,
-    fontSize: 16,
+    fontSize: fontSizes.base,
     fontWeight: "bold",
-    marginLeft: 5,
+    ...spacingStyles.ml5
   },
 });
 

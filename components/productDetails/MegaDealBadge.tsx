@@ -1,17 +1,16 @@
+import React, { useState } from "react";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { EXTRA_DISCOUNT, PRODUCT_PRICE } from "@/constants/constants";
 import OfferDetailsModal from "@/modal/OfferDetailsModal";
 import fontSizes from "@/style/fontSizes";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { EvilIcons } from "@expo/vector-icons";
-import React, { useState } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 
 const DealBanner = () => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const productPrice = "294";
-  const extraDiscount = "90";
+  const [isOfferModalVisible, setIsOfferModalVisible] = useState(false);
   const toggleModal = () => {
-    setModalVisible(!modalVisible);
+    setIsOfferModalVisible(!isOfferModalVisible);
   };
 
   return (
@@ -24,12 +23,12 @@ const DealBanner = () => {
             resizeMode="contain"
           />
           <Text style={styles.getAtText}>
-            Get at <Text style={styles.priceText}>₹{productPrice}</Text>
+            Get at <Text style={styles.priceText}>₹{PRODUCT_PRICE}</Text>
           </Text>
         </View>
 
         <View style={styles.rightBadge}>
-          <Text style={styles.badgeText}>Extra ₹{extraDiscount} Off</Text>
+          <Text style={styles.badgeText}>Extra ₹{EXTRA_DISCOUNT} Off</Text>
         </View>
       </View>
 
@@ -39,15 +38,19 @@ const DealBanner = () => {
         </Text>
         <View style={styles.detailsSections}>
           <Text style={styles.detailsText}>Details</Text>
-          <EvilIcons name="chevron-right" size={20} color={staticColors.discountText} />
+          <EvilIcons
+            name="chevron-right"
+            size={20}
+            color={staticColors.discountText}
+          />
         </View>
       </TouchableOpacity>
 
       <OfferDetailsModal
-        visible={modalVisible}
+        visible={isOfferModalVisible}
         onClose={toggleModal}
-        offerPrice={productPrice}
-        extraDiscount={extraDiscount}
+        offerPrice={PRODUCT_PRICE}
+        extraDiscount={EXTRA_DISCOUNT}
       />
     </View>
   );
@@ -122,7 +125,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: staticColors.discountText,
   },
-  detailsSections:{
-    flexDirection:'row',
-  }
+  detailsSections: {
+    flexDirection: "row",
+  },
 });

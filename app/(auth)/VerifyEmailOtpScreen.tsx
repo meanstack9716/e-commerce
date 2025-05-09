@@ -18,20 +18,18 @@ import { router } from "expo-router";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { verifyUser } from "@/store/auth/authSlice";
 
-const OtpScreen = () => {
+const VerifyEmailOtpScreen = () => {
   const insets = useSafeAreaInsets();
   const params = useLocalSearchParams();
   const email = params.email ? String(params.email) : "";
   const dispatch = useAppDispatch();
-  const { loading, error } = useAppSelector((state) => state.auth);
 
   const handleVerifySuccess = async (otpCode: string) => {
-    console.log("Verifying OTP for:", email, "with code:", otpCode);
     try {
       const result = await dispatch(
         verifyUser({ email, code: otpCode })
       ).unwrap();
-      router.replace("/home");
+      // router.replace("/home");
     } catch (err) {
       console.log("Verification failed:", err);
     }
@@ -65,7 +63,7 @@ const OtpScreen = () => {
   );
 };
 
-export default OtpScreen;
+export default VerifyEmailOtpScreen;
 
 const styles = StyleSheet.create({
   safeArea: {

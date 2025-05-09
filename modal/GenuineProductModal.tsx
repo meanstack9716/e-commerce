@@ -1,5 +1,3 @@
-import spacingStyles from "@/style/spacingStyles";
-import staticColors from "@/style/staticColors";
 import React from "react";
 import {
   View,
@@ -10,6 +8,8 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from "react-native";
+import spacingStyles from "@/style/spacingStyles";
+import staticColors from "@/style/staticColors";
 import { Ionicons } from "@expo/vector-icons";
 import fontSizes from "@/style/fontSizes";
 
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   modalImage: {
     width: 60,
     height: 60,
-    marginRight: 10,
+    ...spacingStyles.mr10,
     resizeMode: "contain",
   },
   modalText: {

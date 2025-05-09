@@ -14,20 +14,16 @@ import gapSizes from "@/style/gapSizes";
 import textStyles from "@/style/textStyles";
 import spacingStyles from "@/style/spacingStyles";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { sendEmailCode, verifyEmailCode } from "@/store/auth/authSlice";
+import { sendEmailCode } from "@/store/auth/authSlice";
 import { AppDispatch } from "@/store/store";
 import { OTPInputProps } from "@/types/types";
 
-const OTPInput: React.FC<OTPInputProps> = ({ 
-  email, 
-  onVerifySuccess, 
+const OTPInput: React.FC<OTPInputProps> = ({
+  email,
+  onVerifySuccess,
   onStepBack,
   cancelText = "Cancel",
   confirmText = "Verify",
-  cancelButtonStyle = {},
-  confirmButtonStyle = {},
-  cancelTextStyle = {},
-  confirmTextStyle = {}
 }) => {
   const [otp, setOtp] = useState<string[]>(new Array(6).fill(""));
   const [otpError, setOtpError] = useState("");
@@ -65,7 +61,7 @@ const OTPInput: React.FC<OTPInputProps> = ({
   };
 
   const handleKeyPress = (e: any, index: number) => {
-    if (e.nativeEvent.key === "Backspace" && otp[index] === "" && index > 0) {
+    if (e.nativeEvent.key === "Backspace" && index > 0) {
       inputsRef.current[index - 1]?.focus();
     }
   };
@@ -91,7 +87,7 @@ const OTPInput: React.FC<OTPInputProps> = ({
     }
 
     try {
-      onVerifySuccess(enteredOtp); 
+      onVerifySuccess(enteredOtp);
     } catch (err) {
       setOtpError((err as string) || "Invalid OTP");
       setOtp(new Array(6).fill(""));
@@ -139,21 +135,21 @@ const OTPInput: React.FC<OTPInputProps> = ({
         <Text style={styles.errorMessage}>{otpError || error}</Text>
       )}
       <View style={styles.buttonContainer}>
-        <TouchableOpacity 
-          style={[styles.button, styles.cancelButton, cancelButtonStyle]} 
+        <TouchableOpacity
+          style={[styles.button, styles.cancelButton]}
           onPress={onStepBack}
         >
-          <Text style={[styles.cancelText, cancelTextStyle]}>{cancelText}</Text>
+          <Text style={[styles.cancelText]}>{cancelText}</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.button, styles.confirmButton, confirmButtonStyle]}
+          style={[styles.button, styles.confirmButton]}
           onPress={handleVerifyOtp}
           disabled={loading}
         >
           {loading ? (
             <ActivityIndicator size="small" color={colors.white} />
           ) : (
-            <Text style={[styles.confirmText, confirmTextStyle]}>{confirmText}</Text>
+            <Text style={[styles.confirmText]}>{confirmText}</Text>
           )}
         </TouchableOpacity>
       </View>
@@ -203,7 +199,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   disabledResend: {
-    color: colors.lightGray,
+    color: colors.textLightGray,
   },
   errorMessage: {
     color: colors.errorColor,

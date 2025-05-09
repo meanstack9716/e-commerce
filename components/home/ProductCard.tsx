@@ -13,10 +13,13 @@ import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import fontSizes from "@/style/fontSizes";
 import gapSizes from "@/style/gapSizes";
+import { DISCOUNT_PERCENTAGE } from "@/constants/constants";
+import { commonStyles } from "@/style/commonStyle";
+import { textTruncate } from "@/utils/textTruncate";
 
 export interface ProductCardProps {
   id: string;
-  images: string[]; 
+  images: string[];
   title: string;
   price: string;
   star: number;
@@ -34,31 +37,36 @@ const ProductCard: React.FC<ProductCardProps> = ({
   liked,
   onLikePress,
   onPress,
-  cardWidth
+  cardWidth,
 }) => {
-  const discountPercentage = Math.floor(Math.random() * 41) + 10;
+  const discountPercentage =
+    Math.floor(Math.random() * DISCOUNT_PERCENTAGE) + 10;
   const imageToShow = images && images.length > 0 ? images[0] : null;
-  
+
   return (
     <View style={[styles.card, cardWidth ? { width: cardWidth } : {}]}>
       <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
-        <View style={styles.imageWrapper}>
+        <View style={commonStyles.imageContainer}>
           {imageToShow ? (
             <Image source={{ uri: imageToShow }} style={styles.cardImage} />
           ) : (
-            <View style={[styles.cardImage, styles.noImageContainer]}>
-              <Text style={styles.noImageText}>No image</Text>
+            <View style={[styles.cardImage, commonStyles.imagePlaceholderContainer]}>
+              <Text style={commonStyles.imagePlaceholderText}>No image</Text>
             </View>
           )}
           <View style={styles.starOverlay}>
-            <FontAwesome name="star" size={14} color={staticColors.lightYellow} />
-            <Text style={styles.ratingText}>({star.toFixed(1)})</Text>
+            <FontAwesome
+              name="star"
+              size={14}
+              color={staticColors.lightYellow}
+            />
+            <Text style={commonStyles.ratingText}>({star.toFixed(1)})</Text>
           </View>
         </View>
-        <View style={styles.cardContainer}>
+        <View>
           <View style={styles.titleRow}>
-            <Text style={styles.cardTitle} numberOfLines={2}>
-              {title}
+            <Text style={commonStyles.cardTitle} numberOfLines={2}>
+            {textTruncate(title,3)}
             </Text>
             <TouchableOpacity
               style={styles.inlineLikeButton}
@@ -66,7 +74,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
             >
               <FontAwesome
                 name={liked ? "heart" : "heart-o"}
-                size={16}
+                size={14}
                 color={liked ? "red" : `${staticColors.textLightGray}`}
               />
             </TouchableOpacity>
@@ -74,7 +82,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
           <View style={styles.discountBadge}>
             <Text style={styles.cardPrice}>${price}</Text>
-            <Text style={styles.discountText}>{discountPercentage}% OFF</Text>
+            {discountPercentage ? (
+              <Text style={styles.discountText}>{discountPercentage}% OFF</Text>
+            ) : null}
           </View>
         </View>
       </TouchableOpacity>
@@ -89,26 +99,12 @@ const styles = StyleSheet.create({
     width: Dimensions.get("window").width / 2 - 16,
     overflow: "hidden",
   },
-  imageWrapper: {
-    position: "relative",
-  },
   cardImage: {
     width: "100%",
     height: 240,
     resizeMode: "cover",
     borderRadius: 10,
   },
-  noImageContainer: {
-    backgroundColor: staticColors.errorColor,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  noImageText: {
-    color: staticColors.lightGray,
-    fontSize: fontSizes.md,
-    fontWeight: "500",
-  },
-  cardContainer: {},
   titleRow: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -116,15 +112,8 @@ const styles = StyleSheet.create({
     ...spacingStyles.px10,
     ...spacingStyles.pt10,
   },
-  cardTitle: {
-    fontSize: fontSizes.xs,
-    fontWeight: "600",
-    color: staticColors.darkGray,
-    flex: 1,
-    lineHeight: 18,
-  },
   inlineLikeButton: {
-    ...spacingStyles.p2
+    ...spacingStyles.p2,
   },
   starOverlay: {
     position: "absolute",
@@ -132,15 +121,10 @@ const styles = StyleSheet.create({
     left: 8,
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor:staticColors.white,
+    backgroundColor: staticColors.white,
     ...spacingStyles.px10,
     ...spacingStyles.py5,
     borderRadius: 8,
-  },
-  ratingText: {
-    fontSize: fontSizes.xs,
-    color: staticColors.textLightGray,
-    marginLeft: 4,
   },
   cardPrice: {
     fontSize: fontSizes.base,
@@ -152,7 +136,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.mx10,
     ...spacingStyles.my5,
     alignItems: "center",
-    gap:gapSizes.xs
+    gap: gapSizes.xs,
   },
   discountText: {
     color: staticColors.DarkRed,

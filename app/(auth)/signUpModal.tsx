@@ -70,7 +70,7 @@ const SignUpModal: React.FC<SignUpModalProps> = ({
     if (registered) {
       onClose();
       router.push({
-        pathname: "/otpScreen",
+        pathname: "/VerifyEmailOtpScreen",
         params: { email: formData.email },
       });
       dispatch(resetRegistration());

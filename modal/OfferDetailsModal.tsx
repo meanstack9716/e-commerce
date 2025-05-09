@@ -18,6 +18,7 @@ import {
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import fontSizes from "@/style/fontSizes";
+import gapSizes from "@/style/gapSizes";
 
 interface OfferDetailsModalProps {
   visible: boolean;
@@ -385,7 +386,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     ...spacingStyles.pt10,
-    gap: 15,
+    gap: gapSizes.lg,
   },
   modalTitle: {
     fontSize: fontSizes['lg'],
