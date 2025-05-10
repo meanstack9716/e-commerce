@@ -64,5 +64,6 @@ export default {
   softSkyBlue:'#c8d7f7',
   darkYellow:'#F57C00',
   darkGreen:"#00C853",
-  LightSkyBlue:"#CCDAF9"
+  LightSkyBlue:"#CCDAF9",
+  slateBlue:"#5b3ec8"
 };

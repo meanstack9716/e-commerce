@@ -12,9 +12,9 @@ import {
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { useLocalSearchParams, router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useDispatch, useSelector } from "react-redux";
 import colors from "@/style/staticColors";
 import staticColors from "@/style/staticColors";
-import data from "../../assets/data/products.json";
 import spacingStyles from "@/style/spacingStyles";
 import MegaDealBadge from "@/components/productDetails/MegaDealBadge";
 import SizeSelector from "@/components/productDetails/SizeSelector";
@@ -27,57 +27,57 @@ import ViewSimilarModal from "@/modal/ViewSimilarModal";
 import ProductList from "@/components/productDetails/ProductList";
 import fontSizes from "@/style/fontSizes";
 import gapSizes from "@/style/gapSizes";
+import { AppDispatch, RootState } from "@/store/store";
+import {
+  clearSelectedProduct,
+  fetchProductById,
+} from "@/store/product/productsSlice";
+import FullScreenLoader from "@/components/common/FullScreenLoader";
 
 const { width: screenWidth } = Dimensions.get("window");
 
 const ProductDetailsScreen: React.FC = () => {
   const params = useLocalSearchParams();
   const { id } = params;
-  const [isProductLiked, setISProductLiked] = useState(false);
-  const [product, setProduct] = useState<Profile | null>(null);
-  const [isViewSimilarModalVisible, setViewSimilarModalVisible] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+  const {
+    selectedProduct: product,
+    selectedProductLoading: loading,
+    selectedProductError: error,
+  } = useSelector((state: RootState) => state.products);
+  const [isProductLiked, setIsProductLiked] = useState(false);
+  const [isViewSimilarModalVisible, setViewSimilarModalVisible] =
+    useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [displayImages, setDisplayImages] = useState<string[]>([]);
   const insets = useSafeAreaInsets();
   const flatListRef = useRef<FlatList>(null);
+  const imageCarouselRef = useRef<FlatList>(null);
   const screenHeight = Dimensions.get("window").height;
-  
-  const originalPrice = product
-    ? (parseFloat(product.price) * 1.15).toFixed(2)
-    : "0";
-  const discount = product
-    ? (parseFloat(originalPrice) - parseFloat(product.price)).toFixed(2)
-    : "0";
 
   useEffect(() => {
-    const products = data.products || data;
-    const selectedProductData = products.find((p) => p.id === id);
-
-    if (selectedProductData) {
-      const normalizedProduct: Profile = {
-        id: selectedProductData.id,
-        images: selectedProductData.images,
-        title: selectedProductData.title || "Product Title",
-        price: selectedProductData.price,
-        star: selectedProductData.star,
-        categories: selectedProductData.categories || [],
-      };
-      setProduct(normalizedProduct);
+    if (id) {
+      dispatch(fetchProductById(id as string));
     }
-  }, [id]);
 
-  const renderStars = () => {
-    if (!product) return null;
-    return (
-      <FontAwesome
-        key="full-star"
-        name="star"
-        size={16}
-        color={staticColors.lightYellow}
-        style={styles.starIcon}
-      />
-    );
-  };
+    return () => {
+      dispatch(clearSelectedProduct());
+    };
+  }, [id, dispatch]);
+
+  // const renderStars = () => {
+  //   if (!product) return null;
+  //   return (
+  //     <FontAwesome
+  //       key="full-star"
+  //       name="star"
+  //       size={16}
+  //       color={staticColors.lightYellow}
+  //       style={styles.starIcon}
+  //     />
+  //   );
+  // };
 
   const handleScroll = (event: any) => {
     const index = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
@@ -90,21 +90,48 @@ const ProductDetailsScreen: React.FC = () => {
   };
 
   const handleLikePress = () => {
-    setISProductLiked((prev) => !prev);
+    setIsProductLiked((prev) => !prev);
   };
 
   const handleGoBack = () => {
     router.back();
   };
 
-  const handleViewSimilar = () => {
-    setViewSimilarModalVisible(true);
-  };
+  // const handleViewSimilar = () => {
+  //   setViewSimilarModalVisible(true);
+  // };
 
   const handleBackToTop = () => {
     flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
     setShowBackToTop(false);
   };
+
+  const handleColorSelect = (colorData: {
+    color: string;
+    images: string[];
+  }) => {
+    setDisplayImages(colorData.images);
+    setActiveIndex(0);
+    if (imageCarouselRef.current) {
+      imageCarouselRef.current.scrollToOffset({ offset: 0, animated: true });
+    }
+  };
+
+  if (loading || error) {
+    return (
+      <SafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
+        <FullScreenLoader visible={loading} />
+        <View style={styles.header}>
+          <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
+            <Ionicons name="arrow-back" size={24} color={colors.primary} />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.loadingContainer}>
+          <Text style={styles.loadingText}>{error}</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   if (!product) {
     return (
@@ -115,7 +142,7 @@ const ProductDetailsScreen: React.FC = () => {
           </TouchableOpacity>
         </View>
         <View style={styles.loadingContainer}>
-          <Text style={styles.loadingText}>Loading product details...</Text>
+          <Text style={styles.loadingText}>Product not found</Text>
         </View>
       </SafeAreaView>
     );
@@ -172,10 +199,13 @@ const ProductDetailsScreen: React.FC = () => {
 
             {/* Image Carousel */}
             <FlatList
+              ref={imageCarouselRef}
               horizontal
               pagingEnabled
-              data={product.images}
-              keyExtractor={(_, index) => index.toString()}
+              data={
+                displayImages.length > 0 ? displayImages : product?.images || []
+              }
+              keyExtractor={(_, index) => `image-${index}`}
               onScroll={handleScroll}
               showsHorizontalScrollIndicator={false}
               renderItem={({ item }) => (
@@ -187,25 +217,30 @@ const ProductDetailsScreen: React.FC = () => {
               )}
             />
             {/* Dot Indicators */}
-            <View style={styles.dotContainer}>
-              {product.images.map((_, index) => (
-                <View
-                  key={index}
-                  style={[
-                    styles.dot,
-                    {
-                      backgroundColor:
-                        activeIndex === index
-                          ? staticColors.darkGray
-                          : staticColors.borderLight,
-                    },
-                  ]}
-                />
-              ))}
-            </View>
+            {(displayImages.length > 1 || displayImages.length === 0) && (
+              <View style={styles.dotContainer}>
+                {(displayImages.length > 0
+                  ? displayImages
+                  : product?.images || []
+                ).map((_, index) => (
+                  <View
+                    key={index}
+                    style={[
+                      styles.dot,
+                      {
+                        backgroundColor:
+                          activeIndex === index
+                            ? staticColors.darkGray
+                            : staticColors.borderLight,
+                      },
+                    ]}
+                  />
+                ))}
+              </View>
+            )}
 
             {/* View Similar & Rating */}
-            <View style={styles.actionRow}>
+            {/* <View style={styles.actionRow}>
               <TouchableOpacity
                 style={styles.viewSimilarButton}
                 onPress={handleViewSimilar}
@@ -223,36 +258,36 @@ const ProductDetailsScreen: React.FC = () => {
                   ({product.star.toFixed(1)})
                 </Text>
               </View>
-            </View>
+            </View> */}
 
             {/* Title & Price */}
             <View style={styles.detailsContainer}>
               <Text style={styles.title}>{product.title}</Text>
+              <Text>{product.description}</Text>
               <View style={styles.priceContainer}>
-                <Text style={styles.originalPrice}>MRP ₹{originalPrice}</Text>
-                <Text style={styles.discountedPrice}>₹{product.price}</Text>
-                <Text style={styles.discount}>(Rs.{discount} OFF)</Text>
+                <Text style={styles.discountedPrice}>
+                  ₹{product.final_price}
+                </Text>
+                <Text style={styles.discount}>
+                  ({product.discount_percent}% OFF)
+                </Text>
               </View>
             </View>
+            {/* <MegaDealBadge /> */}
+            <SizeSelector product={product} onColorSelect={handleColorSelect} />
+            {/* <DeliveryCheck />
+            <ReturnPolicy /> */}
 
-            <MegaDealBadge />
-            <SizeSelector
-              product={product}
-              originalPrice={originalPrice}
-              onSizeChartOpen={() => {}}
-            />
-            <DeliveryCheck />
-            <ReturnPolicy />
-
-            <Text style={styles.heading}>Similar Products</Text>
-            <SimilarProducts currentProduct={product} />
-
+            {/* <Text style={styles.heading}>Similar Products</Text> */}
+            {/* <SimilarProducts currentProduct={product} /> */}
+            {/* 
             <BrandRating />
             <Text style={styles.heading}>Products you may like</Text>
-            <ProductList />
+            <ProductList /> */}
           </>
         }
       />
+
       {showBackToTop ? (
         <TouchableOpacity
           style={[styles.backToTopButton, { bottom: insets.bottom + 10 }]}
@@ -261,14 +296,12 @@ const ProductDetailsScreen: React.FC = () => {
           <Ionicons name="arrow-up" size={24} color={colors.white} />
           <Text style={styles.backToTopText}>Back to Top</Text>
         </TouchableOpacity>
-      ) : (
-        <ProductDetailsScreen />
-      )}
-      <ViewSimilarModal
+      ) : null}
+      {/* <ViewSimilarModal
         visible={isViewSimilarModalVisible}
         onClose={() => setViewSimilarModalVisible(false)}
         currentProduct={product}
-      />
+      /> */}
     </SafeAreaView>
   );
 };
@@ -368,6 +401,8 @@ const styles = StyleSheet.create({
   detailsContainer: {
     ...spacingStyles.px15,
     ...spacingStyles.ml5,
+    ...spacingStyles.pt15,
+    ...spacingStyles.pb10,
   },
   title: {
     fontSize: fontSizes.md,
@@ -415,7 +450,7 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: fontSizes.base,
     fontWeight: "bold",
-    ...spacingStyles.ml5
+    ...spacingStyles.ml5,
   },
 });
 

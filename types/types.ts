@@ -1,10 +1,47 @@
 export interface Profile {
   id: string;
-  images: string[];
   title: string;
-  price: string;
-  star: number;
+  description: string;
+  discount_percent?: number;
+  final_price?: number;
+  stock_quantity?: string;
+  thumbnail_url: string;
+  images?: string[];
   categories: string[];
+  star?: number;
+  details?: string;
+  sku?: string;
+  brand?: Brand;
+  sizes?: Size[];
+  gallery?: GalleryItem[];
+}
+
+export interface GalleryItem {
+  id: string;
+  color: string;
+  img_url: string;
+}
+
+export interface ColorVariant {
+  id: string;
+  value: string;
+  name: string;
+  stock_quantity: string;
+}
+
+export interface Size {
+  id: string;
+  product_id: string;
+  value: string;
+  size_type: string;
+  variants: ColorVariant[];
+}
+
+export interface Brand {
+  id: string;
+  name: string;
+  description: string;
+  img_url: string;
 }
 
 export interface SubSubCategory {
@@ -31,6 +68,21 @@ export interface CategoryItem {
   description?: string;
   img_url: string;
   sub_categories: SubCategory[];
+}
+
+export interface BannerSlide {
+  id: string;
+  image: string;
+  title: string;
+}
+
+export interface PromotionalCard {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  actionText: string;
+  actionLink: string;
 }
 
 export interface ProductData {

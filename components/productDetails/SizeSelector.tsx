@@ -1,61 +1,188 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  Image,
 } from "react-native";
 import SizeChartModal from "@/modal/SizeChartModal";
 import fontSizes from "@/style/fontSizes";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-
-type SizeInfo = {
-  label: string;
-  left: number;
-};
+import { Profile } from "../../types/types";
+import { AntDesign } from "@expo/vector-icons";
 
 interface SizeSelectorProps {
-  product: {
-    id: string;
+  product: Profile | null;
+  onColorSelect: (colorData: {
+    color: string;
     images: string[];
-    title: string;
-    price: string;
-    star: number;
-    categories: string[];
-  } | null;
-  originalPrice: string;
-  onSizeChartOpen?: () => void; 
+  }) => void;
 }
 
-const sizes: SizeInfo[] = [
-  { label: "XS", left: 0 },
-  { label: "S", left: 3 },
-  { label: "M", left: 2 },
-  { label: "L", left: 3 },
-  { label: "XL", left: 4 },
-  { label: "XXL", left: 1 },
-];
+const allPossibleSizes = ["XS", "S", "M", "L", "XL", "XXL"];
 
-const SizeSelector: React.FC<SizeSelectorProps> = ({
-  product,
-  originalPrice,
-}) => {
-  const [selectedSize, setSelectedSize] = useState<string>("M");
-
-  const handleSizeClick = (size: SizeInfo) => {
-    if (size.left > 0) setSelectedSize(size.label);
-  };
+const SizeSelector: React.FC<SizeSelectorProps> = ({ product , onColorSelect }) => {
+  const [selectedSize, setSelectedSize] = useState<string>("");
+  const [selectedColor, setSelectedColor] = useState<string>("");
   const [showSizeChart, setShowSizeChart] = useState(false);
+  const [availableColors, setAvailableColors] = useState<
+    Array<{
+      id: string;
+      color: string;
+      img_url: string;
+      stock_quantity: string;
+      images: string[];
+    }>
+  >([]);
+
+  const availableSizes = allPossibleSizes.map((size) => {
+    const productSize = product?.sizes?.find((s) => s.value === size);
+    if (productSize) {
+      const totalStock = productSize.variants.reduce(
+        (sum, variant) => sum + parseInt(variant.stock_quantity || "0"),
+        0
+      );
+      return { label: size, left: totalStock, sizeData: productSize };
+    }
+    return { label: size, left: 0, sizeData: null };
+  });
+
+  useEffect(() => {
+    const firstAvailableSize = availableSizes.find((size) => size.left > 0);
+    if (firstAvailableSize) {
+      setSelectedSize(firstAvailableSize.label);
+      updateAvailableColors(firstAvailableSize.sizeData);
+    } else {
+      setSelectedSize("");
+      setAvailableColors([]);
+    }
+  }, [product]);
+
+  const updateAvailableColors = (sizeData: any) => {
+    if (!sizeData || !sizeData.variants || sizeData.variants.length === 0) {
+      setAvailableColors([]);
+      setSelectedColor(""); 
+      return;
+    }
+    const colorsWithStock = sizeData.variants.filter(
+      (variant: any) => parseInt(variant.stock_quantity || "0") > 0
+    );
+    const colorsWithImages = colorsWithStock.map((variant: any) => {
+      const galleryItem = product?.gallery?.find(
+        (item) =>
+          item.color.trim().toLowerCase() === variant.name.trim().toLowerCase()
+      );
+      const colorImages = product?.gallery
+      ?.filter(item => item.color.trim().toLowerCase() === variant.name.trim().toLowerCase())
+      ?.map(item => item.img_url) || [];
+      const imgUrl = galleryItem?.img_url || product?.thumbnail_url;
+      const images = colorImages.length > 0 ? colorImages : (product?.images || []);
+
+      return {
+        id: variant.id,
+        color: variant.name,
+        img_url: imgUrl,
+        stock_quantity: variant.stock_quantity,
+        images: images,
+      };
+    });
+
+    setAvailableColors(colorsWithImages);
+    if (colorsWithImages.length > 0) {
+      setSelectedColor(colorsWithImages[0].color);
+      onColorSelect({
+        color: colorsWithImages[0].color,
+        images: colorsWithImages[0].images,
+      });
+    } else {
+      setSelectedColor("");
+    }
+  };
+
+  const handleSizeClick = (size: {
+    label: string;
+    left: number;
+    sizeData: any;
+  }) => {
+    if (size.left > 0) {
+      setSelectedSize(size.label);
+      updateAvailableColors(size.sizeData);
+    }
+  };
+
+  const handleColorClick = (colorOption: {
+    color: string;
+    images: string[];
+  }) => {
+    setSelectedColor(colorOption.color);
+    onColorSelect({
+      color: colorOption.color,
+      images: colorOption.images,
+    });
+  };
+
+
   return (
     <View style={styles.container}>
+      {availableColors.length > 0 ? (
+        <View style={styles.colorSection}>
+          <Text style={styles.colorTitle}>
+            Color:{" "}
+            <Text style={styles.bold}>{selectedColor}</Text>
+          </Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.colorScroll}
+          >
+            {availableColors.map((colorOption) => {
+              const isColorSelected = selectedColor === colorOption.color;
+
+              return (
+                <TouchableOpacity
+                  key={colorOption.id}
+                  onPress={() => handleColorClick(colorOption)}
+                  style={[
+                    styles.colorOption,
+                    isColorSelected && styles.selectedColorOption,
+                  ]}
+                >
+                  <Image
+                    source={{ uri: colorOption.img_url }}
+                    style={styles.colorImage}
+                    resizeMode="cover"
+                  />
+                  <Text style={styles.colorName}>{colorOption.color}</Text>
+                  <Text style={styles.colorStock}>
+                    {colorOption.stock_quantity} left
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        </View>
+      ) : (
+        <Text style={styles.noColorsText}>
+          No colors available for this size
+        </Text>
+      )}
       <View style={styles.headerRow}>
         <Text style={styles.labelText}>
-          Size: <Text style={styles.bold}>{selectedSize}</Text>
+          Size:{" "}
+          <Text style={styles.bold}>{selectedSize}</Text>
         </Text>
         <TouchableOpacity onPress={() => setShowSizeChart(true)}>
-          <Text style={styles.sizeChart}>Size Chart &gt;</Text>
+          <Text style={styles.sizeChart}>
+            Size Chart{" "}
+            <AntDesign
+              name="right"
+              size={12}
+              color={staticColors.discountText}
+            />
+          </Text>
         </TouchableOpacity>
 
         <SizeChartModal
@@ -65,9 +192,11 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
             product
               ? {
                   title: product.title,
-                  price: product.price,
-                  originalPrice: originalPrice,
-                  image: product.images && product.images.length > 0 ? product.images[0] : "", 
+                  price: product.final_price,
+                  image:
+                    product.images && product.images.length > 0
+                      ? product.images[0]
+                      : "",
                 }
               : null
           }
@@ -79,7 +208,7 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
         showsHorizontalScrollIndicator={false}
         style={styles.sizeScroll}
       >
-        {sizes.map((size) => {
+        {availableSizes.map((size) => {
           const isSelected = selectedSize === size.label;
           const isDisabled = size.left === 0;
 
@@ -94,6 +223,8 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
                   isSelected && styles.selectedButton,
                 ]}
               >
+                 {isDisabled && <View style={styles.diagonalLine} />}
+                 {isDisabled && <View style={styles.diagonalLine1} />}
                 <Text
                   style={[
                     styles.sizeLabel,
@@ -136,7 +267,6 @@ const styles = StyleSheet.create({
   headerRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    ...spacingStyles.m10
   },
   labelText: {
     fontSize: fontSizes.base,
@@ -150,11 +280,12 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.sm,
   },
   sizeScroll: {
- 
+   ...spacingStyles.mb10
   },
   sizeOption: {
     alignItems: "center",
-    ...spacingStyles.mr10
+    ...spacingStyles.mr10,
+    ...spacingStyles.py15,
   },
   sizeButton: {
     width: 56,
@@ -169,6 +300,7 @@ const styles = StyleSheet.create({
   disabledButton: {
     backgroundColor: staticColors.white,
     borderColor: staticColors.borderSecondaryLight,
+ 
   },
   selectedButton: {
     backgroundColor: staticColors.shadowColor,
@@ -179,41 +311,103 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   disabledText: {
-    color: staticColors.lightGray,
-    textDecorationLine: "line-through",
+    color: staticColors.textLightGray,
+    // textDecorationLine: "line-through",
   },
   selectedText: {
     color: staticColors.white,
   },
   leftText: {
     fontSize: fontSizes.xs,
-    color:staticColors.discountText,
-   ...spacingStyles.mt5
+    color: staticColors.discountText,
+    ...spacingStyles.mt5,
+  },
+  colorSection: {
+ ...spacingStyles.mb10
+  },
+  colorTitle: {
+    fontSize: fontSizes.base,
+    ...spacingStyles.mb10
+  },
+  colorScroll: {
+    flexGrow: 0,
+  },
+  colorOption: {
+    marginRight: 15,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "transparent",
+    borderRadius: 8,
+    ...spacingStyles.p5
+  },
+  selectedColorOption: {
+    borderColor: staticColors.darkGray,
+  },
+  colorImage: {
+    width: 70,
+    height: 70,
+    borderRadius: 6,
+  },
+  colorName: {
+    fontSize: fontSizes.xs,
+    fontWeight: "600",
+    ...spacingStyles.mt5
+  },
+  colorStock: {
+    fontSize: fontSizes.xs,
+    color: staticColors.discountText,
+  },
+  noColorsText: {
+    fontSize: fontSizes.sm,
+    color: staticColors.darkGray,
+    ...spacingStyles.mt10
   },
   lengthBox: {
     ...spacingStyles.p10,
     borderWidth: 1,
-    borderColor: staticColors.lightGray,
-    borderRadius: 12,
+    borderColor: staticColors.borderLight,
+    borderRadius: 10,
   },
   lengthLabel: {
     fontSize: fontSizes.xs,
-    color: "#555",
+    color: staticColors.textMuted,
   },
   lengthValue: {
     fontWeight: "bold",
     backgroundColor: staticColors.lightGray,
-    color: "#5b3ec8",
+    color: staticColors.slateBlue,
     borderRadius: 4,
   },
   measurements: {
     flexDirection: "row",
     flexWrap: "wrap",
-    
   },
   measureText: {
     ...spacingStyles.mr10,
     fontSize: fontSizes.xs,
-    color:staticColors.darkGray
+    color: staticColors.darkGray,
   },
+
+  diagonalLine: {
+    position: 'absolute',
+    width: '130%', 
+    height: 1,
+    backgroundColor: staticColors.lightGray,
+    transform: [{ rotate: '45deg' }],
+    top: '50%',
+    left: '-18%',
+    zIndex: 1,
+  },
+  
+  diagonalLine1: {
+    position: 'absolute',
+    width: '130%', 
+    height: 1,
+    backgroundColor: staticColors.lightGray,
+    transform: [{ rotate: '-45deg' }],
+    top: '50%',
+    left: '-18%',
+    zIndex: 1,
+  },
+  
 });
