@@ -12,7 +12,7 @@ const textStyles = StyleSheet.create({
     color: colors.primary,
   },
   subtitle: {
-    fontSize: fontSizes.base,
+    fontSize: fontSizes.sm,
     fontFamily: "Helvetica",
     color: colors.textSecondary,
     ...spacingStyles.mb10

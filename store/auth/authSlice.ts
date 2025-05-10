@@ -124,6 +124,26 @@ export const resetPassword = createAsyncThunk(
   }
 );
 
+export const verifyUser = createAsyncThunk(
+  "auth/verifyUser",
+  async (
+    { email, code }: { email: string; code: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const res = await axios.post(`${apiUrl}/auth/verify-user`, {
+        email,
+        code,
+      });
+      return res.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        handleApiError(error, "Email verification failed")
+      );
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -134,16 +154,15 @@ const authSlice = createSlice({
     resetRegistration: (state) => {
       state.registered = false;
     },
-    logoutUser: (state) => {
+    setResetEmail: (state, action: PayloadAction<string>) => {
+      state.resetEmail = action.payload;
+    },
+    setResetCode: (state, action: PayloadAction<string>) => {
+      state.resetCode = action.payload;
+    },
+    logout: (state) => {
       state.isAuthenticated = false;
       state.user = null;
-    },
-    setResetCredentials: (
-      state,
-      action: PayloadAction<{ email: string; code: string }>
-    ) => {
-      state.resetEmail = action.payload.email;
-      state.resetCode = action.payload.code;
     },
   },
   extraReducers: (builder) => {
@@ -205,10 +224,28 @@ const authSlice = createSlice({
       .addCase(resetPassword.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+      })
+      .addCase(verifyUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(verifyUser.fulfilled, (state) => {
+        state.loading = false;
+        state.isAuthenticated = true;
+      })
+      .addCase(verifyUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       });
   },
 });
 
-export const { clearAuthError, resetRegistration, setResetCredentials } =
-  authSlice.actions;
+export const {
+  clearAuthError,
+  resetRegistration,
+  setResetEmail,
+  setResetCode,
+  logout,
+} = authSlice.actions;
+
 export default authSlice.reducer;

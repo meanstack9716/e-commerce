@@ -36,3 +36,11 @@ export interface CategoryItem {
 export interface ProductData {
   products: Profile[];
 }
+
+export type OtpInputProps = {
+  email: string;
+  onVerifySuccess: (enteredOtp: string) => void;
+  onStepBack: () => void;
+  cancelText?: string;
+  confirmText?: string;
+};

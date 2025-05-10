@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-import { useRouter } from "expo-router";
 import LoginModal from "@/app/(auth)/loginModal";
 import SignUpModal from "@/app/(auth)/signUpModal";
 import colors from "@/style/staticColors";
@@ -8,7 +7,6 @@ import spacingStyles from "@/style/spacingStyles";
 import fontSizes from "@/style/fontSizes";
 
 const ProfileHeader: React.FC = () => {
-  const router = useRouter();
   const [loginModalVisible, setLoginModalVisible] = useState<boolean>(false);
   const [signupModalVisible, setSignupModalVisible] = useState<boolean>(false);
 
@@ -25,13 +23,13 @@ const ProfileHeader: React.FC = () => {
   };
 
   const openSignupModal = (): void => {
-    setLoginModalVisible(false); 
+    setLoginModalVisible(false);
     setSignupModalVisible(true);
   };
 
   const openLoginModal = (): void => {
-    setSignupModalVisible(false); 
-    setLoginModalVisible(true); 
+    setSignupModalVisible(false);
+    setLoginModalVisible(true);
   };
 
   return (
@@ -57,15 +55,15 @@ const ProfileHeader: React.FC = () => {
           </View>
         </View>
       </View>
-      
-      <LoginModal 
-        visible={loginModalVisible} 
+
+      <LoginModal
+        visible={loginModalVisible}
         onClose={closeLoginModal}
-        onSignupPress={openSignupModal} 
+        onSignupPress={openSignupModal}
       />
-      
-      <SignUpModal 
-        visible={signupModalVisible} 
+
+      <SignUpModal
+        visible={signupModalVisible}
         onClose={closeSignupModal}
         onLoginPress={openLoginModal}
       />
@@ -79,7 +77,7 @@ const styles = StyleSheet.create({
     height: 215,
   },
   header: {
-    backgroundColor: colors.textMuted, 
+    backgroundColor: colors.textMuted,
     position: "absolute",
     top: 0,
     left: 0,
@@ -87,7 +85,7 @@ const styles = StyleSheet.create({
     height: 130,
   },
   contentContainer: {
-    ...spacingStyles.px15
+    ...spacingStyles.px15,
   },
   rowContainer: {
     marginTop: 70,
@@ -125,7 +123,7 @@ const styles = StyleSheet.create({
   loginText: {
     color: colors.white,
     fontWeight: "bold",
-    fontSize: fontSizes.xs
+    fontSize: fontSizes.xs,
   },
 });
 
