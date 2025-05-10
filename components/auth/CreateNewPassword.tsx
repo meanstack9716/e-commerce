@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   },
   infoText: {
     fontSize: fontSizes.sm,
-    color: staticColors.LightSkyBlue,
+    color: staticColors.textSecondary,
     textAlign: "center",
     width: "80%",
     ...spacingStyles.mb20,

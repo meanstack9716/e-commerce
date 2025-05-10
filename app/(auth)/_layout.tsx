@@ -4,6 +4,7 @@ export default function AuthLayout() {
   return (
     <Stack>
       <Stack.Screen name="forgetPassword" options={{ title: 'ForgetPasword' ,  headerShown: false}} />
+      <Stack.Screen name="VerifyEmailOtpScreen" options={{ title: 'VerifyEmailOtpScreen' ,  headerShown: false}} />
     </Stack>
   );
 }

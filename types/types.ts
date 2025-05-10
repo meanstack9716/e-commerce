@@ -2,7 +2,6 @@ export interface Profile {
   id: string;
   title: string;
   description: string;
- 
   discount_percent?: number;
   final_price?: number;
   stock_quantity?: string;
@@ -90,14 +89,10 @@ export interface ProductData {
   products: Profile[];
 }
 
-export interface CategoriesState {
-  data: CategoryItem[];
-  loading: boolean;
-  error: string | null;
-}
-
-export interface ProductsState {
-  data: Profile[];
-  loading: boolean;
-  error: string | null;
-}
+export type OtpInputProps = {
+  email: string;
+  onVerifySuccess: (enteredOtp: string) => void;
+  onStepBack: () => void;
+  cancelText?: string;
+  confirmText?: string;
+};
