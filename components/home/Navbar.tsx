@@ -22,7 +22,7 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ tabs, activeTab, setActiveTab }) => {
   const handleTabPress = (tab: string) => {
     if (tab === "Categories") {
-      router.push("/categories");
+      router.navigate("/categories");
     } else {
       setActiveTab(tab);
     }

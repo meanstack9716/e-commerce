@@ -9,7 +9,7 @@ import { View, Text, Image, StyleSheet } from "react-native";
 const EmptyShoppingBagMessage: React.FC = () => {
   return (
     <View style={styles.content}>
-      <Image source={images.EMPTYBAGIMAGE} style={styles.bagImage} />
+      <Image source={images.emptyBagImage} style={styles.bagImage} />
 
       <Text style={styles.mainText}>Hey, it feels so light!</Text>
       <Text style={styles.subText}>

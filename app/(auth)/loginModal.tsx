@@ -82,14 +82,14 @@ const LoginModal: React.FC<LoginModalProps> = ({
 
       if (loginUser.fulfilled.match(resultAction)) {
         onClose();
-        router.push("/userInformation");
+        router.navigate("/userInformation");
       }
     }
   };
 
   const handleForgetPress = (): void => {
     onClose();
-    router.push("/forgetPassword");
+    router.navigate("/forgetPassword");
     dispatch(clearAuthError());
   };
   useEffect(() => {

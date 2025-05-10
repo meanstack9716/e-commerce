@@ -56,7 +56,7 @@ const ProductDetailsScreen: React.FC = () => {
     if (product) {
       dispatch(addToCart({ product, selectedSize, isAuthenticated }));
 
-      router.push("/cart");
+      router.navigate("/cart");
     }
   };
 

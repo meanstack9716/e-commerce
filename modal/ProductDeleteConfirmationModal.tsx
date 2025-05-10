@@ -5,7 +5,7 @@ import staticColors from "@/style/staticColors";
 import { Ionicons } from "@expo/vector-icons";
 import fontSizes from "@/style/fontSizes";
 
-interface ConfirmationModalProps {
+interface ProductDeleteConfirmationModalProps {
   visible: boolean;
   title: string;
   message: string;
@@ -16,7 +16,7 @@ interface ConfirmationModalProps {
   onClose: () => void;
 }
 
-const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
+const ProductDeleteConfirmationModal: React.FC<ProductDeleteConfirmationModalProps> = ({
   visible,
   title,
   message,
@@ -35,7 +35,6 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
     >
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
-          {/* Header with Title and Close Icon */}
           <View style={styles.header}>
             <Text style={styles.title}>{title}</Text>
             <TouchableOpacity style={styles.closeIcon} onPress={onClose}>
@@ -72,7 +71,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   );
 };
 
-export default ConfirmationModal;
+export default ProductDeleteConfirmationModal;
 
 const styles = StyleSheet.create({
   overlay: {

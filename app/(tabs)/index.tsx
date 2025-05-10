@@ -108,7 +108,7 @@ const HomeScreen: React.FC = () => {
   };
 
   const handleUserIconPress = () => {
-    router.push("/profile");
+    router.navigate("/profile");
   };
 
   const toggleProductLike = (id: string) => {
@@ -127,7 +127,7 @@ const HomeScreen: React.FC = () => {
       liked={likedProductItems.includes(item.id)}
       onLikePress={() => toggleProductLike(item.id)}
       onPress={() =>
-        router.push({
+        router.navigate({
           pathname: "/ProductDetails",
           params: { id: item.id },
         })

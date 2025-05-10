@@ -11,7 +11,7 @@ import {
 import EmptyShoppingBagMessage from "./EmptyShoppingBagMessage";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import ConfirmationModal from "@/modal/ConfirmationModal";
+import ProductDeleteConfirmationModal from "@/modal/ProductDeleteConfirmationModal";
 import fontSizes from "@/style/fontSizes";
 import { textTruncate } from "@/utils/textTruncate";
 import { useDispatch, useSelector } from "react-redux";
@@ -285,7 +285,7 @@ const ProductInfoSection: React.FC = () => {
         />
       )}
 
-      <ConfirmationModal
+      <ProductDeleteConfirmationModal
         visible={isConfirmationModalVisible}
         title="Add to Wishlist"
         message={confirmationModalDetails.message}

@@ -97,7 +97,7 @@ const ProductScreen: React.FC = () => {
             liked={likedProductIds.includes(item.id)}
             onLikePress={() => toggleLike(item.id)}
             onPress={() =>
-              router.push({
+              router.navigate({
                 pathname: "/ProductDetails",
                 params: { id: item.id },
               })

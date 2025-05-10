@@ -47,7 +47,7 @@ const SimilarProducts = ({ currentProduct }: { currentProduct: Product }) => {
   if (limitedSimilar.length === 0) return null;
 
   const navigateToProductDetails = (productId: string) => {
-    router.push({
+    router.navigate({
       pathname: "/ProductDetails",
       params: { id: productId },
     });
@@ -57,7 +57,7 @@ const SimilarProducts = ({ currentProduct }: { currentProduct: Product }) => {
     dispatch(
       addToCart({ product: product, selectedSize: undefined, isAuthenticated })
     );
-    router.push("/cart");
+    router.navigate("/cart");
   };
 
   return (
