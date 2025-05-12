@@ -1,10 +1,15 @@
-export interface Profile {
+export interface Product {
   id: string;
   images: string[];
   title: string;
   price: string;
   star: number;
   categories: string[];
+  quantity?: number;
+  selectedSize?: string;
+  isSelected?: boolean;
+  seller?: string;
+  discount?:string
 }
 
 export interface SubSubCategory {
@@ -34,5 +39,5 @@ export interface CategoryItem {
 }
 
 export interface ProductData {
-  products: Profile[];
+  products: Product[];
 }

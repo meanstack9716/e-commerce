@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -25,8 +25,8 @@ interface SizeSelectorProps {
     star: number;
     categories: string[];
   } | null;
-  originalPrice: string;
-  onSizeChartOpen?: () => void; 
+  onSizeChartOpen?: () => void;
+  onSizeSelect: (size: string) => void;
 }
 
 const sizes: SizeInfo[] = [
@@ -40,14 +40,22 @@ const sizes: SizeInfo[] = [
 
 const SizeSelector: React.FC<SizeSelectorProps> = ({
   product,
-  originalPrice,
+  onSizeSelect,
 }) => {
   const [selectedSize, setSelectedSize] = useState<string>("M");
+  const [showSizeChart, setShowSizeChart] = useState(false);
+
+  useEffect(() => {
+    onSizeSelect(selectedSize); 
+  }, []); 
 
   const handleSizeClick = (size: SizeInfo) => {
-    if (size.left > 0) setSelectedSize(size.label);
+    if (size.left > 0) {
+      setSelectedSize(size.label);
+      onSizeSelect(size.label); 
+    }
   };
-  const [showSizeChart, setShowSizeChart] = useState(false);
+
   return (
     <View style={styles.container}>
       <View style={styles.headerRow}>
@@ -66,8 +74,7 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
               ? {
                   title: product.title,
                   price: product.price,
-                  originalPrice: originalPrice,
-                  image: product.images && product.images.length > 0 ? product.images[0] : "", 
+                  image: product.images && product.images.length > 0 ? product.images[0] : "",
                 }
               : null
           }
@@ -129,6 +136,7 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
 
 export default SizeSelector;
 
+// Styles remain unchanged
 const styles = StyleSheet.create({
   container: {
     ...spacingStyles.px15,
@@ -136,7 +144,7 @@ const styles = StyleSheet.create({
   headerRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    ...spacingStyles.m10
+    ...spacingStyles.m10,
   },
   labelText: {
     fontSize: fontSizes.base,
@@ -149,12 +157,10 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: fontSizes.sm,
   },
-  sizeScroll: {
- 
-  },
+  sizeScroll: {},
   sizeOption: {
     alignItems: "center",
-    ...spacingStyles.mr10
+    ...spacingStyles.mr10,
   },
   sizeButton: {
     width: 56,
@@ -209,7 +215,6 @@ const styles = StyleSheet.create({
   measurements: {
     flexDirection: "row",
     flexWrap: "wrap",
-    
   },
   measureText: {
     ...spacingStyles.mr10,
