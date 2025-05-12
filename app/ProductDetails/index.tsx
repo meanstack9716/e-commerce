@@ -21,10 +21,11 @@ import SizeSelector from "@/components/productDetails/SizeSelector";
 import DeliveryCheck from "@/components/productDetails/DeliveryCheck";
 import ReturnPolicy from "./ReturnPolicy";
 import SimilarProducts from "@/components/productDetails/SimilarProducts";
-import { Profile } from "../../types/types";
+import { Product } from "../../types/types";
 import BrandRating from "@/components/productDetails/BrandRating";
 import ViewSimilarModal from "@/modal/ViewSimilarModal";
 import ProductList from "@/components/productDetails/ProductList";
+import ProductActionButtons from "@/components/productDetails/ProductActionButtons";
 import fontSizes from "@/style/fontSizes";
 import gapSizes from "@/style/gapSizes";
 import { AppDispatch, RootState } from "@/store/store";
@@ -35,7 +36,7 @@ import {
 import FullScreenLoader from "@/components/common/FullScreenLoader";
 
 const { width: screenWidth } = Dimensions.get("window");
-
+const screenHeight = Dimensions.get("window").height;
 const ProductDetailsScreen: React.FC = () => {
   const params = useLocalSearchParams();
   const { id } = params;
@@ -306,6 +307,7 @@ const ProductDetailsScreen: React.FC = () => {
   );
 };
 
+// Styles remain the same
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -417,11 +419,6 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.md,
     fontWeight: "bold",
     color: colors.primary,
-  },
-  originalPrice: {
-    fontSize: fontSizes.sm,
-    textDecorationLine: "line-through",
-    color: staticColors.softGray,
   },
   discount: {
     fontSize: fontSizes.sm,

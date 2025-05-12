@@ -91,7 +91,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
 
   const handleForgetPress = (): void => {
     onClose();
-    router.push("/forgetPassword");
+    router.navigate("/forgetPassword");
     dispatch(clearAuthError());
   };
   useEffect(() => {

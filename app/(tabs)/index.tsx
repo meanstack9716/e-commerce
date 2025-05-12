@@ -27,7 +27,7 @@ import BrandCard from "@/components/home/BrandCard";
 import staticColors from "@/style/staticColors";
 import OfferPriceCard from "@/components/home/OfferPriceCard";
 import PocketFriendlyBargain from "@/components/home/PocketFriendlyCategory";
-import { Profile } from "@/types/types";
+import { Product } from "@/types/types";
 import fontSizes from "@/style/fontSizes";
 import gapSizes from "@/style/gapSizes";
 import images from "@/constants/images";
@@ -90,7 +90,7 @@ const HomeScreen: React.FC = () => {
         const subCategoryIds = activeCategory.sub_categories.map(
           (sub: any) => sub.id
         );
-        filtered = filtered.filter((product: Profile) =>
+        filtered = filtered.filter((product: Product) =>
           product.categories.some(
             (cat) => cat === activeCategory.id || subCategoryIds.includes(cat)
           )
@@ -99,13 +99,13 @@ const HomeScreen: React.FC = () => {
     }
 
     if (selectedCategory) {
-      filtered = filtered.filter((product: Profile) =>
+      filtered = filtered.filter((product: Product) =>
         product.categories.includes(selectedCategory)
       );
     }
 
     if (productSearchQuery) {
-      filtered = filtered.filter((product: Profile) =>
+      filtered = filtered.filter((product: Product) =>
         product.title.toLowerCase().includes(productSearchQuery.toLowerCase())
       );
     }
@@ -114,7 +114,7 @@ const HomeScreen: React.FC = () => {
   };
 
   const handleUserIconPress = () => {
-    router.push("/profile");
+    router.navigate("/profile");
   };
 
   const toggleProductLike = (id: string) => {
@@ -127,13 +127,13 @@ const HomeScreen: React.FC = () => {
     setSelectedCategory(categoryId || null);
   };
 
-  const renderProductItem = ({ item }: { item: Profile }) => (
+  const renderProductItem = ({ item }: { item: Product }) => (
     <ProductCard
       {...item}
       liked={likedProductItems.includes(item.id)}
       onLikePress={() => toggleProductLike(item.id)}
       onPress={() =>
-        router.push({
+        router.navigate({
           pathname: "/ProductDetails",
           params: { id: item.id },
         })

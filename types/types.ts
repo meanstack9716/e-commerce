@@ -1,4 +1,4 @@
-export interface Profile {
+export interface Product {
   id: string;
   title: string;
   description: string;
@@ -14,6 +14,7 @@ export interface Profile {
   brand?: Brand;
   sizes?: Size[];
   gallery?: GalleryItem[];
+  isSelected?: boolean;
 }
 
 export interface GalleryItem {
@@ -86,7 +87,7 @@ export interface PromotionalCard {
 }
 
 export interface ProductData {
-  products: Profile[];
+  products: Product[];
 }
 
 export type OtpInputProps = {

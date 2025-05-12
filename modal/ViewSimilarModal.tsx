@@ -12,13 +12,13 @@ import { Ionicons } from "@expo/vector-icons";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import SimilarProducts from "@/components/productDetails/SimilarProducts";
-import { Profile } from "@/types/types";
+import { Product } from "@/types/types";
 import fontSizes from "@/style/fontSizes";
 
 interface ViewSimilarModalProps {
   visible: boolean;
   onClose: () => void;
-  currentProduct: Profile | null;
+  currentProduct: Product | null;
 }
 
 const ViewSimilarModal: React.FC<ViewSimilarModalProps> = ({

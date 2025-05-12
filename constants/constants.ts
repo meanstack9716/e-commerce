@@ -6,3 +6,5 @@ export const PRODUCT_CODE = 32361470;
 export const PRODUCT_PRICE = "294";
 export const EXTRA_DISCOUNT = "90";
 export const OTP_RESEND_TIMER = 30;
+export const  CART = "guest_cart";
+export const PIN_CODE_LENGTH = 6
