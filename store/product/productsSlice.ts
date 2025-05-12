@@ -1,13 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { Profile } from "@/types/types";
+import { Product } from "@/types/types";
 import { normalizeProduct } from "@/utils/normalizeProduct";
 
 const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
 interface ProductsState {
-  data: Profile[];
-  selectedProduct: Profile | null;
+  data: Product[];
+  selectedProduct: Product | null;
   loading: boolean;
   error: string | null;
   selectedProductLoading: boolean;
@@ -24,7 +24,7 @@ const initialState: ProductsState = {
 };
 
 export const fetchProducts = createAsyncThunk<
-  Profile[],
+  Product[],
   void,
   { rejectValue: string }
 >("products/fetchProducts", async (_, { rejectWithValue }) => {
@@ -43,11 +43,12 @@ export const fetchProducts = createAsyncThunk<
 });
 
 export const fetchProductById = createAsyncThunk<
-  Profile,
+  Product,
   string,
   { rejectValue: string }
 >("products/fetchProductById", async (id, { rejectWithValue }) => {
   try {
+    console.log(id)
     const response = await axios.get(`${apiUrl}/products/${id}`);
     const apiProduct = response.data.data;
     if (apiProduct) {

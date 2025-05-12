@@ -9,20 +9,26 @@ import {
 } from "react-native";
 import { router } from "expo-router";
 import data from "@/assets/data/products.json";
-import { Profile } from "../../types/types";
+import { Product } from "../../types/types";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import fontSizes from "@/style/fontSizes";
 import { textTruncate } from "@/utils/textTruncate";
 import { commonStyles } from "@/style/commonStyle";
 import { FontAwesome } from "@expo/vector-icons";
-
-const SimilarProducts = ({ currentProduct }: { currentProduct: Profile }) => {
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart } from "@/store/cart/cartSlice";
+import { RootState } from "@/store/store";
+const SimilarProducts = ({ currentProduct }: { currentProduct: Product }) => {
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
   if (!currentProduct) return null;
 
   const allProductData = data.products || data;
 
-  const allProducts: Profile[] = allProductData.map((item) => ({
+  const allProducts: Product[] = allProductData.map((item) => ({
     ...item,
     title: item.title ?? "Untitled Product",
   }));
@@ -41,10 +47,17 @@ const SimilarProducts = ({ currentProduct }: { currentProduct: Profile }) => {
   if (limitedSimilar.length === 0) return null;
 
   const navigateToProductDetails = (productId: string) => {
-    router.push({
+    router.navigate({
       pathname: "/ProductDetails",
       params: { id: productId },
     });
+  };
+
+  const handleAddToCart = (product: Product) => {
+    dispatch(
+      addToCart({ product: product, selectedSize: undefined, isAuthenticated })
+    );
+    router.navigate("/cart");
   };
 
   return (
@@ -72,7 +85,7 @@ const SimilarProducts = ({ currentProduct }: { currentProduct: Profile }) => {
                 </View>
               )}
               <View style={commonStyles.ratingContainer}>
-                <Text >
+                <Text>
                   {item.star}{" "}
                   <FontAwesome
                     name="star"
@@ -82,9 +95,14 @@ const SimilarProducts = ({ currentProduct }: { currentProduct: Profile }) => {
                 </Text>
               </View>
             </View>
-            <Text style={[commonStyles.cardTitle , styles.title]}>{textTruncate(item.title)}</Text>
+            <Text style={[commonStyles.cardTitle, styles.title]}>
+              {textTruncate(item.title)}
+            </Text>
             <Text style={styles.price}>₹{item.price}</Text>
-            <TouchableOpacity style={styles.addButton}>
+            <TouchableOpacity
+              style={styles.addButton}
+              onPress={() => handleAddToCart(item)}
+            >
               <Text style={styles.addButtonText}>Add to Bag</Text>
             </TouchableOpacity>
           </TouchableOpacity>

@@ -11,11 +11,11 @@ import SizeChartModal from "@/modal/SizeChartModal";
 import fontSizes from "@/style/fontSizes";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import { Profile } from "../../types/types";
+import { Product } from "../../types/types";
 import { AntDesign } from "@expo/vector-icons";
 
 interface SizeSelectorProps {
-  product: Profile | null;
+  product: Product | null;
   onColorSelect: (colorData: {
     color: string;
     images: string[];
@@ -260,6 +260,7 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({ product , onColorSelect }) 
 
 export default SizeSelector;
 
+// Styles remain unchanged
 const styles = StyleSheet.create({
   container: {
     ...spacingStyles.px15,

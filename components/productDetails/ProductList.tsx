@@ -7,7 +7,7 @@ import {
   products as allProductsRaw,
 } from "../../assets/data/products.json";
 import { useRouter, useLocalSearchParams } from "expo-router";
-import { Profile } from "@/types/types";
+import { Product } from "@/types/types";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import fontSizes from "@/style/fontSizes";
@@ -16,12 +16,12 @@ const screenWidth = Dimensions.get("window").width;
 const cardWidth = screenWidth / 2 - 22;
 const ProductScreen: React.FC = () => {
   const [activeTab, setActiveTab] = useState("ALL");
-  const [filteredProducts, setFilteredProducts] = useState<Profile[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [likedProductIds, setLikedProductIds] = useState<string[]>([]);
   const router = useRouter();
   const { id: currentProductId } = useLocalSearchParams();
 
-  const normalizeProducts = useCallback((): Profile[] => {
+  const normalizeProducts = useCallback((): Product[] => {
     return allProductsRaw.map((product: any) => {
       const normalizedTitle = product.title || product[" title"] || "Untitled";
       return {
@@ -38,13 +38,13 @@ const ProductScreen: React.FC = () => {
   useEffect(() => {
     const allProducts = normalizeProducts();
     const currentProduct = allProducts.find(
-      (product: Profile) => product.id === currentProductId
+      (product: Product) => product.id === currentProductId
     );
 
     if (activeTab === "ALL") {
       setFilteredProducts(allProducts);
     } else if (activeTab === "Similar" && currentProduct) {
-      const filtered = allProducts.filter((product: Profile) => {
+      const filtered = allProducts.filter((product: Product) => {
         if (product.id === currentProduct.id) return false;
         return product.categories.some((cat: string) =>
           currentProduct.categories.includes(cat)
@@ -54,7 +54,7 @@ const ProductScreen: React.FC = () => {
     } else if (activeTab === "Your Next") {
       setFilteredProducts([]);
     } else {
-      const filtered = allProducts.filter((product: Profile) =>
+      const filtered = allProducts.filter((product: Product) =>
         product.categories.includes(activeTab.toLowerCase())
       );
       setFilteredProducts(filtered);
@@ -87,7 +87,7 @@ const ProductScreen: React.FC = () => {
     return (
       <FlatList
         data={filteredProducts}
-        renderItem={({ item }: { item: Profile }) => (
+        renderItem={({ item }: { item: Product }) => (
           <ProductCard
             id={item.id}
             images={item.images}
@@ -97,7 +97,7 @@ const ProductScreen: React.FC = () => {
             liked={likedProductIds.includes(item.id)}
             onLikePress={() => toggleLike(item.id)}
             onPress={() =>
-              router.push({
+              router.navigate({
                 pathname: "/ProductDetails",
                 params: { id: item.id },
               })
@@ -105,7 +105,7 @@ const ProductScreen: React.FC = () => {
             cardWidth={cardWidth}
           />
         )}
-        keyExtractor={(item: Profile) => item.id}
+        keyExtractor={(item: Product) => item.id}
         numColumns={2}
         columnWrapperStyle={styles.columnWrapper}
         contentContainerStyle={styles.contentContainer}

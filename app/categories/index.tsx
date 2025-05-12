@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.white,
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    ...spacingStyles.pt25
   },
   header: {
     flexDirection: "row",
@@ -304,7 +304,7 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.xs,
     textAlign: "center",
     ...spacingStyles.mt5,
-    fontWeight: "600",
+    fontWeight:"600",
     color: staticColors.darkGray,
   },
   selectedSidebarText: {

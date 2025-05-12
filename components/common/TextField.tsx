@@ -1,4 +1,3 @@
-import spacingStyles from "@/style/spacingStyles";
 import React, { useState } from "react";
 import {
   TextInput,
@@ -10,7 +9,7 @@ import {
 } from "react-native";
 import staticColors from "@/style/staticColors";
 import fontSizes from "@/style/fontSizes";
-
+import spacingStyles from "@/style/spacingStyles";
 interface TextFieldProps extends TextInputProps {
   label?: string;
   error?: string;

@@ -1,6 +1,8 @@
+import { clearCartFromStorage } from "@/utils/cartStorage";
 import { handleApiError } from "@/utils/handleApiError";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
+import { clearCart } from "../cart/cartSlice";
 
 interface AuthState {
   loading: boolean;
@@ -50,15 +52,17 @@ export const loginUser = createAsyncThunk(
   "auth/login",
   async (
     { email, password }: { email: string; password: string },
-    { rejectWithValue }
+    { rejectWithValue, dispatch }
   ) => {
     try {
       const response = await axios.post(`${apiUrl}/auth/login`, {
         email,
         password,
       });
+      dispatch(clearCart());
       return response.data;
     } catch (error: any) {
+      console.error("Login error:", error);
       return rejectWithValue(handleApiError(error, "Login failed"));
     }
   }
