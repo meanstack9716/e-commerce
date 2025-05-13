@@ -2,6 +2,10 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CartItem, Product } from "../../types/types";
 import { clearCartFromStorage, saveCartToStorage } from "@/utils/cartStorage";
 
+const generateUniqueId = () => {
+  return Date.now().toString(36) + Math.random().toString(36).substr(2);
+};
+
 interface CartState {
   cartItems: CartItem[];
 }
@@ -34,6 +38,7 @@ const cartSlice = createSlice({
         selectedSize,
         selectedColor,
         isSelected: true,
+        cartItemId: generateUniqueId(),
       };
 
       const existingItem = state.cartItems.find(
@@ -47,6 +52,68 @@ const cartSlice = createSlice({
         existingItem.quantity = (existingItem.quantity || 1) + 1;
       } else {
         state.cartItems.push(cartItem);
+      }
+
+      if (!isAuthenticated) {
+        saveCartToStorage(state.cartItems);
+      }
+    },
+
+    updateQuantity: (
+      state,
+      action: PayloadAction<{
+        id: string;
+        quantity: number;
+        selectedSize?: string;
+        selectedColor?: string;
+        isAuthenticated: boolean;
+      }>
+    ) => {
+      const { id, quantity, selectedSize, selectedColor, isAuthenticated } =
+        action.payload;
+
+      const existingItem = state.cartItems.find(
+        (item) =>
+          item.id === id &&
+          item.selectedSize === selectedSize &&
+          item.selectedColor === selectedColor
+      );
+
+      if (existingItem) {
+        existingItem.quantity = quantity;
+      }
+
+      if (!isAuthenticated) {
+        saveCartToStorage(state.cartItems);
+      }
+    },
+
+    updateSize: (
+      state,
+      action: PayloadAction<{
+        id: string;
+        selectedSize: string;
+        selectedColor?: string;
+        isAuthenticated: boolean;
+        cartItemId: string;
+      }>
+    ) => {
+      const { id, selectedSize, selectedColor, isAuthenticated, cartItemId } = action.payload;
+
+      const existingItemIndex = state.cartItems.findIndex(
+        (item) =>
+          item.cartItemId === cartItemId &&
+          item.id === id &&
+          item.selectedColor === selectedColor
+      );
+
+      if (existingItemIndex !== -1) {
+        const updatedItem = {
+          ...state.cartItems[existingItemIndex],
+          selectedSize: selectedSize,
+          cartItemId: generateUniqueId(),
+        };
+        state.cartItems.splice(existingItemIndex, 1, updatedItem);
       }
 
       if (!isAuthenticated) {
@@ -143,6 +210,8 @@ const cartSlice = createSlice({
 
 export const {
   addToCart,
+  updateQuantity,
+  updateSize,
   toggleItemSelection,
   removeFromCart,
   deleteSelectedItems,

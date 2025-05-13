@@ -23,6 +23,8 @@ import {
   toggleItemSelection,
 } from "@/store/cart/cartSlice";
 import { CartItem } from "@/types/types";
+import QuantitySelectionModal from "@/modal/QuantitySelectionModal";
+import SizeSelectionModal from "@/modal/SizeSelectionModal";
 
 const ProductInfoSection: React.FC = () => {
   const dispatch = useDispatch();
@@ -30,7 +32,13 @@ const ProductInfoSection: React.FC = () => {
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   );
-
+  const [isQuantityModalVisible, setIsQuantityModalVisible] = useState(false);
+  const [selectedCartItem, setSelectedCartItem] = useState<CartItem | null>(
+    null
+  );
+  const [isSizeModalVisible, setIsSizeModalVisible] = useState(false);
+  const [selectedCartItemForSize, setSelectedCartItemForSize] =
+    useState<CartItem | null>(null);
   const [isConfirmationModalVisible, setIsConfirmationModalVisible] =
     useState(false);
   const [confirmationModalDetails, setConfirmationModalDetails] = useState<{
@@ -136,6 +144,15 @@ const ProductInfoSection: React.FC = () => {
     });
   };
 
+  const handleOpenQuantityModal = (item: CartItem) => {
+    setSelectedCartItem(item);
+    setIsQuantityModalVisible(true);
+  };
+
+  const handleOpenSizeModal = (item: CartItem) => {
+    setSelectedCartItemForSize(item);
+    setIsSizeModalVisible(true);
+  };
   const renderCartItem = ({ item }: { item: CartItem }) => {
     return (
       <View style={styles.cartItem}>
@@ -193,13 +210,16 @@ const ProductInfoSection: React.FC = () => {
           <Text style={styles.cartItemDescription} numberOfLines={1}>
             {textTruncate(item.description, 5)}
           </Text>
-          <Text numberOfLines={1} ellipsizeMode="tail">
+          <Text numberOfLines={1} style={styles.cartSellerItem}>
             Sold by: {item.seller || "Unknown Seller"}
           </Text>
 
           <View style={styles.sizeQtyContainer}>
             {item.selectedSize && (
-              <View style={styles.sizeContainer}>
+              <TouchableOpacity
+                style={styles.sizeContainer}
+                onPress={() => handleOpenSizeModal(item)}
+              >
                 <Text style={styles.sizeQtyText}>
                   Size: {item.selectedSize}
                 </Text>
@@ -208,8 +228,21 @@ const ProductInfoSection: React.FC = () => {
                   size={12}
                   color={staticColors.textSubtitle}
                 />
-              </View>
+              </TouchableOpacity>
             )}
+
+            <TouchableOpacity
+              style={styles.qtyContainer}
+              onPress={() => handleOpenQuantityModal(item)}
+            >
+              <Text style={styles.sizeQtyText}>Qty: {item.quantity || 1}</Text>
+              <Ionicons
+                name="chevron-down"
+                size={12}
+                color={staticColors.textSubtitle}
+              />
+            </TouchableOpacity>
+
             {item.selectedColor && (
               <View style={styles.colorContainer}>
                 <Text style={styles.sizeQtyText}>
@@ -217,14 +250,6 @@ const ProductInfoSection: React.FC = () => {
                 </Text>
               </View>
             )}
-            <View style={styles.qtyContainer}>
-              <Text style={styles.sizeQtyText}>Qty: {item.quantity || 1}</Text>
-              <Ionicons
-                name="chevron-down"
-                size={12}
-                color={staticColors.textSubtitle}
-              />
-            </View>
           </View>
 
           <View style={styles.priceContainer}>
@@ -316,9 +341,7 @@ const ProductInfoSection: React.FC = () => {
         <FlatList
           data={cartItems}
           renderItem={renderCartItem}
-          keyExtractor={(item) =>
-            item.id + (item.selectedSize || "") + (item.selectedColor || "")
-          }
+          keyExtractor={(item) => item.cartItemId} 
           contentContainerStyle={styles.cartList}
           ListHeaderComponent={renderHeader}
           showsVerticalScrollIndicator={false}
@@ -337,6 +360,22 @@ const ProductInfoSection: React.FC = () => {
         onSecondButtonPress={confirmationModalDetails.onSecondaryAction}
         onClose={handleCloseModal}
       />
+
+      {selectedCartItem && (
+        <QuantitySelectionModal
+          visible={isQuantityModalVisible}
+          onClose={() => setIsQuantityModalVisible(false)}
+          item={selectedCartItem}
+        />
+      )}
+
+      {selectedCartItemForSize && (
+        <SizeSelectionModal
+          visible={isSizeModalVisible}
+          onClose={() => setIsSizeModalVisible(false)}
+          item={selectedCartItemForSize}
+        />
+      )}
     </View>
   );
 };
@@ -362,6 +401,12 @@ const styles = StyleSheet.create({
   cartItemDescription: {
     fontSize: fontSizes.xs,
     color: staticColors.textLightGray,
+  },
+  cartSellerItem: {
+    fontSize: fontSizes.xs,
+    color: staticColors.textSecondary,
+    ...spacingStyles.mt2,
+    ...spacingStyles.mb5,
   },
   headerLeft: {
     flexDirection: "row",
