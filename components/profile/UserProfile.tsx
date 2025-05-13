@@ -28,35 +28,80 @@ const UserProfile = () => {
       </View>
 
       {/* Profile Selector */}
-      <View style={styles.profileSelector}>
-        <View style={styles.profileCircle}>
-          <Text style={styles.profileInitial}>Y</Text>
-          <View style={styles.adminBadge}>
-            <Text style={styles.adminText}>Admin</Text>
+      <View style={styles.profileSelectorContainer}>
+        <Text style={styles.profileSelectorHeader}>Shopping for you</Text>
+        <View style={styles.profileSelector}>
+          <View style={styles.profileCircleContainer}>
+            <View style={styles.profileCircle}>
+              <Text style={styles.profileInitial}>Y</Text>
+              <View style={styles.adminBadge}>
+                <Text style={styles.adminText}>Admin</Text>
+              </View>
+            </View>
+            <Text style={styles.profileLabel}>you</Text>
+          </View>
+          <View style={styles.addCircleContainer}>
+            <TouchableOpacity style={styles.addCircle}>
+              <Text style={styles.plusText}>+</Text>
+            </TouchableOpacity>
+            <Text style={styles.addLabel}>Add</Text>
           </View>
         </View>
-        <TouchableOpacity style={styles.addCircle}>
-          <Text style={styles.plusText}>+</Text>
-        </TouchableOpacity>
       </View>
 
       {/* Card Buttons */}
       <View style={styles.cardRow}>
         <TouchableOpacity style={styles.card}>
-          <Ionicons name="cube" size={24} />
-          <Text>Orders</Text>
+          <Ionicons
+            name="cube-outline"
+            size={20}
+            color={staticColors.textLightGray}
+          />
+          <Text style={styles.cardText}>Orders</Text>
+          <Ionicons
+            name="chevron-forward"
+            size={18}
+            color={staticColors.textLightGray}
+          />
         </TouchableOpacity>
         <TouchableOpacity style={styles.card}>
-          <MaterialIcons name="workspace-premium" size={24} />
-          <Text>Insider</Text>
+          <MaterialIcons
+            name="workspace-premium"
+            size={20}
+            color={staticColors.textLightGray}
+          />
+          <Text style={styles.cardText}>Insider</Text>
+          <Ionicons
+            name="chevron-forward"
+            size={18}
+            color={staticColors.textLightGray}
+          />
         </TouchableOpacity>
         <TouchableOpacity style={styles.card}>
-          <Ionicons name="help-circle-outline" size={24} />
-          <Text>Help Center</Text>
+          <Ionicons
+            name="headset-outline"
+            size={20}
+            color={staticColors.textLightGray}
+          />
+          <Text style={styles.cardText}>Help Center</Text>
+          <Ionicons
+            name="chevron-forward"
+            size={18}
+            color={staticColors.textLightGray}
+          />
         </TouchableOpacity>
         <TouchableOpacity style={styles.card}>
-          <Ionicons name="pricetags-outline" size={24} />
-          <Text>Coupons</Text>
+          <Ionicons
+            name="pricetags-outline"
+            size={20}
+            color={staticColors.textLightGray}
+          />
+          <Text style={styles.cardText}>Coupons</Text>
+          <Ionicons
+            name="chevron-forward"
+            size={18}
+            color={staticColors.textLightGray}
+          />
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -81,35 +126,60 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
   },
   knowMoreText: { color: staticColors.white, fontWeight: "bold" },
+  profileSelectorContainer: {
+    ...spacingStyles.mb20,
+  },
+  profileSelectorHeader: {
+    fontSize: fontSizes.lg,
+    fontWeight: "bold",
+    color: staticColors.black,
+    ...spacingStyles.mb10,
+  },
   profileSelector: {
     flexDirection: "row",
-    alignItems: "center",
-    ...spacingStyles.mb20,
+    alignItems: "flex-start",
     gap: gapSizes.lg,
+  },
+  profileCircleContainer: {
+    alignItems: "center",
   },
   profileCircle: {
     width: 60,
     height: 60,
     borderRadius: 30,
     backgroundColor: staticColors.profileBg,
+    borderWidth: 2,
+    borderColor: staticColors.primary,
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
   },
   profileInitial: {
-    fontSize: 24,
+    fontSize: fontSizes.xl,
     fontWeight: "bold",
-    color: staticColors.primary,
+    color: staticColors.black,
   },
   adminBadge: {
     position: "absolute",
-    bottom: -10,
-    backgroundColor: staticColors.darkGray,
+    bottom: 0,
+    backgroundColor: staticColors.modalOverlayLight,
     ...spacingStyles.px5,
     ...spacingStyles.py2,
     borderRadius: 6,
   },
-  adminText: { color: staticColors.white, fontSize: fontSizes.xs },
+  adminText: {
+    color: staticColors.primary,
+    fontSize: 10,
+    fontWeight: "500",
+  },
+  profileLabel: {
+    fontSize: fontSizes.sm,
+    color: staticColors.black,
+    ...spacingStyles.mt5,
+  },
+  addCircleContainer: {
+    alignItems: "center",
+  },
   addCircle: {
     width: 60,
     height: 60,
@@ -119,7 +189,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  plusText: { fontSize: fontSizes.xl, fontWeight: "bold" },
+  plusText: {
+    fontSize: fontSizes.xl,
+    fontWeight: "bold",
+    color: staticColors.darkGray,
+  },
+  addLabel: {
+    fontSize: fontSizes.sm,
+    color: staticColors.black,
+    ...spacingStyles.mt5,
+  },
   cardRow: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -127,12 +206,24 @@ const styles = StyleSheet.create({
     ...spacingStyles.mb20,
   },
   card: {
-    width: "47%",
-    backgroundColor: staticColors.bgSecondary,
-    ...spacingStyles.p15,
+    width: "48%",
+    backgroundColor: staticColors.white,
+    ...spacingStyles.py15,
+    ...spacingStyles.px10,
     ...spacingStyles.my5,
-    borderRadius: 10,
+    borderRadius: 5,
+    flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between",
+    borderWidth: 1,
+    borderColor: staticColors.lightGray,
+  },
+  cardText: {
+    flex: 1,
+    fontSize: fontSizes.sm,
+    fontWeight: "500",
+    color: staticColors.black,
+    ...spacingStyles.ml5,
   },
 });
 

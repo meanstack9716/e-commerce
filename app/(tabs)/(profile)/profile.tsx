@@ -10,10 +10,7 @@ import {
 import { useState } from "react";
 
 import {
-  AntDesign,
-  FontAwesome5,
-  Ionicons,
-  MaterialIcons,
+  AntDesign
 } from "@expo/vector-icons";
 import FAQs from "@/components/profile/FAQs";
 import AboutUs from "@/components/profile/AboutUs";
@@ -58,7 +55,7 @@ const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthentic
     const sectionComponents: { [key: string]: React.ReactNode } = {
       Profile: (
         <>
-          {isAuthenticated ?  <UserProfile /> :  <ProfileListSection />}
+          {isAuthenticated ?  <ProfileListSection />  :  <UserProfile />}
           <FooterLinks onLinkPress={(link) => setSelectedSection(link)} />
           <View style={styles.optionsContainer}>
             <Text style={styles.versionText}>APP VERSION 4.2503.21</Text>
