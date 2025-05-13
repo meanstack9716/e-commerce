@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Product } from "../../types/types";
+import { CartItem, Product } from "../../types/types";
 import { clearCartFromStorage, saveCartToStorage } from "@/utils/cartStorage";
 
 interface CartState {
-  cartItems: Product[];
+  cartItems: CartItem[];
 }
 
 const initialState: CartState = {
@@ -14,7 +14,7 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    setCartItemsFromStorage: (state, action: PayloadAction<Product[]>) => {
+    setCartItemsFromStorage: (state, action: PayloadAction<CartItem[]>) => {
       state.cartItems = action.payload;
     },
     addToCart: (
@@ -22,21 +22,25 @@ const cartSlice = createSlice({
       action: PayloadAction<{
         product: Product;
         selectedSize?: string;
+        selectedColor?: string;
         isAuthenticated: boolean;
       }>
     ) => {
-      const { product, selectedSize, isAuthenticated } = action.payload;
-
-      const cartItem: Product = {
+      const { product, selectedSize, selectedColor, isAuthenticated } =
+        action.payload;
+      const cartItem: CartItem = {
         ...product,
         quantity: 1,
         selectedSize,
+        selectedColor,
         isSelected: true,
-        seller: product.seller || "Default Seller",
       };
 
       const existingItem = state.cartItems.find(
-        (item) => item.id === cartItem.id && item.selectedSize === selectedSize
+        (item) =>
+          item.id === cartItem.id &&
+          item.selectedSize === selectedSize &&
+          item.selectedColor === selectedColor
       );
 
       if (existingItem) {
@@ -52,10 +56,18 @@ const cartSlice = createSlice({
 
     toggleItemSelection: (
       state,
-      action: PayloadAction<{ id: string; isAuthenticated: boolean }>
+      action: PayloadAction<{
+        id: string;
+        isAuthenticated: boolean;
+        selectedColor?: string;
+        selectedSize?: string;
+      }>
     ) => {
       const item = state.cartItems.find(
-        (item) => item.id === action.payload.id
+        (item) =>
+          item.id === action.payload.id &&
+          item.selectedSize === action.payload.selectedSize &&
+          item.selectedColor === action.payload.selectedColor
       );
       if (item) {
         item.isSelected = !item.isSelected;
@@ -67,10 +79,20 @@ const cartSlice = createSlice({
 
     removeFromCart: (
       state,
-      action: PayloadAction<{ id: string; isAuthenticated: boolean }>
+      action: PayloadAction<{
+        id: string;
+        isAuthenticated: boolean;
+        selectedSize?: string;
+        selectedColor?: string;
+      }>
     ) => {
       state.cartItems = state.cartItems.filter(
-        (item) => item.id !== action.payload.id
+        (item) =>
+          !(
+            item.id === action.payload.id &&
+            item.selectedSize === action.payload.selectedSize &&
+            item.selectedColor === action.payload.selectedColor
+          )
       );
       if (!action.payload.isAuthenticated) {
         saveCartToStorage(state.cartItems);
@@ -89,10 +111,23 @@ const cartSlice = createSlice({
 
     moveToWishlist: (
       state,
-      action: PayloadAction<{ ids: string[]; isAuthenticated: boolean }>
+      action: PayloadAction<{
+        ids: string[];
+        selectedSizes?: string[];
+        selectedColors?: string[];
+        isAuthenticated: boolean;
+      }>
     ) => {
+      const { ids, selectedSizes, selectedColors } = action.payload;
       state.cartItems = state.cartItems.filter(
-        (item) => !action.payload.ids.includes(item.id)
+        (item) =>
+          !(
+            ids.includes(item.id) &&
+            (!selectedSizes ||
+              selectedSizes.includes(item.selectedSize || "")) &&
+            (!selectedColors ||
+              selectedColors.includes(item.selectedColor || ""))
+          )
       );
       if (!action.payload.isAuthenticated) {
         saveCartToStorage(state.cartItems);

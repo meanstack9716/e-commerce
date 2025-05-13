@@ -65,5 +65,8 @@ export default {
   darkYellow:'#F57C00',
   darkGreen:"#00C853",
   LightSkyBlue:"#CCDAF9",
-  slateBlue:"#5b3ec8"
+  slateBlue:"#5b3ec8",
+  bannerColor:'#fff6e5',
+  bannerHeighlight:'#d4a200',
+  profileBg:'#e6f5f0'
 };

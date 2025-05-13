@@ -17,7 +17,7 @@ import { isPinCodeValid } from "@/hooks/usePinCodeValidation";
 import LocationAlertModal from "./LocationAlertModal";
 
 interface AddressSelectorModalProps {
-  visible: boolean;
+  visible?: boolean;
   onClose: () => void;
   onPinCodeSelect: (pinCode: string) => void;
 }

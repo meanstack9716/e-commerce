@@ -71,6 +71,7 @@ const OtpInput: React.FC<OtpInputProps> = ({
     if (timer === 0) {
       try {
         await dispatch(sendEmailCode(email)).unwrap();
+        console.log("sdnjknsjdndsj")
         setTimer(OTP_RESEND_TIMER);
         setOtp(new Array(6).fill(""));
         setOtpError("");

@@ -34,6 +34,8 @@ import {
   fetchProductById,
 } from "@/store/product/productsSlice";
 import FullScreenLoader from "@/components/common/FullScreenLoader";
+import { addToCart } from "@/store/cart/cartSlice";
+import { useAppSelector } from "@/store/hooks";
 
 const { width: screenWidth } = Dimensions.get("window");
 const screenHeight = Dimensions.get("window").height;
@@ -46,6 +48,12 @@ const ProductDetailsScreen: React.FC = () => {
     selectedProductLoading: loading,
     selectedProductError: error,
   } = useSelector((state: RootState) => state.products);
+  const [selectedSize, setSelectedSize] = useState<string | undefined>(
+    undefined
+  );
+  const [selectedColor, setSelectedColor] = useState<string | undefined>(
+    undefined
+  );
   const [isProductLiked, setIsProductLiked] = useState(false);
   const [isViewSimilarModalVisible, setViewSimilarModalVisible] =
     useState(false);
@@ -56,6 +64,10 @@ const ProductDetailsScreen: React.FC = () => {
   const flatListRef = useRef<FlatList>(null);
   const imageCarouselRef = useRef<FlatList>(null);
   const screenHeight = Dimensions.get("window").height;
+
+  const isAuthenticatedUser = useAppSelector(
+    (state) => state.auth.isAuthenticated
+  );
 
   useEffect(() => {
     if (id) {
@@ -111,10 +123,25 @@ const ProductDetailsScreen: React.FC = () => {
     color: string;
     images: string[];
   }) => {
+    setSelectedColor(colorData.color);
     setDisplayImages(colorData.images);
     setActiveIndex(0);
     if (imageCarouselRef.current) {
       imageCarouselRef.current.scrollToOffset({ offset: 0, animated: true });
+    }
+  };
+  const handleAddToCart = () => {
+    if (product) {
+      dispatch(
+        addToCart({
+          product,
+          selectedSize,
+          selectedColor,
+          isAuthenticated: isAuthenticatedUser,
+        })
+      );
+
+      router.push("/cart");
     }
   };
 
@@ -275,12 +302,16 @@ const ProductDetailsScreen: React.FC = () => {
               </View>
             </View>
             {/* <MegaDealBadge /> */}
-            <SizeSelector product={product} onColorSelect={handleColorSelect} />
+            <SizeSelector
+              product={product}
+              onColorSelect={handleColorSelect}
+              onSizeSelect={setSelectedSize}
+            />
             {/* <DeliveryCheck />
             <ReturnPolicy /> */}
 
-            {/* <Text style={styles.heading}>Similar Products</Text> */}
-            {/* <SimilarProducts currentProduct={product} /> */}
+            {/* <Text style={styles.heading}>Similar Products</Text>
+            <SimilarProducts currentProduct={product} /> */}
             {/* 
             <BrandRating />
             <Text style={styles.heading}>Products you may like</Text>
@@ -297,7 +328,12 @@ const ProductDetailsScreen: React.FC = () => {
           <Ionicons name="arrow-up" size={24} color={colors.white} />
           <Text style={styles.backToTopText}>Back to Top</Text>
         </TouchableOpacity>
-      ) : null}
+      ) : (
+        <ProductActionButtons
+          onAddToCart={handleAddToCart}
+          onWishlist={handleLikePress}
+        />
+      )}
       {/* <ViewSimilarModal
         visible={isViewSimilarModalVisible}
         onClose={() => setViewSimilarModalVisible(false)}

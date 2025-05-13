@@ -22,7 +22,7 @@ import {
   removeFromCart,
   toggleItemSelection,
 } from "@/store/cart/cartSlice";
-import { Product } from "@/types/types";
+import { CartItem } from "@/types/types";
 
 const ProductInfoSection: React.FC = () => {
   const dispatch = useDispatch();
@@ -46,30 +46,48 @@ const ProductInfoSection: React.FC = () => {
   const selectedItems = cartItems.filter((item) => item.isSelected).length;
   const totalPrice = cartItems
     .filter((item) => item.isSelected)
-    .reduce(
-      (sum, item) => sum + parseFloat(item.price) * (item.quantity || 1),
-      0
-    )
+    .reduce((sum, item) => sum + item.final_price * (item.quantity || 1), 0)
     .toLocaleString("en-IN");
 
   const toggleAllItems = () => {
     const shouldSelect = selectedItems === 0;
     cartItems.forEach((item) => {
       if (item.isSelected !== shouldSelect) {
-        dispatch(toggleItemSelection({ id: item.id, isAuthenticated }));
+        dispatch(
+          toggleItemSelection({
+            id: item.id,
+            selectedSize: item.selectedSize,
+            selectedColor: item.selectedColor,
+            isAuthenticated,
+          })
+        );
       }
     });
   };
 
-  const handleRemoveItemConfirmationModal = (itemId: string) => {
+  const handleRemoveItemConfirmationModal = (item: CartItem) => {
     setConfirmationModalDetails({
-      message: "Do you want to add this item to your wishlist?",
+      message: "Are you sure you want to move this item from bag?",
       onPrimaryAction: () => {
-        dispatch(moveToWishlist({ ids: [itemId], isAuthenticated }));
+        dispatch(
+          moveToWishlist({
+            ids: [item.id],
+            selectedSizes: [item.selectedSize || ""],
+            selectedColors: [item.selectedColor || ""],
+            isAuthenticated,
+          })
+        );
         setIsConfirmationModalVisible(false);
       },
       onSecondaryAction: () => {
-        dispatch(removeFromCart({ id: itemId, isAuthenticated }));
+        dispatch(
+          removeFromCart({
+            id: item.id,
+            selectedSize: item.selectedSize,
+            selectedColor: item.selectedColor,
+            isAuthenticated,
+          })
+        );
         setIsConfirmationModalVisible(false);
       },
     });
@@ -81,10 +99,23 @@ const ProductInfoSection: React.FC = () => {
       const selectedItemIds = cartItems
         .filter((item) => item.isSelected)
         .map((item) => item.id);
+      const selectedSizes = cartItems
+        .filter((item) => item.isSelected)
+        .map((item) => item.selectedSize || "");
+      const selectedColors = cartItems
+        .filter((item) => item.isSelected)
+        .map((item) => item.selectedColor || "");
       setConfirmationModalDetails({
-        message: `Do you want to add ${selectedItems} item(s) to your wishlist?`,
+        message: `Are you sure you want to remove ${selectedItems} item(s) from bag?`,
         onPrimaryAction: () => {
-          dispatch(moveToWishlist({ ids: selectedItemIds, isAuthenticated }));
+          dispatch(
+            moveToWishlist({
+              ids: selectedItemIds,
+              selectedSizes,
+              selectedColors,
+              isAuthenticated,
+            })
+          );
           setIsConfirmationModalVisible(false);
         },
         onSecondaryAction: () => {
@@ -105,7 +136,7 @@ const ProductInfoSection: React.FC = () => {
     });
   };
 
-  const renderCartItem = ({ item }: { item: Product }) => {
+  const renderCartItem = ({ item }: { item: CartItem }) => {
     return (
       <View style={styles.cartItem}>
         <View style={styles.imageContainer}>
@@ -128,7 +159,14 @@ const ProductInfoSection: React.FC = () => {
               },
             ]}
             onPress={() =>
-              dispatch(toggleItemSelection({ id: item.id, isAuthenticated }))
+              dispatch(
+                toggleItemSelection({
+                  id: item.id,
+                  selectedSize: item.selectedSize,
+                  selectedColor: item.selectedColor,
+                  isAuthenticated,
+                })
+              )
             }
           >
             {item.isSelected && (
@@ -140,11 +178,10 @@ const ProductInfoSection: React.FC = () => {
         <View style={styles.cartItemDetails}>
           <View style={styles.titleContainer}>
             <Text style={styles.cartItemTitle} numberOfLines={1}>
-              {textTruncate(item.title, 4)}
+              {textTruncate(item.title, 2)}
             </Text>
             <TouchableOpacity
-              style={styles.cutIcon}
-              onPress={() => handleRemoveItemConfirmationModal(item.id)}
+              onPress={() => handleRemoveItemConfirmationModal(item)}
             >
               <Ionicons
                 name="close-outline"
@@ -153,12 +190,10 @@ const ProductInfoSection: React.FC = () => {
               />
             </TouchableOpacity>
           </View>
-
-          <Text
-            style={styles.sellerText}
-            numberOfLines={1}
-            ellipsizeMode="tail"
-          >
+          <Text style={styles.cartItemDescription} numberOfLines={1}>
+            {textTruncate(item.description, 5)}
+          </Text>
+          <Text numberOfLines={1} ellipsizeMode="tail">
             Sold by: {item.seller || "Unknown Seller"}
           </Text>
 
@@ -175,6 +210,13 @@ const ProductInfoSection: React.FC = () => {
                 />
               </View>
             )}
+            {item.selectedColor && (
+              <View style={styles.colorContainer}>
+                <Text style={styles.sizeQtyText}>
+                  Color: {item.selectedColor}
+                </Text>
+              </View>
+            )}
             <View style={styles.qtyContainer}>
               <Text style={styles.sizeQtyText}>Qty: {item.quantity || 1}</Text>
               <Ionicons
@@ -186,11 +228,9 @@ const ProductInfoSection: React.FC = () => {
           </View>
 
           <View style={styles.priceContainer}>
-            <Text style={styles.cartItemPrice}>
-              ₹{parseFloat(item.price).toLocaleString("en-IN")}
-            </Text>
-            {item.discount && (
-              <Text style={styles.discountText}>{item.discount}</Text>
+            <Text style={styles.cartItemPrice}>₹{item.final_price}</Text>
+            {item.discount_percent && (
+              <Text style={styles.discountText}>{item.discount_percent} %</Text>
             )}
           </View>
 
@@ -276,7 +316,9 @@ const ProductInfoSection: React.FC = () => {
         <FlatList
           data={cartItems}
           renderItem={renderCartItem}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) =>
+            item.id + (item.selectedSize || "") + (item.selectedColor || "")
+          }
           contentContainerStyle={styles.cartList}
           ListHeaderComponent={renderHeader}
           showsVerticalScrollIndicator={false}
@@ -303,13 +345,23 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: staticColors.bgSecondary,
+    ...spacingStyles.mt15,
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    ...spacingStyles.p20,
+    ...spacingStyles.p15,
     backgroundColor: staticColors.white,
+  },
+  titleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  cartItemDescription: {
+    fontSize: fontSizes.xs,
+    color: staticColors.textLightGray,
   },
   headerLeft: {
     flexDirection: "row",
@@ -377,7 +429,8 @@ const styles = StyleSheet.create({
     color: staticColors.textSecondary,
     ...spacingStyles.mb5,
   },
-  sellerText: {
+
+  Text: {
     fontSize: fontSizes.xs,
     color: staticColors.shadowColor,
     ...spacingStyles.mb5,
@@ -387,6 +440,15 @@ const styles = StyleSheet.create({
     ...spacingStyles.mb5,
   },
   sizeContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: staticColors.bgSecondary,
+    ...spacingStyles.px5,
+    ...spacingStyles.py5,
+    borderRadius: 4,
+    ...spacingStyles.mr10,
+  },
+  colorContainer: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: staticColors.bgSecondary,
@@ -424,8 +486,8 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.xs,
     color: staticColors.discountText,
     backgroundColor: staticColors.lightPink,
-    ...spacingStyles.py5,
-    ...spacingStyles.px5,
+    ...spacingStyles.py2,
+    ...spacingStyles.px10,
     borderRadius: 4,
   },
   returnPolicy: {
@@ -436,14 +498,6 @@ const styles = StyleSheet.create({
   returnPolicyText: {
     fontSize: fontSizes.xs,
     color: staticColors.textDarkGray,
-    ...spacingStyles.ml5,
-  },
-  titleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  cutIcon: {
     ...spacingStyles.ml5,
   },
 });

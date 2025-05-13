@@ -16,7 +16,7 @@ import fontSizes from "@/style/fontSizes";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { verifyUser } from "@/store/auth/authSlice";
+import { verifyEmailCode, verifyUser } from "@/store/auth/authSlice";
 
 const VerifyEmailOtpScreen = () => {
   const insets = useSafeAreaInsets();
@@ -26,10 +26,12 @@ const VerifyEmailOtpScreen = () => {
 
   const handleVerifySuccess = async (otpCode: string) => {
     try {
-      const result = await dispatch(
-        verifyUser({ email, code: otpCode })
-      ).unwrap();
-      // router.replace("/home");
+      // const result = await dispatch(
+      //   verifyUser({ email, code: otpCode })
+      // ).unwrap();
+      // // router.replace("/home");
+      dispatch(verifyEmailCode({ email, code: otpCode }))
+      router.navigate("/cart");
     } catch (err) {
       console.log("Verification failed:", err);
     }

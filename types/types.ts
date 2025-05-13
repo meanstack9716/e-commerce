@@ -3,10 +3,10 @@ export interface Product {
   title: string;
   description: string;
   discount_percent?: number;
-  final_price?: number;
+  final_price: number;
   stock_quantity?: string;
   thumbnail_url: string;
-  images?: string[];
+  images: string[];
   categories: string[];
   star?: number;
   details?: string;
@@ -14,7 +14,7 @@ export interface Product {
   brand?: Brand;
   sizes?: Size[];
   gallery?: GalleryItem[];
-  isSelected?: boolean;
+  variant_id?: string;
 }
 
 export interface GalleryItem {
@@ -97,3 +97,11 @@ export type OtpInputProps = {
   cancelText?: string;
   confirmText?: string;
 };
+
+export interface CartItem extends Product {
+  quantity: number;
+  selectedSize?: string;
+  selectedColor?: string;
+  isSelected: boolean;
+  seller?:string
+}

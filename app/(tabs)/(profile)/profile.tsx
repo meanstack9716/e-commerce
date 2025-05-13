@@ -21,17 +21,22 @@ import TermsOfUs from "@/components/profile/TermsOfUs";
 import PrivacyPolicy from "@/components/profile/PrivacyPolicy";
 import Grievance from "@/components/profile/Grievance";
 import ProfileHeader from "@/components/profile/ProfileHeader";
-import ProfileOption from "@/components/profile/ProfileOption";
 import FooterLinks from "@/components/profile/FooterLinks";
 import { useRouter } from "expo-router";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import fontSizes from "@/style/fontSizes";
+import ProfileListSection from "@/components/profile/ProfileListSection";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import UserProfile from "@/components/profile/UserProfile";
 export default function ProfileScreen() {
   const [selectedSection, setSelectedSection] = useState("Profile");
   const router = useRouter();
   const insets = useSafeAreaInsets();
+const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+
   useEffect(() => {
     const backButtonListener = BackHandler.addEventListener(
       "hardwareBackPress",
@@ -53,50 +58,7 @@ export default function ProfileScreen() {
     const sectionComponents: { [key: string]: React.ReactNode } = {
       Profile: (
         <>
-          <ProfileHeader />
-          <View style={styles.optionsContainer}>
-            <ProfileOption
-              icon={
-                <FontAwesome5
-                  name="box-open"
-                  size={24}
-                  color={colors.textMuted}
-                />
-              }
-              label="Orders"
-              subtitle="Check your order status"
-            />
-            <ProfileOption
-              icon={
-                <MaterialIcons name="help" size={24} color={colors.textMuted} />
-              }
-              label="Help Center"
-              subtitle="Help regarding your recent purchases"
-            />
-            <ProfileOption
-              icon={
-                <Ionicons
-                  name="heart-outline"
-                  size={24}
-                  color={colors.textMuted}
-                />
-              }
-              label="Wishlist"
-              subtitle="Your most loved styles"
-            />
-            <ProfileOption
-              icon={
-                <MaterialIcons
-                  name="qr-code-scanner"
-                  size={24}
-                  color={colors.textMuted}
-                  style={styles.qrIcon}
-                />
-              }
-              label="Scan for coupon"
-              customStyle={{ ...spacingStyles.my25 }}
-            />
-          </View>
+          {isAuthenticated ?  <UserProfile /> :  <ProfileListSection />}
           <FooterLinks onLinkPress={(link) => setSelectedSection(link)} />
           <View style={styles.optionsContainer}>
             <Text style={styles.versionText}>APP VERSION 4.2503.21</Text>
