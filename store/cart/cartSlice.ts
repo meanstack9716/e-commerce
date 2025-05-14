@@ -1,14 +1,149 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import axios from "axios";
 import { CartItem, Product } from "../../types/types";
 import { clearCartFromStorage, saveCartToStorage } from "@/utils/cartStorage";
+import { RootState } from "@/store/store";
+
+const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
 interface CartState {
   cartItems: CartItem[];
+  loading: boolean;
+  error: string | null;
 }
 
 const initialState: CartState = {
   cartItems: [],
+  loading: false,
+  error: null,
 };
+
+export const addToCartApi = createAsyncThunk<
+  void,
+  { product: Product; selectedSize?: string; selectedColor?: string },
+  { state: RootState }
+>(
+  "cart/addToCartApi",
+  async (
+    { product, selectedSize, selectedColor },
+    { getState, rejectWithValue }
+  ) => {
+    try {
+      const state = getState();
+      const token = state.auth.token;
+      const payload = {
+        product_id: product.id,
+        selected_size: selectedSize || "",
+        selected_color: selectedColor || "",
+        quantity: "1",
+      };
+      await axios.post(`${apiUrl}/cart/add`, payload, {
+        headers: {
+          Authorization: `${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+    } catch (error: any) {
+      return rejectWithValue(error.message || "Failed to add to cart");
+    }
+  }
+);
+
+export const fetchCartItemsApi = createAsyncThunk<
+  CartItem[],
+  void,
+  { state: RootState }
+>("cart/fetchCartItemsApi", async (_, { getState, rejectWithValue }) => {
+  try {
+    const state = getState();
+    const token = state.auth.token;
+
+    if (!token) {
+      throw new Error("No authentication token found");
+    }
+    const response = await axios.get(`${apiUrl}/cart/list`, {
+      headers: {
+        Authorization: `${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    const cartItemsData = response.data.data;
+    const cartItems: CartItem[] = cartItemsData.map((item: any) => {
+      let colorName = item.selected_color_name;
+      if (item.color) {
+        const matchingSize = item.product?.sizes?.find(
+          (size: any) => size.value === item.size
+        );
+        const matchingVariant = matchingSize?.variants?.find(
+          (variant: any) => variant.value === item.color
+        );
+        colorName = matchingVariant?.name || "";
+      }
+
+      const galleryImages = item.product?.gallery
+        ? item.product.gallery
+            .filter((galleryItem: any) =>
+              colorName
+                ? galleryItem.color.trim().toLowerCase() ===
+                  colorName.trim().toLowerCase()
+                : false
+            )
+            .map((galleryItem: any) => galleryItem.img_url)
+        : [];
+
+      const images =
+        galleryImages.length > 0
+          ? galleryImages
+          : [item.product?.thumbnail_url];
+
+      return {
+        ...item.product,
+        id: item.id,
+        quantity: parseInt(item.quantity, 10) || 1,
+        selectedSize: item.selected_size || item.size || "",
+        selectedColor: item.selected_color || "",
+        colorName,
+        isSelected: true,
+        seller: item.seller || "Unknown Seller",
+        images,
+      };
+    });
+    return cartItems;
+  } catch (error: any) {
+    return rejectWithValue(
+      error.response?.data?.message ||
+        error.message ||
+        "Failed to fetch cart items"
+    );
+  }
+});
+
+export const removeFromCartApi = createAsyncThunk<
+  void,
+  { ids: string[] },
+  { state: RootState }
+>("cart/removeFromCartApi", async ({ ids }, { getState, rejectWithValue }) => {
+  try {
+    const state = getState();
+    const token = state.auth.token;
+    const payload = {
+      item_ids: ids,
+    };
+    await axios.delete(`${apiUrl}/cart/remove`, {
+      headers: {
+        Authorization: `${token}`,
+        "Content-Type": "application/json",
+      },
+      data: payload,
+    });
+  } catch (error: any) {
+    return rejectWithValue(
+      error.response?.data?.message ||
+        error.message ||
+        "Failed to remove from cart"
+    );
+  }
+});
 
 const cartSlice = createSlice({
   name: "cart",
@@ -23,17 +158,43 @@ const cartSlice = createSlice({
         product: Product;
         selectedSize?: string;
         selectedColor?: string;
+        colorName?: string;
+        images?: string[];
         isAuthenticated: boolean;
       }>
     ) => {
-      const { product, selectedSize, selectedColor, isAuthenticated } =
-        action.payload;
+      const {
+        product,
+        selectedSize,
+        selectedColor,
+        colorName,
+        images,
+        isAuthenticated,
+      } = action.payload;
+      const galleryImages = images
+        ? images
+        : product.gallery
+        ? product.gallery
+            .filter((galleryItem) =>
+              colorName
+                ? galleryItem.color.trim().toLowerCase() ===
+                  colorName.trim().toLowerCase()
+                : false
+            )
+            .map((galleryItem) => galleryItem.img_url)
+        : [];
+      const finalImages =
+        galleryImages.length > 0
+          ? galleryImages
+          : [product.thumbnail_url || ""];
       const cartItem: CartItem = {
         ...product,
         quantity: 1,
         selectedSize,
+        colorName,
         selectedColor,
         isSelected: true,
+        images: finalImages,
       };
 
       const existingItem = state.cartItems.find(
@@ -53,7 +214,6 @@ const cartSlice = createSlice({
         saveCartToStorage(state.cartItems);
       }
     },
-
     toggleItemSelection: (
       state,
       action: PayloadAction<{
@@ -76,7 +236,6 @@ const cartSlice = createSlice({
         saveCartToStorage(state.cartItems);
       }
     },
-
     removeFromCart: (
       state,
       action: PayloadAction<{
@@ -86,19 +245,19 @@ const cartSlice = createSlice({
         selectedColor?: string;
       }>
     ) => {
+      const { id, selectedSize, selectedColor } = action.payload;
       state.cartItems = state.cartItems.filter(
         (item) =>
           !(
-            item.id === action.payload.id &&
-            item.selectedSize === action.payload.selectedSize &&
-            item.selectedColor === action.payload.selectedColor
+            item.id === id &&
+            item.selectedSize === selectedSize &&
+            item.selectedColor === selectedColor
           )
       );
       if (!action.payload.isAuthenticated) {
         saveCartToStorage(state.cartItems);
       }
     },
-
     deleteSelectedItems: (
       state,
       action: PayloadAction<{ isAuthenticated: boolean }>
@@ -108,7 +267,6 @@ const cartSlice = createSlice({
         saveCartToStorage(state.cartItems);
       }
     },
-
     moveToWishlist: (
       state,
       action: PayloadAction<{
@@ -133,11 +291,50 @@ const cartSlice = createSlice({
         saveCartToStorage(state.cartItems);
       }
     },
-
     clearCart: (state) => {
       state.cartItems = [];
       clearCartFromStorage();
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(addToCartApi.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addToCartApi.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(addToCartApi.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(fetchCartItemsApi.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        fetchCartItemsApi.fulfilled,
+        (state, action: PayloadAction<CartItem[]>) => {
+          state.loading = false;
+          state.cartItems = action.payload;
+        }
+      )
+      .addCase(fetchCartItemsApi.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(removeFromCartApi.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(removeFromCartApi.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(removeFromCartApi.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
   },
 });
 
