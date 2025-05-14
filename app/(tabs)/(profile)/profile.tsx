@@ -55,7 +55,7 @@ const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthentic
     const sectionComponents: { [key: string]: React.ReactNode } = {
       Profile: (
         <>
-          {isAuthenticated ?  <ProfileListSection />  :  <UserProfile />}
+          {isAuthenticated ?   <UserProfile />  :  <ProfileListSection />}
           <FooterLinks onLinkPress={(link) => setSelectedSection(link)} />
           <View style={styles.optionsContainer}>
             <Text style={styles.versionText}>APP VERSION 4.2503.21</Text>

@@ -1,6 +1,6 @@
-import { Profile } from "@/types/types";
+import { Product } from "@/types/types";
 
-export const normalizeProduct = (Product: any): Profile => {
+export const normalizeProduct = (Product: any): Product => {
   return {
     id: Product.id,
     title: Product.title || "Product Title",

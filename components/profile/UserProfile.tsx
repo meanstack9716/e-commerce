@@ -11,105 +11,112 @@ import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import fontSizes from "@/style/fontSizes";
 import gapSizes from "@/style/gapSizes";
+import UserProfileMenu from "./UserProfileMenu";
 
 const UserProfile = () => {
   return (
     <ScrollView style={styles.container}>
       {/* Banner */}
-      <View style={styles.banner}>
-        <Text style={styles.bannerText}>
-          Become An Insider{" "}
-          <Text style={styles.highlight}>Free Shipping, Extra Discounts</Text>{" "}
-          and More Rewards!
-        </Text>
-        <TouchableOpacity style={styles.knowMoreButton}>
-          <Text style={styles.knowMoreText}>Know More</Text>
-        </TouchableOpacity>
-      </View>
+      <View style={styles.mainContent}>
+        <View style={styles.banner}>
+          <Text style={styles.bannerText}>
+            Become An Insider{" "}
+            <Text style={styles.highlight}>Free Shipping, Extra Discounts</Text>{" "}
+            and More Rewards!
+          </Text>
+          <TouchableOpacity style={styles.knowMoreButton}>
+            <Text style={styles.knowMoreText}>Know More</Text>
+          </TouchableOpacity>
+        </View>
 
-      {/* Profile Selector */}
-      <View style={styles.profileSelectorContainer}>
-        <Text style={styles.profileSelectorHeader}>Shopping for you</Text>
-        <View style={styles.profileSelector}>
-          <View style={styles.profileCircleContainer}>
-            <View style={styles.profileCircle}>
-              <Text style={styles.profileInitial}>Y</Text>
-              <View style={styles.adminBadge}>
-                <Text style={styles.adminText}>Admin</Text>
+        {/* Profile Selector */}
+        <View style={styles.profileSelectorContainer}>
+          <Text style={styles.profileSelectorHeader}>Shopping for you</Text>
+          <View style={styles.profileSelector}>
+            <View style={styles.profileCircleContainer}>
+              <View style={styles.profileCircle}>
+                <Text style={styles.profileInitial}>Y</Text>
+                <View style={styles.adminBadge}>
+                  <Text style={styles.adminText}>Admin</Text>
+                </View>
               </View>
+              <Text style={styles.profileLabel}>you</Text>
             </View>
-            <Text style={styles.profileLabel}>you</Text>
-          </View>
-          <View style={styles.addCircleContainer}>
-            <TouchableOpacity style={styles.addCircle}>
-              <Text style={styles.plusText}>+</Text>
-            </TouchableOpacity>
-            <Text style={styles.addLabel}>Add</Text>
+            <View style={styles.addCircleContainer}>
+              <TouchableOpacity style={styles.addCircle}>
+                <Text style={styles.plusText}>+</Text>
+              </TouchableOpacity>
+              <Text style={styles.addLabel}>Add</Text>
+            </View>
           </View>
         </View>
-      </View>
 
-      {/* Card Buttons */}
-      <View style={styles.cardRow}>
-        <TouchableOpacity style={styles.card}>
-          <Ionicons
-            name="cube-outline"
-            size={20}
-            color={staticColors.textLightGray}
-          />
-          <Text style={styles.cardText}>Orders</Text>
-          <Ionicons
-            name="chevron-forward"
-            size={18}
-            color={staticColors.textLightGray}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.card}>
-          <MaterialIcons
-            name="workspace-premium"
-            size={20}
-            color={staticColors.textLightGray}
-          />
-          <Text style={styles.cardText}>Insider</Text>
-          <Ionicons
-            name="chevron-forward"
-            size={18}
-            color={staticColors.textLightGray}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.card}>
-          <Ionicons
-            name="headset-outline"
-            size={20}
-            color={staticColors.textLightGray}
-          />
-          <Text style={styles.cardText}>Help Center</Text>
-          <Ionicons
-            name="chevron-forward"
-            size={18}
-            color={staticColors.textLightGray}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.card}>
-          <Ionicons
-            name="pricetags-outline"
-            size={20}
-            color={staticColors.textLightGray}
-          />
-          <Text style={styles.cardText}>Coupons</Text>
-          <Ionicons
-            name="chevron-forward"
-            size={18}
-            color={staticColors.textLightGray}
-          />
-        </TouchableOpacity>
+        {/* Card Buttons */}
+        <View style={styles.cardRow}>
+          <TouchableOpacity style={styles.card}>
+            <Ionicons
+              name="cube-outline"
+              size={20}
+              color={staticColors.textLightGray}
+            />
+            <Text style={styles.cardText}>Orders</Text>
+            <Ionicons
+              name="chevron-forward"
+              size={18}
+              color={staticColors.textLightGray}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.card}>
+            <MaterialIcons
+              name="workspace-premium"
+              size={20}
+              color={staticColors.textLightGray}
+            />
+            <Text style={styles.cardText}>Insider</Text>
+            <Ionicons
+              name="chevron-forward"
+              size={18}
+              color={staticColors.textLightGray}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.card}>
+            <Ionicons
+              name="headset-outline"
+              size={20}
+              color={staticColors.textLightGray}
+            />
+            <Text style={styles.cardText}>Help Center</Text>
+            <Ionicons
+              name="chevron-forward"
+              size={18}
+              color={staticColors.textLightGray}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.card}>
+            <Ionicons
+              name="pricetags-outline"
+              size={20}
+              color={staticColors.textLightGray}
+            />
+            <Text style={styles.cardText}>Coupons</Text>
+            <Ionicons
+              name="chevron-forward"
+              size={18}
+              color={staticColors.textLightGray}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
+      <UserProfileMenu />
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, ...spacingStyles.p20 },
+  container: { flex: 1 },
+  mainContent: {
+    ...spacingStyles.p20,
+  },
   banner: {
     backgroundColor: staticColors.bannerColor,
     borderRadius: 10,
@@ -203,7 +210,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    ...spacingStyles.mb20,
   },
   card: {
     width: "48%",
