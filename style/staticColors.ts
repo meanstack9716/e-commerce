@@ -43,7 +43,7 @@ export default {
   discountText: "#dc3545",
 
   // Modal
-  modalOverlayLight: "rgba(0, 0, 0, 0.025)",
+  modalOverlayLight: "rgba(0, 0, 0, 0.2)",
 
   // Links
   linkPrimary: "#0C4A6E",

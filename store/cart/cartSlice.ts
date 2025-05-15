@@ -6,6 +6,10 @@ import { RootState } from "@/store/store";
 
 const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
+const generateUniqueId = () => {
+  return Date.now().toString(36) + Math.random().toString(36).substr(2);
+};
+
 interface CartState {
   cartItems: CartItem[];
   loading: boolean;
@@ -194,6 +198,7 @@ const cartSlice = createSlice({
         colorName,
         selectedColor,
         isSelected: true,
+        cartItemId: generateUniqueId(),
         images: finalImages,
       };
 
@@ -214,6 +219,69 @@ const cartSlice = createSlice({
         saveCartToStorage(state.cartItems);
       }
     },
+
+    updateQuantity: (
+      state,
+      action: PayloadAction<{
+        id: string;
+        quantity: number;
+        selectedSize?: string;
+        selectedColor?: string;
+        isAuthenticated: boolean;
+      }>
+    ) => {
+      const { id, quantity, selectedSize, selectedColor, isAuthenticated } =
+        action.payload;
+
+      const existingItem = state.cartItems.find(
+        (item) =>
+          item.id === id &&
+          item.selectedSize === selectedSize &&
+          item.selectedColor === selectedColor
+      );
+
+      if (existingItem) {
+        existingItem.quantity = quantity;
+      }
+
+      if (!isAuthenticated) {
+        saveCartToStorage(state.cartItems);
+      }
+    },
+
+    updateSize: (
+      state,
+      action: PayloadAction<{
+        id: string;
+        selectedSize: string;
+        selectedColor?: string;
+        isAuthenticated: boolean;
+        cartItemId: string;
+      }>
+    ) => {
+      const { id, selectedSize, selectedColor, isAuthenticated, cartItemId } = action.payload;
+
+      const existingItemIndex = state.cartItems.findIndex(
+        (item) =>
+          item.cartItemId === cartItemId &&
+          item.id === id &&
+          item.selectedColor === selectedColor
+      );
+
+      if (existingItemIndex !== -1) {
+        const updatedItem = {
+          ...state.cartItems[existingItemIndex],
+          selectedSize: selectedSize,
+          cartItemId: generateUniqueId(),
+        };
+        state.cartItems.splice(existingItemIndex, 1, updatedItem);
+      }
+
+      if (!isAuthenticated) {
+        saveCartToStorage(state.cartItems);
+      }
+    },
+
     toggleItemSelection: (
       state,
       action: PayloadAction<{
@@ -340,6 +408,8 @@ const cartSlice = createSlice({
 
 export const {
   addToCart,
+  updateQuantity,
+  updateSize,
   toggleItemSelection,
   removeFromCart,
   deleteSelectedItems,

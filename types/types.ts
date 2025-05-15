@@ -103,6 +103,7 @@ export interface CartItem extends Product {
   selectedSize?: string;
   selectedColor?: string;
   isSelected: boolean;
-  seller?:string;
+  seller?: string;
+  cartItemId: string;
    colorName?:string
 }
