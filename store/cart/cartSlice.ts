@@ -108,7 +108,7 @@ export const fetchCartItemsApi = createAsyncThunk<
         selectedColor: item.selected_color || "",
         colorName,
         isSelected: true,
-        seller: item.seller || "Unknown Seller",
+
         images,
       };
     });

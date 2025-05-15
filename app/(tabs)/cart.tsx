@@ -47,7 +47,20 @@ const ShoppingBagScreen: React.FC = () => {
   }, [dispatch, isAuthenticated, token]);
 
   if (isLoading) {
-    return <FullScreenLoader visible={isLoading} />;
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
+            <Ionicons
+              name="arrow-back"
+              size={23}
+              color={staticColors.darkGray}
+            />
+          </TouchableOpacity>
+        </View>
+        <FullScreenLoader visible={isLoading} />
+      </SafeAreaView>
+    );
   }
 
   const handlePlaceOrder = () => {

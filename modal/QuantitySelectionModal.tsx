@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Modal,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import staticColors from "@/style/staticColors";
@@ -14,7 +15,7 @@ import fontSizes from "@/style/fontSizes";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { CartItem } from "@/types/types";
-import { updateCartItemApi, updateQuantity } from "@/store/cart/cartSlice";
+import {updateCartItemApi, updateQuantity } from "@/store/cart/cartSlice";
 
 interface QuantitySelectionModalProps {
   visible: boolean;
@@ -27,7 +28,7 @@ const QuantitySelectionModal: React.FC<QuantitySelectionModalProps> = ({
   onClose,
   item,
 }) => {
-   const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch<AppDispatch>();
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   );
@@ -77,31 +78,32 @@ const QuantitySelectionModal: React.FC<QuantitySelectionModalProps> = ({
     setSelectedQuantity(quantity);
   };
 
-  const handleDone = () => {
-    if (isAuthenticated) {
-      dispatch(
-        updateCartItemApi({
-          id: item.cartItemId || item.id, 
-          size: item.selectedSize||"",
-          color: item.selectedColor || "",
-          quantity: selectedQuantity.toString(),
-        })
-      );
-    } else {
-      dispatch(
-        updateQuantity({
-          id: item.id,
-          quantity: selectedQuantity,
-          selectedSize: item.selectedSize,
-          selectedColor: item.selectedColor,
-          colorName: item.colorName,
-          isAuthenticated,
-        })
-      );
-    }
-    // Don't close modal if loading or error to show feedback
-    if (!loading && !error) {
+ const handleDone = async () => {
+   try {
+      if (isAuthenticated) {
+        await dispatch(
+          updateCartItemApi({
+            id: item.cartItemId || item.id,
+            size: item.selectedSize || "",
+            color: item.selectedColor || "",
+            quantity: selectedQuantity.toString(),
+          })
+        ).unwrap(); 
+      } else {
+         dispatch(
+          updateQuantity({
+            id: item.id,
+            quantity: selectedQuantity,
+            selectedSize: item.selectedSize,
+            selectedColor: item.selectedColor,
+            colorName: item.colorName,
+            isAuthenticated,
+          })
+        )
+      }
       onClose();
+    } catch (error) {
+      console.error("Failed to update quantity:", error);
     }
   };
 
@@ -129,13 +131,7 @@ const QuantitySelectionModal: React.FC<QuantitySelectionModalProps> = ({
             </View>
           )}
 
-          {error && (
-            <Text >{error}</Text>
-          )}
-
-          {loading && (
-            <Text >Updating...</Text>
-          )}
+          {error && <Text>{error}</Text>}
 
           <View style={styles.quantityContainer}>
             {quantityOptions.map((quantity) => (
@@ -162,11 +158,15 @@ const QuantitySelectionModal: React.FC<QuantitySelectionModalProps> = ({
           </View>
 
           <TouchableOpacity
-            style={[styles.doneButton,]}
+            style={[styles.doneButton]}
             onPress={handleDone}
             disabled={loading}
           >
-            <Text style={styles.doneButtonText}>DONE</Text>
+            {loading ? (
+              <ActivityIndicator size="small" color={staticColors.white} />
+            ) : (
+              <Text style={styles.doneButtonText}>DONE</Text>
+            )}
           </TouchableOpacity>
         </View>
       </View>

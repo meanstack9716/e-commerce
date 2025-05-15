@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -34,6 +34,7 @@ const ProductInfoSection: React.FC = () => {
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   );
+  const [isLoading, setIsLoading] = useState(false);
   const [isQuantityModalVisible, setIsQuantityModalVisible] = useState(false);
   const [selectedCartItem, setSelectedCartItem] = useState<CartItem | null>(
     null
@@ -75,6 +76,11 @@ const ProductInfoSection: React.FC = () => {
     });
   };
 
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     dispatch(fetchCartItemsApi());
+  //   }
+  // }, [dispatch, isAuthenticated]);
   // const handleRemoveItemConfirmationModal = (item: CartItem) => {
   //   setConfirmationModalDetails({
   //     message: "Are you sure you want to move this item from bag?",
@@ -141,17 +147,18 @@ const ProductInfoSection: React.FC = () => {
     setConfirmationModalDetails({
       message: "Are you sure you want to move this item from bag?",
       onPrimaryAction: () => {
-        dispatch(
-          moveToWishlist({
-            ids: [item.id],
-            selectedSizes: [item.selectedSize || ""],
-            selectedColors: [item.selectedColor || ""],
-            isAuthenticated,
-          })
-        );
+        // dispatch(
+        //   moveToWishlist({
+        //     ids: [item.id],
+        //     selectedSizes: [item.selectedSize || ""],
+        //     selectedColors: [item.selectedColor || ""],
+        //     isAuthenticated,
+        //   })
+        // );
         setIsConfirmationModalVisible(false);
       },
       onSecondaryAction: async () => {
+        setIsLoading(true);
         try {
           if (isAuthenticated) {
             await dispatch(
@@ -183,6 +190,7 @@ const ProductInfoSection: React.FC = () => {
         } catch (error) {
           console.error("Failed to remove item:", error);
         } finally {
+          setIsLoading(false);
           setIsConfirmationModalVisible(false);
         }
       },
@@ -206,17 +214,18 @@ const ProductInfoSection: React.FC = () => {
       setConfirmationModalDetails({
         message: `Are you sure you want to remove ${selectedItems} item(s) from bag?`,
         onPrimaryAction: () => {
-          dispatch(
-            moveToWishlist({
-              ids: selectedItemIds,
-              selectedSizes,
-              selectedColors,
-              isAuthenticated,
-            })
-          );
+          // dispatch(
+          //   moveToWishlist({
+          //     ids: selectedItemIds,
+          //     selectedSizes,
+          //     selectedColors,
+          //     isAuthenticated,
+          //   })
+          // );
           setIsConfirmationModalVisible(false);
         },
         onSecondaryAction: async () => {
+          setIsLoading(true);
           try {
             if (isAuthenticated) {
               await dispatch(
@@ -234,6 +243,7 @@ const ProductInfoSection: React.FC = () => {
           } catch (error) {
             console.error("Failed to delete selected items:", error);
           } finally {
+            setIsLoading(false);
             setIsConfirmationModalVisible(false);
           }
         },
@@ -318,7 +328,7 @@ const ProductInfoSection: React.FC = () => {
             {textTruncate(item.description, 5)}
           </Text>
           <Text numberOfLines={1} style={styles.cartSellerItem}>
-            Sold by: {item.seller || "Unknown Seller"}
+            Sold by: {item.seller?.business_name || "Unknown Seller"}
           </Text>
 
           <View style={styles.sizeQtyContainer}>
@@ -359,8 +369,11 @@ const ProductInfoSection: React.FC = () => {
 
           <View style={styles.priceContainer}>
             <Text style={styles.cartItemPrice}>₹{item.final_price}</Text>
+            <Text style={styles.price}>₹{item.price}</Text>
             {item.discount_percent && (
-              <Text style={styles.discountText}>{item.discount_percent} %</Text>
+              <Text style={styles.discountText}>
+                {item.discount_percent} % OFF
+              </Text>
             )}
           </View>
 
@@ -396,14 +409,21 @@ const ProductInfoSection: React.FC = () => {
             },
           ]}
         >
-          {selectedItems === cartItems.length && cartItems.length > 0 && (
+          {selectedItems === cartItems.length && cartItems.length > 0 ? (
             <Ionicons
               name="checkmark"
               size={17}
               color={staticColors.white}
               style={styles.headerCheckbox}
             />
-          )}
+          ) : selectedItems > 0 && selectedItems < cartItems.length ? (
+            <Ionicons
+              name="remove-outline"
+              size={17}
+              color={staticColors.white}
+              style={styles.headerCheckbox}
+            />
+          ) : null}
         </TouchableOpacity>
         <Text style={styles.headerText}>
           {selectedItems}/{cartItems.length} ITEMS SELECTED (₹{totalPrice})
@@ -461,11 +481,13 @@ const ProductInfoSection: React.FC = () => {
         visible={isConfirmationModalVisible}
         title="Add to Wishlist"
         message={confirmationModalDetails.message}
-        primaryButtonText="ADD TO WISHLIST"
+        // primaryButtonText="ADD TO WISHLIST"
+        primaryButtonText="CANCEL"
         secondaryButtonText="REMOVE"
         onFirstButtonPress={confirmationModalDetails.onPrimaryAction}
         onSecondButtonPress={confirmationModalDetails.onSecondaryAction}
         onClose={handleCloseModal}
+        isLoading={isLoading}
       />
 
       {selectedCartItem && (
@@ -631,14 +653,20 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.sm,
     fontWeight: "bold",
     color: staticColors.textSubtitle,
+    ...spacingStyles.mr5,
+  },
+  price: {
+    fontSize: fontSizes.sm,
+    color: staticColors.textLightGray,
+    textDecorationLine: "line-through",
     ...spacingStyles.mr10,
   },
   discountText: {
     fontSize: fontSizes.xs,
     color: staticColors.discountText,
     backgroundColor: staticColors.lightPink,
-    ...spacingStyles.py2,
-    ...spacingStyles.px10,
+    ...spacingStyles.py5,
+    ...spacingStyles.px5,
     borderRadius: 4,
   },
   returnPolicy: {

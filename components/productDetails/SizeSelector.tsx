@@ -107,7 +107,6 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
         stock_quantity: variant.stock_quantity,
         images: images,
       };
-      
     });
 
     setAvailableColors(colorsWithImages);
@@ -122,6 +121,7 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
     } else {
       setSelectedColor("");
       setSelectedColorName("");
+      
     }
   };
 
@@ -154,7 +154,7 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
     value: string;
     images: string[];
   }) => {
-    setSelectedColor(colorOption.color);
+    setSelectedColor(colorOption.value);
     setSelectedColorName(colorOption.color);
     onColorSelect({
       color: colorOption.value,
@@ -176,7 +176,7 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
             style={styles.colorScroll}
           >
             {availableColors.map((colorOption) => {
-              const isColorSelected = selectedColor === colorOption.color;
+              const isColorSelected = selectedColor === colorOption.value;
 
               return (
                 <TouchableOpacity

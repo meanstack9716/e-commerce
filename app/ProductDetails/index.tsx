@@ -314,6 +314,7 @@ const ProductDetailsScreen: React.FC = () => {
                 <Text style={styles.discountedPrice}>
                   ₹{product.final_price}
                 </Text>
+                <Text style={styles.price}>₹{product.price}</Text>
                 <Text style={styles.discount}>
                   ({product.discount_percent}% OFF)
                 </Text>
@@ -473,6 +474,12 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.md,
     fontWeight: "bold",
     color: colors.primary,
+  },
+  price: {
+    fontSize: fontSizes.sm,
+    fontWeight: "bold",
+    color: colors.textMuted,
+    textDecorationLine: "line-through",
   },
   discount: {
     fontSize: fontSizes.sm,

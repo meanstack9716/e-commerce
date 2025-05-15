@@ -4,6 +4,7 @@ export interface Product {
   description: string;
   discount_percent?: number;
   final_price: number;
+  price:number;
   stock_quantity?: string;
   thumbnail_url: string;
   images: string[];
@@ -14,7 +15,7 @@ export interface Product {
   brand?: Brand;
   sizes?: Size[];
   gallery?: GalleryItem[];
-  variant_id?: string;
+  seller?: Seller;
 }
 
 export interface GalleryItem {
@@ -77,6 +78,14 @@ export interface BannerSlide {
   title: string;
 }
 
+export interface Seller {
+  business_name: string;
+  business_type: string;
+  business_email: string;
+  business_mobile: string;
+  id: string;
+}
+
 export interface PromotionalCard {
   id: string;
   title: string;
@@ -103,7 +112,6 @@ export interface CartItem extends Product {
   selectedSize?: string;
   selectedColor?: string;
   isSelected: boolean;
-  seller?: string;
   cartItemId: string;
-   colorName?:string
+  colorName?: string;
 }

@@ -6,6 +6,7 @@ import {
   Modal,
   StyleSheet,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import staticColors from "@/style/staticColors";
@@ -14,7 +15,7 @@ import fontSizes from "@/style/fontSizes";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { CartItem } from "@/types/types";
-import { updateCartItemApi, updateSize } from "@/store/cart/cartSlice";
+import { fetchCartItemsApi, updateCartItemApi, updateSize } from "@/store/cart/cartSlice";
 
 interface SizeSelectionModalProps {
   visible: boolean;
@@ -63,29 +64,31 @@ const SizeSelectionModal: React.FC<SizeSelectionModalProps> = ({
     setSelectedSize(size);
   };
 
-  const handleDone = () => {
-    if (isAuthenticated) {
-      dispatch(
-        updateCartItemApi({
-          id: item.cartItemId || item.id,
-          size: selectedSize || "",
-          color: item.selectedColor || "",
-          quantity: (item.quantity || 1).toString(),
-        })
-      );
-    } else {
-      dispatch(
-        updateSize({
-          id: item.id,
-          selectedSize: selectedSize,
-          selectedColor: item.selectedColor,
-          isAuthenticated,
-          cartItemId: item.cartItemId,
-        })
-      );
-    }
-    if (!loading && !error) {
+  const handleDone = async () => {
+    try {
+      if (isAuthenticated) {
+        await dispatch(
+          updateCartItemApi({
+            id: item.cartItemId || item.id,
+            size: selectedSize || "",
+            color: item.selectedColor || "",
+            quantity: (item.quantity || 1).toString(),
+          })
+        ).unwrap();
+      } else {
+        dispatch(
+          updateSize({
+            id: item.id,
+            selectedSize: selectedSize,
+            selectedColor: item.selectedColor,
+            isAuthenticated,
+            cartItemId: item.cartItemId,
+          })
+        );
+      }
       onClose();
+    } catch (error) {
+      console.error("Failed to update quantity:", error);
     }
   };
 
@@ -127,8 +130,16 @@ const SizeSelectionModal: React.FC<SizeSelectionModalProps> = ({
             ))}
           </View>
 
-          <TouchableOpacity style={styles.doneButton} onPress={handleDone}>
-            <Text style={styles.doneButtonText}>DONE</Text>
+          <TouchableOpacity
+            style={styles.doneButton}
+            onPress={handleDone}
+            disabled={loading}
+          >
+            {loading ? (
+              <ActivityIndicator size="small" color={staticColors.white} />
+            ) : (
+              <Text style={styles.doneButtonText}>DONE</Text>
+            )}
           </TouchableOpacity>
         </View>
       </View>
