@@ -24,9 +24,9 @@ const UserProfile = () => {
             <Text style={styles.highlight}>Free Shipping, Extra Discounts</Text>{" "}
             and More Rewards!
           </Text>
-          <TouchableOpacity style={styles.knowMoreButton}>
+          {/* <TouchableOpacity style={styles.knowMoreButton}>
             <Text style={styles.knowMoreText}>Know More</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
 
         {/* Profile Selector */}
@@ -42,17 +42,19 @@ const UserProfile = () => {
               </View>
               <Text style={styles.profileLabel}>you</Text>
             </View>
-            <View style={styles.addCircleContainer}>
+           {/*This code may be used in the future, so I’ve commented it out  */}
+
+            {/* <View style={styles.addCircleContainer}>
               <TouchableOpacity style={styles.addCircle}>
                 <Text style={styles.plusText}>+</Text>
               </TouchableOpacity>
               <Text style={styles.addLabel}>Add</Text>
-            </View>
+            </View> */}
           </View>
         </View>
 
         {/* Card Buttons */}
-        <View style={styles.cardRow}>
+        {/* <View style={styles.cardRow}>
           <TouchableOpacity style={styles.card}>
             <Ionicons
               name="cube-outline"
@@ -105,9 +107,9 @@ const UserProfile = () => {
               color={staticColors.textLightGray}
             />
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
-      <UserProfileMenu />
+      {/* <UserProfileMenu /> */}
     </ScrollView>
   );
 };
