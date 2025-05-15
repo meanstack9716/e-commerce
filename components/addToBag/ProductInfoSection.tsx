@@ -15,11 +15,13 @@ import ProductDeleteConfirmationModal from "@/modal/ProductDeleteConfirmationMod
 import fontSizes from "@/style/fontSizes";
 import { textTruncate } from "@/utils/textTruncate";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store/store";
+import { AppDispatch, RootState } from "@/store/store";
 import {
   deleteSelectedItems,
+  fetchCartItemsApi,
   moveToWishlist,
   removeFromCart,
+  removeFromCartApi,
   toggleItemSelection,
 } from "@/store/cart/cartSlice";
 import { CartItem } from "@/types/types";
@@ -27,7 +29,7 @@ import QuantitySelectionModal from "@/modal/QuantitySelectionModal";
 import SizeSelectionModal from "@/modal/SizeSelectionModal";
 
 const ProductInfoSection: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const cartItems = useSelector((state: RootState) => state.cart.cartItems);
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
@@ -73,6 +75,68 @@ const ProductInfoSection: React.FC = () => {
     });
   };
 
+  // const handleRemoveItemConfirmationModal = (item: CartItem) => {
+  //   setConfirmationModalDetails({
+  //     message: "Are you sure you want to move this item from bag?",
+  //     onPrimaryAction: () => {
+  //       dispatch(
+  //         moveToWishlist({
+  //           ids: [item.id],
+  //           selectedSizes: [item.selectedSize || ""],
+  //           selectedColors: [item.selectedColor || ""],
+  //           isAuthenticated,
+  //         })
+  //       );
+  //       setIsConfirmationModalVisible(false);
+  //     },
+  //     onSecondaryAction: () => {
+  //       dispatch(
+  //         removeFromCart({
+  //           id: item.id,
+  //           selectedSize: item.selectedSize,
+  //           selectedColor: item.selectedColor,
+  //           isAuthenticated,
+  //         })
+  //       );
+  //       setIsConfirmationModalVisible(false);
+  //     },
+  //   });
+  //   setIsConfirmationModalVisible(true);
+  // };
+
+  // const handleDeleteSelectedProduct = () => {
+  //   if (selectedItems > 0) {
+  //     const selectedItemIds = cartItems
+  //       .filter((item) => item.isSelected)
+  //       .map((item) => item.id);
+  //     const selectedSizes = cartItems
+  //       .filter((item) => item.isSelected)
+  //       .map((item) => item.selectedSize || "");
+  //     const selectedColors = cartItems
+  //       .filter((item) => item.isSelected)
+  //       .map((item) => item.selectedColor || "");
+  //     setConfirmationModalDetails({
+  //       message: `Are you sure you want to remove ${selectedItems} item(s) from bag?`,
+  //       onPrimaryAction: () => {
+  //         dispatch(
+  //           moveToWishlist({
+  //             ids: selectedItemIds,
+  //             selectedSizes,
+  //             selectedColors,
+  //             isAuthenticated,
+  //           })
+  //         );
+  //         setIsConfirmationModalVisible(false);
+  //       },
+  //       onSecondaryAction: () => {
+  //         dispatch(deleteSelectedItems({ isAuthenticated }));
+  //         setIsConfirmationModalVisible(false);
+  //       },
+  //     });
+  //     setIsConfirmationModalVisible(true);
+  //   }
+  // };
+
   const handleRemoveItemConfirmationModal = (item: CartItem) => {
     setConfirmationModalDetails({
       message: "Are you sure you want to move this item from bag?",
@@ -87,18 +151,43 @@ const ProductInfoSection: React.FC = () => {
         );
         setIsConfirmationModalVisible(false);
       },
-      onSecondaryAction: () => {
-        dispatch(
-          removeFromCart({
-            id: item.id,
-            selectedSize: item.selectedSize,
-            selectedColor: item.selectedColor,
-            isAuthenticated,
-          })
-        );
-        setIsConfirmationModalVisible(false);
+      onSecondaryAction: async () => {
+        try {
+          if (isAuthenticated) {
+            await dispatch(
+              removeFromCartApi({
+                ids: [item.id],
+              })
+            ).unwrap();
+
+            dispatch(
+              removeFromCart({
+                id: item.id,
+                selectedSize: item.selectedSize,
+                selectedColor: item.selectedColor,
+                isAuthenticated,
+              })
+            );
+
+            await dispatch(fetchCartItemsApi()).unwrap();
+          } else {
+            dispatch(
+              removeFromCart({
+                id: item.id,
+                selectedSize: item.selectedSize,
+                selectedColor: item.selectedColor,
+                isAuthenticated,
+              })
+            );
+          }
+        } catch (error) {
+          console.error("Failed to remove item:", error);
+        } finally {
+          setIsConfirmationModalVisible(false);
+        }
       },
     });
+
     setIsConfirmationModalVisible(true);
   };
 
@@ -113,6 +202,7 @@ const ProductInfoSection: React.FC = () => {
       const selectedColors = cartItems
         .filter((item) => item.isSelected)
         .map((item) => item.selectedColor || "");
+
       setConfirmationModalDetails({
         message: `Are you sure you want to remove ${selectedItems} item(s) from bag?`,
         onPrimaryAction: () => {
@@ -126,9 +216,26 @@ const ProductInfoSection: React.FC = () => {
           );
           setIsConfirmationModalVisible(false);
         },
-        onSecondaryAction: () => {
-          dispatch(deleteSelectedItems({ isAuthenticated }));
-          setIsConfirmationModalVisible(false);
+        onSecondaryAction: async () => {
+          try {
+            if (isAuthenticated) {
+              await dispatch(
+                removeFromCartApi({
+                  ids: selectedItemIds,
+                })
+              ).unwrap();
+
+              dispatch(deleteSelectedItems({ isAuthenticated }));
+
+              await dispatch(fetchCartItemsApi()).unwrap();
+            } else {
+              dispatch(deleteSelectedItems({ isAuthenticated }));
+            }
+          } catch (error) {
+            console.error("Failed to delete selected items:", error);
+          } finally {
+            setIsConfirmationModalVisible(false);
+          }
         },
       });
       setIsConfirmationModalVisible(true);
@@ -245,9 +352,7 @@ const ProductInfoSection: React.FC = () => {
 
             {item.selectedColor && (
               <View style={styles.colorContainer}>
-                <Text style={styles.sizeQtyText}>
-                  Color: {item.selectedColor}
-                </Text>
+                <Text style={styles.sizeQtyText}>Color: {item.colorName}</Text>
               </View>
             )}
           </View>

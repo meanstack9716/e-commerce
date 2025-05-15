@@ -26,12 +26,11 @@ const VerifyEmailOtpScreen = () => {
 
   const handleVerifySuccess = async (otpCode: string) => {
     try {
-      // const result = await dispatch(
-      //   verifyUser({ email, code: otpCode })
-      // ).unwrap();
-      // // router.replace("/home");
-      dispatch(verifyEmailCode({ email, code: otpCode }))
-      router.navigate("/cart");
+      const result = await dispatch(
+        verifyUser({ email, code: otpCode })
+      ).unwrap();
+      // router.replace("/home");
+      router.navigate("/profile");
     } catch (err) {
       console.log("Verification failed:", err);
     }

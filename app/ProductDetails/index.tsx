@@ -34,7 +34,7 @@ import {
   fetchProductById,
 } from "@/store/product/productsSlice";
 import FullScreenLoader from "@/components/common/FullScreenLoader";
-import { addToCart } from "@/store/cart/cartSlice";
+import { addToCart, addToCartApi } from "@/store/cart/cartSlice";
 import { useAppSelector } from "@/store/hooks";
 
 const { width: screenWidth } = Dimensions.get("window");
@@ -54,6 +54,9 @@ const ProductDetailsScreen: React.FC = () => {
   const [selectedColor, setSelectedColor] = useState<string | undefined>(
     undefined
   );
+  const [selectedColorName, setSelectedColorName] = useState<
+    string | undefined
+  >(undefined);
   const [isProductLiked, setIsProductLiked] = useState(false);
   const [isViewSimilarModalVisible, setViewSimilarModalVisible] =
     useState(false);
@@ -121,15 +124,18 @@ const ProductDetailsScreen: React.FC = () => {
 
   const handleColorSelect = (colorData: {
     color: string;
+    colorName?: string;
     images: string[];
   }) => {
     setSelectedColor(colorData.color);
+    setSelectedColorName(colorData.colorName);
     setDisplayImages(colorData.images);
     setActiveIndex(0);
     if (imageCarouselRef.current) {
       imageCarouselRef.current.scrollToOffset({ offset: 0, animated: true });
     }
   };
+
   const handleAddToCart = () => {
     if (product) {
       dispatch(
@@ -137,11 +143,23 @@ const ProductDetailsScreen: React.FC = () => {
           product,
           selectedSize,
           selectedColor,
+          colorName: selectedColorName,
           isAuthenticated: isAuthenticatedUser,
         })
       );
 
-      router.push("/cart");
+      if (isAuthenticatedUser) {
+        dispatch(
+          addToCartApi({
+            product,
+            selectedSize,
+            selectedColor,
+          })
+        ).unwrap();
+        router.push("/cart");
+      } else {
+        router.push("/cart");
+      }
     }
   };
 

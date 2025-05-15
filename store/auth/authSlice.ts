@@ -3,6 +3,9 @@ import { handleApiError } from "@/utils/handleApiError";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { clearCart } from "../cart/cartSlice";
+import { AppDispatch } from "@/store/store";
+import { fetchCartItemsApi } from "../cart/cartSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface AuthState {
   loading: boolean;
@@ -12,6 +15,7 @@ interface AuthState {
   user: any | null;
   resetEmail: string | null;
   resetCode: string | null;
+  token: string | null;
 }
 
 const initialState: AuthState = {
@@ -22,7 +26,21 @@ const initialState: AuthState = {
   user: null,
   resetEmail: null,
   resetCode: null,
+  token: null,
 };
+
+export const loadAuthState = createAsyncThunk(
+  "auth/loadAuthState",
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = await AsyncStorage.getItem("authToken");
+      const user = await AsyncStorage.getItem("authUser");
+      return { token, user: user ? JSON.parse(user) : null };
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
 const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 export const registerUser = createAsyncThunk(
@@ -211,7 +229,7 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(verifyEmailCode.fulfilled, (state) => {
+      .addCase(verifyEmailCode.fulfilled, (state, action) => {
         state.loading = false;
       })
       .addCase(verifyEmailCode.rejected, (state, action) => {
@@ -233,9 +251,14 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(verifyUser.fulfilled, (state) => {
+      .addCase(verifyUser.fulfilled, (state, action) => {
         state.loading = false;
         state.isAuthenticated = true;
+        console.log("verifyEmailCode response:", action.payload);
+        state.token = action.payload.token;
+        // state.user = action.payload.user;
+        // AsyncStorage.setItem("authToken", action.payload.token);
+        // AsyncStorage.setItem("authUser", JSON.stringify(action.payload.user));
       })
       .addCase(verifyUser.rejected, (state, action) => {
         state.loading = false;

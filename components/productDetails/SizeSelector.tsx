@@ -14,10 +14,15 @@ import staticColors from "@/style/staticColors";
 import { Product } from "../../types/types";
 import { AntDesign } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
+import images from "@/constants/images";
 
 interface SizeSelectorProps {
   product: Product | null;
-  onColorSelect: (colorData: { color: string; images: string[] }) => void;
+  onColorSelect: (colorData: {
+    color: string;
+    colorName: string;
+    images: string[];
+  }) => void;
   onSizeSelect: (size: string) => void;
 }
 
@@ -35,6 +40,7 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
     Array<{
       id: string;
       color: string;
+      value: string;
       img_url: string;
       stock_quantity: string;
       images: string[];
@@ -94,6 +100,7 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
       return {
         id: variant.id,
         color: variant.name,
+        value: variant.value,
         img_url: imgUrl,
         stock_quantity: variant.stock_quantity,
         images: images,
@@ -102,9 +109,10 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
 
     setAvailableColors(colorsWithImages);
     if (colorsWithImages.length > 0) {
-      setSelectedColor(colorsWithImages[0].color);
+      setSelectedColor(colorsWithImages[0].value);
       onColorSelect({
-        color: colorsWithImages[0].color,
+        color: colorsWithImages[0].value,
+        colorName: colorsWithImages[0].color,
         images: colorsWithImages[0].images,
       });
     } else {
@@ -128,6 +136,7 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
         if (selectedColorData) {
           onColorSelect({
             color: selectedColorData.color,
+            colorName: selectedColorData.color,
             images: selectedColorData.images,
           });
         }
@@ -137,11 +146,13 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
 
   const handleColorClick = (colorOption: {
     color: string;
+    value: string;
     images: string[];
   }) => {
     setSelectedColor(colorOption.color);
     onColorSelect({
-      color: colorOption.color,
+      color: colorOption.value,
+      colorName: colorOption.color,
       images: colorOption.images,
     });
   };

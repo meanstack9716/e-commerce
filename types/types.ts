@@ -105,4 +105,5 @@ export interface CartItem extends Product {
   isSelected: boolean;
   seller?: string;
   cartItemId: string;
+   colorName?:string
 }
