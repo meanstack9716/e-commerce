@@ -35,6 +35,7 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
 }) => {
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState<string>("");
+  const [selectedColorName, setSelectedColorName] = useState<string>("");
   const [showSizeChart, setShowSizeChart] = useState(false);
   const [availableColors, setAvailableColors] = useState<
     Array<{
@@ -75,6 +76,7 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
     if (!sizeData || !sizeData.variants || sizeData.variants.length === 0) {
       setAvailableColors([]);
       setSelectedColor("");
+      setSelectedColorName("");
       return;
     }
     const colorsWithStock = sizeData.variants.filter(
@@ -105,11 +107,13 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
         stock_quantity: variant.stock_quantity,
         images: images,
       };
+      
     });
 
     setAvailableColors(colorsWithImages);
     if (colorsWithImages.length > 0) {
       setSelectedColor(colorsWithImages[0].value);
+      setSelectedColorName(colorsWithImages[0].color);
       onColorSelect({
         color: colorsWithImages[0].value,
         colorName: colorsWithImages[0].color,
@@ -117,6 +121,7 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
       });
     } else {
       setSelectedColor("");
+      setSelectedColorName("");
     }
   };
 
@@ -150,6 +155,7 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
     images: string[];
   }) => {
     setSelectedColor(colorOption.color);
+    setSelectedColorName(colorOption.color);
     onColorSelect({
       color: colorOption.value,
       colorName: colorOption.color,
@@ -162,7 +168,7 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
       {availableColors.length > 0 ? (
         <View style={styles.colorSection}>
           <Text style={styles.colorTitle}>
-            Color: <Text style={styles.bold}>{selectedColor}</Text>
+            Color: <Text style={styles.bold}>{selectedColorName}</Text>
           </Text>
           <ScrollView
             horizontal

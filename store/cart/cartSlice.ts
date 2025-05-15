@@ -149,6 +149,44 @@ export const removeFromCartApi = createAsyncThunk<
   }
 });
 
+export const updateCartItemApi = createAsyncThunk<
+  void,
+  { id: string; size: string; color: string; quantity: string },
+  { state: RootState }
+>(
+  "cart/updateCartItemApi",
+  async (
+    { id, size, color, quantity },
+    { getState, rejectWithValue, dispatch }
+  ) => {
+    try {
+      const state = getState();
+      const token = state.auth.token;
+
+      const payload = {
+        id,
+        size,
+        color,
+        quantity,
+      };
+
+      await axios.put(`${apiUrl}/cart/update`, payload, {
+        headers: {
+          Authorization: `${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      dispatch(fetchCartItemsApi());
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to update cart item";
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
 const cartSlice = createSlice({
   name: "cart",
   initialState,
@@ -227,11 +265,18 @@ const cartSlice = createSlice({
         quantity: number;
         selectedSize?: string;
         selectedColor?: string;
+        colorName?: string;
         isAuthenticated: boolean;
       }>
     ) => {
-      const { id, quantity, selectedSize, selectedColor, isAuthenticated } =
-        action.payload;
+      const {
+        id,
+        quantity,
+        selectedSize,
+        selectedColor,
+        colorName,
+        isAuthenticated,
+      } = action.payload;
 
       const existingItem = state.cartItems.find(
         (item) =>
@@ -259,7 +304,8 @@ const cartSlice = createSlice({
         cartItemId: string;
       }>
     ) => {
-      const { id, selectedSize, selectedColor, isAuthenticated, cartItemId } = action.payload;
+      const { id, selectedSize, selectedColor, isAuthenticated, cartItemId } =
+        action.payload;
 
       const existingItemIndex = state.cartItems.findIndex(
         (item) =>
@@ -400,6 +446,17 @@ const cartSlice = createSlice({
         state.loading = false;
       })
       .addCase(removeFromCartApi.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(updateCartItemApi.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateCartItemApi.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(updateCartItemApi.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

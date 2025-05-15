@@ -12,9 +12,9 @@ import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import fontSizes from "@/style/fontSizes";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store/store";
+import { AppDispatch, RootState } from "@/store/store";
 import { CartItem } from "@/types/types";
-import { updateSize } from "@/store/cart/cartSlice";
+import { updateCartItemApi, updateSize } from "@/store/cart/cartSlice";
 
 interface SizeSelectionModalProps {
   visible: boolean;
@@ -29,20 +29,21 @@ const SizeSelectionModal: React.FC<SizeSelectionModalProps> = ({
   onClose,
   item,
 }) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   );
-
+  const loading = useSelector((state: RootState) => state.cart.loading);
+  const error = useSelector((state: RootState) => state.cart.error);
   const availableSizes = allPossibleSizes
     .map((size) => {
       const productSize = item?.sizes?.find((s) => s.value === size);
       if (productSize) {
-        const totalStock = productSize.variants.reduce(
-          (sum, variant) => sum + parseInt(variant.stock_quantity || "0"),
-          0
+        const variant = productSize.variants.find(
+          (v) => v.value === item.selectedColor
         );
-        return { label: size, left: totalStock };
+        const stock = variant ? parseInt(variant.stock_quantity || "0") : 0;
+        return { label: size, left: stock };
       }
       return { label: size, left: 0 };
     })
@@ -63,16 +64,29 @@ const SizeSelectionModal: React.FC<SizeSelectionModalProps> = ({
   };
 
   const handleDone = () => {
-    dispatch(
-      updateSize({
-        id: item.id,
-        selectedSize: selectedSize,
-        selectedColor: item.selectedColor,
-        isAuthenticated,
-        cartItemId: item.cartItemId,
-      })
-    );
-    onClose();
+    if (isAuthenticated) {
+      dispatch(
+        updateCartItemApi({
+          id: item.cartItemId || item.id,
+          size: selectedSize || "",
+          color: item.selectedColor || "",
+          quantity: (item.quantity || 1).toString(),
+        })
+      );
+    } else {
+      dispatch(
+        updateSize({
+          id: item.id,
+          selectedSize: selectedSize,
+          selectedColor: item.selectedColor,
+          isAuthenticated,
+          cartItemId: item.cartItemId,
+        })
+      );
+    }
+    if (!loading && !error) {
+      onClose();
+    }
   };
 
   return (

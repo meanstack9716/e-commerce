@@ -446,7 +446,9 @@ const ProductInfoSection: React.FC = () => {
         <FlatList
           data={cartItems}
           renderItem={renderCartItem}
-          keyExtractor={(item) => item.cartItemId} 
+          keyExtractor={(item, index) =>
+            item.cartItemId || `${item.id}-${index}`
+          }
           contentContainerStyle={styles.cartList}
           ListHeaderComponent={renderHeader}
           showsVerticalScrollIndicator={false}
@@ -596,7 +598,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.px5,
     ...spacingStyles.py5,
     borderRadius: 4,
-    ...spacingStyles.mr10,
+    ...spacingStyles.mr5,
   },
   colorContainer: {
     flexDirection: "row",
@@ -605,7 +607,6 @@ const styles = StyleSheet.create({
     ...spacingStyles.px5,
     ...spacingStyles.py5,
     borderRadius: 4,
-    ...spacingStyles.mr10,
   },
   qtyContainer: {
     flexDirection: "row",
@@ -614,10 +615,10 @@ const styles = StyleSheet.create({
     ...spacingStyles.px5,
     ...spacingStyles.py5,
     borderRadius: 4,
-    ...spacingStyles.mr10,
+    ...spacingStyles.mr5,
   },
   sizeQtyText: {
-    fontSize: fontSizes.xs,
+    fontSize: fontSizes.s,
     color: staticColors.textSubtitle,
     ...spacingStyles.mr5,
   },

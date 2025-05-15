@@ -12,9 +12,9 @@ import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import fontSizes from "@/style/fontSizes";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store/store";
+import { AppDispatch, RootState } from "@/store/store";
 import { CartItem } from "@/types/types";
-import { updateQuantity } from "@/store/cart/cartSlice";
+import { updateCartItemApi, updateQuantity } from "@/store/cart/cartSlice";
 
 interface QuantitySelectionModalProps {
   visible: boolean;
@@ -27,13 +27,15 @@ const QuantitySelectionModal: React.FC<QuantitySelectionModalProps> = ({
   onClose,
   item,
 }) => {
-  const dispatch = useDispatch();
+   const dispatch = useDispatch<AppDispatch>();
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   );
+  const error = useSelector((state: RootState) => state.cart.error);
+  const loading = useSelector((state: RootState) => state.cart.loading);
 
   const getVariantStockQuantity = () => {
-    if (!item.selectedSize || !item.selectedColor || !item.sizes) {
+    if (!item.selectedSize || !item.colorName || !item.sizes) {
       return item.stock_quantity ? parseInt(item.stock_quantity.toString()) : 1;
     }
 
@@ -45,7 +47,7 @@ const QuantitySelectionModal: React.FC<QuantitySelectionModalProps> = ({
     }
 
     const selectedVariant = selectedSizeObj.variants.find(
-      (variant) => variant.name === item.selectedColor
+      (variant) => variant.name === item.colorName
     );
 
     if (!selectedVariant) {
@@ -76,16 +78,31 @@ const QuantitySelectionModal: React.FC<QuantitySelectionModalProps> = ({
   };
 
   const handleDone = () => {
-    dispatch(
-      updateQuantity({
-        id: item.id,
-        quantity: selectedQuantity,
-        selectedSize: item.selectedSize,
-        selectedColor: item.selectedColor,
-        isAuthenticated,
-      })
-    );
-    onClose();
+    if (isAuthenticated) {
+      dispatch(
+        updateCartItemApi({
+          id: item.cartItemId || item.id, 
+          size: item.selectedSize||"",
+          color: item.selectedColor || "",
+          quantity: selectedQuantity.toString(),
+        })
+      );
+    } else {
+      dispatch(
+        updateQuantity({
+          id: item.id,
+          quantity: selectedQuantity,
+          selectedSize: item.selectedSize,
+          selectedColor: item.selectedColor,
+          colorName: item.colorName,
+          isAuthenticated,
+        })
+      );
+    }
+    // Don't close modal if loading or error to show feedback
+    if (!loading && !error) {
+      onClose();
+    }
   };
 
   return (
@@ -104,13 +121,20 @@ const QuantitySelectionModal: React.FC<QuantitySelectionModalProps> = ({
             </TouchableOpacity>
           </View>
 
-          {/* Display selected variant info */}
-          {item.selectedColor && (
+          {item.colorName && (
             <View style={styles.variantInfo}>
               <Text style={styles.variantInfoText}>
-                Available for {item.selectedColor}: {availableQuantity}
+                Available for {item.colorName}: {availableQuantity}
               </Text>
             </View>
+          )}
+
+          {error && (
+            <Text >{error}</Text>
+          )}
+
+          {loading && (
+            <Text >Updating...</Text>
           )}
 
           <View style={styles.quantityContainer}>
@@ -122,6 +146,7 @@ const QuantitySelectionModal: React.FC<QuantitySelectionModalProps> = ({
                   selectedQuantity === quantity && styles.selectedOption,
                 ]}
                 onPress={() => handleQuantitySelect(quantity)}
+                disabled={loading}
               >
                 <Text
                   style={[
@@ -136,7 +161,11 @@ const QuantitySelectionModal: React.FC<QuantitySelectionModalProps> = ({
             ))}
           </View>
 
-          <TouchableOpacity style={styles.doneButton} onPress={handleDone}>
+          <TouchableOpacity
+            style={[styles.doneButton,]}
+            onPress={handleDone}
+            disabled={loading}
+          >
             <Text style={styles.doneButtonText}>DONE</Text>
           </TouchableOpacity>
         </View>
