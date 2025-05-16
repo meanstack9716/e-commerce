@@ -20,6 +20,7 @@ function AppLayout() {
  useCartStorage();
 
   return (
+    
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Stack screenOptions={{ headerShown: false }} >
         <Stack.Screen name="(tabs)" />
@@ -27,6 +28,7 @@ function AppLayout() {
         <Stack.Screen name="+not-found" />
         <Stack.Screen name="/categories" />
         <Stack.Screen name="/ProductDetails" />
+        <Stack.Screen name="/addNewAddresss" />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>

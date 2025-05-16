@@ -14,21 +14,27 @@ import ProductInfoScreen from "@/components/addToBag/ProductInfoSection";
 import ShoppingCartScreen from "@/components/addToBag/ShoppingCartScreen";
 import FullScreenLoader from "@/components/common/FullScreenLoader";
 import { Button } from "@/components/common/Button";
+import LoginModal from "@/app/(auth)/loginModal";
+import SignUpModal from "@/app/(auth)/signUpModal";
 
 const ShoppingBagScreen: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoginModalVisible, setLoginModalVisible] = useState(false);
+  const [isSignupModalVisible, setSignupModalVisible] = useState(false);
   const token = useSelector((state: RootState) => state.auth.token);
   const cartItems = useSelector((state: RootState) => state.cart.cartItems);
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   );
+
   const handleGoBack = () => {
     router.back();
     return true;
   };
 
   useBackHandler(handleGoBack);
+
   useEffect(() => {
     const loadCartData = async () => {
       try {
@@ -44,6 +50,32 @@ const ShoppingBagScreen: React.FC = () => {
 
     loadCartData();
   }, [dispatch, isAuthenticated, token]);
+
+  const handlePlaceOrder = () => {
+    if (isAuthenticated) {
+      router.navigate("/addNewAddress");
+    } else {
+      setLoginModalVisible(true);
+    }
+  };
+
+  const handleCloseLoginModal = () => {
+    setLoginModalVisible(false);
+  };
+
+  const handleCloseSignupModal = () => {
+    setSignupModalVisible(false);
+  };
+
+  const handleOpenSignupModal = () => {
+    setLoginModalVisible(false);
+    setSignupModalVisible(true);
+  };
+
+  const handleOpenLoginModal = () => {
+    setSignupModalVisible(false);
+    setLoginModalVisible(true);
+  };
 
   if (isLoading) {
     return (
@@ -62,7 +94,6 @@ const ShoppingBagScreen: React.FC = () => {
     );
   }
 
-  const handlePlaceOrder = () => {};
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
@@ -97,6 +128,20 @@ const ShoppingBagScreen: React.FC = () => {
           textStyle={styles.PlaceText}
         />
       )}
+
+      {/* Login Modal */}
+      <LoginModal
+        visible={isLoginModalVisible}
+        onClose={handleCloseLoginModal}
+        onSignupPress={handleOpenSignupModal}
+      />
+
+      {/* Signup Modal */}
+      <SignUpModal
+        visible={isSignupModalVisible}
+        onClose={handleCloseSignupModal}
+        onLoginPress={handleOpenLoginModal}
+      />
     </SafeAreaView>
   );
 };

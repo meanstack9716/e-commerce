@@ -61,10 +61,6 @@ export const fetchCartItemsApi = createAsyncThunk<
   try {
     const state = getState();
     const token = state.auth.token;
-
-    if (!token) {
-      throw new Error("No authentication token found");
-    }
     const response = await axios.get(`${apiUrl}/cart/list`, {
       headers: {
         Authorization: `${token}`,

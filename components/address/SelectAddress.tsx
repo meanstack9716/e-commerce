@@ -5,14 +5,14 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  SafeAreaView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { router } from "expo-router";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import fontSizes from "@/style/fontSizes";
 import { commonStyles } from "@/style/commonStyle";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface Address {
   id: string;
@@ -46,19 +46,42 @@ const otherAddress: Address = {
   pincode: "811300",
 };
 
-const SelectAddressScreen = () => {
+interface SelectAddressProps {
+  onGoBack?: () => void; 
+}
+
+const SelectAddress = ({ onGoBack }: SelectAddressProps) => {
   const [selectedAddressId, setSelectedAddressId] = useState(defaultAddress.id);
-  const navigation = useNavigation();
 
   const handleSelect = (id: string) => {
     setSelectedAddressId(id);
+  };
+
+  const handleAddNewAddress = () => {
+    if (onGoBack) {
+      onGoBack();
+    } else {
+      router.push("/addNewAddress");
+    }
+  };
+
+  const handleBack = () => {
+    if (onGoBack) {
+      onGoBack();
+    } else {
+      router.back();
+    }
+  };
+
+  const handleConfirm = () => {
+    router.back();
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={handleBack}
           style={commonStyles.backButton}
         >
           <Ionicons
@@ -70,7 +93,10 @@ const SelectAddressScreen = () => {
         <Text style={commonStyles.header}>SELECT ADDRESS</Text>
       </View>
 
-      <TouchableOpacity style={styles.addNewButton}>
+      <TouchableOpacity 
+        style={styles.addNewButton}
+        onPress={handleAddNewAddress}
+      >
         <Text style={styles.addNewText}>ADD NEW ADDRESS</Text>
       </TouchableOpacity>
 
@@ -95,7 +121,10 @@ const SelectAddressScreen = () => {
         ) : null}
       </ScrollView>
 
-      <TouchableOpacity style={styles.confirmButton}>
+      <TouchableOpacity 
+        style={styles.confirmButton}
+        onPress={handleConfirm}
+      >
         <Text style={styles.confirmText}>CONFIRM</Text>
       </TouchableOpacity>
     </SafeAreaView>
@@ -181,7 +210,6 @@ const styles = StyleSheet.create({
     ...spacingStyles.mb10,
   },
   row: { flexDirection: "row", alignItems: "center", ...spacingStyles.mb5 },
-
   name: { fontWeight: "bold", fontSize: fontSizes.sm },
   labelContainer: {
     backgroundColor: staticColors.lightGreen,
@@ -230,4 +258,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SelectAddressScreen;
+export default SelectAddress;
