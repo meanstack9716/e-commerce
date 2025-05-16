@@ -54,6 +54,7 @@ export default {
   darkGray:'#333',
   brightRed: "#dc2626", 
   lightPink: "#fee2e2",
+  sorftPink:"#fac0c0",
   lightGreen: "#e6ffe6",
   secondaryGray:'#e3e3e3',
   lightYellow:"#F7CD03",

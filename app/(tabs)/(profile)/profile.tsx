@@ -32,17 +32,19 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import UserProfile from "@/components/profile/UserProfile";
 export default function ProfileScreen() {
-  const [selectedSection, setSelectedSection] = useState("Profile");
+const [activeProfileSection, setActiveProfileSection] = useState("Profile");
   const router = useRouter();
   const insets = useSafeAreaInsets();
-const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
 
   useEffect(() => {
     const backButtonListener = BackHandler.addEventListener(
       "hardwareBackPress",
       () => {
-        if (selectedSection !== "Profile") {
-          setSelectedSection("Profile");
+        if (activeProfileSection !== "Profile") {
+          setActiveProfileSection("Profile");
           return true;
         }
         return false;
@@ -52,14 +54,14 @@ const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthentic
     return () => {
       backButtonListener.remove();
     };
-  }, [selectedSection]);
+  }, [activeProfileSection]);
 
   const getSelectedProfileSectionContent = () => {
     const sectionComponents: { [key: string]: React.ReactNode } = {
       Profile: (
         <>
-          {isAuthenticated ?  <UserProfile /> :  <ProfileListSection />}
-          <FooterLinks onLinkPress={(link) => setSelectedSection(link)} />
+          {isAuthenticated ? <UserProfile /> : <ProfileListSection />}
+          <FooterLinks onLinkPress={(link) => setActiveProfileSection(link)} />
           <View style={styles.optionsContainer}>
             <Text style={styles.versionText}>APP VERSION 4.2503.21</Text>
           </View>
@@ -72,7 +74,7 @@ const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthentic
       "GRIEVANCE REDRESSAL": <Grievance />,
     };
 
-    return sectionComponents[selectedSection] || <ProfileHeader />;
+    return sectionComponents[activeProfileSection] || <ProfileHeader />;
   };
 
   return (
@@ -81,8 +83,8 @@ const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthentic
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => {
-            if (selectedSection !== "Profile") {
-              setSelectedSection("Profile");
+            if (activeProfileSection !== "Profile") {
+              setActiveProfileSection("Profile");
             } else {
               router.back();
             }
@@ -91,7 +93,7 @@ const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthentic
           <AntDesign name="arrowleft" size={18} color="black" />
         </TouchableOpacity>
 
-        <Text style={styles.headerTitle}>{selectedSection}</Text>
+        <Text style={styles.headerTitle}>{activeProfileSection}</Text>
       </View>
 
       <ScrollView style={styles.container}>

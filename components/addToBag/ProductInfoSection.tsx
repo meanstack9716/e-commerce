@@ -27,8 +27,11 @@ import {
 import { CartItem } from "@/types/types";
 import QuantitySelectionModal from "@/modal/QuantitySelectionModal";
 import SizeSelectionModal from "@/modal/SizeSelectionModal";
+import { router, useNavigation } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
 
 const ProductInfoSection: React.FC = () => {
+  const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
   const cartItems = useSelector((state: RootState) => state.cart.cartItems);
   const isAuthenticated = useSelector(
@@ -75,73 +78,6 @@ const ProductInfoSection: React.FC = () => {
       }
     });
   };
-
-  // useEffect(() => {
-  //   if (isAuthenticated) {
-  //     dispatch(fetchCartItemsApi());
-  //   }
-  // }, [dispatch, isAuthenticated]);
-  // const handleRemoveItemConfirmationModal = (item: CartItem) => {
-  //   setConfirmationModalDetails({
-  //     message: "Are you sure you want to move this item from bag?",
-  //     onPrimaryAction: () => {
-  //       dispatch(
-  //         moveToWishlist({
-  //           ids: [item.id],
-  //           selectedSizes: [item.selectedSize || ""],
-  //           selectedColors: [item.selectedColor || ""],
-  //           isAuthenticated,
-  //         })
-  //       );
-  //       setIsConfirmationModalVisible(false);
-  //     },
-  //     onSecondaryAction: () => {
-  //       dispatch(
-  //         removeFromCart({
-  //           id: item.id,
-  //           selectedSize: item.selectedSize,
-  //           selectedColor: item.selectedColor,
-  //           isAuthenticated,
-  //         })
-  //       );
-  //       setIsConfirmationModalVisible(false);
-  //     },
-  //   });
-  //   setIsConfirmationModalVisible(true);
-  // };
-
-  // const handleDeleteSelectedProduct = () => {
-  //   if (selectedItems > 0) {
-  //     const selectedItemIds = cartItems
-  //       .filter((item) => item.isSelected)
-  //       .map((item) => item.id);
-  //     const selectedSizes = cartItems
-  //       .filter((item) => item.isSelected)
-  //       .map((item) => item.selectedSize || "");
-  //     const selectedColors = cartItems
-  //       .filter((item) => item.isSelected)
-  //       .map((item) => item.selectedColor || "");
-  //     setConfirmationModalDetails({
-  //       message: `Are you sure you want to remove ${selectedItems} item(s) from bag?`,
-  //       onPrimaryAction: () => {
-  //         dispatch(
-  //           moveToWishlist({
-  //             ids: selectedItemIds,
-  //             selectedSizes,
-  //             selectedColors,
-  //             isAuthenticated,
-  //           })
-  //         );
-  //         setIsConfirmationModalVisible(false);
-  //       },
-  //       onSecondaryAction: () => {
-  //         dispatch(deleteSelectedItems({ isAuthenticated }));
-  //         setIsConfirmationModalVisible(false);
-  //       },
-  //     });
-  //     setIsConfirmationModalVisible(true);
-  //   }
-  // };
 
   const handleRemoveItemConfirmationModal = (item: CartItem) => {
     setConfirmationModalDetails({
@@ -272,7 +208,15 @@ const ProductInfoSection: React.FC = () => {
   };
   const renderCartItem = ({ item }: { item: CartItem }) => {
     return (
-      <View style={styles.cartItem}>
+      <TouchableOpacity
+        style={styles.cartItem}
+        onPress={() =>
+          router.navigate({
+            pathname: "/ProductDetails",
+            params: { id: item.id },
+          })
+        }
+      >
         <View style={styles.imageContainer}>
           <Image
             source={{ uri: item.images[0] }}
@@ -371,9 +315,16 @@ const ProductInfoSection: React.FC = () => {
             <Text style={styles.cartItemPrice}>₹{item.final_price}</Text>
             <Text style={styles.price}>₹{item.price}</Text>
             {item.discount_percent && (
-              <Text style={styles.discountText}>
-                {item.discount_percent} % OFF
-              </Text>
+              <LinearGradient
+                colors={[staticColors.sorftPink, staticColors.lightPink]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.discountTextGradient}
+              >
+                <Text style={styles.discountText}>
+                  {item.discount_percent} % OFF
+                </Text>
+              </LinearGradient>
             )}
           </View>
 
@@ -383,10 +334,12 @@ const ProductInfoSection: React.FC = () => {
               size={12}
               color={staticColors.darkGray}
             />
-            <Text style={styles.returnPolicyText}>7 days return available</Text>
+            <Text style={styles.returnPolicyText}>
+              <Text style={styles.dayText}>7 days</Text> return available
+            </Text>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -640,7 +593,8 @@ const styles = StyleSheet.create({
     ...spacingStyles.mr5,
   },
   sizeQtyText: {
-    fontSize: fontSizes.s,
+    fontSize: fontSizes.xs,
+    fontWeight: "bold",
     color: staticColors.textSubtitle,
     ...spacingStyles.mr5,
   },
@@ -656,18 +610,19 @@ const styles = StyleSheet.create({
     ...spacingStyles.mr5,
   },
   price: {
-    fontSize: fontSizes.sm,
+    fontSize: fontSizes.xs,
     color: staticColors.textLightGray,
     textDecorationLine: "line-through",
     ...spacingStyles.mr10,
   },
-  discountText: {
-    fontSize: fontSizes.xs,
-    color: staticColors.discountText,
-    backgroundColor: staticColors.lightPink,
-    ...spacingStyles.py5,
+  discountTextGradient: {
+    ...spacingStyles.py2,
     ...spacingStyles.px5,
     borderRadius: 4,
+  },
+  discountText: {
+    fontSize: fontSizes.s,
+    color: staticColors.discountText,
   },
   returnPolicy: {
     flexDirection: "row",
@@ -678,6 +633,9 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.xs,
     color: staticColors.textDarkGray,
     ...spacingStyles.ml5,
+  },
+  dayText: {
+    fontWeight: "bold",
   },
 });
 

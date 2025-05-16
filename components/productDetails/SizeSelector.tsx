@@ -61,11 +61,11 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
   });
 
   useEffect(() => {
-    const firstAvailableSize = availableSizes.find((size) => size.left > 0);
-    if (firstAvailableSize) {
-      setSelectedSize(firstAvailableSize.label);
-      updateAvailableColors(firstAvailableSize.sizeData);
-      onSizeSelect(firstAvailableSize.label);
+    const initialAvailableSize = availableSizes.find((size) => size.left > 0);
+    if (initialAvailableSize) {
+      setSelectedSize(initialAvailableSize.label);
+      updateAvailableColors(initialAvailableSize.sizeData);
+      onSizeSelect(initialAvailableSize.label);
     } else {
       setSelectedSize("");
       setAvailableColors([]);

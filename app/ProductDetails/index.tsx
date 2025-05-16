@@ -156,9 +156,9 @@ const ProductDetailsScreen: React.FC = () => {
             selectedColor,
           })
         ).unwrap();
-        router.push("/cart");
+        router.navigate("/cart");
       } else {
-        router.push("/cart");
+        router.navigate("/cart");
       }
     }
   };
