@@ -1,4 +1,3 @@
-import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -8,11 +7,12 @@ import {
   StyleSheet,
   FlatList,
 } from "react-native";
-import EmptyShoppingBagMessage from "./EmptyShoppingBagMessage";
+import { Ionicons } from "@expo/vector-icons";
+import { router, useNavigation } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
+import fontSizes from "@/style/fontSizes";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import ProductDeleteConfirmationModal from "@/modal/ProductDeleteConfirmationModal";
-import fontSizes from "@/style/fontSizes";
 import { textTruncate } from "@/utils/textTruncate";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
@@ -25,10 +25,10 @@ import {
   toggleItemSelection,
 } from "@/store/cart/cartSlice";
 import { CartItem } from "@/types/types";
+import EmptyShoppingBagMessage from "./EmptyShoppingBagMessage";
+import ProductDeleteConfirmationModal from "@/modal/ProductDeleteConfirmationModal";
 import QuantitySelectionModal from "@/modal/QuantitySelectionModal";
 import SizeSelectionModal from "@/modal/SizeSelectionModal";
-import { router, useNavigation } from "expo-router";
-import { LinearGradient } from "expo-linear-gradient";
 
 const ProductInfoSection: React.FC = () => {
   const navigation = useNavigation();
