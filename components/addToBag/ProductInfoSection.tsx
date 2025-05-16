@@ -1,5 +1,4 @@
-import { Ionicons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,29 +7,44 @@ import {
   StyleSheet,
   FlatList,
 } from "react-native";
-import EmptyShoppingBagMessage from "./EmptyShoppingBagMessage";
+import { Ionicons } from "@expo/vector-icons";
+import { router, useNavigation } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
+import fontSizes from "@/style/fontSizes";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import ProductDeleteConfirmationModal from "@/modal/ProductDeleteConfirmationModal";
-import fontSizes from "@/style/fontSizes";
 import { textTruncate } from "@/utils/textTruncate";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store/store";
+import { AppDispatch, RootState } from "@/store/store";
 import {
   deleteSelectedItems,
+  fetchCartItemsApi,
   moveToWishlist,
   removeFromCart,
+  removeFromCartApi,
   toggleItemSelection,
 } from "@/store/cart/cartSlice";
-import { Product } from "@/types/types";
+import { CartItem } from "@/types/types";
+import EmptyShoppingBagMessage from "./EmptyShoppingBagMessage";
+import ProductDeleteConfirmationModal from "@/modal/ProductDeleteConfirmationModal";
+import QuantitySelectionModal from "@/modal/QuantitySelectionModal";
+import SizeSelectionModal from "@/modal/SizeSelectionModal";
 
 const ProductInfoSection: React.FC = () => {
-  const dispatch = useDispatch();
+  const navigation = useNavigation();
+  const dispatch = useDispatch<AppDispatch>();
   const cartItems = useSelector((state: RootState) => state.cart.cartItems);
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   );
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [isQuantityModalVisible, setIsQuantityModalVisible] = useState(false);
+  const [selectedCartItem, setSelectedCartItem] = useState<CartItem | null>(
+    null
+  );
+  const [isSizeModalVisible, setIsSizeModalVisible] = useState(false);
+  const [selectedCartItemForSize, setSelectedCartItemForSize] =
+    useState<CartItem | null>(null);
   const [isConfirmationModalVisible, setIsConfirmationModalVisible] =
     useState(false);
   const [confirmationModalDetails, setConfirmationModalDetails] = useState<{
@@ -46,33 +60,78 @@ const ProductInfoSection: React.FC = () => {
   const selectedItems = cartItems.filter((item) => item.isSelected).length;
   const totalPrice = cartItems
     .filter((item) => item.isSelected)
-    .reduce(
-      (sum, item) => sum + parseFloat(item.price) * (item.quantity || 1),
-      0
-    )
+    .reduce((sum, item) => sum + item.final_price * (item.quantity || 1), 0)
     .toLocaleString("en-IN");
 
   const toggleAllItems = () => {
     const shouldSelect = selectedItems === 0;
     cartItems.forEach((item) => {
       if (item.isSelected !== shouldSelect) {
-        dispatch(toggleItemSelection({ id: item.id, isAuthenticated }));
+        dispatch(
+          toggleItemSelection({
+            id: item.id,
+            selectedSize: item.selectedSize,
+            selectedColor: item.selectedColor,
+            isAuthenticated,
+          })
+        );
       }
     });
   };
 
-  const handleRemoveItemConfirmationModal = (itemId: string) => {
+  const handleRemoveItemConfirmationModal = (item: CartItem) => {
     setConfirmationModalDetails({
-      message: "Do you want to add this item to your wishlist?",
+      message: "Are you sure you want to move this item from bag?",
       onPrimaryAction: () => {
-        dispatch(moveToWishlist({ ids: [itemId], isAuthenticated }));
+        // dispatch(
+        //   moveToWishlist({
+        //     ids: [item.id],
+        //     selectedSizes: [item.selectedSize || ""],
+        //     selectedColors: [item.selectedColor || ""],
+        //     isAuthenticated,
+        //   })
+        // );
         setIsConfirmationModalVisible(false);
       },
-      onSecondaryAction: () => {
-        dispatch(removeFromCart({ id: itemId, isAuthenticated }));
-        setIsConfirmationModalVisible(false);
+      onSecondaryAction: async () => {
+        setIsLoading(true);
+        try {
+          if (isAuthenticated) {
+            await dispatch(
+              removeFromCartApi({
+                ids: [item.id],
+              })
+            ).unwrap();
+
+            dispatch(
+              removeFromCart({
+                id: item.id,
+                selectedSize: item.selectedSize,
+                selectedColor: item.selectedColor,
+                isAuthenticated,
+              })
+            );
+
+            await dispatch(fetchCartItemsApi()).unwrap();
+          } else {
+            dispatch(
+              removeFromCart({
+                id: item.id,
+                selectedSize: item.selectedSize,
+                selectedColor: item.selectedColor,
+                isAuthenticated,
+              })
+            );
+          }
+        } catch (error) {
+          console.error("Failed to remove item:", error);
+        } finally {
+          setIsLoading(false);
+          setIsConfirmationModalVisible(false);
+        }
       },
     });
+
     setIsConfirmationModalVisible(true);
   };
 
@@ -81,15 +140,48 @@ const ProductInfoSection: React.FC = () => {
       const selectedItemIds = cartItems
         .filter((item) => item.isSelected)
         .map((item) => item.id);
+      const selectedSizes = cartItems
+        .filter((item) => item.isSelected)
+        .map((item) => item.selectedSize || "");
+      const selectedColors = cartItems
+        .filter((item) => item.isSelected)
+        .map((item) => item.selectedColor || "");
+
       setConfirmationModalDetails({
-        message: `Do you want to add ${selectedItems} item(s) to your wishlist?`,
+        message: `Are you sure you want to remove ${selectedItems} item(s) from bag?`,
         onPrimaryAction: () => {
-          dispatch(moveToWishlist({ ids: selectedItemIds, isAuthenticated }));
+          // dispatch(
+          //   moveToWishlist({
+          //     ids: selectedItemIds,
+          //     selectedSizes,
+          //     selectedColors,
+          //     isAuthenticated,
+          //   })
+          // );
           setIsConfirmationModalVisible(false);
         },
-        onSecondaryAction: () => {
-          dispatch(deleteSelectedItems({ isAuthenticated }));
-          setIsConfirmationModalVisible(false);
+        onSecondaryAction: async () => {
+          setIsLoading(true);
+          try {
+            if (isAuthenticated) {
+              await dispatch(
+                removeFromCartApi({
+                  ids: selectedItemIds,
+                })
+              ).unwrap();
+
+              dispatch(deleteSelectedItems({ isAuthenticated }));
+
+              await dispatch(fetchCartItemsApi()).unwrap();
+            } else {
+              dispatch(deleteSelectedItems({ isAuthenticated }));
+            }
+          } catch (error) {
+            console.error("Failed to delete selected items:", error);
+          } finally {
+            setIsLoading(false);
+            setIsConfirmationModalVisible(false);
+          }
         },
       });
       setIsConfirmationModalVisible(true);
@@ -105,9 +197,26 @@ const ProductInfoSection: React.FC = () => {
     });
   };
 
-  const renderCartItem = ({ item }: { item: Product }) => {
+  const handleOpenQuantityModal = (item: CartItem) => {
+    setSelectedCartItem(item);
+    setIsQuantityModalVisible(true);
+  };
+
+  const handleOpenSizeModal = (item: CartItem) => {
+    setSelectedCartItemForSize(item);
+    setIsSizeModalVisible(true);
+  };
+  const renderCartItem = ({ item }: { item: CartItem }) => {
     return (
-      <View style={styles.cartItem}>
+      <TouchableOpacity
+        style={styles.cartItem}
+        onPress={() =>
+          router.navigate({
+            pathname: "/ProductDetails",
+            params: { id: item.id },
+          })
+        }
+      >
         <View style={styles.imageContainer}>
           <Image
             source={{ uri: item.images[0] }}
@@ -128,7 +237,14 @@ const ProductInfoSection: React.FC = () => {
               },
             ]}
             onPress={() =>
-              dispatch(toggleItemSelection({ id: item.id, isAuthenticated }))
+              dispatch(
+                toggleItemSelection({
+                  id: item.id,
+                  selectedSize: item.selectedSize,
+                  selectedColor: item.selectedColor,
+                  isAuthenticated,
+                })
+              )
             }
           >
             {item.isSelected && (
@@ -140,11 +256,10 @@ const ProductInfoSection: React.FC = () => {
         <View style={styles.cartItemDetails}>
           <View style={styles.titleContainer}>
             <Text style={styles.cartItemTitle} numberOfLines={1}>
-              {textTruncate(item.title, 4)}
+              {textTruncate(item.title, 2)}
             </Text>
             <TouchableOpacity
-              style={styles.cutIcon}
-              onPress={() => handleRemoveItemConfirmationModal(item.id)}
+              onPress={() => handleRemoveItemConfirmationModal(item)}
             >
               <Ionicons
                 name="close-outline"
@@ -153,18 +268,19 @@ const ProductInfoSection: React.FC = () => {
               />
             </TouchableOpacity>
           </View>
-
-          <Text
-            style={styles.sellerText}
-            numberOfLines={1}
-            ellipsizeMode="tail"
-          >
-            Sold by: {item.seller || "Unknown Seller"}
+          <Text style={styles.cartItemDescription} numberOfLines={1}>
+            {textTruncate(item.description, 5)}
+          </Text>
+          <Text numberOfLines={1} style={styles.cartSellerItem}>
+            Sold by: {item.seller?.business_name || "Unknown Seller"}
           </Text>
 
           <View style={styles.sizeQtyContainer}>
             {item.selectedSize && (
-              <View style={styles.sizeContainer}>
+              <TouchableOpacity
+                style={styles.sizeContainer}
+                onPress={() => handleOpenSizeModal(item)}
+              >
                 <Text style={styles.sizeQtyText}>
                   Size: {item.selectedSize}
                 </Text>
@@ -173,24 +289,42 @@ const ProductInfoSection: React.FC = () => {
                   size={12}
                   color={staticColors.textSubtitle}
                 />
-              </View>
+              </TouchableOpacity>
             )}
-            <View style={styles.qtyContainer}>
+
+            <TouchableOpacity
+              style={styles.qtyContainer}
+              onPress={() => handleOpenQuantityModal(item)}
+            >
               <Text style={styles.sizeQtyText}>Qty: {item.quantity || 1}</Text>
               <Ionicons
                 name="chevron-down"
                 size={12}
                 color={staticColors.textSubtitle}
               />
-            </View>
+            </TouchableOpacity>
+
+            {item.selectedColor && (
+              <View style={styles.colorContainer}>
+                <Text style={styles.sizeQtyText}>Color: {item.colorName}</Text>
+              </View>
+            )}
           </View>
 
           <View style={styles.priceContainer}>
-            <Text style={styles.cartItemPrice}>
-              ₹{parseFloat(item.price).toLocaleString("en-IN")}
-            </Text>
-            {item.discount && (
-              <Text style={styles.discountText}>{item.discount}</Text>
+            <Text style={styles.cartItemPrice}>₹{item.final_price}</Text>
+            <Text style={styles.price}>₹{item.price}</Text>
+            {item.discount_percent && (
+              <LinearGradient
+                colors={[staticColors.sorftPink, staticColors.lightPink]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.discountTextGradient}
+              >
+                <Text style={styles.discountText}>
+                  {item.discount_percent} % OFF
+                </Text>
+              </LinearGradient>
             )}
           </View>
 
@@ -200,10 +334,12 @@ const ProductInfoSection: React.FC = () => {
               size={12}
               color={staticColors.darkGray}
             />
-            <Text style={styles.returnPolicyText}>7 days return available</Text>
+            <Text style={styles.returnPolicyText}>
+              <Text style={styles.dayText}>7 days</Text> return available
+            </Text>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -226,14 +362,21 @@ const ProductInfoSection: React.FC = () => {
             },
           ]}
         >
-          {selectedItems === cartItems.length && cartItems.length > 0 && (
+          {selectedItems === cartItems.length && cartItems.length > 0 ? (
             <Ionicons
               name="checkmark"
               size={17}
               color={staticColors.white}
               style={styles.headerCheckbox}
             />
-          )}
+          ) : selectedItems > 0 && selectedItems < cartItems.length ? (
+            <Ionicons
+              name="remove-outline"
+              size={17}
+              color={staticColors.white}
+              style={styles.headerCheckbox}
+            />
+          ) : null}
         </TouchableOpacity>
         <Text style={styles.headerText}>
           {selectedItems}/{cartItems.length} ITEMS SELECTED (₹{totalPrice})
@@ -276,7 +419,9 @@ const ProductInfoSection: React.FC = () => {
         <FlatList
           data={cartItems}
           renderItem={renderCartItem}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item, index) =>
+            item.cartItemId || `${item.id}-${index}`
+          }
           contentContainerStyle={styles.cartList}
           ListHeaderComponent={renderHeader}
           showsVerticalScrollIndicator={false}
@@ -289,12 +434,30 @@ const ProductInfoSection: React.FC = () => {
         visible={isConfirmationModalVisible}
         title="Add to Wishlist"
         message={confirmationModalDetails.message}
-        primaryButtonText="ADD TO WISHLIST"
+        // primaryButtonText="ADD TO WISHLIST"
+        primaryButtonText="CANCEL"
         secondaryButtonText="REMOVE"
         onFirstButtonPress={confirmationModalDetails.onPrimaryAction}
         onSecondButtonPress={confirmationModalDetails.onSecondaryAction}
         onClose={handleCloseModal}
+        isLoading={isLoading}
       />
+
+      {selectedCartItem && (
+        <QuantitySelectionModal
+          visible={isQuantityModalVisible}
+          onClose={() => setIsQuantityModalVisible(false)}
+          item={selectedCartItem}
+        />
+      )}
+
+      {selectedCartItemForSize && (
+        <SizeSelectionModal
+          visible={isSizeModalVisible}
+          onClose={() => setIsSizeModalVisible(false)}
+          item={selectedCartItemForSize}
+        />
+      )}
     </View>
   );
 };
@@ -303,13 +466,29 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: staticColors.bgSecondary,
+    ...spacingStyles.mt15,
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    ...spacingStyles.p20,
+    ...spacingStyles.p15,
     backgroundColor: staticColors.white,
+  },
+  titleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  cartItemDescription: {
+    fontSize: fontSizes.xs,
+    color: staticColors.textLightGray,
+  },
+  cartSellerItem: {
+    fontSize: fontSizes.xs,
+    color: staticColors.textSecondary,
+    ...spacingStyles.mt2,
+    ...spacingStyles.mb5,
   },
   headerLeft: {
     flexDirection: "row",
@@ -377,7 +556,8 @@ const styles = StyleSheet.create({
     color: staticColors.textSecondary,
     ...spacingStyles.mb5,
   },
-  sellerText: {
+
+  Text: {
     fontSize: fontSizes.xs,
     color: staticColors.shadowColor,
     ...spacingStyles.mb5,
@@ -393,7 +573,15 @@ const styles = StyleSheet.create({
     ...spacingStyles.px5,
     ...spacingStyles.py5,
     borderRadius: 4,
-    ...spacingStyles.mr10,
+    ...spacingStyles.mr5,
+  },
+  colorContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: staticColors.bgSecondary,
+    ...spacingStyles.px5,
+    ...spacingStyles.py5,
+    borderRadius: 4,
   },
   qtyContainer: {
     flexDirection: "row",
@@ -402,10 +590,11 @@ const styles = StyleSheet.create({
     ...spacingStyles.px5,
     ...spacingStyles.py5,
     borderRadius: 4,
-    ...spacingStyles.mr10,
+    ...spacingStyles.mr5,
   },
   sizeQtyText: {
     fontSize: fontSizes.xs,
+    fontWeight: "bold",
     color: staticColors.textSubtitle,
     ...spacingStyles.mr5,
   },
@@ -418,15 +607,22 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.sm,
     fontWeight: "bold",
     color: staticColors.textSubtitle,
+    ...spacingStyles.mr5,
+  },
+  price: {
+    fontSize: fontSizes.xs,
+    color: staticColors.textLightGray,
+    textDecorationLine: "line-through",
     ...spacingStyles.mr10,
   },
-  discountText: {
-    fontSize: fontSizes.xs,
-    color: staticColors.discountText,
-    backgroundColor: staticColors.lightPink,
-    ...spacingStyles.py5,
+  discountTextGradient: {
+    ...spacingStyles.py2,
     ...spacingStyles.px5,
     borderRadius: 4,
+  },
+  discountText: {
+    fontSize: fontSizes.s,
+    color: staticColors.discountText,
   },
   returnPolicy: {
     flexDirection: "row",
@@ -438,13 +634,8 @@ const styles = StyleSheet.create({
     color: staticColors.textDarkGray,
     ...spacingStyles.ml5,
   },
-  titleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  cutIcon: {
-    ...spacingStyles.ml5,
+  dayText: {
+    fontWeight: "bold",
   },
 });
 

@@ -48,8 +48,9 @@ export const fetchProductById = createAsyncThunk<
   { rejectValue: string }
 >("products/fetchProductById", async (id, { rejectWithValue }) => {
   try {
-    console.log(id)
+
     const response = await axios.get(`${apiUrl}/products/${id}`);
+        console.log(id)
     const apiProduct = response.data.data;
     if (apiProduct) {
       return normalizeProduct(apiProduct);

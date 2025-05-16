@@ -8,11 +8,11 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useSelector } from "react-redux";
+import { CategoryItem } from "@/types/types";
+import fontSizes from "@/style/fontSizes";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import { CategoryItem } from "@/types/types";
-import fontSizes from "@/style/fontSizes";
 
 interface CategoryGridProps {
   activeTab: string;

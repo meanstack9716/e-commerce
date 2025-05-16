@@ -1,6 +1,3 @@
-import colors from "@/style/staticColors";
-import spacingStyles from "@/style/spacingStyles";
-import textStyles from "@/style/textStyles";
 import React from "react";
 import {
   ScrollView,
@@ -11,7 +8,9 @@ import {
 } from "react-native";
 import { StyleSheet } from "react-native";
 import fontSizes from "@/style/fontSizes";
-
+import colors from "@/style/staticColors";
+import spacingStyles from "@/style/spacingStyles";
+import textStyles from "@/style/textStyles";
 const Grievance = () => {
   return (
     <ScrollView style={styles.container}>

@@ -7,31 +7,40 @@ import {
   ScrollView,
   Image,
 } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
 import SizeChartModal from "@/modal/SizeChartModal";
 import fontSizes from "@/style/fontSizes";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { Product } from "../../types/types";
-import { AntDesign } from "@expo/vector-icons";
+import images from "@/constants/images";
 
 interface SizeSelectorProps {
   product: Product | null;
   onColorSelect: (colorData: {
     color: string;
+    colorName: string;
     images: string[];
   }) => void;
+  onSizeSelect: (size: string) => void;
 }
 
 const allPossibleSizes = ["XS", "S", "M", "L", "XL", "XXL"];
 
-const SizeSelector: React.FC<SizeSelectorProps> = ({ product , onColorSelect }) => {
+const SizeSelector: React.FC<SizeSelectorProps> = ({
+  product,
+  onColorSelect,
+  onSizeSelect,
+}) => {
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState<string>("");
+  const [selectedColorName, setSelectedColorName] = useState<string>("");
   const [showSizeChart, setShowSizeChart] = useState(false);
   const [availableColors, setAvailableColors] = useState<
     Array<{
       id: string;
       color: string;
+      value: string;
       img_url: string;
       stock_quantity: string;
       images: string[];
@@ -51,20 +60,22 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({ product , onColorSelect }) 
   });
 
   useEffect(() => {
-    const firstAvailableSize = availableSizes.find((size) => size.left > 0);
-    if (firstAvailableSize) {
-      setSelectedSize(firstAvailableSize.label);
-      updateAvailableColors(firstAvailableSize.sizeData);
+    const initialAvailableSize = availableSizes.find((size) => size.left > 0);
+    if (initialAvailableSize) {
+      setSelectedSize(initialAvailableSize.label);
+      updateAvailableColors(initialAvailableSize.sizeData);
+      onSizeSelect(initialAvailableSize.label);
     } else {
       setSelectedSize("");
       setAvailableColors([]);
     }
-  }, [product]);
+  }, [product, onSizeSelect]);
 
   const updateAvailableColors = (sizeData: any) => {
     if (!sizeData || !sizeData.variants || sizeData.variants.length === 0) {
       setAvailableColors([]);
-      setSelectedColor(""); 
+      setSelectedColor("");
+      setSelectedColorName("");
       return;
     }
     const colorsWithStock = sizeData.variants.filter(
@@ -75,15 +86,22 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({ product , onColorSelect }) 
         (item) =>
           item.color.trim().toLowerCase() === variant.name.trim().toLowerCase()
       );
-      const colorImages = product?.gallery
-      ?.filter(item => item.color.trim().toLowerCase() === variant.name.trim().toLowerCase())
-      ?.map(item => item.img_url) || [];
+      const colorImages =
+        product?.gallery
+          ?.filter(
+            (item) =>
+              item.color.trim().toLowerCase() ===
+              variant.name.trim().toLowerCase()
+          )
+          ?.map((item) => item.img_url) || [];
       const imgUrl = galleryItem?.img_url || product?.thumbnail_url;
-      const images = colorImages.length > 0 ? colorImages : (product?.images || []);
+      const images =
+        colorImages.length > 0 ? colorImages : product?.images || [];
 
       return {
         id: variant.id,
         color: variant.name,
+        value: variant.value,
         img_url: imgUrl,
         stock_quantity: variant.stock_quantity,
         images: images,
@@ -92,13 +110,17 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({ product , onColorSelect }) 
 
     setAvailableColors(colorsWithImages);
     if (colorsWithImages.length > 0) {
-      setSelectedColor(colorsWithImages[0].color);
+      setSelectedColor(colorsWithImages[0].value);
+      setSelectedColorName(colorsWithImages[0].color);
       onColorSelect({
-        color: colorsWithImages[0].color,
+        color: colorsWithImages[0].value,
+        colorName: colorsWithImages[0].color,
         images: colorsWithImages[0].images,
       });
     } else {
       setSelectedColor("");
+      setSelectedColorName("");
+      
     }
   };
 
@@ -110,28 +132,42 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({ product , onColorSelect }) 
     if (size.left > 0) {
       setSelectedSize(size.label);
       updateAvailableColors(size.sizeData);
+      onSizeSelect(size.label);
+      if (selectedColor && availableColors.length > 0) {
+        const selectedColorData = availableColors.find(
+          (c) => c.color === selectedColor
+        );
+        if (selectedColorData) {
+          onColorSelect({
+            color: selectedColorData.color,
+            colorName: selectedColorData.color,
+            images: selectedColorData.images,
+          });
+        }
+      }
     }
   };
 
   const handleColorClick = (colorOption: {
     color: string;
+    value: string;
     images: string[];
   }) => {
-    setSelectedColor(colorOption.color);
+    setSelectedColor(colorOption.value);
+    setSelectedColorName(colorOption.color);
     onColorSelect({
-      color: colorOption.color,
+      color: colorOption.value,
+      colorName: colorOption.color,
       images: colorOption.images,
     });
   };
-
 
   return (
     <View style={styles.container}>
       {availableColors.length > 0 ? (
         <View style={styles.colorSection}>
           <Text style={styles.colorTitle}>
-            Color:{" "}
-            <Text style={styles.bold}>{selectedColor}</Text>
+            Color: <Text style={styles.bold}>{selectedColorName}</Text>
           </Text>
           <ScrollView
             horizontal
@@ -139,7 +175,7 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({ product , onColorSelect }) 
             style={styles.colorScroll}
           >
             {availableColors.map((colorOption) => {
-              const isColorSelected = selectedColor === colorOption.color;
+              const isColorSelected = selectedColor === colorOption.value;
 
               return (
                 <TouchableOpacity
@@ -171,8 +207,7 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({ product , onColorSelect }) 
       )}
       <View style={styles.headerRow}>
         <Text style={styles.labelText}>
-          Size:{" "}
-          <Text style={styles.bold}>{selectedSize}</Text>
+          Size: <Text style={styles.bold}>{selectedSize}</Text>
         </Text>
         <TouchableOpacity onPress={() => setShowSizeChart(true)}>
           <Text style={styles.sizeChart}>
@@ -223,8 +258,8 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({ product , onColorSelect }) 
                   isSelected && styles.selectedButton,
                 ]}
               >
-                 {isDisabled && <View style={styles.diagonalLine} />}
-                 {isDisabled && <View style={styles.diagonalLine1} />}
+                {isDisabled && <View style={styles.diagonalLine} />}
+                {isDisabled && <View style={styles.diagonalLine1} />}
                 <Text
                   style={[
                     styles.sizeLabel,
@@ -260,7 +295,6 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({ product , onColorSelect }) 
 
 export default SizeSelector;
 
-// Styles remain unchanged
 const styles = StyleSheet.create({
   container: {
     ...spacingStyles.px15,
@@ -281,7 +315,7 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.sm,
   },
   sizeScroll: {
-   ...spacingStyles.mb10
+    ...spacingStyles.mb10,
   },
   sizeOption: {
     alignItems: "center",
@@ -301,7 +335,6 @@ const styles = StyleSheet.create({
   disabledButton: {
     backgroundColor: staticColors.white,
     borderColor: staticColors.borderSecondaryLight,
- 
   },
   selectedButton: {
     backgroundColor: staticColors.shadowColor,
@@ -324,11 +357,11 @@ const styles = StyleSheet.create({
     ...spacingStyles.mt5,
   },
   colorSection: {
- ...spacingStyles.mb10
+    ...spacingStyles.mb10,
   },
   colorTitle: {
     fontSize: fontSizes.base,
-    ...spacingStyles.mb10
+    ...spacingStyles.mb10,
   },
   colorScroll: {
     flexGrow: 0,
@@ -339,7 +372,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "transparent",
     borderRadius: 8,
-    ...spacingStyles.p5
+    ...spacingStyles.p5,
   },
   selectedColorOption: {
     borderColor: staticColors.darkGray,
@@ -352,7 +385,7 @@ const styles = StyleSheet.create({
   colorName: {
     fontSize: fontSizes.xs,
     fontWeight: "600",
-    ...spacingStyles.mt5
+    ...spacingStyles.mt5,
   },
   colorStock: {
     fontSize: fontSizes.xs,
@@ -361,7 +394,7 @@ const styles = StyleSheet.create({
   noColorsText: {
     fontSize: fontSizes.sm,
     color: staticColors.darkGray,
-    ...spacingStyles.mt10
+    ...spacingStyles.mt10,
   },
   lengthBox: {
     ...spacingStyles.p10,
@@ -390,25 +423,24 @@ const styles = StyleSheet.create({
   },
 
   diagonalLine: {
-    position: 'absolute',
-    width: '130%', 
+    position: "absolute",
+    width: "130%",
     height: 1,
     backgroundColor: staticColors.lightGray,
-    transform: [{ rotate: '45deg' }],
-    top: '50%',
-    left: '-18%',
+    transform: [{ rotate: "45deg" }],
+    top: "50%",
+    left: "-18%",
     zIndex: 1,
   },
-  
+
   diagonalLine1: {
-    position: 'absolute',
-    width: '130%', 
+    position: "absolute",
+    width: "130%",
     height: 1,
     backgroundColor: staticColors.lightGray,
-    transform: [{ rotate: '-45deg' }],
-    top: '50%',
-    left: '-18%',
+    transform: [{ rotate: "-45deg" }],
+    top: "50%",
+    left: "-18%",
     zIndex: 1,
   },
-  
 });

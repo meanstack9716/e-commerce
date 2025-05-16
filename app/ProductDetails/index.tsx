@@ -13,27 +13,29 @@ import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { useLocalSearchParams, router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
-import colors from "@/style/staticColors";
-import staticColors from "@/style/staticColors";
-import spacingStyles from "@/style/spacingStyles";
-import MegaDealBadge from "@/components/productDetails/MegaDealBadge";
-import SizeSelector from "@/components/productDetails/SizeSelector";
-import DeliveryCheck from "@/components/productDetails/DeliveryCheck";
-import ReturnPolicy from "./ReturnPolicy";
-import SimilarProducts from "@/components/productDetails/SimilarProducts";
-import { Product } from "../../types/types";
-import BrandRating from "@/components/productDetails/BrandRating";
-import ViewSimilarModal from "@/modal/ViewSimilarModal";
-import ProductList from "@/components/productDetails/ProductList";
-import ProductActionButtons from "@/components/productDetails/ProductActionButtons";
-import fontSizes from "@/style/fontSizes";
-import gapSizes from "@/style/gapSizes";
 import { AppDispatch, RootState } from "@/store/store";
 import {
   clearSelectedProduct,
   fetchProductById,
 } from "@/store/product/productsSlice";
+import { addToCartApi, addToCartLocally } from "@/store/cart/cartSlice";
+import { useAppSelector } from "@/store/hooks";
+import colors from "@/style/staticColors";
+import staticColors from "@/style/staticColors";
+import spacingStyles from "@/style/spacingStyles";
+import fontSizes from "@/style/fontSizes";
+import gapSizes from "@/style/gapSizes";
+import MegaDealBadge from "@/components/productDetails/MegaDealBadge";
+import SizeSelector from "@/components/productDetails/SizeSelector";
+import SimilarProducts from "@/components/productDetails/SimilarProducts";
+import ProductList from "@/components/productDetails/ProductList";
+import BrandRating from "@/components/productDetails/BrandRating";
+import DeliveryCheck from "@/components/productDetails/DeliveryCheck";
+import ProductActionButtons from "@/components/productDetails/ProductActionButtons";
 import FullScreenLoader from "@/components/common/FullScreenLoader";
+import ReturnPolicy from "./ReturnPolicy";
+import { Product } from "../../types/types";
+import ViewSimilarModal from "@/modal/ViewSimilarModal";
 
 const { width: screenWidth } = Dimensions.get("window");
 const screenHeight = Dimensions.get("window").height;
@@ -46,6 +48,15 @@ const ProductDetailsScreen: React.FC = () => {
     selectedProductLoading: loading,
     selectedProductError: error,
   } = useSelector((state: RootState) => state.products);
+  const [selectedSize, setSelectedSize] = useState<string | undefined>(
+    undefined
+  );
+  const [selectedColor, setSelectedColor] = useState<string | undefined>(
+    undefined
+  );
+  const [selectedColorName, setSelectedColorName] = useState<
+    string | undefined
+  >(undefined);
   const [isProductLiked, setIsProductLiked] = useState(false);
   const [isViewSimilarModalVisible, setViewSimilarModalVisible] =
     useState(false);
@@ -56,6 +67,10 @@ const ProductDetailsScreen: React.FC = () => {
   const flatListRef = useRef<FlatList>(null);
   const imageCarouselRef = useRef<FlatList>(null);
   const screenHeight = Dimensions.get("window").height;
+
+  const isAuthenticatedUser = useAppSelector(
+    (state) => state.auth.isAuthenticated
+  );
 
   useEffect(() => {
     if (id) {
@@ -109,12 +124,40 @@ const ProductDetailsScreen: React.FC = () => {
 
   const handleColorSelect = (colorData: {
     color: string;
+    colorName?: string;
     images: string[];
   }) => {
+    setSelectedColor(colorData.color);
+    setSelectedColorName(colorData.colorName);
     setDisplayImages(colorData.images);
     setActiveIndex(0);
     if (imageCarouselRef.current) {
       imageCarouselRef.current.scrollToOffset({ offset: 0, animated: true });
+    }
+  };
+
+  const handleAddToCart = () => {
+    if (product) {
+      dispatch(
+        addToCartLocally({
+          product,
+          selectedSize,
+          selectedColor,
+          colorName: selectedColorName,
+          isAuthenticated: isAuthenticatedUser,
+        })
+      );
+
+      if (isAuthenticatedUser) {
+        dispatch(
+          addToCartApi({
+            product,
+            selectedSize,
+            selectedColor,
+          })
+        ).unwrap();
+      } 
+      router.push("/cart");
     }
   };
 
@@ -269,18 +312,23 @@ const ProductDetailsScreen: React.FC = () => {
                 <Text style={styles.discountedPrice}>
                   ₹{product.final_price}
                 </Text>
+                <Text style={styles.price}>₹{product.price}</Text>
                 <Text style={styles.discount}>
                   ({product.discount_percent}% OFF)
                 </Text>
               </View>
             </View>
             {/* <MegaDealBadge /> */}
-            <SizeSelector product={product} onColorSelect={handleColorSelect} />
+            <SizeSelector
+              product={product}
+              onColorSelect={handleColorSelect}
+              onSizeSelect={setSelectedSize}
+            />
             {/* <DeliveryCheck />
             <ReturnPolicy /> */}
 
-            {/* <Text style={styles.heading}>Similar Products</Text> */}
-            {/* <SimilarProducts currentProduct={product} /> */}
+            {/* <Text style={styles.heading}>Similar Products</Text>
+            <SimilarProducts currentProduct={product} /> */}
             {/* 
             <BrandRating />
             <Text style={styles.heading}>Products you may like</Text>
@@ -297,7 +345,12 @@ const ProductDetailsScreen: React.FC = () => {
           <Ionicons name="arrow-up" size={24} color={colors.white} />
           <Text style={styles.backToTopText}>Back to Top</Text>
         </TouchableOpacity>
-      ) : null}
+      ) : (
+        <ProductActionButtons
+          onAddToCart={handleAddToCart}
+          onWishlist={handleLikePress}
+        />
+      )}
       {/* <ViewSimilarModal
         visible={isViewSimilarModalVisible}
         onClose={() => setViewSimilarModalVisible(false)}
@@ -419,6 +472,12 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.md,
     fontWeight: "bold",
     color: colors.primary,
+  },
+  price: {
+    fontSize: fontSizes.sm,
+    fontWeight: "bold",
+    color: colors.textMuted,
+    textDecorationLine: "line-through",
   },
   discount: {
     fontSize: fontSizes.sm,

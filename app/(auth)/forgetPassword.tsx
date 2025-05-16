@@ -9,9 +9,6 @@ import {
   StyleSheet,
 } from "react-native";
 import { useRouter } from "expo-router";
-
-import CreateNewPassword from "@/components/auth/CreateNewPassword";
-import TextField from "@/components/common/TextField";
 import { useFieldValidation } from "@/hooks/useFieldValidation";
 import {
   clearAuthError,
@@ -20,14 +17,15 @@ import {
   setResetEmail,
 } from "@/store/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import images from "../../constants/images";
+import gapSizes from "@/style/gapSizes";
 import colors from "@/style/staticColors";
 import textStyles from "@/style/textStyles";
 import spacingStyles from "@/style/spacingStyles";
-import images from "../../constants/images";
-import gapSizes from "@/style/gapSizes";
 import fontSizes from "@/style/fontSizes";
 import OTPInput from "@/components/common/OtpInput";
-
+import CreateNewPassword from "@/components/auth/CreateNewPassword";
+import TextField from "@/components/common/TextField";
 export default function ForgetPassword() {
   const router = useRouter();
   const { errors, handleEmailValidation } = useFieldValidation();

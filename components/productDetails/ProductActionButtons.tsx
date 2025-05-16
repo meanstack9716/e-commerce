@@ -1,6 +1,11 @@
-
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  SafeAreaView,
+} from "react-native";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import colors from "@/style/staticColors";
 import staticColors from "@/style/staticColors";

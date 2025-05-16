@@ -1,31 +1,68 @@
-import React, { useEffect } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-
-} from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import ProductInfoScreen from "@/components/addToBag/ProductInfoSection";
-import ShoppingCartScreen from "@/components/addToBag/ShoppingCartScreen";
-import { Button } from "@/components/common/Button";
-import spacingStyles from "@/style/spacingStyles";
-import staticColors from "@/style/staticColors";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-
-import fontSizes from "@/style/fontSizes";
+import { useDispatch, useSelector } from "react-redux";
 import useBackHandler from "@/utils/useBackHandler";
+import spacingStyles from "@/style/spacingStyles";
+import staticColors from "@/style/staticColors";
+import fontSizes from "@/style/fontSizes";
+import { AppDispatch, RootState } from "@/store/store";
+import { fetchCartItemsApi } from "@/store/cart/cartSlice";
+import ProductInfoScreen from "@/components/addToBag/ProductInfoSection";
+import ShoppingCartScreen from "@/components/addToBag/ShoppingCartScreen";
+import FullScreenLoader from "@/components/common/FullScreenLoader";
+import { Button } from "@/components/common/Button";
 
 const ShoppingBagScreen: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const [isLoading, setIsLoading] = useState(true);
+  const token = useSelector((state: RootState) => state.auth.token);
+  const cartItems = useSelector((state: RootState) => state.cart.cartItems);
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
   const handleGoBack = () => {
     router.back();
     return true;
   };
-  
-  useBackHandler(handleGoBack);
 
+  useBackHandler(handleGoBack);
+  useEffect(() => {
+    const loadCartData = async () => {
+      try {
+        if (isAuthenticated && token) {
+          await dispatch(fetchCartItemsApi()).unwrap();
+        }
+      } catch (error) {
+        console.error("Failed to fetch cart items:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadCartData();
+  }, [dispatch, isAuthenticated, token]);
+
+  if (isLoading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
+            <Ionicons
+              name="arrow-back"
+              size={23}
+              color={staticColors.darkGray}
+            />
+          </TouchableOpacity>
+        </View>
+        <FullScreenLoader visible={isLoading} />
+      </SafeAreaView>
+    );
+  }
+
+  const handlePlaceOrder = () => {};
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
@@ -52,12 +89,14 @@ const ShoppingBagScreen: React.FC = () => {
       <ShoppingCartScreen />
       <ProductInfoScreen />
 
-      <Button
-        title="PLACE ORDER"
-        style={styles.PlaceButton}
-        onPress={alert}
-        textStyle={styles.PlaceText}
-      />
+      {cartItems.length > 0 && (
+        <Button
+          title="PLACE ORDER"
+          style={styles.PlaceButton}
+          onPress={handlePlaceOrder}
+          textStyle={styles.PlaceText}
+        />
+      )}
     </SafeAreaView>
   );
 };

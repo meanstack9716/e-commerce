@@ -43,7 +43,7 @@ export default {
   discountText: "#dc3545",
 
   // Modal
-  modalOverlayLight: "rgba(0, 0, 0, 0.025)",
+  modalOverlayLight: "rgba(0, 0, 0, 0.2)",
 
   // Links
   linkPrimary: "#0C4A6E",
@@ -54,6 +54,7 @@ export default {
   darkGray:'#333',
   brightRed: "#dc2626", 
   lightPink: "#fee2e2",
+  sorftPink:"#fac0c0",
   lightGreen: "#e6ffe6",
   secondaryGray:'#e3e3e3',
   lightYellow:"#F7CD03",
@@ -65,5 +66,8 @@ export default {
   darkYellow:'#F57C00',
   darkGreen:"#00C853",
   LightSkyBlue:"#CCDAF9",
-  slateBlue:"#5b3ec8"
+  slateBlue:"#5b3ec8",
+  bannerColor:'#fff6e5',
+  bannerHeighlight:'#d4a200',
+  profileBg:'#e6f5f0'
 };

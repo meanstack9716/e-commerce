@@ -17,7 +17,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { sendEmailCode } from "@/store/auth/authSlice";
 import { AppDispatch } from "@/store/store";
 import { OtpInputProps } from "@/types/types";
-import { OTP_RESEND_TIMER } from "@/constants/constants";
+import { OTP_LENGTH, OTP_RESEND_TIMER } from "@/constants/constants";
 
 const OtpInput: React.FC<OtpInputProps> = ({
   email,
@@ -91,7 +91,7 @@ const OtpInput: React.FC<OtpInputProps> = ({
       onVerifySuccess(enteredOtp);
     } catch (err) {
       setOtpError((err as string) || "Invalid OTP");
-      setOtp(new Array(6).fill(""));
+      setOtp(new Array(OTP_LENGTH).fill(""));
     }
   };
 
