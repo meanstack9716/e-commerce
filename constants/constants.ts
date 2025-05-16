@@ -9,3 +9,4 @@ export const OTP_RESEND_TIMER = 30;
 export const  CART = "guest_cart";
 export const PIN_CODE_LENGTH = 6;
 export const OTP_LENGTH = 6;
+export const APP_VERSION = "4.2503.21";

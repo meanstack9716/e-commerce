@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import ProductInfoScreen from "@/components/addToBag/ProductInfoSection";
-import ShoppingCartScreen from "@/components/addToBag/ShoppingCartScreen";
-import { Button } from "@/components/common/Button";
-import spacingStyles from "@/style/spacingStyles";
-import staticColors from "@/style/staticColors";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-
-import fontSizes from "@/style/fontSizes";
-import useBackHandler from "@/utils/useBackHandler";
 import { useDispatch, useSelector } from "react-redux";
+import useBackHandler from "@/utils/useBackHandler";
+import spacingStyles from "@/style/spacingStyles";
+import staticColors from "@/style/staticColors";
+import fontSizes from "@/style/fontSizes";
 import { AppDispatch, RootState } from "@/store/store";
 import { fetchCartItemsApi } from "@/store/cart/cartSlice";
+import ProductInfoScreen from "@/components/addToBag/ProductInfoSection";
+import ShoppingCartScreen from "@/components/addToBag/ShoppingCartScreen";
 import FullScreenLoader from "@/components/common/FullScreenLoader";
+import { Button } from "@/components/common/Button";
 
 const ShoppingBagScreen: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -63,8 +62,7 @@ const ShoppingBagScreen: React.FC = () => {
     );
   }
 
-  const handlePlaceOrder = () => {
-  };
+  const handlePlaceOrder = () => {};
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}

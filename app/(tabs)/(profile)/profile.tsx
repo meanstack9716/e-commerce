@@ -15,6 +15,10 @@ import {
   Ionicons,
   MaterialIcons,
 } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import { useSelector } from "react-redux";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { RootState } from "@/store/store";
 import FAQs from "@/components/profile/FAQs";
 import AboutUs from "@/components/profile/AboutUs";
 import TermsOfUs from "@/components/profile/TermsOfUs";
@@ -22,17 +26,15 @@ import PrivacyPolicy from "@/components/profile/PrivacyPolicy";
 import Grievance from "@/components/profile/Grievance";
 import ProfileHeader from "@/components/profile/ProfileHeader";
 import FooterLinks from "@/components/profile/FooterLinks";
-import { useRouter } from "expo-router";
+import UserProfile from "@/components/profile/UserProfile";
+import ProfileListSection from "@/components/profile/ProfileListSection";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import fontSizes from "@/style/fontSizes";
-import ProfileListSection from "@/components/profile/ProfileListSection";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import UserProfile from "@/components/profile/UserProfile";
+import { APP_VERSION } from "@/constants/constants";
+
 export default function ProfileScreen() {
-const [activeProfileSection, setActiveProfileSection] = useState("Profile");
+  const [activeProfileSection, setActiveProfileSection] = useState("Profile");
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const isAuthenticated = useSelector(
@@ -63,7 +65,7 @@ const [activeProfileSection, setActiveProfileSection] = useState("Profile");
           {isAuthenticated ? <UserProfile /> : <ProfileListSection />}
           <FooterLinks onLinkPress={(link) => setActiveProfileSection(link)} />
           <View style={styles.optionsContainer}>
-            <Text style={styles.versionText}>APP VERSION 4.2503.21</Text>
+            <Text style={styles.versionText}>APP VERSION {APP_VERSION}</Text>
           </View>
         </>
       ),

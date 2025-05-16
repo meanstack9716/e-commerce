@@ -7,13 +7,12 @@ import {
   ScrollView,
   Image,
 } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
 import SizeChartModal from "@/modal/SizeChartModal";
 import fontSizes from "@/style/fontSizes";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { Product } from "../../types/types";
-import { AntDesign } from "@expo/vector-icons";
-import { useDispatch } from "react-redux";
 import images from "@/constants/images";
 
 interface SizeSelectorProps {

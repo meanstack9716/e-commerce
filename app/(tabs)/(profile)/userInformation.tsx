@@ -9,17 +9,17 @@ import {
   Dimensions,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import TextField from "@/components/common/TextField";
+import { FontAwesome } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { Button } from "@/components/common/Button";
-import { FontAwesome } from "@expo/vector-icons";
+import TextField from "@/components/common/TextField";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import fontSizes from "@/style/fontSizes";
 import images from "@/constants/images";
-import { pickImages } from "@/utils/imagePicker";
 import gapSizes from "@/style/gapSizes";
+import { pickImages } from "@/utils/imagePicker";
 
 const { height } = Dimensions.get("window");
 interface UserData {

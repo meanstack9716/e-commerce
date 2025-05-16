@@ -13,29 +13,29 @@ import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { useLocalSearchParams, router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
-import colors from "@/style/staticColors";
-import staticColors from "@/style/staticColors";
-import spacingStyles from "@/style/spacingStyles";
-import MegaDealBadge from "@/components/productDetails/MegaDealBadge";
-import SizeSelector from "@/components/productDetails/SizeSelector";
-import DeliveryCheck from "@/components/productDetails/DeliveryCheck";
-import ReturnPolicy from "./ReturnPolicy";
-import SimilarProducts from "@/components/productDetails/SimilarProducts";
-import { Product } from "../../types/types";
-import BrandRating from "@/components/productDetails/BrandRating";
-import ViewSimilarModal from "@/modal/ViewSimilarModal";
-import ProductList from "@/components/productDetails/ProductList";
-import ProductActionButtons from "@/components/productDetails/ProductActionButtons";
-import fontSizes from "@/style/fontSizes";
-import gapSizes from "@/style/gapSizes";
 import { AppDispatch, RootState } from "@/store/store";
 import {
   clearSelectedProduct,
   fetchProductById,
 } from "@/store/product/productsSlice";
-import FullScreenLoader from "@/components/common/FullScreenLoader";
 import { addToCartApi, addToCartLocally } from "@/store/cart/cartSlice";
 import { useAppSelector } from "@/store/hooks";
+import colors from "@/style/staticColors";
+import staticColors from "@/style/staticColors";
+import spacingStyles from "@/style/spacingStyles";
+import fontSizes from "@/style/fontSizes";
+import gapSizes from "@/style/gapSizes";
+import MegaDealBadge from "@/components/productDetails/MegaDealBadge";
+import SizeSelector from "@/components/productDetails/SizeSelector";
+import SimilarProducts from "@/components/productDetails/SimilarProducts";
+import ProductList from "@/components/productDetails/ProductList";
+import BrandRating from "@/components/productDetails/BrandRating";
+import DeliveryCheck from "@/components/productDetails/DeliveryCheck";
+import ProductActionButtons from "@/components/productDetails/ProductActionButtons";
+import FullScreenLoader from "@/components/common/FullScreenLoader";
+import ReturnPolicy from "./ReturnPolicy";
+import { Product } from "../../types/types";
+import ViewSimilarModal from "@/modal/ViewSimilarModal";
 
 const { width: screenWidth } = Dimensions.get("window");
 const screenHeight = Dimensions.get("window").height;
@@ -156,10 +156,8 @@ const ProductDetailsScreen: React.FC = () => {
             selectedColor,
           })
         ).unwrap();
-        router.navigate("/cart");
-      } else {
-        router.navigate("/cart");
-      }
+      } 
+      router.push("/cart");
     }
   };
 

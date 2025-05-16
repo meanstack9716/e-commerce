@@ -8,13 +8,13 @@ import {
   Alert,
 } from "react-native";
 import { useLocalSearchParams } from "expo-router";
-import colors from "@/style/staticColors";
-import OtpInput from "@/components/common/OtpInput";
-import images from "@/constants/images";
-import spacingStyles from "@/style/spacingStyles";
-import fontSizes from "@/style/fontSizes";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
+import colors from "@/style/staticColors";
+import spacingStyles from "@/style/spacingStyles";
+import fontSizes from "@/style/fontSizes";
+import OtpInput from "@/components/common/OtpInput";
+import images from "@/constants/images";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { verifyEmailCode, verifyUser } from "@/store/auth/authSlice";
 
@@ -29,7 +29,6 @@ const VerifyEmailOtpScreen = () => {
       const result = await dispatch(
         verifyUser({ email, code: otpCode })
       ).unwrap();
-      // router.replace("/home");
       router.navigate("/profile");
     } catch (err) {
       console.log("Verification failed:", err);
