@@ -34,7 +34,7 @@ import {
   fetchProductById,
 } from "@/store/product/productsSlice";
 import FullScreenLoader from "@/components/common/FullScreenLoader";
-import { addToCart, addToCartApi } from "@/store/cart/cartSlice";
+import { addToCartApi, addToCartLocally } from "@/store/cart/cartSlice";
 import { useAppSelector } from "@/store/hooks";
 
 const { width: screenWidth } = Dimensions.get("window");
@@ -139,7 +139,7 @@ const ProductDetailsScreen: React.FC = () => {
   const handleAddToCart = () => {
     if (product) {
       dispatch(
-        addToCart({
+        addToCartLocally({
           product,
           selectedSize,
           selectedColor,

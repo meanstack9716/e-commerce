@@ -64,7 +64,6 @@ const ShoppingBagScreen: React.FC = () => {
   }
 
   const handlePlaceOrder = () => {
-    alert("Order placed successfully!");
   };
   return (
     <SafeAreaView style={styles.container}>

@@ -194,7 +194,7 @@ const cartSlice = createSlice({
     setCartItemsFromStorage: (state, action: PayloadAction<CartItem[]>) => {
       state.cartItems = action.payload;
     },
-    addToCart: (
+    addToCartLocally: (
       state,
       action: PayloadAction<{
         product: Product;
@@ -464,7 +464,7 @@ const cartSlice = createSlice({
 });
 
 export const {
-  addToCart,
+  addToCartLocally,
   updateQuantity,
   updateSize,
   toggleItemSelection,
