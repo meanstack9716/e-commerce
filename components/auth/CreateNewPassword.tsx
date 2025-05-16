@@ -51,7 +51,7 @@ export default function CreateNewPassword() {
           password_confirmation: formState.confirmPassword,
         })
       ).unwrap();
-      router.push("/categories");
+      router.navigate("/categories");
     } catch (err) {
       console.error("Reset failed:", err);
     }

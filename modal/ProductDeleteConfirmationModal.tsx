@@ -1,5 +1,12 @@
 import React from "react";
-import { Modal, View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  Modal,
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { Ionicons } from "@expo/vector-icons";
@@ -14,9 +21,12 @@ interface ProductDeleteConfirmationModalProps {
   onFirstButtonPress: () => void;
   onSecondButtonPress: () => void;
   onClose: () => void;
+  isLoading: boolean;
 }
 
-const ProductDeleteConfirmationModal: React.FC<ProductDeleteConfirmationModalProps> = ({
+const ProductDeleteConfirmationModal: React.FC<
+  ProductDeleteConfirmationModalProps
+> = ({
   visible,
   title,
   message,
@@ -25,6 +35,7 @@ const ProductDeleteConfirmationModal: React.FC<ProductDeleteConfirmationModalPro
   onFirstButtonPress,
   onSecondButtonPress,
   onClose,
+  isLoading,
 }) => {
   return (
     <Modal
@@ -54,15 +65,33 @@ const ProductDeleteConfirmationModal: React.FC<ProductDeleteConfirmationModalPro
             <TouchableOpacity
               onPress={onSecondButtonPress}
               style={styles.secondButton}
+              disabled={isLoading}
             >
-              <Text style={styles.secondButtonText}>{secondaryButtonText}</Text>
+              {isLoading ? (
+                <ActivityIndicator size="small" color={staticColors.darkGray} />
+              ) : (
+                <Text style={styles.secondButtonText}>
+                  {secondaryButtonText}
+                </Text>
+              )}
             </TouchableOpacity>
 
             <TouchableOpacity
               onPress={onFirstButtonPress}
-              style={styles.firstButton}
+              style={[
+                styles.firstButton,
+                isLoading && styles.firstButtonDisabled,
+              ]}
+              disabled={isLoading}
             >
-              <Text style={styles.firstButtonText}>{primaryButtonText}</Text>
+              <Text
+                style={[
+                  styles.firstButtonText,
+                  isLoading && styles.firstButtonTextDisabled,
+                ]}
+              >
+                {primaryButtonText}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -108,6 +137,9 @@ const styles = StyleSheet.create({
     ...spacingStyles.py5,
     alignItems: "center",
   },
+  firstButtonDisabled: {
+    opacity: 0.5,
+  },
   firstButton: {
     borderLeftWidth: 1,
     width: "50%",
@@ -115,6 +147,10 @@ const styles = StyleSheet.create({
     ...spacingStyles.px15,
     ...spacingStyles.py10,
     alignItems: "center",
+  },
+
+  firstButtonTextDisabled: {
+    color: staticColors.textLightGray,
   },
   firstButtonText: {
     fontSize: fontSizes.xs,

@@ -8,6 +8,7 @@ import {
   Image,
   TouchableWithoutFeedback,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useFieldValidation } from "@/hooks/useFieldValidation";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -15,7 +16,6 @@ import { clearAuthError, loginUser } from "@/store/auth/authSlice";
 import TextField from "@/components/common/TextField";
 import PasswordField from "@/components/common/PasswordField";
 import { Button } from "@/components/common/Button";
-import { Ionicons } from "@expo/vector-icons";
 import textStyles from "@/style/textStyles";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";

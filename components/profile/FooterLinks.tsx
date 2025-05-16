@@ -1,8 +1,8 @@
-import colors from '@/style/staticColors';
-import spacingStyles from '@/style/spacingStyles';
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import fontSizes from '@/style/fontSizes';
+import colors from '@/style/staticColors';
+import spacingStyles from '@/style/spacingStyles';
 
 type FooterLinksProps = {
   onLinkPress: (label: string) => void;

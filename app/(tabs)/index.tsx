@@ -11,31 +11,33 @@ import {
   Image,
 } from "react-native";
 import { Ionicons, MaterialIcons, FontAwesome6 } from "@expo/vector-icons";
-import ProductCard from "@/components/home/ProductCard";
+import { useSelector } from "react-redux";
 import { router } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import ProductCard from "@/components/home/ProductCard";
+import bannerData from "../../assets/data/banner.json";
+import promotionalData from "../../assets/data/promotionalData.json";
 import Navbar from "@/components/home/Navbar";
 import CategoryGrid from "@/components/home/CategoryGrid";
 import ImageSlider from "@/components/home/ImageSlider";
-import bannerData from "../../assets/data/banner.json";
 import PromotionalCards from "@/components/home/PromotionalCards";
-import promotionalData from "../../assets/data/promotionalData.json";
 import OfferCardCarousel from "@/components/home/OfferCardCarousel";
-import colors from "@/style/staticColors";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import spacingStyles from "@/style/spacingStyles";
 import BrandCard from "@/components/home/BrandCard";
-import staticColors from "@/style/staticColors";
 import OfferPriceCard from "@/components/home/OfferPriceCard";
 import PocketFriendlyBargain from "@/components/home/PocketFriendlyCategory";
-import { Product } from "@/types/types";
+import FullScreenLoader from "@/components/common/FullScreenLoader";
+import colors from "@/style/staticColors";
+import spacingStyles from "@/style/spacingStyles";
+import staticColors from "@/style/staticColors";
 import fontSizes from "@/style/fontSizes";
 import gapSizes from "@/style/gapSizes";
+import { Product } from "@/types/types";
 import images from "@/constants/images";
-import { useSelector } from "react-redux";
+
 import { useAppDispatch } from "@/store/hooks";
 import { fetchCategories } from "@/store/category/categoriesSlice";
 import { fetchProducts } from "@/store/product/productsSlice";
-import FullScreenLoader from "@/components/common/FullScreenLoader";
+
 
 const HomeScreen: React.FC = () => {
   const [likedProductItems, setLikedProductItems] = useState<string[]>([]);

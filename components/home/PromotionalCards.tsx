@@ -1,11 +1,3 @@
-import spacingStyles from "@/style/spacingStyles";
-import {
-  AntDesign,
-  Entypo,
-  FontAwesome,
-  Ionicons,
-  MaterialIcons,
-} from "@expo/vector-icons";
 import React from "react";
 import {
   View,
@@ -16,9 +8,17 @@ import {
   ScrollView,
   Dimensions,
 } from "react-native";
+import {
+  AntDesign,
+  Entypo,
+  FontAwesome,
+  Ionicons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import staticColors from "@/style/staticColors";
 import fontSizes from "@/style/fontSizes";
 import gapSizes from "@/style/gapSizes";
+import spacingStyles from "@/style/spacingStyles";
 interface PromotionalCard {
   id: string;
   title: string;

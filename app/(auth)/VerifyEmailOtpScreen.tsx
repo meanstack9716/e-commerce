@@ -7,16 +7,16 @@ import {
   Image,
   Alert,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useLocalSearchParams } from "expo-router";
+import { router } from "expo-router";
 import colors from "@/style/staticColors";
-import OtpInput from "@/components/common/OtpInput";
-import images from "@/constants/images";
 import spacingStyles from "@/style/spacingStyles";
 import fontSizes from "@/style/fontSizes";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { router } from "expo-router";
+import OtpInput from "@/components/common/OtpInput";
+import images from "@/constants/images";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { verifyUser } from "@/store/auth/authSlice";
+import { verifyEmailCode, verifyUser } from "@/store/auth/authSlice";
 
 const VerifyEmailOtpScreen = () => {
   const insets = useSafeAreaInsets();
@@ -29,7 +29,7 @@ const VerifyEmailOtpScreen = () => {
       const result = await dispatch(
         verifyUser({ email, code: otpCode })
       ).unwrap();
-      // router.replace("/home");
+      router.navigate("/profile");
     } catch (err) {
       console.log("Verification failed:", err);
     }
