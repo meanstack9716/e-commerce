@@ -112,7 +112,8 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     ...spacingStyles.p10,
     paddingVertical: Platform.OS === "ios" ? 8 : 5,
-    fontSize:fontSizes.sm
+    fontSize:fontSizes.sm,
+    color:staticColors.textDarkGray
   },
   inputFocused: {
     borderColor: staticColors.primary,

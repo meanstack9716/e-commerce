@@ -39,7 +39,7 @@ export const addToCartApi = createAsyncThunk<
         product_id: product.id,
         selected_size: selectedSize || "",
         selected_color: selectedColor || "",
-        quantity: "1",
+        quantity: 1,
       };
       await axios.post(`${apiUrl}/cart/add`, payload, {
         headers: {
@@ -48,7 +48,23 @@ export const addToCartApi = createAsyncThunk<
         },
       });
     } catch (error: any) {
-      return rejectWithValue(error.message || "Failed to add to cart");
+      console.log("API Error Details:", {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        headers: error.response?.headers,
+        requestPayload: {
+          product_id: product.id,
+          selected_size: selectedSize || "",
+          selected_color: selectedColor || "",
+          quantity: "1",
+        }
+      });
+      return rejectWithValue({
+        message: error.response?.data?.message || error.message || "Failed to add to cart",
+        status: error.response?.status,
+        data: error.response?.data
+      });
     }
   }
 );

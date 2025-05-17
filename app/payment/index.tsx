@@ -10,6 +10,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
+import fontSizes from "@/style/fontSizes";
 
 const PaymentScreen: React.FC = () => {
   const [expandedOption, setExpandedOption] = useState<string | null>(null);
@@ -128,9 +129,9 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.white,
   },
   headerTitle: {
-    fontSize: 18,
+    fontSize: fontSizes.md,
     fontWeight: "bold",
-    marginLeft: 16,
+    ...spacingStyles.ml15
   },
   offerContainer: {
     backgroundColor: staticColors.white,
