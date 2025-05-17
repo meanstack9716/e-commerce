@@ -10,13 +10,14 @@ import {
   Platform,
 } from "react-native";
 import { useSelector } from "react-redux";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import staticColors from "@/style/staticColors";
 import fontSizes from "@/style/fontSizes";
+import spacingStyles from "@/style/spacingStyles";
 import { commonStyles } from "@/style/commonStyle";
 import { useFieldValidation } from "@/hooks/useFieldValidation";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { RootState } from "@/store/store";
 import {
   fetchAddressTypes,
@@ -27,7 +28,6 @@ import {
 } from "@/store/address/addressSlice";
 import { useAppDispatch } from "@/store/hooks";
 import SelectAddress from "@/components/address/SelectAddress";
-import spacingStyles from "@/style/spacingStyles";
 
 const AddNewAddress = () => {
   const dispatch = useAppDispatch();
@@ -45,7 +45,7 @@ const AddNewAddress = () => {
     state: "",
     country: "",
   });
-  const [showSelectAddress, setShowSelectAddress] = useState(false); 
+  const [showSelectAddress, setShowSelectAddress] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
   const notEmptyValidator = (value: string) => value.trim().length > 0;
 
@@ -174,10 +174,11 @@ const AddNewAddress = () => {
               style={[styles.input, errors.mobile && styles.inputError]}
               placeholder="Mobile No*"
               placeholderTextColor={staticColors.textSecondary}
-              keyboardType="phone-pad"
+              keyboardType="numeric"
               value={formData.mobile}
               onChangeText={(text) => handleInputChange("mobile", text)}
               onFocus={handleInputFocus}
+              maxLength={12}
             />
             {errors.mobile && (
               <Text style={styles.errorText}>{errors.mobile}</Text>
@@ -194,6 +195,7 @@ const AddNewAddress = () => {
               value={formData.pinCode}
               onChangeText={(text) => handleInputChange("pinCode", text)}
               onFocus={handleInputFocus}
+              maxLength={6}
             />
             {errors.pinCode && (
               <Text style={styles.errorText}>{errors.pinCode}</Text>
@@ -340,7 +342,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: "row",
     alignItems: "center",
-   ...spacingStyles.p10,
+    ...spacingStyles.p10,
     backgroundColor: staticColors.white,
     zIndex: 1,
   },
@@ -348,26 +350,26 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-     ...spacingStyles.p10,
-    ...spacingStyles.pb20
+    ...spacingStyles.p10,
+    ...spacingStyles.pb20,
   },
   section: {
     backgroundColor: staticColors.white,
     borderRadius: 10,
     ...spacingStyles.p10,
-     ...spacingStyles.mb10,
+    ...spacingStyles.mb10,
   },
   sectionTitle: {
     fontWeight: "bold",
     fontSize: fontSizes.sm,
-     ...spacingStyles.mb10,
+    ...spacingStyles.mb10,
   },
   input: {
     borderWidth: 1,
     borderColor: staticColors.borderLight,
     borderRadius: 5,
-     ...spacingStyles.p10,
-     ...spacingStyles.mb10,
+    ...spacingStyles.p10,
+    ...spacingStyles.mb10,
     fontSize: fontSizes.sm,
   },
   inputError: {
@@ -381,7 +383,7 @@ const styles = StyleSheet.create({
   noteText: {
     fontSize: fontSizes.xs,
     color: staticColors.lightYellow,
-     ...spacingStyles.mb10,
+    ...spacingStyles.mb10,
   },
   row: {
     flexDirection: "row",
@@ -393,13 +395,13 @@ const styles = StyleSheet.create({
   addressTypeContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-     ...spacingStyles.mb10,
+    ...spacingStyles.mb10,
   },
   addressTypeOption: {
     flexDirection: "row",
     alignItems: "center",
-     ...spacingStyles.mr20,
-     ...spacingStyles.mb10,
+    ...spacingStyles.mr20,
+    ...spacingStyles.mb10,
   },
   addressTypeText: {
     fontSize: fontSizes.sm,
@@ -408,7 +410,7 @@ const styles = StyleSheet.create({
   checkboxContainer: {
     flexDirection: "row",
     alignItems: "center",
-     ...spacingStyles.mb10,
+    ...spacingStyles.mb10,
   },
   checkbox: {
     width: 20,
@@ -436,14 +438,14 @@ const styles = StyleSheet.create({
   cancelButton: {
     borderWidth: 1,
     borderColor: staticColors.black,
-      ...spacingStyles.py10,
+    ...spacingStyles.py10,
     borderRadius: 5,
     width: "48%",
     alignItems: "center",
   },
   saveButton: {
     backgroundColor: staticColors.primary,
-     ...spacingStyles.py10,
+    ...spacingStyles.py10,
     borderRadius: 5,
     width: "48%",
     alignItems: "center",

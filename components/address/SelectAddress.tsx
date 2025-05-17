@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -8,61 +8,54 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useSelector } from "react-redux";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import fontSizes from "@/style/fontSizes";
-import { commonStyles } from "@/style/commonStyle";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  fetchAddresses,
+  setSelectedAddressId,
+  removeAddress,
+} from "@/store/address/addressSlice";
+import { RootState } from "@/store/store";
+import { useAppDispatch } from "@/store/hooks";
+import FullScreenLoader from "../common/FullScreenLoader";
 
 interface Address {
   id: string;
-  name: string;
-  label: string;
-  addressLine: string;
+  contact_name: string | null;
+  contact_mobile: string | null;
+  type: string;
+  line1: string;
+  line2: string | null;
   city: string;
   state: string;
-  pincode: string;
-  mobile?: string;
+  postal_code: string;
+  country: string;
+  is_primary: boolean;
 }
 
-const defaultAddress: Address = {
-  id: "1",
-  name: "Kaushaki Kumari",
-  label: "HOME",
-  addressLine: " Sector 11",
-  city: "Noida",
-  state: " Uttar Pradesh",
-  pincode: "201301",
-  mobile: "6206517046",
-};
-
-const otherAddress: Address = {
-  id: "2",
-  name: "kaushaki",
-  label: "HOME",
-  addressLine: "lakhisarai",
-  city: "Dariapur",
-  state: "",
-  pincode: "811300",
-};
-
 interface SelectAddressProps {
-  onGoBack?: () => void; 
+  onGoBack?: () => void;
 }
 
 const SelectAddress = ({ onGoBack }: SelectAddressProps) => {
-  const [selectedAddressId, setSelectedAddressId] = useState(defaultAddress.id);
+  const dispatch = useAppDispatch();
+  const { addresses, selectedAddressId, loading, error } = useSelector(
+    (state: RootState) => state.address
+  );
+
+  useEffect(() => {
+    dispatch(fetchAddresses());
+  }, [dispatch]);
 
   const handleSelect = (id: string) => {
-    setSelectedAddressId(id);
+    dispatch(setSelectedAddressId(id));
   };
 
   const handleAddNewAddress = () => {
-    if (onGoBack) {
-      onGoBack();
-    } else {
-      router.push("/addNewAddress");
-    }
+    router.push("/addNewAddress");
   };
 
   const handleBack = () => {
@@ -74,60 +67,72 @@ const SelectAddress = ({ onGoBack }: SelectAddressProps) => {
   };
 
   const handleConfirm = () => {
-    router.back();
+    if (onGoBack) {
+      onGoBack();
+    }
   };
 
+  const handleRemove = (id: string) => {
+    dispatch(removeAddress(id));
+  };
+
+  const primaryAddress = addresses.find((addr) => addr.is_primary);
+  const otherAddresses = addresses.filter((addr) => !addr.is_primary);
+
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.headerContainer}>
+    <>
+      <FullScreenLoader visible={loading} />
+      <SafeAreaView style={styles.container}>
+        <View style={styles.headerContainer}>
+          <TouchableOpacity onPress={handleBack} style={styles.backButton}>
+            <Ionicons name="arrow-back" size={20} color={staticColors.black} />
+          </TouchableOpacity>
+          <Text style={styles.header}>SELECT ADDRESS</Text>
+        </View>
+
+        {error && <Text style={styles.errorText}>{error.general}</Text>}
+
         <TouchableOpacity
-          onPress={handleBack}
-          style={commonStyles.backButton}
+          style={styles.addNewButton}
+          onPress={handleAddNewAddress}
         >
-          <Ionicons
-            name="arrow-back"
-            size={20}
-            color={staticColors.textDarkGray}
-          />
+          <Text style={styles.addNewText}>ADD NEW ADDRESS</Text>
         </TouchableOpacity>
-        <Text style={commonStyles.header}>SELECT ADDRESS</Text>
-      </View>
 
-      <TouchableOpacity 
-        style={styles.addNewButton}
-        onPress={handleAddNewAddress}
-      >
-        <Text style={styles.addNewText}>ADD NEW ADDRESS</Text>
-      </TouchableOpacity>
+        <ScrollView style={styles.addressList}>
+          {primaryAddress && (
+            <>
+              <Text style={styles.sectionTitle}>DEFAULT ADDRESS</Text>
+              <AddressItem
+                address={primaryAddress}
+                selected={selectedAddressId === primaryAddress.id}
+                onSelect={handleSelect}
+                onRemove={handleRemove}
+              />
+            </>
+          )}
 
-      <ScrollView style={styles.addressList}>
-        <Text style={styles.sectionTitle}>DEFAULT ADDRESS</Text>
-        <AddressItem
-          address={defaultAddress}
-          selected={selectedAddressId === defaultAddress.id}
-          onSelect={handleSelect}
-          showEdit
-        />
+          {otherAddresses.length > 0 && (
+            <>
+              <Text style={styles.sectionTitle}>OTHER ADDRESS</Text>
+              {otherAddresses.map((address) => (
+                <AddressItem
+                  key={address.id}
+                  address={address}
+                  selected={selectedAddressId === address.id}
+                  onSelect={handleSelect}
+                  onRemove={handleRemove}
+                />
+              ))}
+            </>
+          )}
+        </ScrollView>
 
-        {otherAddress?.addressLine ? (
-          <>
-            <Text style={styles.sectionTitle}>OTHER ADDRESS</Text>
-            <AddressItem
-              address={otherAddress}
-              selected={selectedAddressId === otherAddress.id}
-              onSelect={handleSelect}
-            />
-          </>
-        ) : null}
-      </ScrollView>
-
-      <TouchableOpacity 
-        style={styles.confirmButton}
-        onPress={handleConfirm}
-      >
-        <Text style={styles.confirmText}>CONFIRM</Text>
-      </TouchableOpacity>
-    </SafeAreaView>
+        <TouchableOpacity style={styles.confirmButton} onPress={handleConfirm}>
+          <Text style={styles.confirmText}>CONFIRM</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
+    </>
   );
 };
 
@@ -135,14 +140,14 @@ interface AddressItemProps {
   address: Address;
   selected: boolean;
   onSelect: (id: string) => void;
-  showEdit?: boolean;
+  onRemove: (id: string) => void;
 }
 
 const AddressItem: React.FC<AddressItemProps> = ({
   address,
   selected,
   onSelect,
-  showEdit,
+  onRemove,
 }) => {
   return (
     <TouchableOpacity
@@ -150,25 +155,31 @@ const AddressItem: React.FC<AddressItemProps> = ({
       onPress={() => onSelect(address.id)}
     >
       <View style={styles.row}>
-        <View style={commonStyles.radioOuter}>
-          {selected && <View style={commonStyles.radioInner} />}
+        <View
+          style={[styles.radioOuter, selected && styles.radioOuterSelected]}
+        >
+          {selected && <View style={styles.radioInnerSelected} />}
         </View>
-        <Text style={styles.name}>{address.name}</Text>
+        <Text style={styles.name}>{address.contact_name || "Unknown"}</Text>
         <View style={styles.labelContainer}>
-          <Text style={styles.label}>{address.label}</Text>
+          <Text style={styles.label}>{address.type.toUpperCase()}</Text>
         </View>
       </View>
-      <Text style={styles.addressLine}>{address.addressLine}</Text>
+      <Text style={styles.addressLine}>{address.line1}</Text>
+      {address.line2 && <Text style={styles.addressLine}>{address.line2}</Text>}
       <Text style={styles.addressLine}>{address.city}</Text>
       <Text style={styles.addressLine}>
-        {address.state} {address.pincode}
+        {address.state}, {address.postal_code}
       </Text>
-      {address.mobile && (
-        <Text style={styles.mobile}>Mobile: {address.mobile}</Text>
+      {address.contact_mobile && (
+        <Text style={styles.mobile}>Mobile: {address.contact_mobile}</Text>
       )}
-      {showEdit && (
+      {selected && (
         <View style={styles.buttonRow}>
-          <TouchableOpacity style={styles.editButton}>
+          <TouchableOpacity
+            style={styles.editButton}
+            onPress={() => onRemove(address.id)}
+          >
             <Text style={styles.buttonText}>REMOVE</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.editButton}>
@@ -183,13 +194,21 @@ const AddressItem: React.FC<AddressItemProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: staticColors.white,
-    ...spacingStyles.p10,
+    backgroundColor: staticColors.bgSecondary,
+    ...spacingStyles.p15,
   },
   headerContainer: {
     flexDirection: "row",
     alignItems: "center",
-    ...spacingStyles.mb10,
+  },
+  backButton: {
+   ...spacingStyles.pr5
+  },
+  header: {
+    flex: 1,
+    fontSize: fontSizes.base,
+    fontWeight: "bold",
+    color: staticColors.black,
   },
   addNewButton: {
     borderWidth: 1,
@@ -199,63 +218,115 @@ const styles = StyleSheet.create({
     ...spacingStyles.my10,
     borderRadius: 5,
   },
-  addNewText: { fontWeight: "bold" },
-  sectionTitle: { fontWeight: "bold", ...spacingStyles.my10 },
-  addressList: { flex: 1 },
+  addNewText: {
+    fontWeight: "bold",
+    fontSize: fontSizes.sm,
+    color: staticColors.black,
+  },
+  sectionTitle: {
+    fontWeight: "bold",
+    fontSize: fontSizes.sm,
+    color: staticColors.black,
+   ...spacingStyles.mb10
+  },
+  addressList: {
+    flex: 1,
+  },
   addressItem: {
     borderWidth: 1,
-    borderColor: staticColors.borderLight,
+    borderColor: "#E0E0E0",
     borderRadius: 10,
-    ...spacingStyles.p10,
-    ...spacingStyles.mb10,
+    padding: 12,
+    backgroundColor: "#FFFFFF",
+    marginBottom: 10,
   },
-  row: { flexDirection: "row", alignItems: "center", ...spacingStyles.mb5 },
-  name: { fontWeight: "bold", fontSize: fontSizes.sm },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 5,
+  },
+  radioOuter: {
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    borderWidth: 1,
+    borderColor: staticColors.textLightGray,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 10,
+  },
+  radioOuterSelected: {
+    borderColor: staticColors.discountText,
+  },
+  radioInnerSelected: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: staticColors.discountText,
+  },
+  name: {
+    fontWeight: "bold",
+    fontSize: fontSizes.sm,
+    color: staticColors.black,
+  },
   labelContainer: {
     backgroundColor: staticColors.lightGreen,
     ...spacingStyles.px10,
     ...spacingStyles.py2,
-    borderRadius: 15,
-    ...spacingStyles.ml10,
+    borderRadius:8,
+    ...spacingStyles.ml10
   },
-  label: { fontSize: fontSizes.s, color: staticColors.darkGreen },
+  label: {
+    fontSize: fontSizes.s,
+    color: staticColors.darkGreen,
+    fontWeight: "bold",
+  },
   addressLine: {
     fontSize: fontSizes.xs,
-    color: staticColors.textSecondary,
+    color: staticColors.textDarkGray,
+    lineHeight: 20,
   },
   mobile: {
-    fontSize: fontSizes.sm,
+    fontSize: 14,
+    color: staticColors.textDarkGray,
     ...spacingStyles.mt5,
     fontWeight: "600",
   },
   buttonRow: {
     flexDirection: "row",
     justifyContent: "flex-start",
-    ...spacingStyles.mt10,
+    ...spacingStyles.mt5
   },
   editButton: {
     borderWidth: 1,
     borderColor: staticColors.black,
-    ...spacingStyles.py5,
-    ...spacingStyles.px10,
+    ...spacingStyles.px15,
+   ...spacingStyles.py5,
     borderRadius: 5,
-    ...spacingStyles.mr10,
+    ...spacingStyles.mr10
   },
   buttonText: {
     fontSize: fontSizes.s,
     fontWeight: "bold",
+    color: staticColors.black,
   },
   confirmButton: {
     backgroundColor: staticColors.primary,
-    ...spacingStyles.py10,
+    ...spacingStyles.p10,
     alignItems: "center",
     borderRadius: 6,
-    ...spacingStyles.mt5,
+    ...spacingStyles.mt5
   },
   confirmText: {
     color: staticColors.white,
     fontSize: fontSizes.sm,
+    fontWeight: "bold",
   },
+  errorText: {
+    color: staticColors.errorColor,
+    fontSize: fontSizes.sm,
+    ...spacingStyles.mb10
+  }
 });
 
 export default SelectAddress;

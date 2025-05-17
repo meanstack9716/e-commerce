@@ -8,14 +8,15 @@ import useBackHandler from "@/utils/useBackHandler";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import fontSizes from "@/style/fontSizes";
-import { AppDispatch, RootState } from "@/store/store";
-import { fetchCartItemsApi } from "@/store/cart/cartSlice";
 import ProductInfoScreen from "@/components/addToBag/ProductInfoSection";
 import ShoppingCartScreen from "@/components/addToBag/ShoppingCartScreen";
 import FullScreenLoader from "@/components/common/FullScreenLoader";
 import { Button } from "@/components/common/Button";
 import LoginModal from "@/app/(auth)/loginModal";
 import SignUpModal from "@/app/(auth)/signUpModal";
+import { AppDispatch, RootState } from "@/store/store";
+import { fetchAddresses } from "@/store/address/addressSlice";
+import { fetchCartItemsApi } from "@/store/cart/cartSlice";
 
 const ShoppingBagScreen: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -24,6 +25,7 @@ const ShoppingBagScreen: React.FC = () => {
   const [isSignupModalVisible, setSignupModalVisible] = useState(false);
   const token = useSelector((state: RootState) => state.auth.token);
   const cartItems = useSelector((state: RootState) => state.cart.cartItems);
+  const addresses = useSelector((state: RootState) => state.address.addresses);
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   );
@@ -40,6 +42,7 @@ const ShoppingBagScreen: React.FC = () => {
       try {
         if (isAuthenticated && token) {
           await dispatch(fetchCartItemsApi()).unwrap();
+          await dispatch(fetchAddresses()).unwrap();
         }
       } catch (error) {
         console.error("Failed to fetch cart items:", error);
@@ -52,10 +55,27 @@ const ShoppingBagScreen: React.FC = () => {
   }, [dispatch, isAuthenticated, token]);
 
   const handlePlaceOrder = () => {
-    if (isAuthenticated) {
-      router.navigate("/addNewAddress");
-    } else {
+    if (!isAuthenticated) {
       setLoginModalVisible(true);
+      return;
+    }
+
+    const selectedItems = cartItems.filter((item) => item.isSelected);
+    if (selectedItems.length === 0) {
+      alert("Please select at least one item to place an order.");
+      return;
+    }
+
+    if (addresses.length > 0) {
+      router.navigate({
+        pathname: "/placeorder",
+        params: { selectedItems: JSON.stringify(selectedItems) },
+      });
+    } else {
+      router.navigate({
+        pathname: "/addNewAddress",
+        params: { selectedItems: JSON.stringify(selectedItems) },
+      });
     }
   };
 
@@ -108,7 +128,6 @@ const ShoppingBagScreen: React.FC = () => {
           </TouchableOpacity>
           <Text style={styles.headerTitle}>SHOPPING BAG</Text>
         </View>
-
         <TouchableOpacity style={styles.iconButton}>
           <Ionicons
             name="heart-outline"

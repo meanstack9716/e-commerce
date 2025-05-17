@@ -28,7 +28,9 @@ function AppLayout() {
         <Stack.Screen name="+not-found" />
         <Stack.Screen name="/categories" />
         <Stack.Screen name="/ProductDetails" />
-        <Stack.Screen name="/addNewAddresss" />
+        <Stack.Screen name="/addNewAddress" />
+        <Stack.Screen name="/payment" />
+        <Stack.Screen name="/placeorder" />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>

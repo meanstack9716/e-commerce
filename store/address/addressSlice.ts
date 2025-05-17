@@ -18,15 +18,33 @@ interface AddressState {
   selectedAddressType: string;
   isDefault: boolean;
   loading: boolean;
-  error: { [key: string]: string } | null; 
+  addresses: Address[];
+  error: { [key: string]: string } | null;
+  selectedAddressId: string | null;
+}
+
+interface Address {
+  id: string;
+  contact_name: string | null;
+  contact_mobile: string | null;
+  type: string;
+  line1: string;
+  line2: string | null;
+  city: string;
+  state: string;
+  postal_code: string;
+  country: string;
+  is_primary: boolean;
 }
 
 const initialState: AddressState = {
   addressTypes: [],
+  addresses: [],
   selectedAddressType: "",
   isDefault: false,
   loading: false,
   error: null,
+  selectedAddressId: null,
 };
 
 const apiUrl = process.env.EXPO_PUBLIC_API_URL;
@@ -118,6 +136,53 @@ export const saveAddress = createAsyncThunk<
   }
 );
 
+export const fetchAddresses = createAsyncThunk<
+  Address[],
+  void,
+  { state: RootState; rejectValue: string }
+>("address/fetchAddresses", async (_, { getState, rejectWithValue }) => {
+  try {
+    const state = getState();
+    const token = state.auth.token;
+    const response = await axios.get(`${apiUrl}/address/list`, {
+      headers: {
+        Authorization: `${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data.data;
+  } catch (error: any) {
+    return rejectWithValue(
+      error.response?.data?.message || "Failed to fetch addresses"
+    );
+  }
+});
+
+export const removeAddress = createAsyncThunk<
+  string,
+  string,
+  { state: RootState; rejectValue: string }
+>(
+  "address/removeAddress",
+  async (id: string, { getState, rejectWithValue }) => {
+    try {
+      const state = getState();
+      const token = state.auth.token;
+      await axios.delete(`${apiUrl}/address/remove/${id}`, {
+        headers: {
+          Authorization: `${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      return id;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to remove address"
+      );
+    }
+  }
+);
+
 const addressSlice = createSlice({
   name: "address",
   initialState,
@@ -130,6 +195,9 @@ const addressSlice = createSlice({
     },
     resetError(state) {
       state.error = null;
+    },
+    setSelectedAddressId(state, action: PayloadAction<string | null>) {
+      state.selectedAddressId = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -145,7 +213,9 @@ const addressSlice = createSlice({
       })
       .addCase(fetchAddressTypes.rejected, (state, action) => {
         state.loading = false;
-        state.error = { general: action.payload || "Failed to fetch address types" };
+        state.error = {
+          general: action.payload || "Failed to fetch address types",
+        };
         state.selectedAddressType = "Home";
       })
       .addCase(saveAddress.pending, (state) => {
@@ -158,11 +228,56 @@ const addressSlice = createSlice({
       .addCase(saveAddress.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || { general: "Failed to save address" };
+      })
+      .addCase(fetchAddresses.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchAddresses.fulfilled, (state, action) => {
+        state.loading = false;
+        state.addresses = action.payload;
+        const primaryAddress = action.payload.find((addr) => addr.is_primary);
+        state.selectedAddressId =
+          primaryAddress?.id || action.payload[0]?.id || null;
+      })
+      .addCase(fetchAddresses.rejected, (state, action) => {
+        state.loading = false;
+        state.error = {
+          general: action.payload || "Failed to fetch addresses",
+        };
+      })
+      .addCase(removeAddress.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(removeAddress.fulfilled, (state, action) => {
+        state.loading = false;
+        state.addresses = state.addresses.filter(
+          (addr) => addr.id !== action.payload
+        );
+        if (state.selectedAddressId === action.payload) {
+          const remainingAddresses = state.addresses.filter(
+            (addr) => addr.id !== action.payload
+          );
+          const primaryAddress = remainingAddresses.find(
+            (addr) => addr.is_primary
+          );
+          state.selectedAddressId =
+            primaryAddress?.id || remainingAddresses[0]?.id || null;
+        }
+      })
+      .addCase(removeAddress.rejected, (state, action) => {
+        state.loading = false;
+        state.error = { general: action.payload || "Failed to remove address" };
       });
   },
 });
 
-export const { setAddressType, setIsDefault, resetError } =
-  addressSlice.actions;
+export const {
+  setAddressType,
+  setIsDefault,
+  resetError,
+  setSelectedAddressId,
+} = addressSlice.actions;
 
 export default addressSlice.reducer;
