@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { Product } from "@/types/types";
 import { normalizeProduct } from "@/utils/normalizeProduct";
+import { handleApiError } from "@/utils/handleApiError";
 
 const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
@@ -35,10 +36,8 @@ export const fetchProducts = createAsyncThunk<
       return formattedProducts;
     }
     return rejectWithValue("Invalid response format from API");
-  } catch (error: any) {
-    return rejectWithValue(
-      error.response?.data?.message || "Failed to fetch products"
-    );
+  } catch (error) {
+    return rejectWithValue(handleApiError(error, "Failed to fetch categories"));
   }
 });
 
@@ -48,18 +47,15 @@ export const fetchProductById = createAsyncThunk<
   { rejectValue: string }
 >("products/fetchProductById", async (id, { rejectWithValue }) => {
   try {
-
     const response = await axios.get(`${apiUrl}/products/${id}`);
-        console.log(id)
+    console.log(id);
     const apiProduct = response.data.data;
     if (apiProduct) {
       return normalizeProduct(apiProduct);
     }
     return rejectWithValue("Invalid product data");
-  } catch (error: any) {
-    return rejectWithValue(
-      error.response?.data?.message || "Failed to fetch product details"
-    );
+  } catch (error) {
+    return rejectWithValue(handleApiError(error, "Failed to fetch categories"));
   }
 });
 

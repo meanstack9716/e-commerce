@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { RootState } from "@/store/store";
+import { handleApiError } from "@/utils/handleApiError";
 
 interface AddressFormData {
   contact_name: string;
@@ -64,10 +65,8 @@ export const fetchAddressTypes = createAsyncThunk<
       },
     });
     return response.data.data;
-  } catch (error: any) {
-    return rejectWithValue(
-      error.response?.data?.message || "Failed to fetch address types"
-    );
+  } catch (error) {
+    return rejectWithValue(handleApiError(error, "Failed to fetch categories"));
   }
 });
 
@@ -151,10 +150,8 @@ export const fetchAddresses = createAsyncThunk<
       },
     });
     return response.data.data;
-  } catch (error: any) {
-    return rejectWithValue(
-      error.response?.data?.message || "Failed to fetch addresses"
-    );
+  } catch (error) {
+    return rejectWithValue(handleApiError(error, "Failed to fetch categories"));
   }
 });
 
@@ -175,9 +172,9 @@ export const removeAddress = createAsyncThunk<
         },
       });
       return id;
-    } catch (error: any) {
+    } catch (error) {
       return rejectWithValue(
-        error.response?.data?.message || "Failed to remove address"
+        handleApiError(error, "Failed to fetch categories")
       );
     }
   }

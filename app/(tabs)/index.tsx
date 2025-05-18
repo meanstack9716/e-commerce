@@ -9,6 +9,7 @@ import {
   StatusBar,
   FlatList,
   Image,
+  Alert,
 } from "react-native";
 import { Ionicons, MaterialIcons, FontAwesome6 } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
@@ -33,11 +34,9 @@ import fontSizes from "@/style/fontSizes";
 import gapSizes from "@/style/gapSizes";
 import { Product } from "@/types/types";
 import images from "@/constants/images";
-
 import { useAppDispatch } from "@/store/hooks";
 import { fetchCategories } from "@/store/category/categoriesSlice";
 import { fetchProducts } from "@/store/product/productsSlice";
-
 
 const HomeScreen: React.FC = () => {
   const [likedProductItems, setLikedProductItems] = useState<string[]>([]);
@@ -63,6 +62,28 @@ const HomeScreen: React.FC = () => {
     dispatch(fetchCategories());
     dispatch(fetchProducts());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (categoriesError || productsError) {
+      Alert.alert(
+        "Error",
+        categoriesError || productsError || "Failed to fetch data. Please try again.",
+        [
+          {
+            text: "Retry",
+            onPress: () => {
+              dispatch(fetchCategories());
+              dispatch(fetchProducts());
+            },
+          },
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+        ]
+      );
+    }
+  }, [categoriesError, productsError, dispatch]);
 
   const tabs = [
     "All",
@@ -154,9 +175,7 @@ const HomeScreen: React.FC = () => {
       {/* <ImageSlider slides={bannerData} /> */}
       {/* <PromotionalCards cards={promotionalData.promotionalCards} /> */}
       {/* <OfferCardCarousel /> */}
-      {/* <BrandCard />
-      <OfferPriceCard />
-      <PocketFriendlyBargain /> */}
+      {/* <BrandCard /> <OfferPriceCard /> <PocketFriendlyBargain /> */}
     </>
   );
 
@@ -204,7 +223,6 @@ const HomeScreen: React.FC = () => {
               style={styles.logo}
               resizeMode="contain"
             />
-
             <TextInput
               placeholder="Search products..."
               style={styles.searchInput}

@@ -36,8 +36,10 @@ export const loadAuthState = createAsyncThunk(
       const token = await AsyncStorage.getItem("authToken");
       const user = await AsyncStorage.getItem("authUser");
       return { token, user: user ? JSON.parse(user) : null };
-    } catch (error: any) {
-      return rejectWithValue(error.message);
+    } catch (error) {
+      return rejectWithValue(
+        handleApiError(error, "Failed to fetch categories")
+      );
     }
   }
 );
@@ -60,8 +62,10 @@ export const registerUser = createAsyncThunk(
         password_confirmation,
       });
       return response.data;
-    } catch (error: any) {
-      return rejectWithValue(handleApiError(error, "Registration failed"));
+    } catch (error) {
+      return rejectWithValue(
+        handleApiError(error, "Failed to fetch categories")
+      );
     }
   }
 );
@@ -79,9 +83,10 @@ export const loginUser = createAsyncThunk(
       });
       dispatch(clearCart());
       return response.data;
-    } catch (error: any) {
-      console.error("Login error:", error);
-      return rejectWithValue(handleApiError(error, "Login failed"));
+    } catch (error) {
+      return rejectWithValue(
+        handleApiError(error, "Failed to fetch categories")
+      );
     }
   }
 );
@@ -92,8 +97,10 @@ export const sendEmailCode = createAsyncThunk(
     try {
       const res = await axios.post(`${apiUrl}/auth/send-email-code`, { email });
       return res.data;
-    } catch (error: any) {
-      return rejectWithValue(handleApiError(error, "Failed to send code"));
+    } catch (error) {
+      return rejectWithValue(
+        handleApiError(error, "Failed to fetch categories")
+      );
     }
   }
 );
@@ -110,8 +117,10 @@ export const verifyEmailCode = createAsyncThunk(
         code,
       });
       return res.data;
-    } catch (error: any) {
-      return rejectWithValue(handleApiError(error, "Invalid OTP"));
+    } catch (error) {
+      return rejectWithValue(
+        handleApiError(error, "Failed to fetch categories")
+      );
     }
   }
 );
@@ -140,8 +149,10 @@ export const resetPassword = createAsyncThunk(
         password_confirmation,
       });
       return response.data;
-    } catch (error: any) {
-      return rejectWithValue(handleApiError(error, "Password reset failed"));
+    } catch (error) {
+      return rejectWithValue(
+        handleApiError(error, "Failed to fetch categories")
+      );
     }
   }
 );
@@ -158,9 +169,9 @@ export const verifyUser = createAsyncThunk(
         code,
       });
       return res.data;
-    } catch (error: any) {
+    } catch (error) {
       return rejectWithValue(
-        handleApiError(error, "Email verification failed")
+        handleApiError(error, "Failed to fetch categories")
       );
     }
   }
