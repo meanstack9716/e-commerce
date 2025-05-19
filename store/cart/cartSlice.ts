@@ -48,10 +48,27 @@ export const addToCartApi = createAsyncThunk<
           "Content-Type": "application/json",
         },
       });
-    } catch (error) {
-      return rejectWithValue(
-        handleApiError(error, "Failed to fetch categories")
-      );
+    } catch (error: any) {
+      console.log("API Error Details:", {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        headers: error.response?.headers,
+        requestPayload: {
+          product_id: product.id,
+          selected_size: selectedSize || "",
+          selected_color: selectedColor || "",
+          quantity: "1",
+        },
+      });
+      return rejectWithValue({
+        message:
+          error.response?.data?.message ||
+          error.message ||
+          "Failed to add to cart",
+        status: error.response?.status,
+        data: error.response?.data,
+      });
     }
   }
 );
@@ -112,9 +129,17 @@ export const fetchCartItemsApi = createAsyncThunk<
       };
     });
     return cartItems;
-  } catch (error) {
-    return rejectWithValue(handleApiError(error, "Failed to fetch categories"));
+  // } catch (error: any) {
+  //   return rejectWithValue(
+  //     error.response?.data?.message ||
+  //       error.message ||
+  //       "Failed to fetch cart items"
+  //   );
+  // }
   }
+  catch (error: any) {
+        return rejectWithValue(handleApiError(error, "Failed to send code"));
+      }
 });
 
 export const removeFromCartApi = createAsyncThunk<
@@ -135,8 +160,12 @@ export const removeFromCartApi = createAsyncThunk<
       },
       data: payload,
     });
-  } catch (error) {
-    return rejectWithValue(handleApiError(error, "Failed to fetch categories"));
+  } catch (error: any) {
+    return rejectWithValue(
+      error.response?.data?.message ||
+        error.message ||
+        "Failed to remove from cart"
+    );
   }
 });
 
@@ -168,10 +197,12 @@ export const updateCartItemApi = createAsyncThunk<
         },
       });
       dispatch(fetchCartItemsApi());
-    } catch (error) {
-      return rejectWithValue(
-        handleApiError(error, "Failed to fetch categories")
-      );
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to update cart item";
+      return rejectWithValue(errorMessage);
     }
   }
 );

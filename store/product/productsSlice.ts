@@ -37,7 +37,7 @@ export const fetchProducts = createAsyncThunk<
     }
     return rejectWithValue("Invalid response format from API");
   } catch (error) {
-    return rejectWithValue(handleApiError(error, "Failed to fetch categories"));
+    return rejectWithValue(handleApiError(error, "Failed to fetch pruducts"));
   }
 });
 
@@ -55,7 +55,7 @@ export const fetchProductById = createAsyncThunk<
     }
     return rejectWithValue("Invalid product data");
   } catch (error) {
-    return rejectWithValue(handleApiError(error, "Failed to fetch categories"));
+    return rejectWithValue(handleApiError(error, "Failed to fetch product data"));
   }
 });
 

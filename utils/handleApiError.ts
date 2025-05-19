@@ -13,10 +13,10 @@ export const handleApiError = (
             for (const field in data.errors) {
               if (data.errors[field]) {
                 return (
-                  (Array.isArray(data.errors[field])
+                  Array.isArray(data.errors[field])
                     ? data.errors[field][0]
-                    : data.errors[field]) || defaultMessage
-                );
+                    : data.errors[field]
+                ) || defaultMessage;
               }
             }
           }
@@ -36,12 +36,17 @@ export const handleApiError = (
       return error.response.statusText || defaultMessage;
     }
 
+    // Network error (no response)
     if (error.request) {
-      return "Network error: Unable to reach the server";
+      alert(error.request)
+      return error.request;
     }
+
+    // Other Axios errors
     return error.message || defaultMessage;
   }
 
+  // Handle non-Axios errors (e.g., thrown by code)
   console.error("Non-Axios error:", error);
   return error instanceof Error ? error.message : defaultMessage;
 };
