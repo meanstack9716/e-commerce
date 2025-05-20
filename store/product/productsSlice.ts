@@ -3,9 +3,9 @@ import axios from "axios";
 import { Product } from "@/types/types";
 import { normalizeProduct } from "@/utils/normalizeProduct";
 import { handleApiError } from "@/utils/handleApiError";
-
+import Constants from "expo-constants";
 const apiUrl = process.env.EXPO_PUBLIC_API_URL;
-
+// const apiUrl = Constants.expoConfig?.extra?.API_URL;
 interface ProductsState {
   data: Product[];
   selectedProduct: Product | null;
@@ -81,7 +81,7 @@ const productsSlice = createSlice({
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || "Failed to fetch products";
+        state.error = action.payload as string;
       });
     builder
       .addCase(fetchProductById.pending, (state) => {

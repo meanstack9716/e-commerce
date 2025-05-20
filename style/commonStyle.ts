@@ -49,6 +49,7 @@ export const commonStyles = StyleSheet.create({
     fontWeight: "700",
     color: staticColors.primary,
   },
+  
   radioOuter: {
     width: 20,
     height: 20,

@@ -32,10 +32,14 @@ import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import fontSizes from "@/style/fontSizes";
 import { APP_VERSION } from "@/constants/constants";
+import staticColors from "@/style/staticColors";
+import { useAppDispatch } from "@/store/hooks";
+import { logoutUser } from "@/store/auth/authSlice";
 
 export default function ProfileScreen() {
   const [activeProfileSection, setActiveProfileSection] = useState("Profile");
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const insets = useSafeAreaInsets();
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
@@ -58,12 +62,24 @@ export default function ProfileScreen() {
     };
   }, [activeProfileSection]);
 
+  const handleLogout = () => {
+    dispatch(logoutUser());
+  };
+
   const getSelectedProfileSectionContent = () => {
     const sectionComponents: { [key: string]: React.ReactNode } = {
       Profile: (
         <>
           {isAuthenticated ? <UserProfile /> : <ProfileListSection />}
           <FooterLinks onLinkPress={(link) => setActiveProfileSection(link)} />
+          {isAuthenticated && (
+            <TouchableOpacity
+              style={styles.logoutButton}
+              onPress={handleLogout}
+            >
+              <Text style={styles.logoutText}>Logout</Text>
+            </TouchableOpacity>
+          )}
           <View style={styles.optionsContainer}>
             <Text style={styles.versionText}>APP VERSION {APP_VERSION}</Text>
           </View>
@@ -143,5 +159,19 @@ const styles = StyleSheet.create({
   },
   qrIcon: {
     ...spacingStyles.mt10,
+  },
+  logoutButton: {
+    borderWidth: 1,
+    borderColor: staticColors.primary,
+    ...spacingStyles.py10,
+    ...spacingStyles.mx15,
+    marginVertical: 10,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  logoutText: {
+    fontSize: fontSizes.base,
+    color: colors.primary,
+    fontWeight: "600",
   },
 });

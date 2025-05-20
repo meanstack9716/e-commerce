@@ -35,7 +35,10 @@ export const loadAuthState = createAsyncThunk(
     try {
       const token = await AsyncStorage.getItem("authToken");
       const user = await AsyncStorage.getItem("authUser");
-      return { token, user: user ? JSON.parse(user) : null };
+      if (!token || !user) {
+        return rejectWithValue("No auth data found in AsyncStorage");
+      }
+      return { token, user: JSON.parse(user) };
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
@@ -80,22 +83,7 @@ export const loginUser = createAsyncThunk(
       dispatch(clearCart());
       return response.data;
     } catch (error: any) {
-      console.error("fetchCategories error:", error);
-      let errorMessage = "Failed to fetch categories";
-
-      if (error.response) {
-        errorMessage =
-          error.response.data?.message ||
-          error.response.data?.error ||
-          error.response.statusText ||
-          errorMessage;
-      } else if (error.request) {
-        errorMessage = "Network error: Unable to reach the server";
-      } else {
-        errorMessage = error.message || errorMessage;
-      }
-
-      return rejectWithValue(errorMessage);
+      return rejectWithValue(handleApiError(error, "Login failed"));
     }
   }
 );
@@ -171,11 +159,43 @@ export const verifyUser = createAsyncThunk(
         email,
         code,
       });
+      await AsyncStorage.setItem("authToken", res.data.token);
+      await AsyncStorage.setItem("authUser", JSON.stringify(res.data.user));
       return res.data;
     } catch (error: any) {
       return rejectWithValue(
         handleApiError(error, "Email verification failed")
       );
+    }
+  }
+);
+
+export const logoutUser = createAsyncThunk(
+  "auth/logoutUser",
+  async (_, { rejectWithValue, dispatch }) => {
+    try {
+      const token = await AsyncStorage.getItem("authToken");
+      if (!token) {
+        throw new Error("No token found");
+      }
+      await axios.post(
+        `${apiUrl}/auth/logout`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      await AsyncStorage.removeItem("authToken");
+      await AsyncStorage.removeItem("authUser");
+      await clearCartFromStorage();
+      dispatch(clearCart());
+
+      return true;
+    } catch (error: any) {
+      return rejectWithValue(handleApiError(error, "Logout failed"));
     }
   }
 );
@@ -199,6 +219,7 @@ const authSlice = createSlice({
     logout: (state) => {
       state.isAuthenticated = false;
       state.user = null;
+      state.token = null;
     },
   },
   extraReducers: (builder) => {
@@ -221,7 +242,6 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.isAuthenticated = true;
         state.user = action.payload;
       })
       .addCase(loginUser.rejected, (state, action) => {
@@ -261,6 +281,29 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
+      .addCase(loadAuthState.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(loadAuthState.fulfilled, (state, action) => {
+        state.loading = false;
+        if (action.payload.token && action.payload.user) {
+          state.isAuthenticated = true;
+          state.token = action.payload.token;
+          state.user = action.payload.user;
+        } else {
+          state.isAuthenticated = false;
+          state.token = null;
+          state.user = null;
+        }
+      })
+      .addCase(loadAuthState.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+        state.isAuthenticated = false;
+        state.token = null;
+        state.user = null;
+      })
       .addCase(verifyUser.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -268,13 +311,24 @@ const authSlice = createSlice({
       .addCase(verifyUser.fulfilled, (state, action) => {
         state.loading = false;
         state.isAuthenticated = true;
-        console.log("verifyEmailCode response:", action.payload);
         state.token = action.payload.token;
-        // state.user = action.payload.user;
-        // AsyncStorage.setItem("authToken", action.payload.token);
-        // AsyncStorage.setItem("authUser", JSON.stringify(action.payload.user));
+        state.user = action.payload.user;
       })
       .addCase(verifyUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(logoutUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.loading = false;
+        state.isAuthenticated = false;
+        state.user = null;
+        state.token = null;
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

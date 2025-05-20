@@ -17,10 +17,12 @@ import {
   fetchAddresses,
   setSelectedAddressId,
   removeAddress,
+  setEditingAddress,
 } from "@/store/address/addressSlice";
 import { RootState } from "@/store/store";
 import { useAppDispatch } from "@/store/hooks";
 import FullScreenLoader from "../common/FullScreenLoader";
+import { commonStyles } from "@/style/commonStyle";
 
 interface Address {
   id: string;
@@ -55,6 +57,11 @@ const SelectAddress = ({ onGoBack }: SelectAddressProps) => {
   };
 
   const handleAddNewAddress = () => {
+    dispatch(setEditingAddress(null));
+    router.push("/addNewAddress");
+  };
+    const handleEditAddress = (address: Address) => {
+    dispatch(setEditingAddress(address));
     router.push("/addNewAddress");
   };
 
@@ -67,9 +74,7 @@ const SelectAddress = ({ onGoBack }: SelectAddressProps) => {
   };
 
   const handleConfirm = () => {
-    if (onGoBack) {
-      onGoBack();
-    }
+    router.push("/placeorder")
   };
 
   const handleRemove = (id: string) => {
@@ -108,6 +113,7 @@ const SelectAddress = ({ onGoBack }: SelectAddressProps) => {
                 selected={selectedAddressId === primaryAddress.id}
                 onSelect={handleSelect}
                 onRemove={handleRemove}
+                onEdit={handleEditAddress}
               />
             </>
           )}
@@ -122,6 +128,7 @@ const SelectAddress = ({ onGoBack }: SelectAddressProps) => {
                   selected={selectedAddressId === address.id}
                   onSelect={handleSelect}
                   onRemove={handleRemove}
+                  onEdit={handleEditAddress}
                 />
               ))}
             </>
@@ -141,6 +148,7 @@ interface AddressItemProps {
   selected: boolean;
   onSelect: (id: string) => void;
   onRemove: (id: string) => void;
+  onEdit: (address: Address) => void;
 }
 
 const AddressItem: React.FC<AddressItemProps> = ({
@@ -148,6 +156,7 @@ const AddressItem: React.FC<AddressItemProps> = ({
   selected,
   onSelect,
   onRemove,
+  onEdit,
 }) => {
   return (
     <TouchableOpacity
@@ -156,13 +165,13 @@ const AddressItem: React.FC<AddressItemProps> = ({
     >
       <View style={styles.row}>
         <View
-          style={[styles.radioOuter, selected && styles.radioOuterSelected]}
+          style={[commonStyles.radioOuter, selected && styles.radioOuterSelected]}
         >
-          {selected && <View style={styles.radioInnerSelected} />}
+          {selected && <View style={commonStyles.radioInner} />}
         </View>
         <Text style={styles.name}>{address.contact_name || "Unknown"}</Text>
         <View style={styles.labelContainer}>
-          <Text style={styles.label}>{address.type.toUpperCase()}</Text>
+          <Text style={styles.label}>{address.type}</Text>
         </View>
       </View>
       <Text style={styles.addressLine}>{address.line1}</Text>
@@ -182,7 +191,7 @@ const AddressItem: React.FC<AddressItemProps> = ({
           >
             <Text style={styles.buttonText}>REMOVE</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.editButton}>
+          <TouchableOpacity style={styles.editButton}  onPress={() => onEdit(address)}>
             <Text style={styles.buttonText}>EDIT</Text>
           </TouchableOpacity>
         </View>
@@ -245,24 +254,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 5,
   },
-  radioOuter: {
-    width: 18,
-    height: 18,
-    borderRadius: 9,
-    borderWidth: 1,
-    borderColor: staticColors.textLightGray,
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: 10,
-  },
   radioOuterSelected: {
     borderColor: staticColors.discountText,
-  },
-  radioInnerSelected: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: staticColors.discountText,
   },
   name: {
     fontWeight: "bold",

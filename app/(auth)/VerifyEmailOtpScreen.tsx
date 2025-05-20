@@ -5,7 +5,6 @@ import {
   StyleSheet,
   SafeAreaView,
   Image,
-  Alert,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useLocalSearchParams } from "expo-router";

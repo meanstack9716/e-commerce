@@ -3,6 +3,7 @@ export const handleApiError = (
   error: unknown,
   defaultMessage = "Something went wrong"
 ): string => {
+  console.log("Raw Error:", error);
   if (error instanceof AxiosError) {
     console.error("API error:", error);
     if (error.response) {
@@ -37,16 +38,29 @@ export const handleApiError = (
     }
 
     // Network error (no response)
-    if (error.request) {
-      alert(error.request)
-      return error.request;
-    }
+  if (error.request) {
+  const errorDetails = {
+    url: error.request._url,
+    method: error.request._method,
+    headers: error.request._headers,
+    readyState: error.request.readyState,
+    status: error.request.status,
+    responseURL: error.request.responseURL,
+    timeout: error.request.timeout,
+  };
+  console.error("Network error details:", {
+    requestDetails: errorDetails,
+    message: error.message,
+    config: error.config,
+  });
+  return `Network error: ${JSON.stringify(errorDetails)}`; 
+}
 
     // Other Axios errors
     return error.message || defaultMessage;
   }
 
-  // Handle non-Axios errors (e.g., thrown by code)
+  // Handle non-Axios errors
   console.error("Non-Axios error:", error);
   return error instanceof Error ? error.message : defaultMessage;
 };

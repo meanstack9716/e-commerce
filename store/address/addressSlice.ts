@@ -2,17 +2,8 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { RootState } from "@/store/store";
 import { handleApiError } from "@/utils/handleApiError";
-
-interface AddressFormData {
-  contact_name: string;
-  contact_mobile: string;
-  postal_code: string;
-  line1: string;
-  line2: string;
-  city: string;
-  state: string;
-  country: string;
-}
+import { Address, AddressFormData } from "@/types/types";
+import Constants from "expo-constants";
 
 interface AddressState {
   addressTypes: string[];
@@ -22,20 +13,7 @@ interface AddressState {
   addresses: Address[];
   error: { [key: string]: string } | null;
   selectedAddressId: string | null;
-}
-
-interface Address {
-  id: string;
-  contact_name: string | null;
-  contact_mobile: string | null;
-  type: string;
-  line1: string;
-  line2: string | null;
-  city: string;
-  state: string;
-  postal_code: string;
-  country: string;
-  is_primary: boolean;
+  editingAddress: Address | null;
 }
 
 const initialState: AddressState = {
@@ -46,6 +24,7 @@ const initialState: AddressState = {
   loading: false,
   error: null,
   selectedAddressId: null,
+  editingAddress: null,
 };
 
 const apiUrl = process.env.EXPO_PUBLIC_API_URL;
@@ -65,8 +44,10 @@ export const fetchAddressTypes = createAsyncThunk<
       },
     });
     return response.data.data;
-  } catch (error) {
-    return rejectWithValue(handleApiError(error, "Failed to fetch categories"));
+  } catch (error: any) {
+    return rejectWithValue(
+      handleApiError(error, "Failed to fetch address types")
+    );
   }
 });
 
@@ -150,8 +131,10 @@ export const fetchAddresses = createAsyncThunk<
       },
     });
     return response.data.data;
-  } catch (error) {
-    return rejectWithValue(handleApiError(error, "Failed to fetch categories"));
+  } catch (error: any) {
+    return rejectWithValue(
+      error.response?.data?.message || "Failed to fetch addresses"
+    );
   }
 });
 
@@ -172,10 +155,77 @@ export const removeAddress = createAsyncThunk<
         },
       });
       return id;
-    } catch (error) {
+    } catch (error: any) {
       return rejectWithValue(
-        handleApiError(error, "Failed to fetch categories")
+        error.response?.data?.message || "Failed to remove address"
       );
+    }
+  }
+);
+
+export const updateAddress = createAsyncThunk<
+  void,
+  {
+    addressId: string;
+    formData: AddressFormData;
+    addressType: string;
+    isDefault: boolean;
+  },
+  { state: RootState; rejectValue: { [key: string]: string } }
+>(
+  "address/updateAddress",
+  async (
+    { addressId, formData, addressType, isDefault },
+    { getState, rejectWithValue }
+  ) => {
+    try {
+      const state = getState();
+      const token = state.auth.token;
+      await axios.put(
+        `${apiUrl}/address/update`,
+        {
+          address_id: addressId,
+          contact_name: formData.contact_name,
+          contact_mobile: formData.contact_mobile,
+          line1: formData.line1,
+          line2: formData.line2,
+          type: addressType,
+          city: formData.city,
+          state: formData.state,
+          postal_code: formData.postal_code,
+          country: formData.country,
+          is_primary: isDefault,
+        },
+        {
+          headers: {
+            Authorization: `${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    } catch (error: any) {
+      if (error.response?.data?.errors) {
+        const apiErrors = error.response.data.errors;
+        const mappedErrors: { [key: string]: string } = {};
+        for (const field in apiErrors) {
+          const fieldNameMap: { [key: string]: string } = {
+            contact_name: "name",
+            contact_mobile: "mobile",
+            postal_code: "pinCode",
+            line1: "address",
+            line2: "locality",
+            city: "city",
+            state: "state",
+            country: "country",
+          };
+          const mappedField = fieldNameMap[field] || field;
+          mappedErrors[mappedField] = apiErrors[field];
+        }
+        return rejectWithValue(mappedErrors);
+      }
+      return rejectWithValue({
+        general: error.response?.data?.message || "Failed to update address",
+      });
     }
   }
 );
@@ -195,6 +245,9 @@ const addressSlice = createSlice({
     },
     setSelectedAddressId(state, action: PayloadAction<string | null>) {
       state.selectedAddressId = action.payload;
+    },
+    setEditingAddress(state, action: PayloadAction<Address | null>) {
+      state.editingAddress = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -221,6 +274,7 @@ const addressSlice = createSlice({
       })
       .addCase(saveAddress.fulfilled, (state) => {
         state.loading = false;
+        state.editingAddress = null;
       })
       .addCase(saveAddress.rejected, (state, action) => {
         state.loading = false;
@@ -266,6 +320,14 @@ const addressSlice = createSlice({
       .addCase(removeAddress.rejected, (state, action) => {
         state.loading = false;
         state.error = { general: action.payload || "Failed to remove address" };
+      })
+      .addCase(updateAddress.fulfilled, (state) => {
+        state.loading = false;
+        state.editingAddress = null; // Clear editing address
+      })
+      .addCase(updateAddress.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || { general: "Failed to update address" };
       });
   },
 });
@@ -275,6 +337,7 @@ export const {
   setIsDefault,
   resetError,
   setSelectedAddressId,
+  setEditingAddress,
 } = addressSlice.actions;
 
 export default addressSlice.reducer;

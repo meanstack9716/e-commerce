@@ -23,35 +23,49 @@ import {
   fetchAddressTypes,
   resetError,
   saveAddress,
+  updateAddress,
   setAddressType,
   setIsDefault,
+  setEditingAddress,
 } from "@/store/address/addressSlice";
 import { useAppDispatch } from "@/store/hooks";
 import SelectAddress from "@/components/address/SelectAddress";
+import { AddressFormData } from "@/types/types";
 
 const AddNewAddress = () => {
   const dispatch = useAppDispatch();
   const { errors, handleFieldChange, resetErrors, setFieldErrors } =
     useFieldValidation();
-  const { addressTypes, selectedAddressType, isDefault, loading, error } =
-    useSelector((state: RootState) => state.address);
-  const [formData, setFormData] = useState({
-    name: "",
-    mobile: "",
-    pinCode: "",
-    address: "",
-    locality: "",
-    city: "",
-    state: "",
-    country: "",
+  const {
+    addressTypes,
+    selectedAddressType,
+    isDefault,
+    loading,
+    error,
+    editingAddress,
+  } = useSelector((state: RootState) => state.address);
+  const [formData, setFormData] = useState<AddressFormData>({
+    contact_name: editingAddress?.contact_name || "",
+    contact_mobile: editingAddress?.contact_mobile || "",
+    postal_code: editingAddress?.postal_code || "",
+    line1: editingAddress?.line1 || "",
+    line2: editingAddress?.line2 || "",
+    city: editingAddress?.city || "",
+    state: editingAddress?.state || "",
+    country: editingAddress?.country || "",
   });
   const [showSelectAddress, setShowSelectAddress] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
   const notEmptyValidator = (value: string) => value.trim().length > 0;
+  const isEditMode = !!editingAddress;
 
   useEffect(() => {
     dispatch(fetchAddressTypes());
-  }, [dispatch]);
+    if (isEditMode) {
+      dispatch(setAddressType(editingAddress.type));
+      dispatch(setIsDefault(editingAddress.is_primary));
+    }
+  }, [dispatch, isEditMode, editingAddress]);
 
   useEffect(() => {
     if (error && typeof error === "object") {
@@ -60,18 +74,24 @@ const AddNewAddress = () => {
     }
   }, [error, dispatch, setFieldErrors]);
 
-  const handleInputChange = (field: string, value: string) => {
+  useEffect(() => {
+    return () => {
+      dispatch(setEditingAddress(null));
+    };
+  }, [dispatch]);
+
+  const handleInputChange = (field: keyof AddressFormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     handleFieldChange(field, value, notEmptyValidator, `${field} is required`);
   };
 
   const handleSave = () => {
-    const fields = [
-      { name: "name", value: formData.name },
-      { name: "mobile", value: formData.mobile },
-      { name: "pinCode", value: formData.pinCode },
-      { name: "address", value: formData.address },
-      { name: "locality", value: formData.locality },
+    const fields: { name: keyof AddressFormData; value: string }[] = [
+      { name: "contact_name", value: formData.contact_name },
+      { name: "contact_mobile", value: formData.contact_mobile },
+      { name: "postal_code", value: formData.postal_code },
+      { name: "line1", value: formData.line1 },
+      { name: "line2", value: formData.line2 || "" },
       { name: "city", value: formData.city },
       { name: "state", value: formData.state },
       { name: "country", value: formData.country },
@@ -94,28 +114,29 @@ const AddNewAddress = () => {
       return;
     }
 
-    dispatch(
-      saveAddress({
-        formData: {
-          contact_name: formData.name,
-          contact_mobile: formData.mobile,
-          postal_code: formData.pinCode,
-          line1: formData.address,
-          line2: formData.locality,
-          city: formData.city,
-          state: formData.state,
-          country: formData.country,
-        },
-        addressType: selectedAddressType,
-        isDefault,
-      })
-    )
+    const action = isEditMode
+      ? updateAddress({
+          addressId: editingAddress.id,
+          formData,
+          addressType: selectedAddressType,
+          isDefault,
+        })
+      : saveAddress({
+          formData,
+          addressType: selectedAddressType,
+          isDefault,
+        });
+
+    dispatch(action)
       .unwrap()
       .then(() => {
         setShowSelectAddress(true);
       })
       .catch((error) => {
-        console.error("Failed to save address:", error);
+        console.error(
+          isEditMode ? "Failed to update address:" : "Failed to save address:",
+          error
+        );
       });
   };
 
@@ -140,6 +161,7 @@ const AddNewAddress = () => {
           <TouchableOpacity
             onPress={() => {
               resetErrors();
+              dispatch(setEditingAddress(null));
               router.back();
             }}
             style={commonStyles.backButton}
@@ -150,7 +172,9 @@ const AddNewAddress = () => {
               color={staticColors.textDarkGray}
             />
           </TouchableOpacity>
-          <Text style={commonStyles.header}>ADD NEW ADDRESS</Text>
+          <Text style={commonStyles.header}>
+            {isEditMode ? "EDIT ADDRESS" : "ADD NEW ADDRESS"}
+          </Text>
         </View>
 
         <ScrollView
@@ -162,68 +186,70 @@ const AddNewAddress = () => {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Contact Details</Text>
             <TextInput
-              style={[styles.input, errors.name && styles.inputError]}
+              style={[styles.input, errors.contact_name && styles.inputError]}
               placeholder="Name*"
               placeholderTextColor={staticColors.textSecondary}
-              value={formData.name}
-              onChangeText={(text) => handleInputChange("name", text)}
+              value={formData.contact_name}
+              onChangeText={(text) => handleInputChange("contact_name", text)}
               onFocus={handleInputFocus}
             />
-            {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
+            {errors.contact_name && (
+              <Text style={styles.errorText}>{errors.contact_name}</Text>
+            )}
             <TextInput
-              style={[styles.input, errors.mobile && styles.inputError]}
+              style={[styles.input, errors.contact_mobile && styles.inputError]}
               placeholder="Mobile No*"
               placeholderTextColor={staticColors.textSecondary}
               keyboardType="numeric"
-              value={formData.mobile}
-              onChangeText={(text) => handleInputChange("mobile", text)}
+              value={formData.contact_mobile}
+              onChangeText={(text) => handleInputChange("contact_mobile", text)}
               onFocus={handleInputFocus}
-              maxLength={12}
+              maxLength={10}
             />
-            {errors.mobile && (
-              <Text style={styles.errorText}>{errors.mobile}</Text>
+            {errors.contact_mobile && (
+              <Text style={styles.errorText}>{errors.contact_mobile}</Text>
             )}
           </View>
 
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Address</Text>
             <TextInput
-              style={[styles.input, errors.pinCode && styles.inputError]}
+              style={[styles.input, errors.postal_code && styles.inputError]}
               placeholder="Pin Code*"
               placeholderTextColor={staticColors.textSecondary}
               keyboardType="numeric"
-              value={formData.pinCode}
-              onChangeText={(text) => handleInputChange("pinCode", text)}
+              value={formData.postal_code}
+              onChangeText={(text) => handleInputChange("postal_code", text)}
               onFocus={handleInputFocus}
               maxLength={6}
             />
-            {errors.pinCode && (
-              <Text style={styles.errorText}>{errors.pinCode}</Text>
+            {errors.postal_code && (
+              <Text style={styles.errorText}>{errors.postal_code}</Text>
             )}
             <TextInput
-              style={[styles.input, errors.address && styles.inputError]}
+              style={[styles.input, errors.line1 && styles.inputError]}
               placeholder="Address (House No., Building, Street, Area)*"
               placeholderTextColor={staticColors.textSecondary}
-              value={formData.address}
-              onChangeText={(text) => handleInputChange("address", text)}
+              value={formData.line1}
+              onChangeText={(text) => handleInputChange("line1", text)}
               onFocus={handleInputFocus}
             />
-            {errors.address && (
-              <Text style={styles.errorText}>{errors.address}</Text>
+            {errors.line1 && (
+              <Text style={styles.errorText}>{errors.line1}</Text>
             )}
             <Text style={styles.noteText}>
               *Please update flat/house no and society/apartment details
             </Text>
             <TextInput
-              style={[styles.input, errors.locality && styles.inputError]}
+              style={[styles.input, errors.line2 && styles.inputError]}
               placeholder="Locality /Town*"
               placeholderTextColor={staticColors.textSecondary}
-              value={formData.locality}
-              onChangeText={(text) => handleInputChange("locality", text)}
+              value={formData.line2 || ""}
+              onChangeText={(text) => handleInputChange("line2", text)}
               onFocus={handleInputFocus}
             />
-            {errors.locality && (
-              <Text style={styles.errorText}>{errors.locality}</Text>
+            {errors.line2 && (
+              <Text style={styles.errorText}>{errors.line2}</Text>
             )}
             <View style={styles.row}>
               <TextInput
@@ -311,6 +337,7 @@ const AddNewAddress = () => {
             style={styles.cancelButton}
             onPress={() => {
               resetErrors();
+              dispatch(setEditingAddress(null));
               router.back();
             }}
           >
@@ -322,7 +349,7 @@ const AddNewAddress = () => {
             disabled={loading}
           >
             <Text style={styles.saveButtonText}>
-              {loading ? "Saving..." : "Save"}
+              {loading ? "Saving..." : isEditMode ? "Update" : "Save"}
             </Text>
           </TouchableOpacity>
         </View>
@@ -362,6 +389,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontWeight: "bold",
     fontSize: fontSizes.sm,
+    fontFamily: "HelveticaBold",
     ...spacingStyles.mb10,
   },
   input: {
@@ -371,6 +399,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.p10,
     ...spacingStyles.mb10,
     fontSize: fontSizes.sm,
+    fontFamily: "Helvetica",
   },
   inputError: {
     borderColor: staticColors.errorColor,
@@ -406,6 +435,7 @@ const styles = StyleSheet.create({
   addressTypeText: {
     fontSize: fontSizes.sm,
     fontWeight: "bold",
+    fontFamily: "Helvetica",
   },
   checkboxContainer: {
     flexDirection: "row",
@@ -428,6 +458,7 @@ const styles = StyleSheet.create({
   },
   checkboxText: {
     fontSize: fontSizes.sm,
+    fontFamily: "Helvetica",
   },
   buttonContainer: {
     flexDirection: "row",
@@ -458,11 +489,13 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.sm,
     fontWeight: "bold",
     color: staticColors.white,
+    fontFamily: "Helvetica",
   },
   cancelButtonText: {
     fontSize: fontSizes.sm,
     fontWeight: "bold",
     color: staticColors.primary,
+    fontFamily: "Helvetica",
   },
 });
 

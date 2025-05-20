@@ -12,17 +12,17 @@ import { Provider } from "react-redux";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { store } from "@/store/store";
 import { useCartStorage } from "@/hooks/useCartStorage";
+import { LoadAuthState } from "@/components/auth/LoadAuthState";
 
 SplashScreen.preventAutoHideAsync();
 
 function AppLayout() {
   const colorScheme = useColorScheme();
- useCartStorage();
+  useCartStorage();
 
   return (
-    
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack screenOptions={{ headerShown: false }} >
+      <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="(auth)" />
         <Stack.Screen name="+not-found" />
@@ -58,6 +58,7 @@ export default function RootLayout() {
 
   return (
     <Provider store={store}>
+      <LoadAuthState />
       <AppLayout />
     </Provider>
   );

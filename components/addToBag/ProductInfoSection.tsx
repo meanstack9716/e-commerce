@@ -213,7 +213,7 @@ const ProductInfoSection: React.FC = () => {
         onPress={() =>
           router.navigate({
             pathname: "/ProductDetails",
-            params: { id: item.id },
+            params: { id: item.productId},
           })
         }
       >

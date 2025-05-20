@@ -1,28 +1,57 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  TextInput,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { router, useLocalSearchParams } from "expo-router";
+import { useSelector } from "react-redux";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import fontSizes from "@/style/fontSizes";
+import { RootState } from "@/store/store";
+import { commonStyles } from "@/style/commonStyle";
+import { useAppDispatch } from "@/store/hooks";
+import { placeOrder, resetOrderState } from "@/store/order/orderSlice";
 
 const PaymentScreen: React.FC = () => {
   const [expandedOption, setExpandedOption] = useState<string | null>(null);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [orderNotes, setOrderNotes] = useState<{ [key: string]: string }>({});
+  const { shippingAddressId } = useLocalSearchParams<{
+    shippingAddressId: string;
+  }>();
+  const dispatch = useAppDispatch ()
+  const cartItems = useSelector((state: RootState) => state.cart.cartItems);
+  const { loading, error, orderId } = useSelector((state: RootState) => state.order);
+  const selectedItems = cartItems.filter((item) => item.isSelected);
+  const totalPrice = selectedItems.reduce(
+    (sum, item) => sum + (item.final_price || 0),
+    0
+  );
+
+  useEffect(() => {
+    if (orderId) {
+      Alert.alert("Success", "Order placed successfully!");
+      dispatch(resetOrderState()); 
+      router.push("/cart");
+    }
+    if (error) {
+      Alert.alert("Error", error);
+      dispatch(resetOrderState());
+    }
+  }, [orderId, error, dispatch]);
 
   const paymentOptions = [
     {
       label: "Cash On Delivery",
-      offers: "",
-      icon: "cash-outline",
-      iconColor: "black",
-      
     },
   ];
 
@@ -34,11 +63,36 @@ const PaymentScreen: React.FC = () => {
     setSelectedOption(label);
   };
 
+  const handleOrderNoteChange = (label: string, text: string) => {
+    setOrderNotes((prev) => ({ ...prev, [label]: text }));
+  };
+
+  const handleBack = () => {
+    router.back();
+  };
+
+  const handlePayNow = async () => {
+    if (!selectedOption) {
+      Alert.alert("Error", "Please select a payment method.");
+      return;
+    }
+
+    const payload = {
+      cart_items_ids: selectedItems.map((item) => item.id),
+      shipping_address_id: shippingAddressId,
+      payment_method: selectedOption,
+    };
+
+    dispatch(placeOrder(payload));
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Ionicons name="arrow-back" size={24} color="black" />
+        <TouchableOpacity onPress={handleBack}>
+          <Ionicons name="arrow-back" size={20} color={staticColors.darkGray} />
+        </TouchableOpacity>
         <Text style={styles.headerTitle}>PAYMENT</Text>
       </View>
 
@@ -52,30 +106,28 @@ const PaymentScreen: React.FC = () => {
             >
               <View style={styles.optionRow}>
                 <TouchableOpacity
-                  style={styles.radioButton}
+                  style={commonStyles.radioOuter}
                   onPress={() => handleSelectOption(option.label)}
                 >
                   <View
                     style={[
                       styles.radioButtonInner,
-                      selectedOption === option.label && styles.radioButtonSelected,
+                      selectedOption === option.label &&
+                        styles.radioButtonSelected,
                     ]}
                   />
                 </TouchableOpacity>
                 <Ionicons
-                //   name={option.icon}
-                  size={24}
-                  color={option.iconColor}
+                  name="cash-outline"
+                  size={20}
+                  color={staticColors.black}
                   style={styles.optionIcon}
                 />
                 <Text style={styles.optionText}>{option.label}</Text>
-                {option.offers ? (
-                  <Text style={styles.offerTag}>{option.offers}</Text>
-                ) : null}
               </View>
               <Ionicons
                 name="chevron-down"
-                size={24}
+                size={18}
                 color="black"
                 style={[
                   styles.chevron,
@@ -90,27 +142,50 @@ const PaymentScreen: React.FC = () => {
                 ]}
               />
             </TouchableOpacity>
-            {expandedOption === option.label && option.label === "Cash On Delivery" && (
-              <View style={styles.expandedMessage}>
-                <Text style={styles.expandedMessageText}>
-                  Due to handling costs, a nominal fee of ₹9 will be charged
-                </Text>
-              </View>
-            )}
+            {expandedOption === option.label &&
+              option.label === "Cash On Delivery" && (
+                <View style={styles.expandedMessage}>
+                  <Text style={styles.expandedMessageText}>
+                    Due to handling costs, a nominal fee of ₹9 will be charged
+                  </Text>
+                </View>
+              )}
+            {/* Order Note Box */}
+            <View style={styles.orderNoteContainer}>
+              <Text style={styles.orderNoteLabel}>Order Note</Text>
+              <TextInput
+                style={styles.orderNoteInput}
+                placeholder="Add a note for your order (optional)"
+                value={orderNotes[option.label] || ""}
+                onChangeText={(text) =>
+                  handleOrderNoteChange(option.label, text)
+                }
+                multiline
+                numberOfLines={4}
+              />
+            </View>
           </View>
         ))}
       </ScrollView>
 
       {/* Footer */}
-      <View style={styles.footer}>
+  <View style={styles.footer}>
         <View>
-          <Text style={styles.totalText}>₹12,086</Text>
-          <TouchableOpacity>
-            <Text style={styles.viewDetails}>VIEW DETAILS</Text>
-          </TouchableOpacity>
+          <Text style={styles.totalText}>₹{totalPrice}</Text>
         </View>
-        <TouchableOpacity style={styles.payButton}>
-          <Text style={styles.payButtonText}>PAY NOW</Text>
+        <TouchableOpacity
+          style={[styles.payButton, loading && styles.payButtonDisabled]}
+          onPress={handlePayNow}
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator
+              size="small"
+              color={staticColors.white}
+            />
+          ) : (
+            <Text style={styles.payButtonText}>PAY NOW</Text>
+          )}
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -120,7 +195,7 @@ const PaymentScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:staticColors.bgSecondary
+    backgroundColor: staticColors.bgSecondary,
   },
   header: {
     flexDirection: "row",
@@ -129,151 +204,107 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.white,
   },
   headerTitle: {
-    fontSize: fontSizes.md,
+    fontSize: fontSizes.base,
     fontWeight: "bold",
-    ...spacingStyles.ml15
-  },
-  offerContainer: {
-    backgroundColor: staticColors.white,
-    ...spacingStyles.p15,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "#ddd",
-  },
-  offerIcons: {
-    flexDirection: "row",
-    marginBottom: 8,
-  },
-  offerIcon: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: "#ddd",
-    marginRight: 8,
-  },
-  offerText: {
-    fontSize: 14,
-    color: "#333",
-  },
-  offerLink: {
-    fontSize: 14,
-    color: "#00c4b4",
-    marginTop: 8,
+    color: staticColors.darkGray,
+    ...spacingStyles.pl5,
   },
   sectionContainer: {
-    backgroundColor: "#fff",
-    padding: 16,
-    marginVertical: 8,
-  },
-  checkboxContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  checkbox: {
-    width: 20,
-    height: 20,
-    borderWidth: 2,
-    borderColor: "#000",
-    marginRight: 8,
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  infoIcon: {
-    marginLeft: 4,
-  },
-  sectionSubtitle: {
-    fontSize: 14,
-    color: "#666",
-    marginTop: 4,
+    backgroundColor: staticColors.white,
+    ...spacingStyles.px15,
+    ...spacingStyles.my5,
   },
   optionContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: 12,
+    ...spacingStyles.py10,
   },
   optionRow: {
     flexDirection: "row",
     alignItems: "center",
   },
-  radioButton: {
-    height: 20,
-    width: 20,
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: "#000",
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: 8,
-  },
   radioButtonInner: {
-    height: 10,
-    width: 10,
-    borderRadius: 5,
+    width: 12,
+    height: 12,
+    borderRadius: 6,
     backgroundColor: "transparent",
   },
   radioButtonSelected: {
-    backgroundColor: "#ff3d71",
+    backgroundColor: staticColors.discountText,
+    borderColor: staticColors.discountText,
   },
   optionIcon: {
-    marginRight: 8,
+    ...spacingStyles.mx5,
   },
   optionText: {
-    fontSize: 16,
-    marginRight: 8,
-  },
-  offerTag: {
-    fontSize: 12,
-    color: "#00c4b4",
+    fontSize: fontSizes.sm,
   },
   chevron: {
     transitionProperty: "transform",
     transitionDuration: "0.3s",
   },
   expandedMessage: {
-    backgroundColor: "#f9f9f9",
-    padding: 10,
+    backgroundColor: staticColors.bgSecondary,
+    ...spacingStyles.p10,
     borderRadius: 5,
-    marginVertical: 5,
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: staticColors.borderLight,
+    ...spacingStyles.mb10,
   },
   expandedMessageText: {
-    fontSize: 14,
-    color: "#666",
+    fontSize: fontSizes.xs,
+    color: staticColors.textDarkGray,
+  },
+  orderNoteContainer: {
+    backgroundColor: staticColors.bgMuted,
+    ...spacingStyles.p10,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: staticColors.softGray,
+    ...spacingStyles.my10,
+  },
+  orderNoteLabel: {
+    fontSize: fontSizes.sm,
+    fontWeight: "bold",
+    color: staticColors.textDarkGray,
+    ...spacingStyles.mb5,
+  },
+  orderNoteInput: {
+    borderWidth: 1,
+    borderColor: staticColors.borderLight,
+    borderRadius: 5,
+    ...spacingStyles.p10,
+    fontSize: fontSizes.xs,
+    color: staticColors.textDarkGray,
+    textAlignVertical: "top",
+    backgroundColor: staticColors.white,
   },
   footer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: 16,
-    backgroundColor: "#fff",
-    borderTopWidth: 1,
-    borderColor: "#ddd",
+    ...spacingStyles.p15,
+    backgroundColor: staticColors.white,
   },
   totalText: {
-    fontSize: 18,
+    fontSize: fontSizes.base,
     fontWeight: "bold",
   },
-  viewDetails: {
-    fontSize: 12,
-    color: "#00c4b4",
-    marginTop: 4,
-  },
   payButton: {
-    backgroundColor: "#ff3d71",
-    paddingVertical: 12,
-    paddingHorizontal: 32,
+    backgroundColor: staticColors.primary,
+    ...spacingStyles.py10,
+    ...spacingStyles.px25,
     borderRadius: 8,
   },
   payButtonText: {
-    color: "#fff",
-    fontSize: 16,
+    color: staticColors.white,
+    fontSize: fontSizes.sm,
     fontWeight: "bold",
+  },
+  payButtonDisabled: {
+    backgroundColor: staticColors.lightGray,
+    opacity: 0.6,
   },
 });
 

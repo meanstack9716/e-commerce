@@ -4,7 +4,9 @@ import { CartItem, Product } from "../../types/types";
 import { clearCartFromStorage, saveCartToStorage } from "@/utils/cartStorage";
 import { RootState } from "@/store/store";
 import { handleApiError } from "@/utils/handleApiError";
+import Constants from "expo-constants";
 
+// const apiUrl = Constants.expoConfig?.extra?.API_URL;
 const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
 const generateUniqueId = () => {
@@ -58,7 +60,7 @@ export const addToCartApi = createAsyncThunk<
           product_id: product.id,
           selected_size: selectedSize || "",
           selected_color: selectedColor || "",
-          quantity: "1",
+          quantity: 1,
         },
       });
       return rejectWithValue({
@@ -90,6 +92,7 @@ export const fetchCartItemsApi = createAsyncThunk<
     const cartItemsData = response.data.data;
     const cartItems: CartItem[] = cartItemsData.map((item: any) => {
       let colorName = item.selected_color_name;
+         const productId = item.product?.id;
       if (item.color) {
         const matchingSize = item.product?.sizes?.find(
           (size: any) => size.value === item.size
@@ -119,6 +122,7 @@ export const fetchCartItemsApi = createAsyncThunk<
       return {
         ...item.product,
         id: item.id,
+          productId,
         quantity: parseInt(item.quantity, 10) || 1,
         selectedSize: item.selected_size || item.size || "",
         selectedColor: item.selected_color || "",
@@ -129,13 +133,6 @@ export const fetchCartItemsApi = createAsyncThunk<
       };
     });
     return cartItems;
-  // } catch (error: any) {
-  //   return rejectWithValue(
-  //     error.response?.data?.message ||
-  //       error.message ||
-  //       "Failed to fetch cart items"
-  //   );
-  // }
   }
   catch (error: any) {
         return rejectWithValue(handleApiError(error, "Failed to send code"));
@@ -253,6 +250,7 @@ const cartSlice = createSlice({
         ...product,
         quantity: 1,
         selectedSize,
+        productId:product.id,
         colorName,
         selectedColor,
         isSelected: true,

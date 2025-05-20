@@ -16,6 +16,7 @@ export interface Product {
   sizes?: Size[];
   gallery?: GalleryItem[];
   seller?: Seller;
+  delivery_days?: string;
 }
 
 export interface GalleryItem {
@@ -114,4 +115,31 @@ export interface CartItem extends Product {
   isSelected: boolean;
   cartItemId: string;
   colorName?: string;
+  productId: string;
+}
+
+
+export interface Address {
+  id: string;
+  contact_name: string | null;
+  contact_mobile: string | null;
+  type: string;
+  line1: string;
+  line2: string | null;
+  city: string;
+  state: string;
+  postal_code: string;
+  country: string;
+  is_primary: boolean;
+}
+
+export interface AddressFormData {
+  contact_name: string;
+  contact_mobile: string;
+  postal_code: string;
+  line1: string;
+  line2: string | null; 
+  city: string;
+  state: string;
+  country: string;
 }

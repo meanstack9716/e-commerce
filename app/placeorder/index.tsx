@@ -38,18 +38,26 @@ const AddressScreen: React.FC = () => {
   const displayAddress = selectedAddress || primaryAddress;
   const deliveryData: DeliveryItem[] = selectedItems.map((item) => ({
     imageUri: item.images?.[0],
-    estimatedDelivery: "Estimated delivery by 19 May 2025",
+    estimatedDelivery: item.delivery_days || "15 days",
   }));
 
   const renderDeliveryItem = ({ item }: { item: DeliveryItem }) => (
     <View style={styles.deliveryItem}>
       <Image source={{ uri: item.imageUri }} style={styles.itemImage} />
-      <Text style={styles.deliveryText}>{item.estimatedDelivery}</Text>
+      <Text style={styles.deliveryText}>
+        Estimated delivery in {item.estimatedDelivery} days
+      </Text>
     </View>
   );
 
   const handleBack = () => {
     router.back();
+  };
+  const handleConfirm = () => {
+    router.push({
+      pathname: "/payment",
+      params: { shippingAddressId: displayAddress?.id || "" },
+    });
   };
   return (
     <>
@@ -72,12 +80,10 @@ const AddressScreen: React.FC = () => {
             <View style={styles.addressContainer}>
               <View style={styles.addressHeader}>
                 <Text style={styles.addressName}>
-                  {displayAddress.contact_name || "No Name"}{" "}
+                  {displayAddress.contact_name || "No Name"}
                   {displayAddress.is_primary && "(Default)"}
                 </Text>
-                <Text style={styles.addressType}>
-                  {displayAddress.type.toUpperCase()}
-                </Text>
+                <Text style={styles.addressType}>{displayAddress.type}</Text>
                 <TouchableOpacity onPress={() => setShowAddressSelector(true)}>
                   <Text style={styles.changeText}>CHANGE</Text>
                 </TouchableOpacity>
@@ -112,7 +118,10 @@ const AddressScreen: React.FC = () => {
             ItemSeparatorComponent={() => <View style={styles.separator} />}
           />
 
-          <TouchableOpacity style={styles.continueButton}>
+          <TouchableOpacity
+            style={styles.continueButton}
+            onPress={handleConfirm}
+          >
             <Text style={styles.continueButtonText}>CONTINUE</Text>
           </TouchableOpacity>
         </SafeAreaView>
