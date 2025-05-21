@@ -8,9 +8,10 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { resetPassword } from "@/store/auth/authSlice";
 import textStyles from "@/style/textStyles";
 import spacingStyles from "@/style/spacingStyles";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes} from "@/style/typography";
 import images from "@/constants/images";
 import staticColors from "@/style/staticColors";
+import borderRadius from "@/style/borderRadius";
 
 export default function CreateNewPassword() {
   const { errors, handlePasswordValidation, handleConfirmPasswordMatch } =
@@ -101,7 +102,7 @@ const styles = StyleSheet.create({
   imageWrapper: {
     width: 140,
     height: 140,
-    borderRadius: 70,
+    borderRadius: borderRadius.circle,
     backgroundColor: staticColors.LightSkyBlue,
     justifyContent: "center",
     alignItems: "center",

@@ -11,11 +11,12 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { CartItem } from "@/types/types";
 import { fetchCartItemsApi, updateCartItemApi, updateSize } from "@/store/cart/cartSlice";
+import borderRadius from "@/style/borderRadius";
 
 interface SizeSelectionModalProps {
   visible: boolean;
@@ -168,7 +169,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: fontSizes.lg,
-    fontWeight: "600",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.black,
   },
   closeButton: {
@@ -187,7 +188,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 1,
     borderColor: staticColors.lightGray,
-    borderRadius: 25,
+    borderRadius: borderRadius.r24,
     ...spacingStyles.m5,
   },
   selectedOption: {
@@ -200,11 +201,11 @@ const styles = StyleSheet.create({
   },
   selectedSizeText: {
     color: staticColors.discountText,
-    fontWeight: "600",
+    fontWeight: fontWeights.semiBold,
   },
   doneButton: {
     backgroundColor: staticColors.discountText,
-    borderRadius: 8,
+    borderRadius: borderRadius.r8,
     ...spacingStyles.py5,
     alignItems: "center",
     ...spacingStyles.m5,
@@ -212,7 +213,7 @@ const styles = StyleSheet.create({
   doneButtonText: {
     color: staticColors.white,
     fontSize: fontSizes.md,
-    fontWeight: "600",
+    fontWeight: fontWeights.semiBold,
   },
 });
 

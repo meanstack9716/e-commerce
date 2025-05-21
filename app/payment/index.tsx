@@ -16,11 +16,12 @@ import { router, useLocalSearchParams } from "expo-router";
 import { useSelector } from "react-redux";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import { RootState } from "@/store/store";
 import { commonStyles } from "@/style/commonStyle";
 import { useAppDispatch } from "@/store/hooks";
 import { placeOrder, clearOrderStatus } from "@/store/order/orderSlice";
+import borderRadius from "@/style/borderRadius";
 
 const PaymentScreen: React.FC = () => {
   const [expandedPaymentOption, setExpandedPaymentOption] = useState<
@@ -223,7 +224,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: fontSizes.base,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.darkGray,
     ...spacingStyles.pl5,
   },
@@ -245,7 +246,7 @@ const styles = StyleSheet.create({
   radioButtonInner: {
     width: 12,
     height: 12,
-    borderRadius: 6,
+    borderRadius: borderRadius.r6,
     backgroundColor: "transparent",
   },
   radioButtonSelected: {
@@ -265,7 +266,7 @@ const styles = StyleSheet.create({
   expandedMessage: {
     backgroundColor: staticColors.bgSecondary,
     ...spacingStyles.p10,
-    borderRadius: 5,
+    borderRadius: borderRadius.r5,
     borderWidth: 1,
     borderColor: staticColors.borderLight,
     ...spacingStyles.mb10,
@@ -277,21 +278,21 @@ const styles = StyleSheet.create({
   orderNoteContainer: {
     backgroundColor: staticColors.bgMuted,
     ...spacingStyles.p10,
-    borderRadius: 5,
+    borderRadius: borderRadius.r5,
     borderWidth: 1,
     borderColor: staticColors.softGray,
     ...spacingStyles.my10,
   },
   orderNoteLabel: {
     fontSize: fontSizes.sm,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.textDarkGray,
     ...spacingStyles.mb5,
   },
   orderNoteInput: {
     borderWidth: 1,
     borderColor: staticColors.borderLight,
-    borderRadius: 5,
+    borderRadius: borderRadius.r5,
     ...spacingStyles.p10,
     fontSize: fontSizes.xs,
     color: staticColors.textDarkGray,
@@ -307,18 +308,18 @@ const styles = StyleSheet.create({
   },
   totalText: {
     fontSize: fontSizes.base,
-    fontWeight: "bold",
+    fontWeight:fontWeights.semiBold,
   },
   payButton: {
     backgroundColor: staticColors.primary,
     ...spacingStyles.py10,
     ...spacingStyles.px25,
-    borderRadius: 8,
+    borderRadius: borderRadius.r8,
   },
   payButtonText: {
     color: staticColors.white,
     fontSize: fontSizes.sm,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
   },
   payButtonDisabled: {
     backgroundColor: staticColors.lightGray,

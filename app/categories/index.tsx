@@ -22,8 +22,9 @@ import { useAppDispatch } from "@/store/hooks";
 import { RootState } from "@/store/store";
 import { fetchCategories } from "@/store/category/categoriesSlice";
 import { CategoryItem , SubSubCategory  } from "@/types/types";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import FullScreenLoader from "@/components/common/FullScreenLoader";
+import borderRadius from "@/style/borderRadius";
 const CategoriesScreen: React.FC = () => {
   const params = useLocalSearchParams();
   const { categoryId, categoryTitle } = params;
@@ -234,7 +235,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: fontSizes.base,
-    fontWeight: "500",
+    fontWeight:fontWeights.medium,
     color: staticColors.darkGray,
   },
   headerRight: {
@@ -249,7 +250,7 @@ const styles = StyleSheet.create({
     right: -8,
     top: -8,
     backgroundColor: colors.primary,
-    borderRadius: 10,
+    borderRadius: borderRadius.r10,
     width: 18,
     height: 18,
     justifyContent: "center",
@@ -258,7 +259,7 @@ const styles = StyleSheet.create({
   badgeText: {
     color: colors.white,
     fontSize: fontSizes.xs,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
   },
   contentContainer: {
     flex: 1,
@@ -297,19 +298,19 @@ const styles = StyleSheet.create({
   sidebarImage: {
     width: 55,
     height: 45,
-    borderRadius: 10,
+    borderRadius: borderRadius.r10,
     resizeMode: "cover",
   },
   sidebarText: {
     fontSize: fontSizes.xs,
     textAlign: "center",
     ...spacingStyles.mt5,
-    fontWeight:"600",
+    fontWeight:fontWeights.semiBold,
     color: staticColors.darkGray,
   },
   selectedSidebarText: {
     color: colors.primary,
-    fontWeight: "700",
+    fontWeight: fontWeights.bold,
     fontSize: fontSizes.sm,
   },
   mainContent: {
@@ -342,7 +343,7 @@ const styles = StyleSheet.create({
   spotlightImageContainer: {
     width: 80,
     height: 80,
-    borderRadius: 40,
+    borderRadius: borderRadius.circle,
     overflow: "hidden",
     backgroundColor: staticColors.bgMuted,
   },
@@ -356,7 +357,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     ...spacingStyles.mt8,
     color: colors.primary,
-    fontWeight: "600",
+    fontWeight: fontWeights.semiBold,
   },
   errorText: {
     textAlign: "center",
@@ -365,17 +366,17 @@ const styles = StyleSheet.create({
   },
   errorContainer: {
     alignItems: "center",
-    padding: 20,
+    ...spacingStyles.p20
   },
   retryButton: {
     backgroundColor: colors.primary,
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 10,
+    ...spacingStyles.p10,
+    borderRadius: borderRadius.r5,
+   ...spacingStyles.mt10
   },
   retryButtonText: {
     color: colors.white,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
   },
 });
 

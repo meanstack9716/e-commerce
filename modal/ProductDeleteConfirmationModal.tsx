@@ -10,7 +10,7 @@ import {
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { Ionicons } from "@expo/vector-icons";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 
 interface ProductDeleteConfirmationModalProps {
   visible: boolean;
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   closeIcon: {},
   title: {
     fontSize: fontSizes.base,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
   },
   message: {
     fontSize: fontSizes.sm,

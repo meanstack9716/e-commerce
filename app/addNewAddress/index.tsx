@@ -14,7 +14,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import staticColors from "@/style/staticColors";
-import fontSizes from "@/style/fontSizes";
+import { fontSizes, fontWeights } from "@/style/typography";
 import spacingStyles from "@/style/spacingStyles";
 import { commonStyles } from "@/style/commonStyle";
 import { useFieldValidation } from "@/hooks/useFieldValidation";
@@ -31,6 +31,7 @@ import {
 import { useAppDispatch } from "@/store/hooks";
 import SelectAddress from "@/components/address/SelectAddress";
 import { AddressFormData } from "@/types/types";
+import borderRadius from "@/style/borderRadius";
 
 const AddNewAddress = () => {
   const dispatch = useAppDispatch();
@@ -382,12 +383,12 @@ const styles = StyleSheet.create({
   },
   section: {
     backgroundColor: staticColors.white,
-    borderRadius: 10,
+    borderRadius: borderRadius.r10,
     ...spacingStyles.p10,
     ...spacingStyles.mb10,
   },
   sectionTitle: {
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     fontSize: fontSizes.sm,
     fontFamily: "HelveticaBold",
     ...spacingStyles.mb10,
@@ -395,11 +396,10 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
     borderColor: staticColors.borderLight,
-    borderRadius: 5,
+    borderRadius: borderRadius.r5,
     ...spacingStyles.p10,
     ...spacingStyles.mb10,
     fontSize: fontSizes.sm,
-    fontFamily: "Helvetica",
   },
   inputError: {
     borderColor: staticColors.errorColor,
@@ -434,7 +434,7 @@ const styles = StyleSheet.create({
   },
   addressTypeText: {
     fontSize: fontSizes.sm,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     fontFamily: "Helvetica",
   },
   checkboxContainer: {
@@ -447,7 +447,7 @@ const styles = StyleSheet.create({
     height: 20,
     borderWidth: 1,
     borderColor: staticColors.black,
-    borderRadius: 3,
+    borderRadius: borderRadius.r4,
     ...spacingStyles.mr10,
     justifyContent: "center",
     alignItems: "center",
@@ -470,14 +470,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: staticColors.black,
     ...spacingStyles.py10,
-    borderRadius: 5,
+    borderRadius: borderRadius.r5,
     width: "48%",
     alignItems: "center",
   },
   saveButton: {
     backgroundColor: staticColors.primary,
     ...spacingStyles.py10,
-    borderRadius: 5,
+    borderRadius: borderRadius.r5,
     width: "48%",
     alignItems: "center",
   },
@@ -487,13 +487,13 @@ const styles = StyleSheet.create({
   },
   saveButtonText: {
     fontSize: fontSizes.sm,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.white,
     fontFamily: "Helvetica",
   },
   cancelButtonText: {
     fontSize: fontSizes.sm,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.primary,
     fontFamily: "Helvetica",
   },

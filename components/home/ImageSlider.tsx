@@ -12,7 +12,8 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import colors from '@/style/staticColors';
 import spacingStyles from '@/style/spacingStyles';
 import staticColors from '@/style/staticColors';
-import fontSizes from '@/style/fontSizes';
+import {fontSizes, fontWeights} from "@/style/typography";
+import borderRadius from '@/style/borderRadius';
 
 const { width } = Dimensions.get('window');
 const SLIDER_WIDTH = width - 40;
@@ -133,7 +134,7 @@ const styles = StyleSheet.create({
   slide: {
     width: SLIDER_WIDTH,
     height: 220,
-    borderRadius: 16,
+    borderRadius: borderRadius.r16,
     overflow: 'hidden',
     position: 'relative',
   },
@@ -157,17 +158,17 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.8)',
     ...spacingStyles.py5,
    ...spacingStyles.px10,
-    borderRadius: 5,
+    borderRadius: borderRadius.r5,
     marginRight: 6,
   },
   brandText: {
     fontSize: fontSizes.sm,
-    fontWeight: '600',
+    fontWeight: fontWeights.semiBold,
     color: staticColors.darkGray,
   },
   title: {
     fontSize: fontSizes.lg,
-    fontWeight: 'bold',
+    fontWeight: fontWeights.semiBold,
     color: colors.white,
     textShadowColor: 'rgba(0, 0, 0, 0.75)',
     textShadowOffset: { width: 1, height: 1 },
@@ -182,7 +183,7 @@ const styles = StyleSheet.create({
   },
   price: {
     fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontWeight: fontWeights.semiBold,
     color: colors.white,
     textShadowColor: 'rgba(0, 0, 0, 0.75)',
     textShadowOffset: { width: 1, height: 1 },
@@ -196,7 +197,7 @@ const styles = StyleSheet.create({
   paginationDot: {
     width: 8,
     height: 8,
-    borderRadius: 4,
+    borderRadius: borderRadius.r4,
     backgroundColor:staticColors.lightGray,
     ...spacingStyles.mx2
   },
@@ -209,7 +210,7 @@ const styles = StyleSheet.create({
     bottom: '8%',
     width: 30,
     height: 30,
-    borderRadius: 15,
+    borderRadius: borderRadius.r16,
     backgroundColor: colors.white,
     justifyContent: 'center',
     alignItems: 'center',

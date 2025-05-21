@@ -15,7 +15,9 @@ import { RootState } from "@/store/store";
 import SelectAddress from "@/components/address/SelectAddress";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
+import borderRadius from "@/style/borderRadius";
+import { ESTIMATED_DELIVERY } from "@/constants/constants";
 
 interface DeliveryItem {
   imageUri: string;
@@ -38,7 +40,7 @@ const PlaceOrderScreen: React.FC = () => {
   const displayAddress = selectedAddress || primaryAddress;
   const deliveryData: DeliveryItem[] = selectedItems.map((item) => ({
     imageUri: item.images?.[0],
-    estimatedDelivery: item.delivery_days || "15 days",
+    estimatedDelivery: item.delivery_days || ESTIMATED_DELIVERY,
   }));
 
   const renderDeliveryItem = ({ item }: { item: DeliveryItem }) => (
@@ -143,13 +145,13 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: fontSizes.base,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.darkGray,
   },
   addressContainer: {
     backgroundColor: staticColors.white,
     ...spacingStyles.p15,
-    borderRadius: 8,
+    borderRadius: borderRadius.r8,
     ...spacingStyles.mb15,
   },
   addressHeader: {
@@ -160,7 +162,7 @@ const styles = StyleSheet.create({
   },
   addressName: {
     fontSize: fontSizes.sm,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.darkGray,
   },
   addressType: {
@@ -170,12 +172,12 @@ const styles = StyleSheet.create({
     borderColor: staticColors.lightGray,
     ...spacingStyles.px5,
     ...spacingStyles.py2,
-    borderRadius: 4,
+    borderRadius: borderRadius.r4,
   },
   changeText: {
     fontSize: fontSizes.sm,
     color: staticColors.primary,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
   },
   addressDetails: {
     fontSize: fontSizes.sm,
@@ -184,7 +186,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: fontSizes.sm,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.darkGray,
     ...spacingStyles.mb10,
   },
@@ -193,12 +195,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: staticColors.white,
     ...spacingStyles.p10,
-    borderRadius: 8,
+    borderRadius: borderRadius.r8,
   },
   itemImage: {
     width: 50,
     height: 60,
-    borderRadius: 5,
+    borderRadius: borderRadius.r5,
     ...spacingStyles.mr15,
   },
   deliveryText: {
@@ -213,14 +215,14 @@ const styles = StyleSheet.create({
   continueButton: {
     backgroundColor: staticColors.primary,
     ...spacingStyles.py10,
-    borderRadius: 8,
+    borderRadius: borderRadius.r8,
     alignItems: "center",
     ...spacingStyles.mt15,
   },
   continueButtonText: {
     fontSize: fontSizes.sm,
     color: staticColors.white,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
   },
   backButton: {
     ...spacingStyles.p5,

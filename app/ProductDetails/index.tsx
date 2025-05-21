@@ -23,7 +23,7 @@ import { useAppSelector } from "@/store/hooks";
 import colors from "@/style/staticColors";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
 import MegaDealBadge from "@/components/productDetails/MegaDealBadge";
 import SizeSelector from "@/components/productDetails/SizeSelector";
@@ -36,6 +36,7 @@ import FullScreenLoader from "@/components/common/FullScreenLoader";
 import ReturnPolicy from "./ReturnPolicy";
 import { Product } from "../../types/types";
 import ViewSimilarModal from "@/modal/ViewSimilarModal";
+import borderRadius from "@/style/borderRadius";
 
 const { width: screenWidth } = Dimensions.get("window");
 const screenHeight = Dimensions.get("window").height;
@@ -406,7 +407,7 @@ const styles = StyleSheet.create({
   dot: {
     width: 8,
     height: 8,
-    borderRadius: 4,
+    borderRadius: borderRadius.r4,
     ...spacingStyles.mx2,
   },
   actionRow: {
@@ -423,7 +424,7 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.bgSecondary,
     ...spacingStyles.py5,
     ...spacingStyles.px10,
-    borderRadius: 10,
+    borderRadius: borderRadius.r10,
     position: "absolute",
     left: 15,
     bottom: 40,
@@ -439,7 +440,7 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.bgSecondary,
     ...spacingStyles.py5,
     ...spacingStyles.px10,
-    borderRadius: 10,
+    borderRadius: borderRadius.r10,
     position: "absolute",
     right: 15,
     bottom: 40,
@@ -461,7 +462,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: fontSizes.md,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
   },
   priceContainer: {
     flexDirection: "row",
@@ -470,23 +471,23 @@ const styles = StyleSheet.create({
   },
   discountedPrice: {
     fontSize: fontSizes.md,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: colors.primary,
   },
   price: {
     fontSize: fontSizes.sm,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: colors.textMuted,
     textDecorationLine: "line-through",
   },
   discount: {
     fontSize: fontSizes.sm,
     color: colors.brightRed,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
   },
   heading: {
     fontSize: fontSizes.md,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     ...spacingStyles.mb10,
     color: staticColors.primary,
     ...spacingStyles.px15,
@@ -500,12 +501,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     ...spacingStyles.py10,
     ...spacingStyles.px15,
-    borderRadius: 25,
+    borderRadius: borderRadius.r24,
   },
   backToTopText: {
     color: colors.white,
     fontSize: fontSizes.base,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     ...spacingStyles.ml5,
   },
 });

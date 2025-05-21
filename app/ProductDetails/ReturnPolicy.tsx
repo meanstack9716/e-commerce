@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import GenuineProductModal from "@/modal/GenuineProductModal";
 import QualityCheckModal from "@/modal/QualityCheckModal";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 
@@ -79,12 +79,12 @@ const styles = StyleSheet.create({
   badgeText: {
     color: staticColors.discountText,
     fontSize: fontSizes.base,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     textAlign: "center",
   },
   returnText: {
     fontSize: fontSizes.base,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.textDarkGray,
     ...spacingStyles.px15,
   },

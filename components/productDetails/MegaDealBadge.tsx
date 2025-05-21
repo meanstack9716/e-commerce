@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { EXTRA_DISCOUNT, PRODUCT_PRICE } from "@/constants/constants";
 import OfferDetailsModal from "@/modal/OfferDetailsModal";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { EvilIcons } from "@expo/vector-icons";
+import borderRadius from "@/style/borderRadius";
 
 const DealBanner = () => {
   const [isOfferModalVisible, setIsOfferModalVisible] = useState(false);
@@ -60,7 +61,7 @@ export default DealBanner;
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 10,
+     borderRadius: borderRadius.r10,
     ...spacingStyles.mx15,
     ...spacingStyles.mt15,
     borderBottomLeftRadius: 20,
@@ -70,7 +71,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    borderRadius: 10,
+    borderRadius: borderRadius.r10,
     ...spacingStyles.pr10,
     ...spacingStyles.py10,
   },
@@ -85,22 +86,22 @@ const styles = StyleSheet.create({
   getAtText: {
     fontSize: fontSizes.md,
     color: staticColors.darkGray,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
   },
   priceText: {
     fontSize: fontSizes.base,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
   },
   rightBadge: {
     backgroundColor: staticColors.darkGreen,
     ...spacingStyles.px10,
     ...spacingStyles.py5,
-    borderRadius: 10,
+     borderRadius: borderRadius.r10,
   },
   badgeText: {
     color: staticColors.white,
     fontSize: fontSizes.xs,
-    fontWeight: "600",
+    fontWeight: fontWeights.semiBold,
   },
   bottomRow: {
     backgroundColor: staticColors.white,
@@ -109,7 +110,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     ...spacingStyles.py10,
     ...spacingStyles.px20,
-    borderRadius: 15,
+     borderRadius: borderRadius.r14,
     borderWidth: 1,
     borderColor: staticColors.borderLight,
   },
@@ -118,11 +119,11 @@ const styles = StyleSheet.create({
     color: staticColors.darkGray,
   },
   bankOfferText: {
-    fontWeight: "600",
+    fontWeight: fontWeights.semiBold,
   },
   detailsText: {
     fontSize: fontSizes.xs,
-    fontWeight: "600",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.discountText,
   },
   detailsSections: {

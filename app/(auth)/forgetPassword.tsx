@@ -22,10 +22,11 @@ import gapSizes from "@/style/gapSizes";
 import colors from "@/style/staticColors";
 import textStyles from "@/style/textStyles";
 import spacingStyles from "@/style/spacingStyles";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes} from "@/style/typography";
 import OTPInput from "@/components/common/OtpInput";
 import CreateNewPassword from "@/components/auth/CreateNewPassword";
 import TextField from "@/components/common/TextField";
+import borderRadius from "@/style/borderRadius";
 export default function ForgetPassword() {
   const router = useRouter();
   const { errors, handleEmailValidation } = useFieldValidation();
@@ -170,7 +171,7 @@ const styles = StyleSheet.create({
   button: {
     flex: 1,
     height: 48,
-    borderRadius: 25,
+    borderRadius:borderRadius.r24,
     justifyContent: "center",
     alignItems: "center",
   },

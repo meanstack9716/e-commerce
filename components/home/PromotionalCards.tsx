@@ -16,9 +16,10 @@ import {
   MaterialIcons,
 } from "@expo/vector-icons";
 import staticColors from "@/style/staticColors";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
 import spacingStyles from "@/style/spacingStyles";
+import borderRadius from "@/style/borderRadius";
 interface PromotionalCard {
   id: string;
   title: string;
@@ -191,7 +192,7 @@ const styles = StyleSheet.create({
   },
   largeCard: {
     height: 80,
-    borderRadius: 15,
+    borderRadius: borderRadius.r16,
     ...spacingStyles.mb5,
     overflow: "hidden",
     backgroundColor: staticColors.bgCard,
@@ -201,7 +202,7 @@ const styles = StyleSheet.create({
   card: {
     width: cardWidth,
     height: 80,
-    borderRadius: 15,
+    borderRadius: borderRadius.r16,
     ...spacingStyles.mb5,
     overflow: "hidden",
     backgroundColor: staticColors.bgCardLight,
@@ -225,7 +226,7 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     color: staticColors.darkGray,
-    fontWeight: "600",
+    fontWeight:fontWeights.semiBold,
     fontSize: fontSizes.xs,
     ...spacingStyles.pl10,
   },
@@ -240,7 +241,7 @@ const styles = StyleSheet.create({
   },
   bestSellerTitle: {
     color: staticColors.primary,
-    fontWeight: "800",
+    fontWeight: fontWeights.black,
     fontSize: fontSizes.lg,
     lineHeight: 24,
   },
@@ -252,7 +253,7 @@ const styles = StyleSheet.create({
   shippingInfoContainer: {
     flexDirection: "row",
     backgroundColor: staticColors.lightGreen,
-    borderRadius: 15,
+    borderRadius: borderRadius.r16,
     ...spacingStyles.p10,
     justifyContent: "space-between",
     alignItems: "center",
@@ -272,7 +273,7 @@ const styles = StyleSheet.create({
   },
   infoTitle: {
     fontSize: fontSizes.xs,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.darkGray,
   },
   infoSubtitle: {

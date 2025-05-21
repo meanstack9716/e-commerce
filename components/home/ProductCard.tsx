@@ -11,10 +11,11 @@ import { FontAwesome } from "@expo/vector-icons";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
 import { commonStyles } from "@/style/commonStyle";
 import { textTruncate } from "@/utils/textTruncate";
+import borderRadius from "@/style/borderRadius";
 
 export interface ProductCardProps {
   id: string;
@@ -105,7 +106,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 240,
     resizeMode: "cover",
-    borderRadius: 10,
+    borderRadius: borderRadius.r10,
   },
   titleRow: {
     flexDirection: "row",
@@ -126,11 +127,11 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.white,
     ...spacingStyles.px10,
     ...spacingStyles.py5,
-    borderRadius: 8,
+    borderRadius: borderRadius.r8,
   },
   cardPrice: {
     fontSize: fontSizes.base,
-    fontWeight: "700",
+    fontWeight: fontWeights.bold,
     color: colors.primary,
   },
   discountBadge: {
@@ -143,6 +144,6 @@ const styles = StyleSheet.create({
   discountText: {
     color: staticColors.DarkRed,
     fontSize: fontSizes.xs,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
   },
 });

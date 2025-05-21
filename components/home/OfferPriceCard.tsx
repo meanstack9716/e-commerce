@@ -4,8 +4,9 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign } from '@expo/vector-icons';
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
+import borderRadius from "@/style/borderRadius";
 
 interface OfferCardProps {
   topText: string;
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
   card: {
     borderWidth:1,
     borderColor:staticColors.borderLight,
-    borderRadius: 25,
+    borderRadius: borderRadius.r24,
     width: 95,
     justifyContent: "center",
     alignItems: "center",
@@ -89,12 +90,12 @@ const styles = StyleSheet.create({
   },
   topText: {
     fontSize: fontSizes.sm,
-    fontWeight: "500",
+    fontWeight: fontWeights.medium,
     ...spacingStyles.mt25
   },
   priceText: {
     fontSize: fontSizes.lg,
-    fontWeight: "700",
+    fontWeight: fontWeights.bold,
   },
   bottomRow: {
     flexDirection: "column",
@@ -103,7 +104,7 @@ const styles = StyleSheet.create({
   },
   bottomText: {
     fontSize:fontSizes.base,
-    fontWeight: "600",
+    fontWeight: fontWeights.semiBold,
   },
   arrow: {
     ...spacingStyles.mb5  }

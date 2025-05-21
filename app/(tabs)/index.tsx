@@ -32,13 +32,14 @@ import FullScreenLoader from "@/components/common/FullScreenLoader";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
 import { Product } from "@/types/types";
 import images from "@/constants/images";
 import { useAppDispatch } from "@/store/hooks";
 import { fetchCategories } from "@/store/category/categoriesSlice";
 import { fetchProducts } from "@/store/product/productsSlice";
+import borderRadius from "@/style/borderRadius";
 
 const HomeScreen: React.FC = () => {
   const [likedProductItems, setLikedProductItems] = useState<string[]>([]);
@@ -337,7 +338,7 @@ const styles = StyleSheet.create({
   },
   addressText: {
     fontSize: fontSizes.sm,
-    fontWeight: "500",
+    fontWeight: fontWeights.medium,
     color: colors.primary,
     ...spacingStyles.mx5,
   },
@@ -353,7 +354,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderColor: staticColors.lightGray,
     borderWidth: 1,
-    borderRadius: 12,
+    borderRadius: borderRadius.r12,
     ...spacingStyles.px10,
     backgroundColor: colors.white,
     justifyContent: "space-between",

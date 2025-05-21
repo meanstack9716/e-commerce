@@ -26,8 +26,9 @@ import TextField from "@/components/common/TextField";
 import textStyles from "@/style/textStyles";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import images from "@/constants/images";
+import borderRadius from "@/style/borderRadius";
 
 interface SignUpModalProps {
   visible: boolean;
@@ -307,7 +308,7 @@ const styles = StyleSheet.create({
     height: 20,
     borderWidth: 1,
     borderColor: staticColors.linkPrimary,
-    borderRadius: 4,
+    borderRadius: borderRadius.r4,
     marginRight: 8,
     justifyContent: "center",
     alignItems: "center",
@@ -326,7 +327,7 @@ const styles = StyleSheet.create({
   },
   link: {
     color: staticColors.linkPrimary,
-    fontWeight: "600",
+    fontWeight: fontWeights.semiBold,
   },
   signupContainer: {
     flexDirection: "row",
@@ -338,7 +339,7 @@ const styles = StyleSheet.create({
   },
   signupLink: {
     color: staticColors.linkPrimary,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
   },
   disabledButton: {
     opacity: 0.5,

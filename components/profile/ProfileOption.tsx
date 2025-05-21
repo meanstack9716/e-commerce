@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import colors from '@/style/staticColors';
 import textStyles from '@/style/textStyles';
 import spacingStyles from '@/style/spacingStyles';
-import fontSizes from '@/style/fontSizes';
+import {fontSizes} from "@/style/typography";
 import gapSizes from '@/style/gapSizes';
 
 interface Props {

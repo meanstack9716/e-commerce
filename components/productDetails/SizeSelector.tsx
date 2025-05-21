@@ -9,11 +9,12 @@ import {
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import SizeChartModal from "@/modal/SizeChartModal";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { Product } from "../../types/types";
 import images from "@/constants/images";
+import borderRadius from "@/style/borderRadius";
 
 interface SizeSelectorProps {
   product: Product | null;
@@ -307,11 +308,11 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.base,
   },
   bold: {
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
   },
   sizeChart: {
     color: staticColors.discountText,
-    fontWeight: "600",
+    fontWeight: fontWeights.semiBold,
     fontSize: fontSizes.sm,
   },
   sizeScroll: {
@@ -325,7 +326,7 @@ const styles = StyleSheet.create({
   sizeButton: {
     width: 56,
     height: 56,
-    borderRadius: 10,
+    borderRadius: borderRadius.r10,
     borderWidth: 1,
     borderColor: staticColors.borderLight,
     justifyContent: "center",
@@ -342,7 +343,7 @@ const styles = StyleSheet.create({
   },
   sizeLabel: {
     fontSize: fontSizes.sm,
-    fontWeight: "600",
+    fontWeight: fontWeights.semiBold,
   },
   disabledText: {
     color: staticColors.textLightGray,
@@ -371,7 +372,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 1,
     borderColor: "transparent",
-    borderRadius: 8,
+    borderRadius: borderRadius.r8,
     ...spacingStyles.p5,
   },
   selectedColorOption: {
@@ -380,11 +381,11 @@ const styles = StyleSheet.create({
   colorImage: {
     width: 70,
     height: 70,
-    borderRadius: 6,
+    borderRadius: borderRadius.r6,
   },
   colorName: {
     fontSize: fontSizes.xs,
-    fontWeight: "600",
+    fontWeight: fontWeights.semiBold,
     ...spacingStyles.mt5,
   },
   colorStock: {
@@ -400,17 +401,17 @@ const styles = StyleSheet.create({
     ...spacingStyles.p10,
     borderWidth: 1,
     borderColor: staticColors.borderLight,
-    borderRadius: 10,
+    borderRadius: borderRadius.r10,
   },
   lengthLabel: {
     fontSize: fontSizes.xs,
     color: staticColors.textMuted,
   },
   lengthValue: {
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     backgroundColor: staticColors.lightGray,
     color: staticColors.slateBlue,
-    borderRadius: 4,
+    borderRadius: borderRadius.r4
   },
   measurements: {
     flexDirection: "row",

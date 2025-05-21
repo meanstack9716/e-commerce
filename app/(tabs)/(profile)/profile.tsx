@@ -30,11 +30,12 @@ import UserProfile from "@/components/profile/UserProfile";
 import ProfileListSection from "@/components/profile/ProfileListSection";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import { APP_VERSION } from "@/constants/constants";
 import staticColors from "@/style/staticColors";
 import { useAppDispatch } from "@/store/hooks";
 import { logoutUser } from "@/store/auth/authSlice";
+import borderRadius from "@/style/borderRadius";
 
 export default function ProfileScreen() {
   const [activeProfileSection, setActiveProfileSection] = useState("Profile");
@@ -166,12 +167,12 @@ const styles = StyleSheet.create({
     ...spacingStyles.py10,
     ...spacingStyles.mx15,
     marginVertical: 10,
-    borderRadius: 8,
+    borderRadius: borderRadius.r8,
     alignItems: "center",
   },
   logoutText: {
     fontSize: fontSizes.base,
     color: colors.primary,
-    fontWeight: "600",
+    fontWeight: fontWeights.semiBold,
   },
 });

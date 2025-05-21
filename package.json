@@ -9,7 +9,9 @@
     "ios": "expo run:ios",
     "web": "expo start --web",
     "test": "jest --watchAll",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "apkbuild": "npm run uploadenv && eas build --platform android --profile preview",
+    "uploadenv":"eas secret:push --force --scope project --env-file .env"
   },
   "jest": {
     "preset": "jest-expo"
@@ -26,7 +28,7 @@
     "axios": "^1.8.4",
     "babel-plugin-inline-dotenv": "^1.7.0",
     "dotenv": "^16.5.0",
-    "expo": "53.0.9",
+    "expo": "^53.0.9",
     "expo-blur": "~14.1.4",
     "expo-build-properties": "~0.14.6",
     "expo-constants": "~17.1.6",

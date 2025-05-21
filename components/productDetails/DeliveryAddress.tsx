@@ -12,8 +12,9 @@ import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useLocation } from "@/utils/useLocation";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
-import fontSizes from "@/style/fontSizes";
+import { fontSizes, fontWeights } from "@/style/typography";
 import LocationAlertModal from "@/modal/LocationAlertModal";
+import borderRadius from "@/style/borderRadius";
 
 interface DeliveryAddressProps {
   onPinCodeFetched?: (pinCode: string) => void;
@@ -126,7 +127,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: fontSizes.md,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.primary,
     ...spacingStyles.ml10,
     flex: 1,
@@ -141,7 +142,7 @@ const styles = StyleSheet.create({
   infoIconContainer: {
     width: 20,
     height: 20,
-    borderRadius: 10,
+   borderRadius: borderRadius.r10,
     backgroundColor: staticColors.darkYellow,
     justifyContent: "center",
     alignItems: "center",
@@ -150,10 +151,10 @@ const styles = StyleSheet.create({
   infoIcon: {
     color: "white",
     fontSize: fontSizes.sm,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
   },
   importantLabel: {
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.darkYellow,
   },
   importantText: {
@@ -166,7 +167,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 1,
     borderColor: staticColors.borderLight,
-    borderRadius: 8,
+    borderRadius: borderRadius.r8,
     ...spacingStyles.m15,
     ...spacingStyles.px10,
   },
@@ -188,7 +189,7 @@ const styles = StyleSheet.create({
   locationIconContainer: {
     width: 30,
     height: 30,
-    borderRadius: 15,
+    borderRadius: borderRadius.r16,
     borderWidth: 1,
     borderColor: staticColors.brightRed,
     justifyContent: "center",
@@ -198,7 +199,7 @@ const styles = StyleSheet.create({
   locationText: {
     color: staticColors.brightRed,
     fontSize: fontSizes.sm,
-    fontWeight: "500",
+    fontWeight: fontWeights.semiBold,
   },
 });
 

@@ -11,7 +11,8 @@ import { router } from "expo-router";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
+import borderRadius from "@/style/borderRadius";
 
 interface NavbarProps {
   tabs: string[];
@@ -72,7 +73,7 @@ const styles = StyleSheet.create({
   },
   navItemText: {
     fontSize: fontSizes.base,
-    fontWeight: "600",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.darkGray,
     fontFamily: "Helvetica",
   },
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
     height: 2,
     width: "100%",
     backgroundColor: colors.primary,
-    borderRadius: 1,
+    borderRadius: borderRadius.r2,
   },
   activeNavItemText: {
     color: colors.primary,
@@ -90,7 +91,7 @@ const styles = StyleSheet.create({
   categoryTab: {
     backgroundColor: colors.primary,
    ...spacingStyles.p5,
-    borderRadius: 8,
+    borderRadius: borderRadius.r8,
     borderWidth: 1,
     borderColor: colors.white,
     elevation: 3,

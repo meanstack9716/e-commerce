@@ -3,7 +3,8 @@ import { View, Text, StyleSheet } from "react-native";
 import Collapsible from "../Collapsible";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
+import borderRadius from "@/style/borderRadius";
 interface ExpandableContentProps {
   heading: string;
   description: string;
@@ -36,7 +37,7 @@ const ExpandableContent: React.FC<ExpandableContentProps> = ({
 const styles = StyleSheet.create({
   faqContainer: {
     backgroundColor: staticColors.white,
-    borderRadius: 8,
+    borderRadius: borderRadius.r8
   },
   headingRow: {
     flexDirection: "row",
@@ -44,7 +45,7 @@ const styles = StyleSheet.create({
   },
   number: {
     fontSize: fontSizes.base,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: "black",
     ...spacingStyles.mr5,
   },

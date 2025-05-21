@@ -10,7 +10,7 @@ import { useRouter, useLocalSearchParams } from "expo-router";
 import { Product } from "@/types/types";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes} from "@/style/typography";
 
 const screenWidth = Dimensions.get("window").width;
 const cardWidth = screenWidth / 2 - 22;

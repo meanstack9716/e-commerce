@@ -4,7 +4,7 @@ import ExpandableContent from "../ui/ExpandableContent";
 import colors from "@/style/staticColors";
 import textStyles from "@/style/textStyles";
 import spacingStyles from "@/style/spacingStyles";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes} from "@/style/typography";
 
 const TermsOfUs = () => {
   const termsData = [

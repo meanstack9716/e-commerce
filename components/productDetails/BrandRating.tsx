@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { PRODUCT_CODE } from "@/constants/constants";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: fontSizes.md,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     ...spacingStyles.py5,
     color: staticColors.primary,
   },
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   },
   rating: {
     fontSize: fontSizes.sm,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     ...spacingStyles.mr10,
   },
   ratingDetails: {
@@ -88,11 +88,11 @@ const styles = StyleSheet.create({
   },
   sectionHeader: {
     fontSize: fontSizes.base,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
   },
   subHeader: {
     fontSize: fontSizes.xs,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     ...spacingStyles.mb5,
     color: staticColors.shadowColor,
   },
@@ -106,6 +106,6 @@ const styles = StyleSheet.create({
   viewMoreText: {
     fontSize: fontSizes.sm,
     color: staticColors.discountText,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
   },
 });

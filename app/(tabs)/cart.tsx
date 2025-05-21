@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import useBackHandler from "@/utils/useBackHandler";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import fontSizes from "@/style/fontSizes";
+import { fontSizes, fontWeights } from "@/style/typography";
 import ProductInfoScreen from "@/components/addToBag/ProductInfoSection";
 import ShoppingCartScreen from "@/components/addToBag/ShoppingCartScreen";
 import FullScreenLoader from "@/components/common/FullScreenLoader";
@@ -18,6 +18,7 @@ import SignUpModal from "@/app/(auth)/signUpModal";
 import { AppDispatch, RootState } from "@/store/store";
 import { fetchAddresses } from "@/store/address/addressSlice";
 import { fetchCartItemsApi } from "@/store/cart/cartSlice";
+import borderRadius from "@/style/borderRadius";
 
 const ShoppingBagScreen: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -60,7 +61,6 @@ const ShoppingBagScreen: React.FC = () => {
       setLoginModalVisible(true);
       return;
     }
-
     const selectedItems = cartItems.filter((item) => item.isSelected);
     if (selectedItems.length === 0) {
       Toast.show({
@@ -71,17 +71,11 @@ const ShoppingBagScreen: React.FC = () => {
       return;
     }
 
-    if (addresses.length > 0) {
-      router.navigate({
-        pathname: "/placeorder",
-        params: { selectedItems: JSON.stringify(selectedItems) },
-      });
-    } else {
-      router.navigate({
-        pathname: "/addNewAddress",
-        params: { selectedItems: JSON.stringify(selectedItems) },
-      });
-    }
+    const path = addresses.length ? "/placeorder" : "/addNewAddress";
+    router.navigate({
+      pathname: path,
+      params: { selectedItems: JSON.stringify(selectedItems) },
+    });
   };
 
   const handleCloseLoginModal = () => {
@@ -190,7 +184,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: fontSizes.base,
-    fontWeight: "500",
+    fontWeight: fontWeights.medium,
     color: staticColors.darkGray,
   },
   iconButton: {
@@ -199,7 +193,7 @@ const styles = StyleSheet.create({
   PlaceButton: {
     backgroundColor: staticColors.primary,
     ...spacingStyles.p15,
-    borderRadius: 0,
+    borderRadius: borderRadius.r0,
     marginBottom: 0,
     position: "absolute",
     bottom: 0,

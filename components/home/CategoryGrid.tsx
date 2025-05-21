@@ -9,10 +9,11 @@ import {
 } from "react-native";
 import { useSelector } from "react-redux";
 import { CategoryItem } from "@/types/types";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
+import borderRadius from "@/style/borderRadius";
 
 interface CategoryGridProps {
   activeTab: string;
@@ -115,7 +116,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     width: 75,
     height: 75,
-    borderRadius: 20,
+    borderRadius: borderRadius.r20,
     overflow: "hidden",
     borderWidth: 1,
     borderColor: staticColors.bgMuted,
@@ -139,7 +140,7 @@ const styles = StyleSheet.create({
   },
   activeTitle: {
     color: colors.primary,
-    fontWeight: "700",
+    fontWeight:fontWeights.bold,
   },
 });
 

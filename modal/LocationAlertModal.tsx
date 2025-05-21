@@ -8,8 +8,9 @@ import {
 } from "react-native";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
+import borderRadius from "@/style/borderRadius";
 
 interface Props {
   visible: boolean;
@@ -64,11 +65,11 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: staticColors.white,
     ...spacingStyles.p20,
-    borderRadius: 20,
+    borderRadius: borderRadius.r20,
     width: "80%"
   },
   title: {
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
    fontSize:fontSizes.md,
    ...spacingStyles.mb5
   },
@@ -86,7 +87,7 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.bgMuted,
     ...spacingStyles.py10,
     ...spacingStyles.px20,
-    borderRadius:10
+    borderRadius: borderRadius.r10,
   },
   cancelText: {
     color: staticColors.textDarkGray,
@@ -95,7 +96,7 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.discountText,
    ...spacingStyles.py10,
    ...spacingStyles.px20,
-   borderRadius:10
+   borderRadius: borderRadius.r10,
   },
   confirmText: {
     color: staticColors.white,

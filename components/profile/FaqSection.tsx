@@ -4,7 +4,8 @@ import ExpandableContent from "../ui/ExpandableContent";
 import colors from "@/style/staticColors";
 import textStyles from "@/style/textStyles";
 import spacingStyles from "@/style/spacingStyles";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes} from "@/style/typography";
+import borderRadius from "@/style/borderRadius";
 type FaqItem = {
   heading: string;
   description: string;
@@ -58,7 +59,7 @@ const styles = StyleSheet.create({
   button: {
     ...spacingStyles.py10,
     ...spacingStyles.px20,
-    borderRadius: 5,
+    borderRadius: borderRadius.r5,
     ...spacingStyles.mb10,
     alignSelf: "flex-end",
     borderWidth: 1,

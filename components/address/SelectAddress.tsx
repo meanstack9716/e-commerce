@@ -12,7 +12,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import {
   fetchAddresses,
   setSelectedAddressId,
@@ -23,6 +23,7 @@ import { RootState } from "@/store/store";
 import { useAppDispatch } from "@/store/hooks";
 import FullScreenLoader from "../common/FullScreenLoader";
 import { commonStyles } from "@/style/commonStyle";
+import borderRadius from "@/style/borderRadius";
 
 interface Address {
   id: string;
@@ -216,7 +217,7 @@ const styles = StyleSheet.create({
   header: {
     flex: 1,
     fontSize: fontSizes.base,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.black,
   },
   addNewButton: {
@@ -225,15 +226,15 @@ const styles = StyleSheet.create({
     ...spacingStyles.p10,
     alignItems: "center",
     ...spacingStyles.my10,
-    borderRadius: 5,
+    borderRadius: borderRadius.r5,
   },
   addNewText: {
-    fontWeight: "bold",
+    fontWeight:fontWeights.semiBold,
     fontSize: fontSizes.sm,
     color: staticColors.black,
   },
   sectionTitle: {
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     fontSize: fontSizes.sm,
     color: staticColors.black,
    ...spacingStyles.mb10
@@ -244,10 +245,10 @@ const styles = StyleSheet.create({
   addressItem: {
     borderWidth: 1,
     borderColor: "#E0E0E0",
-    borderRadius: 10,
-    padding: 12,
-    backgroundColor: "#FFFFFF",
-    marginBottom: 10,
+    borderRadius: borderRadius.r10,
+    ...spacingStyles.p12,
+    backgroundColor:staticColors.white,
+    ...spacingStyles.mb10
   },
   row: {
     flexDirection: "row",
@@ -258,7 +259,7 @@ const styles = StyleSheet.create({
     borderColor: staticColors.discountText,
   },
   name: {
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     fontSize: fontSizes.sm,
     color: staticColors.black,
   },
@@ -266,13 +267,13 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.lightGreen,
     ...spacingStyles.px10,
     ...spacingStyles.py2,
-    borderRadius:8,
+   borderRadius: borderRadius.r8,
     ...spacingStyles.ml10
   },
   label: {
     fontSize: fontSizes.s,
     color: staticColors.darkGreen,
-    fontWeight: "bold",
+    fontWeight:fontWeights.semiBold,
   },
   addressLine: {
     fontSize: fontSizes.xs,
@@ -283,7 +284,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: staticColors.textDarkGray,
     ...spacingStyles.mt5,
-    fontWeight: "600",
+    fontWeight: fontWeights.semiBold,
   },
   buttonRow: {
     flexDirection: "row",
@@ -295,25 +296,25 @@ const styles = StyleSheet.create({
     borderColor: staticColors.black,
     ...spacingStyles.px15,
    ...spacingStyles.py5,
-    borderRadius: 5,
+    borderRadius: borderRadius.r5,
     ...spacingStyles.mr10
   },
   buttonText: {
     fontSize: fontSizes.s,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.black,
   },
   confirmButton: {
     backgroundColor: staticColors.primary,
     ...spacingStyles.p10,
     alignItems: "center",
-    borderRadius: 6,
+    borderRadius: borderRadius.r6,
     ...spacingStyles.mt5
   },
   confirmText: {
     color: staticColors.white,
     fontSize: fontSizes.sm,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
   },
   errorText: {
     color: staticColors.errorColor,
