@@ -246,14 +246,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E0E0E0",
     borderRadius: borderRadius.r10,
-    ...spacingStyles.p12,
+    ...spacingStyles.p10,
     backgroundColor:staticColors.white,
     ...spacingStyles.mb10
   },
   row: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 5,
+    ...spacingStyles.mb5
   },
   radioOuterSelected: {
     borderColor: staticColors.discountText,
