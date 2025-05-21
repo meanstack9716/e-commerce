@@ -36,7 +36,7 @@ export const loadAuthState = createAsyncThunk(
       const token = await AsyncStorage.getItem("authToken");
       const user = await AsyncStorage.getItem("authUser");
       if (!token || !user) {
-        return rejectWithValue("No auth data found in AsyncStorage");
+        return rejectWithValue("Authentication data not found. Please log in again.");
       }
       return { token, user: JSON.parse(user) };
     } catch (error: any) {

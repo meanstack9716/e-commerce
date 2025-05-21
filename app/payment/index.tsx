@@ -9,6 +9,7 @@ import {
   Alert,
   ActivityIndicator,
 } from "react-native";
+import Toast from "react-native-toast-message";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
@@ -19,18 +20,24 @@ import fontSizes from "@/style/fontSizes";
 import { RootState } from "@/store/store";
 import { commonStyles } from "@/style/commonStyle";
 import { useAppDispatch } from "@/store/hooks";
-import { placeOrder, resetOrderState } from "@/store/order/orderSlice";
+import { placeOrder, clearOrderStatus } from "@/store/order/orderSlice";
 
 const PaymentScreen: React.FC = () => {
-  const [expandedOption, setExpandedOption] = useState<string | null>(null);
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [expandedPaymentOption, setExpandedPaymentOption] = useState<
+    string | null
+  >(null);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
+    string | null
+  >(null);
   const [orderNotes, setOrderNotes] = useState<{ [key: string]: string }>({});
   const { shippingAddressId } = useLocalSearchParams<{
     shippingAddressId: string;
   }>();
-  const dispatch = useAppDispatch ()
+  const dispatch = useAppDispatch();
   const cartItems = useSelector((state: RootState) => state.cart.cartItems);
-  const { loading, error, orderId } = useSelector((state: RootState) => state.order);
+  const { loading, error, orderId } = useSelector(
+    (state: RootState) => state.order
+  );
   const selectedItems = cartItems.filter((item) => item.isSelected);
   const totalPrice = selectedItems.reduce(
     (sum, item) => sum + (item.final_price || 0),
@@ -39,13 +46,21 @@ const PaymentScreen: React.FC = () => {
 
   useEffect(() => {
     if (orderId) {
-      Alert.alert("Success", "Order placed successfully!");
-      dispatch(resetOrderState()); 
+      Toast.show({
+        type: "success",
+        text1: "Success",
+        text2: "Order placed successfully!",
+      });
+      dispatch(clearOrderStatus());
       router.push("/cart");
     }
     if (error) {
-      Alert.alert("Error", error);
-      dispatch(resetOrderState());
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: error || "Failed to place order. Please try again.",
+      });
+      dispatch(clearOrderStatus());
     }
   }, [orderId, error, dispatch]);
 
@@ -56,11 +71,11 @@ const PaymentScreen: React.FC = () => {
   ];
 
   const toggleExpand = (label: string) => {
-    setExpandedOption(expandedOption === label ? null : label);
+    setExpandedPaymentOption(expandedPaymentOption === label ? null : label);
   };
 
   const handleSelectOption = (label: string) => {
-    setSelectedOption(label);
+    setSelectedPaymentMethod(label);
   };
 
   const handleOrderNoteChange = (label: string, text: string) => {
@@ -72,15 +87,19 @@ const PaymentScreen: React.FC = () => {
   };
 
   const handlePayNow = async () => {
-    if (!selectedOption) {
-      Alert.alert("Error", "Please select a payment method.");
+    if (!selectedPaymentMethod) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Please select a payment method.",
+      });
       return;
     }
 
     const payload = {
       cart_items_ids: selectedItems.map((item) => item.id),
       shipping_address_id: shippingAddressId,
-      payment_method: selectedOption,
+      payment_method: selectedPaymentMethod,
     };
 
     dispatch(placeOrder(payload));
@@ -112,7 +131,7 @@ const PaymentScreen: React.FC = () => {
                   <View
                     style={[
                       styles.radioButtonInner,
-                      selectedOption === option.label &&
+                      selectedPaymentMethod === option.label &&
                         styles.radioButtonSelected,
                     ]}
                   />
@@ -135,14 +154,16 @@ const PaymentScreen: React.FC = () => {
                     transform: [
                       {
                         rotate:
-                          expandedOption === option.label ? "180deg" : "0deg",
+                          expandedPaymentOption === option.label
+                            ? "180deg"
+                            : "0deg",
                       },
                     ],
                   },
                 ]}
               />
             </TouchableOpacity>
-            {expandedOption === option.label &&
+            {expandedPaymentOption === option.label &&
               option.label === "Cash On Delivery" && (
                 <View style={styles.expandedMessage}>
                   <Text style={styles.expandedMessageText}>
@@ -169,7 +190,7 @@ const PaymentScreen: React.FC = () => {
       </ScrollView>
 
       {/* Footer */}
-  <View style={styles.footer}>
+      <View style={styles.footer}>
         <View>
           <Text style={styles.totalText}>₹{totalPrice}</Text>
         </View>
@@ -179,10 +200,7 @@ const PaymentScreen: React.FC = () => {
           disabled={loading}
         >
           {loading ? (
-            <ActivityIndicator
-              size="small"
-              color={staticColors.white}
-            />
+            <ActivityIndicator size="small" color={staticColors.white} />
           ) : (
             <Text style={styles.payButtonText}>PAY NOW</Text>
           )}

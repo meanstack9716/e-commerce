@@ -10,6 +10,8 @@ import {
   FlatList,
   Image,
   Alert,
+  BackHandler,
+  Platform,
 } from "react-native";
 import { Ionicons, MaterialIcons, FontAwesome6 } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
@@ -67,7 +69,9 @@ const HomeScreen: React.FC = () => {
     if (categoriesError || productsError) {
       Alert.alert(
         "Error",
-        categoriesError || productsError || "Failed to fetch data. Please try again.",
+        categoriesError ||
+          productsError ||
+          "Failed to fetch data. Please try again.",
         [
           {
             text: "Retry",

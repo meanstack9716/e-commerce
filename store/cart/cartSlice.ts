@@ -1,14 +1,12 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { CartItem, Product } from "../../types/types";
-import { clearCartFromStorage, saveCartToStorage } from "@/utils/cartStorage";
 import { RootState } from "@/store/store";
+import { clearCartFromStorage, saveCartToStorage } from "@/utils/cartStorage";
 import { handleApiError } from "@/utils/handleApiError";
-import Constants from "expo-constants";
+import { getAuthHeaders } from "@/utils/apiHeader";
 
-// const apiUrl = Constants.expoConfig?.extra?.API_URL;
 const apiUrl = process.env.EXPO_PUBLIC_API_URL;
-
 const generateUniqueId = () => {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
 };
@@ -37,32 +35,14 @@ export const addToCartApi = createAsyncThunk<
   ) => {
     try {
       const state = getState();
-      const token = state.auth.token;
       const payload = {
         product_id: product.id,
         selected_size: selectedSize || "",
         selected_color: selectedColor || "",
         quantity: 1,
       };
-      await axios.post(`${apiUrl}/cart/add`, payload, {
-        headers: {
-          Authorization: `${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      await axios.post(`${apiUrl}/cart/add`, payload, getAuthHeaders(state));
     } catch (error: any) {
-      console.log("API Error Details:", {
-        status: error.response?.status,
-        statusText: error.response?.statusText,
-        data: error.response?.data,
-        headers: error.response?.headers,
-        requestPayload: {
-          product_id: product.id,
-          selected_size: selectedSize || "",
-          selected_color: selectedColor || "",
-          quantity: 1,
-        },
-      });
       return rejectWithValue({
         message:
           error.response?.data?.message ||
@@ -82,17 +62,14 @@ export const fetchCartItemsApi = createAsyncThunk<
 >("cart/fetchCartItemsApi", async (_, { getState, rejectWithValue }) => {
   try {
     const state = getState();
-    const token = state.auth.token;
-    const response = await axios.get(`${apiUrl}/cart/list`, {
-      headers: {
-        Authorization: `${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await axios.get(
+      `${apiUrl}/cart/list`,
+      getAuthHeaders(state)
+    );
     const cartItemsData = response.data.data;
     const cartItems: CartItem[] = cartItemsData.map((item: any) => {
       let colorName = item.selected_color_name;
-         const productId = item.product?.id;
+      const productId = item.product?.id;
       if (item.color) {
         const matchingSize = item.product?.sizes?.find(
           (size: any) => size.value === item.size
@@ -122,7 +99,7 @@ export const fetchCartItemsApi = createAsyncThunk<
       return {
         ...item.product,
         id: item.id,
-          productId,
+        productId,
         quantity: parseInt(item.quantity, 10) || 1,
         selectedSize: item.selected_size || item.size || "",
         selectedColor: item.selected_color || "",
@@ -133,10 +110,9 @@ export const fetchCartItemsApi = createAsyncThunk<
       };
     });
     return cartItems;
+  } catch (error: any) {
+    return rejectWithValue(handleApiError(error, "Failed to send code"));
   }
-  catch (error: any) {
-        return rejectWithValue(handleApiError(error, "Failed to send code"));
-      }
 });
 
 export const removeFromCartApi = createAsyncThunk<
@@ -178,7 +154,6 @@ export const updateCartItemApi = createAsyncThunk<
   ) => {
     try {
       const state = getState();
-      const token = state.auth.token;
 
       const payload = {
         id,
@@ -187,12 +162,7 @@ export const updateCartItemApi = createAsyncThunk<
         quantity,
       };
 
-      await axios.put(`${apiUrl}/cart/update`, payload, {
-        headers: {
-          Authorization: `${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      await axios.put(`${apiUrl}/cart/update`, payload, getAuthHeaders(state));
       dispatch(fetchCartItemsApi());
     } catch (error: any) {
       const errorMessage =
@@ -233,15 +203,15 @@ const cartSlice = createSlice({
       const galleryImages = images
         ? images
         : product.gallery
-        ? product.gallery
-            .filter((galleryItem) =>
-              colorName
-                ? galleryItem.color.trim().toLowerCase() ===
-                  colorName.trim().toLowerCase()
-                : false
-            )
-            .map((galleryItem) => galleryItem.img_url)
-        : [];
+          ? product.gallery
+              .filter((galleryItem) =>
+                colorName
+                  ? galleryItem.color.trim().toLowerCase() ===
+                    colorName.trim().toLowerCase()
+                  : false
+              )
+              .map((galleryItem) => galleryItem.img_url)
+          : [];
       const finalImages =
         galleryImages.length > 0
           ? galleryImages
@@ -250,7 +220,7 @@ const cartSlice = createSlice({
         ...product,
         quantity: 1,
         selectedSize,
-        productId:product.id,
+        productId: product.id,
         colorName,
         selectedColor,
         isSelected: true,

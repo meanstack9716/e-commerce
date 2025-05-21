@@ -12,7 +12,8 @@ import { Provider } from "react-redux";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { store } from "@/store/store";
 import { useCartStorage } from "@/hooks/useCartStorage";
-import { LoadAuthState } from "@/components/auth/LoadAuthState";
+import { AuthStateInitializer } from "@/components/auth/AuthStateInitializer";
+import Toast from "react-native-toast-message";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -58,8 +59,9 @@ export default function RootLayout() {
 
   return (
     <Provider store={store}>
-      <LoadAuthState />
+      <AuthStateInitializer />
       <AppLayout />
+      <Toast />
     </Provider>
   );
 }

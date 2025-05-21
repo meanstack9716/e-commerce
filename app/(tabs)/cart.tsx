@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import Toast from "react-native-toast-message";
 import { useDispatch, useSelector } from "react-redux";
 import useBackHandler from "@/utils/useBackHandler";
 import spacingStyles from "@/style/spacingStyles";
@@ -62,7 +63,11 @@ const ShoppingBagScreen: React.FC = () => {
 
     const selectedItems = cartItems.filter((item) => item.isSelected);
     if (selectedItems.length === 0) {
-      alert("Please select at least one item to place an order.");
+      Toast.show({
+        type: "error",
+        text1: "No Items Selected",
+        text2: "Please select at least one item to place an order.",
+      });
       return;
     }
 

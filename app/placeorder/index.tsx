@@ -22,7 +22,7 @@ interface DeliveryItem {
   estimatedDelivery: string;
 }
 
-const AddressScreen: React.FC = () => {
+const PlaceOrderScreen: React.FC = () => {
   const [showAddressSelector, setShowAddressSelector] = useState(false);
   const cartItems = useSelector((state: RootState) => state.cart.cartItems);
   const selectedItems = cartItems.filter((item) => item.isSelected);
@@ -227,4 +227,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddressScreen;
+export default PlaceOrderScreen;

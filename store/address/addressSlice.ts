@@ -4,6 +4,7 @@ import { RootState } from "@/store/store";
 import { handleApiError } from "@/utils/handleApiError";
 import { Address, AddressFormData } from "@/types/types";
 import Constants from "expo-constants";
+import { getAuthHeaders } from "@/utils/apiHeader";
 
 interface AddressState {
   addressTypes: string[];
@@ -36,13 +37,7 @@ export const fetchAddressTypes = createAsyncThunk<
 >("address/fetchAddressTypes", async (_, { getState, rejectWithValue }) => {
   try {
     const state = getState();
-    const token = state.auth.token;
-    const response = await axios.get(`${apiUrl}/address/types-list`, {
-      headers: {
-        Authorization: `${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await axios.get(`${apiUrl}/address/types-list`, getAuthHeaders(state))
     return response.data.data;
   } catch (error: any) {
     return rejectWithValue(
@@ -67,7 +62,6 @@ export const saveAddress = createAsyncThunk<
   ) => {
     try {
       const state = getState();
-      const token = state.auth.token;
       await axios.post(
         `${apiUrl}/address/add`,
         {
@@ -82,12 +76,7 @@ export const saveAddress = createAsyncThunk<
           country: formData.country,
           is_primary: isDefault,
         },
-        {
-          headers: {
-            Authorization: `${token}`,
-            "Content-Type": "application/json",
-          },
-        }
+        getAuthHeaders(state)
       );
     } catch (error: any) {
       if (error.response?.data?.errors) {
@@ -123,13 +112,7 @@ export const fetchAddresses = createAsyncThunk<
 >("address/fetchAddresses", async (_, { getState, rejectWithValue }) => {
   try {
     const state = getState();
-    const token = state.auth.token;
-    const response = await axios.get(`${apiUrl}/address/list`, {
-      headers: {
-        Authorization: `${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await axios.get(`${apiUrl}/address/list`,getAuthHeaders(state));
     return response.data.data;
   } catch (error: any) {
     return rejectWithValue(
@@ -147,13 +130,7 @@ export const removeAddress = createAsyncThunk<
   async (id: string, { getState, rejectWithValue }) => {
     try {
       const state = getState();
-      const token = state.auth.token;
-      await axios.delete(`${apiUrl}/address/remove/${id}`, {
-        headers: {
-          Authorization: `${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      await axios.delete(`${apiUrl}/address/remove/${id}`, getAuthHeaders(state));
       return id;
     } catch (error: any) {
       return rejectWithValue(
@@ -180,7 +157,6 @@ export const updateAddress = createAsyncThunk<
   ) => {
     try {
       const state = getState();
-      const token = state.auth.token;
       await axios.put(
         `${apiUrl}/address/update`,
         {
@@ -196,12 +172,7 @@ export const updateAddress = createAsyncThunk<
           country: formData.country,
           is_primary: isDefault,
         },
-        {
-          headers: {
-            Authorization: `${token}`,
-            "Content-Type": "application/json",
-          },
-        }
+        getAuthHeaders(state)
       );
     } catch (error: any) {
       if (error.response?.data?.errors) {

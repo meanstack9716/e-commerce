@@ -108,7 +108,7 @@ const SelectAddress = ({ onGoBack }: SelectAddressProps) => {
           {primaryAddress && (
             <>
               <Text style={styles.sectionTitle}>DEFAULT ADDRESS</Text>
-              <AddressItem
+              <AddressCard
                 address={primaryAddress}
                 selected={selectedAddressId === primaryAddress.id}
                 onSelect={handleSelect}
@@ -122,7 +122,7 @@ const SelectAddress = ({ onGoBack }: SelectAddressProps) => {
             <>
               <Text style={styles.sectionTitle}>OTHER ADDRESS</Text>
               {otherAddresses.map((address) => (
-                <AddressItem
+                <AddressCard
                   key={address.id}
                   address={address}
                   selected={selectedAddressId === address.id}
@@ -151,7 +151,7 @@ interface AddressItemProps {
   onEdit: (address: Address) => void;
 }
 
-const AddressItem: React.FC<AddressItemProps> = ({
+const AddressCard: React.FC<AddressItemProps> = ({
   address,
   selected,
   onSelect,

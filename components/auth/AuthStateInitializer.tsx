@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useAppDispatch } from "@/store/hooks";
 import { loadAuthState } from "@/store/auth/authSlice";
 
-export function LoadAuthState() {
+export function AuthStateInitializer() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
