@@ -39,4 +39,6 @@ yarn-error.*
 .env.development
 .env.production
 .idea/
+.idea/*
 app-example
+
