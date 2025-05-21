@@ -19,8 +19,9 @@ import { Button } from "@/components/common/Button";
 import textStyles from "@/style/textStyles";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import images from "@/constants/images";
+import borderRadius from "@/style/borderRadius";
 
 interface LoginModalProps {
   visible: boolean;
@@ -245,7 +246,7 @@ const styles = StyleSheet.create({
   },
   forgotPasswordText: {
     color: staticColors.linkPrimary,
-    fontWeight: "600",
+    fontWeight: fontWeights.semiBold,
   },
   rememberMeContainer: {
     flexDirection: "row",
@@ -256,7 +257,7 @@ const styles = StyleSheet.create({
     height: 20,
     borderWidth: 1,
     borderColor: staticColors.linkPrimary,
-    borderRadius: 4,
+    borderRadius: borderRadius.r4,
     ...spacingStyles.mr5,
     justifyContent: "center",
     alignItems: "center",

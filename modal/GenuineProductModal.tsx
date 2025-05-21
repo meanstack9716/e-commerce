@@ -11,7 +11,7 @@ import {
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { Ionicons } from "@expo/vector-icons";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 
 interface GenuineProductModalProps {
   isVisible: boolean;
@@ -83,13 +83,13 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: fontSizes.md,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.primary,
   },
   closeButton: {
     fontSize:fontSizes['lg'],
     color: staticColors.shadowColor,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
   },
   modalContent: {
     flexDirection: "row",

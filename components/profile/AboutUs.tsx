@@ -4,7 +4,7 @@ import ExpandableContent from "../ui/ExpandableContent";
 import textStyles from "@/style/textStyles";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes} from "@/style/typography";
 
 const aboutUsData = [
   {

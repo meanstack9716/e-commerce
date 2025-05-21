@@ -2,8 +2,9 @@ import spacingStyles from "@/style/spacingStyles";
 import React from "react";
 import { Text, TouchableOpacity, StyleSheet, ViewStyle, TextStyle, ActivityIndicator } from "react-native";
 import colors from "@/style/staticColors";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import staticColors from "@/style/staticColors";
+import borderRadius from "@/style/borderRadius";
 interface ButtonProps {
   title: string;
   onPress: () => void;
@@ -41,7 +42,7 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: colors.primary,
     ...spacingStyles.p10,
-    borderRadius: 6,
+    borderRadius: borderRadius.r6,
     alignItems: "center",
     justifyContent: "center",
     ...spacingStyles.mb10,
@@ -49,7 +50,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: colors.white,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     fontSize:fontSizes.sm
   },
   disabled: {

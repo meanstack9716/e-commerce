@@ -17,8 +17,9 @@ import {
 } from "@expo/vector-icons";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
+import borderRadius from "@/style/borderRadius";
 
 interface OfferDetailsModalProps {
   visible: boolean;
@@ -390,14 +391,14 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: fontSizes['lg'],
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.darkGray,
   },
   modalSubtitle: {
     backgroundColor: staticColors.darkGreen,
     ...spacingStyles.px10,
     ...spacingStyles.py5,
-    borderRadius: 10,
+    borderRadius: borderRadius.r10,
     color: staticColors.white,
   },
   modalDescription: {
@@ -412,7 +413,7 @@ const styles = StyleSheet.create({
   offerSection: {
     borderWidth: 1,
     borderColor: staticColors.borderLight,
-    borderRadius: 10,
+   borderRadius: borderRadius.r10,
     ...spacingStyles.mx10,
     ...spacingStyles.mb10,
     ...spacingStyles.p10,
@@ -424,12 +425,12 @@ const styles = StyleSheet.create({
   },
   offerLabel: {
     fontSize: fontSizes.sm,
-    fontWeight: "600",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.darkGray,
   },
   offerValue: {
     fontSize: fontSizes.sm,
-    fontWeight: "600",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.darkGreen,
   },
   offerDetails: {
@@ -445,7 +446,7 @@ const styles = StyleSheet.create({
   detailsButtonText: {
     fontSize: fontSizes.sm,
     color: staticColors.discountText,
-    fontWeight: "600",
+    fontWeight: fontWeights.semiBold,
   },
   bankRow: {
     flexDirection: "row",
@@ -457,7 +458,7 @@ const styles = StyleSheet.create({
   },
   moreOffersSection: {
     ...spacingStyles.mx10,
-    borderRadius: 10,
+    borderRadius: borderRadius.r10,
     borderWidth: 1,
     borderColor: staticColors.lightGray,
   },
@@ -466,7 +467,7 @@ const styles = StyleSheet.create({
   },
   moreOffersHeader: {
     backgroundColor: staticColors.lightGreen,
-    borderRadius: 10,
+     borderRadius: borderRadius.r10,
     ...spacingStyles.p10,
     flexDirection: "row",
     justifyContent: "space-between",
@@ -479,7 +480,7 @@ const styles = StyleSheet.create({
   offerIcon: {
     width: 24,
     height: 24,
-    borderRadius: 12,
+    borderRadius: borderRadius.r12,
     backgroundColor: staticColors.white,
     justifyContent: "center",
     alignItems: "center",
@@ -487,13 +488,13 @@ const styles = StyleSheet.create({
   },
   moreOffersText: {
     fontSize: fontSizes.base,
-    fontWeight: "600",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.darkGray,
   },
   viewLessText: {
     fontSize: fontSizes.sm,
     color: staticColors.discountText,
-    fontWeight: "600",
+    fontWeight: fontWeights.semiBold,
   },
 
   viewLessRow: {
@@ -502,12 +503,12 @@ const styles = StyleSheet.create({
   },
   cardOfferSection: {
     backgroundColor: staticColors.white,
-    borderRadius: 10,
+    borderRadius: borderRadius.r10,
     ...spacingStyles.p10,
   },
   cardName: {
     fontSize: fontSizes.sm,
-    fontWeight: "600",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.darkGray,
   },
   cardOfferDetails: {

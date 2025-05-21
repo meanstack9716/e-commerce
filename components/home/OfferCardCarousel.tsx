@@ -11,8 +11,9 @@ import offerData from "../../assets/data/offers.json";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
+import borderRadius from "@/style/borderRadius";
 
 const { width } = Dimensions.get("window");
 
@@ -111,7 +112,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: fontSizes.lg,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.primary,
     fontFamily: "helveticaBold",
   },
@@ -133,7 +134,7 @@ const styles = StyleSheet.create({
   },
   timerSegment: {
     backgroundColor: staticColors.lightPink,
-    borderRadius: 6,
+    borderRadius: borderRadius.r6,
     ...spacingStyles.p5,
     marginRight: 8,
     alignItems: "center",
@@ -141,7 +142,7 @@ const styles = StyleSheet.create({
     gap: gapSizes.sm
   },
   timerText: {
-    fontWeight: "600",
+    fontWeight: fontWeights.semiBold,
     fontSize: fontSizes.base,
     color: staticColors.brightRed,
   },
@@ -155,7 +156,7 @@ const styles = StyleSheet.create({
   card: {
     width: width * 0.4,
     backgroundColor: colors.white,
-    borderRadius: 10,
+    borderRadius: borderRadius.r10,
     ...spacingStyles.mr10,
     overflow: "hidden",
     borderColor: staticColors.lightGray,
@@ -172,7 +173,7 @@ const styles = StyleSheet.create({
   },
 
   brand: {
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     fontSize: fontSizes.xs,
     color: staticColors.primary,
   },
@@ -180,7 +181,7 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: 150,
-    borderRadius: 8,
+    borderRadius: borderRadius.r8,
     ...spacingStyles.mb5,
   },
 
@@ -194,7 +195,7 @@ const styles = StyleSheet.create({
   discount: {
     fontSize:fontSizes.xs,
     color: staticColors.brightRed,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     textAlign: "center",
   },
 });

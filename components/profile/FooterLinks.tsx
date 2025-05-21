@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import fontSizes from '@/style/fontSizes';
+import {fontSizes} from "@/style/typography";
 import colors from '@/style/staticColors';
 import spacingStyles from '@/style/spacingStyles';
 

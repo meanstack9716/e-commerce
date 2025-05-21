@@ -14,8 +14,9 @@ import staticColors from "@/style/staticColors";
 import DeliveryAddressScreen from "@/components/productDetails/DeliveryAddress";
 import { useLocation } from "@/utils/useLocation";
 import spacingStyles from "@/style/spacingStyles";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import LocationAlertModal from "./LocationAlertModal";
+import borderRadius from "@/style/borderRadius";
 
 interface LocationModalProps {
   visible: boolean;
@@ -219,7 +220,7 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontSize: fontSizes.md,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.primary,
     marginBottom: 5,
   },
@@ -229,7 +230,7 @@ const styles = StyleSheet.create({
   },
   grantButton: {
     backgroundColor: staticColors.discountText,
-    borderRadius: 20,
+    borderRadius: borderRadius.r20,
     ...spacingStyles.py5,
     ...spacingStyles.px15,
     alignSelf: "flex-start",
@@ -239,7 +240,7 @@ const styles = StyleSheet.create({
   grantButtonText: {
     color: staticColors.white,
     fontSize: fontSizes.xs,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
   },
   inputContainer: {
     ...spacingStyles.mb15,
@@ -249,7 +250,7 @@ const styles = StyleSheet.create({
   inputLabel: {
     fontSize: fontSizes.sm,
     color: staticColors.primary,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
   },
   inputWrapper: {
     flexDirection: "row",
@@ -260,7 +261,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderWidth: 1,
     borderColor: staticColors.borderLight,
-    borderRadius: 8,
+   borderRadius: borderRadius.r8,
     ...spacingStyles.p10,
     backgroundColor: staticColors.bgSecondary,
   },
@@ -278,7 +279,7 @@ const styles = StyleSheet.create({
   checkButtonText: {
     color: staticColors.shadowColor,
     fontSize: fontSizes.sm,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
   },
   searchContainer: {
     flexDirection: "row",

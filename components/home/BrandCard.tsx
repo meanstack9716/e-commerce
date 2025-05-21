@@ -12,7 +12,8 @@ import { StatusBar } from "expo-status-bar";
 import brandData from "../../assets/data/brand.json";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
+import borderRadius from "@/style/borderRadius";
 const { width } = Dimensions.get("window");
 
 interface Brand {
@@ -65,7 +66,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: fontSizes.lg,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.primary,
     fontFamily: "helveticaBold",
     textAlign: "center",
@@ -76,7 +77,7 @@ const styles = StyleSheet.create({
   brandCard: {
     width: width * 0.4,
     ...spacingStyles.mr15,
-    borderRadius: 10,
+    borderRadius: borderRadius.r10,
     backgroundColor: staticColors.white,
     overflow: "hidden",
     elevation: 1,
@@ -92,7 +93,7 @@ const styles = StyleSheet.create({
   },
   brandName: {
     fontSize:fontSizes.base,
-    fontWeight: "600",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.darkGray,
     textAlign: "center",
   },

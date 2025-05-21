@@ -10,7 +10,8 @@ import {
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
+import borderRadius from "@/style/borderRadius";
 
 interface TabProps {
   activeTab: string;
@@ -59,7 +60,7 @@ const tabStyles = StyleSheet.create({
     ...spacingStyles.px15,
     borderWidth: 1,
     borderColor: staticColors.borderLight,
-    borderRadius: 20,
+     borderRadius: borderRadius.r20,
     ...spacingStyles.mr10,
   },
   activeTab: {
@@ -72,6 +73,6 @@ const tabStyles = StyleSheet.create({
   },
   activeTabText: {
     color: staticColors.white,
-    fontWeight: "600",
+    fontWeight: fontWeights.semiBold,
   },
 });

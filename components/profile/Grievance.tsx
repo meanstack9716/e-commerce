@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { StyleSheet } from "react-native";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import textStyles from "@/style/textStyles";
@@ -120,12 +120,12 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: fontSizes.md,
-    fontWeight: "semibold",
+    fontWeight: fontWeights.semiBold,
     ...spacingStyles.mb5
   },
   subHeading: {
     fontSize:fontSizes.base,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     ...spacingStyles.mt10,
     ...spacingStyles.mb5
   },
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.mb5
   },
   bold: {
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
   },
   linkButton: {
     ...spacingStyles.my10

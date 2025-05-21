@@ -12,13 +12,14 @@ import data from "@/assets/data/products.json";
 import { Product } from "../../types/types";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import { textTruncate } from "@/utils/textTruncate";
 import { commonStyles } from "@/style/commonStyle";
 import { FontAwesome } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "@/store/cart/cartSlice";
 import { RootState } from "@/store/store";
+import borderRadius from "@/style/borderRadius";
 const SimilarProducts = ({ currentProduct }: { currentProduct: Product }) => {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(
@@ -119,13 +120,13 @@ const styles = StyleSheet.create({
   card: {
     ...spacingStyles.mr10,
     width: 150,
-    borderRadius: 8,
+    borderRadius: borderRadius.r8,
     overflow: "hidden",
   },
   image: {
     width: "100%",
     height: 190,
-    borderRadius: 10,
+    borderRadius: borderRadius.r10,
   },
   title: {
     ...spacingStyles.mt5,
@@ -133,14 +134,14 @@ const styles = StyleSheet.create({
   },
   price: {
     fontSize: fontSizes.sm,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     ...spacingStyles.mt2,
     ...spacingStyles.mx5,
     color: staticColors.black,
   },
   addButton: {
     ...spacingStyles.py5,
-    borderRadius: 20,
+    borderRadius: borderRadius.r20,
     ...spacingStyles.m5,
     borderWidth: 1,
     borderColor: staticColors.primary,
@@ -149,7 +150,7 @@ const styles = StyleSheet.create({
     color: staticColors.primary,
     textAlign: "center",
     fontSize: fontSizes.xs,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
   },
 });
 

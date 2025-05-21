@@ -9,8 +9,9 @@ import {
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
+import borderRadius from "@/style/borderRadius";
 
 const UserProfile = () => {
   return (
@@ -67,20 +68,20 @@ const styles = StyleSheet.create({
   container: { flex: 1, ...spacingStyles.p20 },
   banner: {
     backgroundColor: staticColors.bannerColor,
-    borderRadius: 10,
+    borderRadius: borderRadius.r10,
     ...spacingStyles.p15,
     ...spacingStyles.mb20,
   },
   bannerText: { fontSize: fontSizes.sm, ...spacingStyles.mb10 },
-  highlight: { fontWeight: "bold", color: staticColors.bannerHeighlight },
+  highlight: { fontWeight: fontWeights.semiBold, color: staticColors.bannerHeighlight },
   knowMoreButton: {
     backgroundColor: staticColors.bannerHeighlight,
     ...spacingStyles.py5,
     ...spacingStyles.px15,
-    borderRadius: 6,
+   borderRadius: borderRadius.r6,
     alignSelf: "flex-start",
   },
-  knowMoreText: { color: staticColors.white, fontWeight: "bold" },
+  knowMoreText: { color: staticColors.white, fontWeight: fontWeights.semiBold },
   profileSelector: {
     flexDirection: "row",
     alignItems: "center",
@@ -90,7 +91,7 @@ const styles = StyleSheet.create({
   profileCircle: {
     width: 60,
     height: 60,
-    borderRadius: 30,
+    borderRadius: borderRadius.r30,
     backgroundColor: staticColors.profileBg,
     alignItems: "center",
     justifyContent: "center",
@@ -98,7 +99,7 @@ const styles = StyleSheet.create({
   },
   profileInitial: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.primary,
   },
   adminBadge: {
@@ -107,19 +108,19 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.darkGray,
     ...spacingStyles.px5,
     ...spacingStyles.py2,
-    borderRadius: 6,
+   borderRadius: borderRadius.r6
   },
   adminText: { color: staticColors.white, fontSize: fontSizes.xs },
   addCircle: {
     width: 60,
     height: 60,
-    borderRadius: 30,
+    borderRadius: borderRadius.r30,
     borderWidth: 1,
     borderColor: staticColors.softGray,
     alignItems: "center",
     justifyContent: "center",
   },
-  plusText: { fontSize: fontSizes.xl, fontWeight: "bold" },
+  plusText: { fontSize: fontSizes.xl, fontWeight: fontWeights.semiBold},
   cardRow: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -131,7 +132,7 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.bgSecondary,
     ...spacingStyles.p15,
     ...spacingStyles.my5,
-    borderRadius: 10,
+   borderRadius: borderRadius.r10,
     alignItems: "center",
   },
 });

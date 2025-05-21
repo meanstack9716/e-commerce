@@ -10,8 +10,9 @@ import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import colors from "@/style/staticColors";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
+import borderRadius from "@/style/borderRadius";
 
 interface BottomActionsProps {
   onAddToCart?: () => void;
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 12,
+    borderRadius: borderRadius.r12,
     ...spacingStyles.py10,
     flexDirection: "row",
     gap: gapSizes.sm,
@@ -59,7 +60,7 @@ const styles = StyleSheet.create({
   addToCartText: {
     fontSize: fontSizes.sm,
     color: staticColors.white,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     letterSpacing: 1.2,
   },
   wishlistButton: {
@@ -68,7 +69,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     ...spacingStyles.py10,
-    borderRadius: 12,
+     borderRadius: borderRadius.r12,
     borderWidth: 1,
     borderColor: staticColors.borderDark,
     flexDirection: "row",
@@ -77,7 +78,7 @@ const styles = StyleSheet.create({
   wishlist: {
     fontSize: fontSizes.sm,
     color: staticColors.shadowColor,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     letterSpacing: 1.2,
   },
 });

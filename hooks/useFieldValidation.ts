@@ -111,6 +111,9 @@ export const useFieldValidation = () => {
     setErrors({});
   };
   
+  const setFieldErrors = (newErrors: { [key: string]: string }) => {
+    setErrors(newErrors);
+  };
 
   return { 
     errors, 
@@ -119,6 +122,7 @@ export const useFieldValidation = () => {
     handlePasswordValidation, 
     handleConfirmPasswordMatch ,
     handleLoginPasswordValidation,
-    resetErrors
+    resetErrors,
+    setFieldErrors
   };
 };

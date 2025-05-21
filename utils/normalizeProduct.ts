@@ -30,6 +30,7 @@ export const normalizeProduct = (Product: any): Product => {
           business_email: Product.seller.business_email,
           business_mobile: Product.seller.business_mobile,
         }
-      : undefined
+      : undefined,
+      delivery_days: Product.delivery_days,
   };
 };

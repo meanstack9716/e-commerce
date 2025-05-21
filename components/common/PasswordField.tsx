@@ -11,7 +11,8 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
+import borderRadius from "@/style/borderRadius";
 
 interface PasswordFieldProps extends TextInputProps {
   label?: string;
@@ -111,11 +112,11 @@ const styles = StyleSheet.create({
   labelFloating: {
     top: -8,
     fontSize: fontSizes.sm,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
   },
   labelFocused: {
     color: staticColors.primary,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
   },
   labelError: {
     color: "red", 
@@ -126,10 +127,11 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
     borderColor: staticColors.lightGray,
-    borderRadius: 6,
+   borderRadius: borderRadius.r6,
     ...spacingStyles.p10,
     paddingVertical: Platform.OS === "ios" ? 8 : 5,
-    fontSize: fontSizes.sm
+    fontSize: fontSizes.sm,
+     color:staticColors.textDarkGray
   },
   inputFocused: {
     borderColor: staticColors.primary,

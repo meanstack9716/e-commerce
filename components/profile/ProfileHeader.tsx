@@ -4,7 +4,8 @@ import LoginModal from "@/app/(auth)/loginModal";
 import SignUpModal from "@/app/(auth)/signUpModal";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
-import fontSizes from "@/style/fontSizes";
+import { fontSizes, fontWeights } from "@/style/typography";
+import borderRadius from "@/style/borderRadius";
 
 const ProfileHeader: React.FC = () => {
   const [loginModalVisible, setLoginModalVisible] = useState<boolean>(false);
@@ -97,7 +98,7 @@ const styles = StyleSheet.create({
     width: 120,
     height: 125,
     backgroundColor: colors.white,
-    borderRadius: 5,
+    borderRadius: borderRadius.r5,
     borderColor: colors.borderLight,
     borderWidth: 1,
     alignItems: "center",
@@ -107,7 +108,7 @@ const styles = StyleSheet.create({
     width: "55%",
     height: "55%",
     resizeMode: "cover",
-    borderRadius: 5,
+    borderRadius: borderRadius.r5,
   },
   loginButton: {
     marginTop: 75,
@@ -118,12 +119,11 @@ const styles = StyleSheet.create({
     ...spacingStyles.py10,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 5,
+    borderRadius: borderRadius.r5,
   },
   loginText: {
     color: colors.white,
-    fontWeight: "bold",
-    fontSize: fontSizes.xs,
+    fontWeight: fontWeights.semiBold,
   },
 });
 

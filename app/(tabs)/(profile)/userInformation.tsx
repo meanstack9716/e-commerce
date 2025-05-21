@@ -16,10 +16,11 @@ import TextField from "@/components/common/TextField";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import images from "@/constants/images";
 import gapSizes from "@/style/gapSizes";
 import { pickImages } from "@/utils/imagePicker";
+import borderRadius from "@/style/borderRadius";
 
 const { height } = Dimensions.get("window");
 interface UserData {
@@ -170,7 +171,7 @@ const styles = StyleSheet.create({
   },
   accountText: {
     fontSize: fontSizes["2xl"],
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: colors.white,
   },
   avatarWrapper: {
@@ -180,7 +181,7 @@ const styles = StyleSheet.create({
   avatar: {
     width: 100,
     height: 100,
-    borderRadius: 60,
+    borderRadius: borderRadius.circle,
     ...spacingStyles.mb10,
     borderWidth: 2,
     borderColor: colors.textLightGray,
@@ -194,7 +195,7 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.sm,
     color: staticColors.textLightGray,
     ...spacingStyles.mb10,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     borderBottomWidth: 2,
     borderColor: colors.textLightGray,
     borderStyle: "dotted",
@@ -211,7 +212,7 @@ const styles = StyleSheet.create({
     width: "80%",
   },
   label: {
-    fontWeight: "600",
+    fontWeight: fontWeights.semiBold,
     ...spacingStyles.mb10,
     alignSelf: "flex-start",
     color: staticColors.darkGray,
@@ -230,7 +231,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.py15,
     borderWidth: 1,
     borderColor: staticColors.lightGray,
-    borderRadius: 12,
+    borderRadius: borderRadius.r12,
     backgroundColor: colors.white,
   },
 
@@ -268,6 +269,6 @@ const styles = StyleSheet.create({
   helpLink: {
     marginTop: -5,
     color: staticColors.linkDefault,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
   },
 });

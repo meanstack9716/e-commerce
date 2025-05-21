@@ -12,21 +12,26 @@ import { Provider } from "react-redux";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { store } from "@/store/store";
 import { useCartStorage } from "@/hooks/useCartStorage";
+import { AuthStateInitializer } from "@/components/auth/AuthStateInitializer";
+import Toast from "react-native-toast-message";
 
 SplashScreen.preventAutoHideAsync();
 
 function AppLayout() {
   const colorScheme = useColorScheme();
- useCartStorage();
+  useCartStorage();
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack screenOptions={{ headerShown: false }} >
+      <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="(auth)" />
         <Stack.Screen name="+not-found" />
         <Stack.Screen name="/categories" />
         <Stack.Screen name="/ProductDetails" />
+        <Stack.Screen name="/addNewAddress" />
+        <Stack.Screen name="/payment" />
+        <Stack.Screen name="/placeorder" />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>
@@ -54,7 +59,9 @@ export default function RootLayout() {
 
   return (
     <Provider store={store}>
+      <AuthStateInitializer />
       <AppLayout />
+      <Toast />
     </Provider>
   );
 }

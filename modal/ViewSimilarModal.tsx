@@ -11,9 +11,9 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
+import {fontSizes, fontWeights} from "@/style/typography";
 import SimilarProducts from "@/components/productDetails/SimilarProducts";
 import { Product } from "@/types/types";
-import fontSizes from "@/style/fontSizes";
 
 interface ViewSimilarModalProps {
   visible: boolean;
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: fontSizes.md,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.primary,
   },
   closeButton: {

@@ -8,12 +8,13 @@ import {
   Image,
   StyleSheet,
 } from "react-native";
-import fontSizes from "@/style/fontSizes";
+import { Ionicons } from "@expo/vector-icons";
+import {fontSizes, fontWeights} from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import { Ionicons } from "@expo/vector-icons";
 import ProductActionButtons from "@/components/productDetails/ProductActionButtons";
+import borderRadius from "@/style/borderRadius";
 
 interface SizeChartModalProps {
   visible: boolean;
@@ -383,7 +384,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: fontSizes.md,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.primary,
   },
   productInfo: {
@@ -397,11 +398,11 @@ const styles = StyleSheet.create({
   productImage: {
     width: 75,
     height: 90,
-    borderRadius: 4,
+    borderRadius: borderRadius.r4,
     ...spacingStyles.mr15,
   },
   productBrand: {
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     fontSize: fontSizes.base,
     color: staticColors.shadowColor,
   },
@@ -412,7 +413,7 @@ const styles = StyleSheet.create({
   },
   productPrice: {
     color: staticColors.discountText,
-    fontWeight: "600",
+    fontWeight: fontWeights.semiBold,
     fontSize: fontSizes.sm,
   },
   tabContainer: {
@@ -436,7 +437,7 @@ const styles = StyleSheet.create({
   },
   activeTabText: {
     color: staticColors.discountText,
-    fontWeight: "600",
+    fontWeight:fontWeights.semiBold,
   },
   contentScroll: {
     flex: 1,
@@ -447,7 +448,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: fontSizes.base,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.shadowColor,
     ...spacingStyles.mb10,
   },
@@ -470,13 +471,13 @@ const styles = StyleSheet.create({
   unitToggle: {
     flexDirection: "row",
     backgroundColor: staticColors.lightGray,
-    borderRadius: 20,
+   borderRadius: borderRadius.r20,
     ...spacingStyles.p2,
   },
   unitButton: {
     ...spacingStyles.px20,
     ...spacingStyles.py10,
-    borderRadius: 20,
+    borderRadius: borderRadius.r20,
   },
   activeUnitButton: {
     backgroundColor: staticColors.primary,
@@ -498,7 +499,7 @@ const styles = StyleSheet.create({
   },
   headerCell: {
     minWidth: 90,
-    fontWeight: "500",
+    fontWeight: fontWeights.medium,
     color:staticColors.darkGray,
     textAlign: "center",
   },
@@ -508,7 +509,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   headerTextMain: {
-    fontWeight: "500",
+    fontWeight: fontWeights.medium,
     color: staticColors.darkGray,
     fontSize: fontSizes.sm,
   },
@@ -524,7 +525,7 @@ const styles = StyleSheet.create({
   sizeCell: {
     minWidth: 90,
     textAlign: "center",
-    fontWeight: "500",
+    fontWeight: fontWeights.medium,
   },
   dataCell: {
     minWidth: 90,
@@ -538,7 +539,7 @@ const styles = StyleSheet.create({
   radioCircle: {
     width: 20,
     height: 20,
-    borderRadius: 10,
+    borderRadius: borderRadius.r10,
     borderWidth: 1,
     borderColor: staticColors.borderDark,
     justifyContent: "center",
@@ -547,7 +548,7 @@ const styles = StyleSheet.create({
   radioDot: {
     width: 12,
     height: 12,
-    borderRadius: 6,
+    borderRadius: borderRadius.r6,
     backgroundColor: staticColors.discountText,
   },
   rowDivider: {

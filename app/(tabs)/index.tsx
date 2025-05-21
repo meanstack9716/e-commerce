@@ -9,6 +9,9 @@ import {
   StatusBar,
   FlatList,
   Image,
+  Alert,
+  BackHandler,
+  Platform,
 } from "react-native";
 import { Ionicons, MaterialIcons, FontAwesome6 } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
@@ -29,15 +32,14 @@ import FullScreenLoader from "@/components/common/FullScreenLoader";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
 import { Product } from "@/types/types";
 import images from "@/constants/images";
-
 import { useAppDispatch } from "@/store/hooks";
 import { fetchCategories } from "@/store/category/categoriesSlice";
 import { fetchProducts } from "@/store/product/productsSlice";
-
+import borderRadius from "@/style/borderRadius";
 
 const HomeScreen: React.FC = () => {
   const [likedProductItems, setLikedProductItems] = useState<string[]>([]);
@@ -63,6 +65,51 @@ const HomeScreen: React.FC = () => {
     dispatch(fetchCategories());
     dispatch(fetchProducts());
   }, [dispatch]);
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        if (router.canGoBack()) {
+          router.back();
+          return true;
+        } else {
+          if (Platform.OS === "ios") {
+            router.navigate("/(tabs)");
+          } else {
+            BackHandler.exitApp();
+          }
+          return true;
+        }
+      }
+    );
+
+    return () => backHandler.remove();
+  }, []);
+
+  useEffect(() => {
+    if (categoriesError || productsError) {
+      Alert.alert(
+        "Error",
+        categoriesError ||
+          productsError ||
+          "Failed to fetch data. Please try again.",
+        [
+          {
+            text: "Retry",
+            onPress: () => {
+              dispatch(fetchCategories());
+              dispatch(fetchProducts());
+            },
+          },
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+        ]
+      );
+    }
+  }, [categoriesError, productsError, dispatch]);
 
   const tabs = [
     "All",
@@ -154,9 +201,7 @@ const HomeScreen: React.FC = () => {
       {/* <ImageSlider slides={bannerData} /> */}
       {/* <PromotionalCards cards={promotionalData.promotionalCards} /> */}
       {/* <OfferCardCarousel /> */}
-      {/* <BrandCard />
-      <OfferPriceCard />
-      <PocketFriendlyBargain /> */}
+      {/* <BrandCard /> <OfferPriceCard /> <PocketFriendlyBargain /> */}
     </>
   );
 
@@ -204,7 +249,6 @@ const HomeScreen: React.FC = () => {
               style={styles.logo}
               resizeMode="contain"
             />
-
             <TextInput
               placeholder="Search products..."
               style={styles.searchInput}
@@ -294,7 +338,7 @@ const styles = StyleSheet.create({
   },
   addressText: {
     fontSize: fontSizes.sm,
-    fontWeight: "500",
+    fontWeight: fontWeights.medium,
     color: colors.primary,
     ...spacingStyles.mx5,
   },
@@ -310,7 +354,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderColor: staticColors.lightGray,
     borderWidth: 1,
-    borderRadius: 12,
+    borderRadius: borderRadius.r12,
     ...spacingStyles.px10,
     backgroundColor: colors.white,
     justifyContent: "space-between",

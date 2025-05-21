@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import colors from "./staticColors";
 import spacingStyles from "./spacingStyles";
-import fontSizes from "./fontSizes";
+import {fontSizes} from "./typography";
 
 const textStyles = StyleSheet.create({
   title: {

@@ -11,9 +11,10 @@ import { MaterialIcons } from "@expo/vector-icons";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import LocationModal from "@/modal/LocationModal";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
 import { getCurrentPinCode } from "@/utils/currentLocation";
+import borderRadius from "@/style/borderRadius";
 
 const ProductDetails = () => {
   const [isLocationModalVisible, setIsLocationModalVisible] = useState(false);
@@ -149,13 +150,13 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: fontSizes.md,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     ...spacingStyles.py5,
     color: staticColors.primary,
   },
   tableTitle: {
     fontSize: fontSizes.md,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.primary,
   },
   inputContainer: {
@@ -169,7 +170,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 1,
     borderColor: staticColors.borderLight,
-    borderRadius: 10,
+     borderRadius: borderRadius.r10,
     position: "relative",
   },
   input: {
@@ -184,7 +185,7 @@ const styles = StyleSheet.create({
   changeText: {
     color: staticColors.discountText,
     fontSize: fontSizes.sm,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
   },
   loadingContainer: {
     flex: 1,
@@ -192,7 +193,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 1,
     borderColor: staticColors.borderLight,
-    borderRadius: 10,
+    borderRadius: borderRadius.r10,
     ...spacingStyles.p10,
   },
   loadingText: {
@@ -213,7 +214,7 @@ const styles = StyleSheet.create({
   details: {
     borderWidth: 1,
     borderColor: staticColors.borderLight,
-    borderRadius: 20,
+     borderRadius: borderRadius.r20,
     ...spacingStyles.p15,
   },
   row: {
@@ -221,10 +222,10 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   subTitle: {
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
   },
   boldText: {
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
   },
 });
 

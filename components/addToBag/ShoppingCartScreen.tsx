@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
 import DeliveryAddressModal from "@/modal/AddressSelectorModal";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   enterPincode: {
     fontSize: fontSizes.sm,
     color: staticColors.discountText,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
   },
 });
 

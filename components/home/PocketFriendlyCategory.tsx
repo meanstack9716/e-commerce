@@ -12,8 +12,9 @@ import {
 import categoryData from "../../assets/data/pockeFriendly.json";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import { TRACK_WIDTH, FIXED_INDICATOR_WIDTH, MAX_TRANSLATION } from "@/constants/constants"
+import borderRadius from "@/style/borderRadius";
 const CategoryCard: React.FC<{
   imageUrl: string;
   price: string;
@@ -125,13 +126,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: fontSizes.md,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.primary,
   },
   subtitle: {
     fontSize: fontSizes.sm,
     color: staticColors.textLightGray,
-    fontWeight: "500",
+    fontWeight: fontWeights.medium,
     lineHeight: 15,
   },
   headerImage: {
@@ -152,7 +153,7 @@ const styles = StyleSheet.create({
     width: 130,
     height: 180,
     ...spacingStyles.mr10,
-    borderRadius: 12,
+    borderRadius: borderRadius.r12,
     overflow: "hidden",
   },
   cardImage: {
@@ -166,16 +167,16 @@ const styles = StyleSheet.create({
   priceLabel: {
     fontSize: fontSizes.base,
     color: staticColors.white,
-    fontWeight: "500",
+    fontWeight: fontWeights.medium,
   },
   price: {
     fontSize: fontSizes.lg,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.white,
   },
   category: {
     fontSize: fontSizes.sm,
-    fontWeight: "600",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.white,
   },
   indicatorContainer: {
@@ -184,12 +185,12 @@ const styles = StyleSheet.create({
   indicatorTrack: {
     height: 5,
     backgroundColor: staticColors.secondaryGray,
-    borderRadius: 3,
+    borderRadius: borderRadius.r4
   },
   indicator: {
     height: 5,
     backgroundColor: staticColors.primary,
-    borderRadius: 3,
+    borderRadius: borderRadius.r4,
   },
 });
 

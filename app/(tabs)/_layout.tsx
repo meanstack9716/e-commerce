@@ -4,7 +4,7 @@ import { Image, Text, Platform, SafeAreaView, StyleSheet } from "react-native";
 import colors from "@/style/staticColors";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import staticColors from "@/style/staticColors";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes} from "@/style/typography";
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
   return (

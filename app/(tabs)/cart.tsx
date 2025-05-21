@@ -3,37 +3,48 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import Toast from "react-native-toast-message";
 import { useDispatch, useSelector } from "react-redux";
 import useBackHandler from "@/utils/useBackHandler";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import fontSizes from "@/style/fontSizes";
-import { AppDispatch, RootState } from "@/store/store";
-import { fetchCartItemsApi } from "@/store/cart/cartSlice";
+import { fontSizes, fontWeights } from "@/style/typography";
 import ProductInfoScreen from "@/components/addToBag/ProductInfoSection";
 import ShoppingCartScreen from "@/components/addToBag/ShoppingCartScreen";
 import FullScreenLoader from "@/components/common/FullScreenLoader";
 import { Button } from "@/components/common/Button";
+import LoginModal from "@/app/(auth)/loginModal";
+import SignUpModal from "@/app/(auth)/signUpModal";
+import { AppDispatch, RootState } from "@/store/store";
+import { fetchAddresses } from "@/store/address/addressSlice";
+import { fetchCartItemsApi } from "@/store/cart/cartSlice";
+import borderRadius from "@/style/borderRadius";
 
 const ShoppingBagScreen: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoginModalVisible, setLoginModalVisible] = useState(false);
+  const [isSignupModalVisible, setSignupModalVisible] = useState(false);
   const token = useSelector((state: RootState) => state.auth.token);
   const cartItems = useSelector((state: RootState) => state.cart.cartItems);
+  const addresses = useSelector((state: RootState) => state.address.addresses);
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   );
+
   const handleGoBack = () => {
     router.back();
     return true;
   };
 
   useBackHandler(handleGoBack);
+
   useEffect(() => {
     const loadCartData = async () => {
       try {
         if (isAuthenticated && token) {
           await dispatch(fetchCartItemsApi()).unwrap();
+          await dispatch(fetchAddresses()).unwrap();
         }
       } catch (error) {
         console.error("Failed to fetch cart items:", error);
@@ -44,6 +55,46 @@ const ShoppingBagScreen: React.FC = () => {
 
     loadCartData();
   }, [dispatch, isAuthenticated, token]);
+
+  const handlePlaceOrder = () => {
+    if (!isAuthenticated) {
+      setLoginModalVisible(true);
+      return;
+    }
+    const selectedItems = cartItems.filter((item) => item.isSelected);
+    if (selectedItems.length === 0) {
+      Toast.show({
+        type: "error",
+        text1: "No Items Selected",
+        text2: "Please select at least one item to place an order.",
+      });
+      return;
+    }
+
+    const path = addresses.length ? "/placeorder" : "/addNewAddress";
+    router.navigate({
+      pathname: path,
+      params: { selectedItems: JSON.stringify(selectedItems) },
+    });
+  };
+
+  const handleCloseLoginModal = () => {
+    setLoginModalVisible(false);
+  };
+
+  const handleCloseSignupModal = () => {
+    setSignupModalVisible(false);
+  };
+
+  const handleOpenSignupModal = () => {
+    setLoginModalVisible(false);
+    setSignupModalVisible(true);
+  };
+
+  const handleOpenLoginModal = () => {
+    setSignupModalVisible(false);
+    setLoginModalVisible(true);
+  };
 
   if (isLoading) {
     return (
@@ -62,7 +113,6 @@ const ShoppingBagScreen: React.FC = () => {
     );
   }
 
-  const handlePlaceOrder = () => {};
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
@@ -77,7 +127,6 @@ const ShoppingBagScreen: React.FC = () => {
           </TouchableOpacity>
           <Text style={styles.headerTitle}>SHOPPING BAG</Text>
         </View>
-
         <TouchableOpacity style={styles.iconButton}>
           <Ionicons
             name="heart-outline"
@@ -97,6 +146,20 @@ const ShoppingBagScreen: React.FC = () => {
           textStyle={styles.PlaceText}
         />
       )}
+
+      {/* Login Modal */}
+      <LoginModal
+        visible={isLoginModalVisible}
+        onClose={handleCloseLoginModal}
+        onSignupPress={handleOpenSignupModal}
+      />
+
+      {/* Signup Modal */}
+      <SignUpModal
+        visible={isSignupModalVisible}
+        onClose={handleCloseSignupModal}
+        onLoginPress={handleOpenLoginModal}
+      />
     </SafeAreaView>
   );
 };
@@ -121,7 +184,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: fontSizes.base,
-    fontWeight: "500",
+    fontWeight: fontWeights.medium,
     color: staticColors.darkGray,
   },
   iconButton: {
@@ -130,7 +193,7 @@ const styles = StyleSheet.create({
   PlaceButton: {
     backgroundColor: staticColors.primary,
     ...spacingStyles.p15,
-    borderRadius: 0,
+    borderRadius: borderRadius.r0,
     marginBottom: 0,
     position: "absolute",
     bottom: 0,

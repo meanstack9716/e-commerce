@@ -10,7 +10,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { router, useNavigation } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { textTruncate } from "@/utils/textTruncate";
@@ -29,6 +29,7 @@ import EmptyShoppingBagMessage from "./EmptyShoppingBagMessage";
 import ProductDeleteConfirmationModal from "@/modal/ProductDeleteConfirmationModal";
 import QuantitySelectionModal from "@/modal/QuantitySelectionModal";
 import SizeSelectionModal from "@/modal/SizeSelectionModal";
+import borderRadius from "@/style/borderRadius";
 
 const ProductInfoSection: React.FC = () => {
   const navigation = useNavigation();
@@ -213,7 +214,7 @@ const ProductInfoSection: React.FC = () => {
         onPress={() =>
           router.navigate({
             pathname: "/ProductDetails",
-            params: { id: item.id },
+            params: { id: item.productId},
           })
         }
       >
@@ -499,7 +500,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: fontSizes.sm,
-    fontWeight: "500",
+    fontWeight: fontWeights.medium,
     color: staticColors.textSubtitle,
   },
   headerRight: {
@@ -514,7 +515,7 @@ const styles = StyleSheet.create({
   cartItem: {
     flexDirection: "row",
     backgroundColor: staticColors.white,
-    borderRadius: 8,
+    borderRadius: borderRadius.r8,
     ...spacingStyles.p10,
     ...spacingStyles.m10,
   },
@@ -524,12 +525,12 @@ const styles = StyleSheet.create({
   cartItemImage: {
     width: 100,
     height: 140,
-    borderRadius: 8,
+    borderRadius: borderRadius.r8,
   },
   checkbox: {
     width: 20,
     height: 20,
-    borderRadius: 4,
+    borderRadius: borderRadius.r4,
     borderWidth: 1,
     justifyContent: "center",
     alignItems: "center",
@@ -538,7 +539,7 @@ const styles = StyleSheet.create({
   checkboxImage: {
     width: 20,
     height: 20,
-    borderRadius: 4,
+    borderRadius: borderRadius.r4,
     borderWidth: 1,
     justifyContent: "center",
     alignItems: "center",
@@ -552,7 +553,7 @@ const styles = StyleSheet.create({
   },
   cartItemTitle: {
     fontSize: fontSizes.sm,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.textSecondary,
     ...spacingStyles.mb5,
   },
@@ -572,7 +573,7 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.bgSecondary,
     ...spacingStyles.px5,
     ...spacingStyles.py5,
-    borderRadius: 4,
+    borderRadius: borderRadius.r4,
     ...spacingStyles.mr5,
   },
   colorContainer: {
@@ -581,7 +582,7 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.bgSecondary,
     ...spacingStyles.px5,
     ...spacingStyles.py5,
-    borderRadius: 4,
+    borderRadius: borderRadius.r4,
   },
   qtyContainer: {
     flexDirection: "row",
@@ -589,12 +590,12 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.bgSecondary,
     ...spacingStyles.px5,
     ...spacingStyles.py5,
-    borderRadius: 4,
+    borderRadius: borderRadius.r4,
     ...spacingStyles.mr5,
   },
   sizeQtyText: {
     fontSize: fontSizes.xs,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.textSubtitle,
     ...spacingStyles.mr5,
   },
@@ -605,7 +606,7 @@ const styles = StyleSheet.create({
   },
   cartItemPrice: {
     fontSize: fontSizes.sm,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.textSubtitle,
     ...spacingStyles.mr5,
   },
@@ -618,7 +619,7 @@ const styles = StyleSheet.create({
   discountTextGradient: {
     ...spacingStyles.py2,
     ...spacingStyles.px5,
-    borderRadius: 4,
+    borderRadius: borderRadius.r4,
   },
   discountText: {
     fontSize: fontSizes.s,
@@ -635,7 +636,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.ml5,
   },
   dayText: {
-    fontWeight: "bold",
+    fontWeight:fontWeights.semiBold,
   },
 });
 

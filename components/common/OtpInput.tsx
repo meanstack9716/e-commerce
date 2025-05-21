@@ -9,7 +9,7 @@ import {
   Keyboard,
 } from "react-native";
 import colors from "@/style/staticColors";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
 import textStyles from "@/style/textStyles";
 import spacingStyles from "@/style/spacingStyles";
@@ -18,6 +18,7 @@ import { sendEmailCode } from "@/store/auth/authSlice";
 import { AppDispatch } from "@/store/store";
 import { OtpInputProps } from "@/types/types";
 import { OTP_LENGTH, OTP_RESEND_TIMER } from "@/constants/constants";
+import borderRadius from "@/style/borderRadius";
 
 const OtpInput: React.FC<OtpInputProps> = ({
   email,
@@ -171,7 +172,7 @@ const styles = StyleSheet.create({
   timerText: {
     fontSize: fontSizes.sm,
     color: colors.darkGray,
-    fontWeight: "500",
+    fontWeight: fontWeights.medium,
   },
   otpContainer: {
     flexDirection: "row",
@@ -183,7 +184,7 @@ const styles = StyleSheet.create({
     width: 45,
     height: 50,
     borderWidth: 1,
-    borderRadius: 10,
+   borderRadius: borderRadius.r10,
     textAlign: "center",
     fontSize: fontSizes.lg,
   },
@@ -197,7 +198,7 @@ const styles = StyleSheet.create({
   },
   resendLink: {
     color: colors.linkDefault,
-    fontWeight: "600",
+    fontWeight: fontWeights.semiBold,
   },
   disabledResend: {
     color: colors.textLightGray,
@@ -217,7 +218,7 @@ const styles = StyleSheet.create({
   button: {
     flex: 1,
     height: 48,
-    borderRadius: 25,
+    borderRadius: borderRadius.r24,
     justifyContent: "center",
     alignItems: "center",
   },

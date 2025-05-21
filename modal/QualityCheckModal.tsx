@@ -10,7 +10,7 @@ import {
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { Ionicons } from "@expo/vector-icons";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import { IMAGE_URIS } from "@/constants/imageLinks";
 
 interface QualityCheckModalProps {
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: fontSizes.md,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.primary,
   },
   modalContent: {
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: fontSizes.base,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.primary,
     ...spacingStyles.mb5,
   },

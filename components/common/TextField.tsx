@@ -8,8 +8,9 @@ import {
   Platform,
 } from "react-native";
 import staticColors from "@/style/staticColors";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import spacingStyles from "@/style/spacingStyles";
+import borderRadius from "@/style/borderRadius";
 interface TextFieldProps extends TextInputProps {
   label?: string;
   error?: string;
@@ -97,11 +98,11 @@ const styles = StyleSheet.create({
   labelFloating: {
     top: -8,
     fontSize: fontSizes.xs,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
   },
   labelFocused: {
     color: staticColors.primary,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
   },
   labelError: {
     color: staticColors.errorColor,
@@ -109,10 +110,11 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
     borderColor: staticColors.lightGray,
-    borderRadius: 6,
+   borderRadius: borderRadius.r6,
     ...spacingStyles.p10,
     paddingVertical: Platform.OS === "ios" ? 8 : 5,
-    fontSize:fontSizes.sm
+    fontSize:fontSizes.sm,
+    color:staticColors.textDarkGray
   },
   inputFocused: {
     borderColor: staticColors.primary,

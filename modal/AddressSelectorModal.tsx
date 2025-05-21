@@ -12,9 +12,10 @@ import staticColors from "@/style/staticColors";
 import { FontAwesome6, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import DeliveryAddressScreen from "@/components/productDetails/DeliveryAddress";
 import { useLocation } from "@/utils/useLocation";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes} from "@/style/typography";
 import { isPinCodeValid } from "@/hooks/usePinCodeValidation";
 import LocationAlertModal from "./LocationAlertModal";
+import borderRadius from "@/style/borderRadius";
 
 interface AddressSelectorModalProps {
   visible?: boolean;
@@ -183,7 +184,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.mb15,
     borderWidth: 1,
     borderColor: staticColors.borderLight,
-    borderRadius: 8,
+    borderRadius: borderRadius.r8,
     ...spacingStyles.px10,
     ...spacingStyles.py2,
   },

@@ -1,6 +1,6 @@
 import { IMAGE_URIS } from "@/constants/imageLinks";
 import images from "@/constants/images";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import React from "react";
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   },
   mainText: {
     fontSize: fontSizes.lg,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     color: staticColors.textSubtitle,
     textAlign: "center",
   },

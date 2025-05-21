@@ -5,14 +5,13 @@ import {
   StyleSheet,
   SafeAreaView,
   Image,
-  Alert,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useLocalSearchParams } from "expo-router";
 import { router } from "expo-router";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
-import fontSizes from "@/style/fontSizes";
+import {fontSizes, fontWeights} from "@/style/typography";
 import OtpInput from "@/components/common/OtpInput";
 import images from "@/constants/images";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -84,7 +83,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: fontSizes.xl,
-    fontWeight: "bold",
+    fontWeight: fontWeights.semiBold,
     ...spacingStyles.mb5,
     textAlign: "center",
   },
@@ -95,7 +94,7 @@ const styles = StyleSheet.create({
     color: colors.darkGray,
   },
   highlight: {
-    fontWeight: "bold",
+    fontWeight:fontWeights.semiBold,
     color: colors.textDarkGray,
   },
 });
