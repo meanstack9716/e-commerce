@@ -122,7 +122,7 @@ export interface CartItem extends Product {
 export interface Address {
   id: string;
   contact_name: string | null;
-  contact_mobile: string | null;
+  contact_number: string | null;
   type: string;
   line1: string;
   line2: string | null;
@@ -135,7 +135,7 @@ export interface Address {
 
 export interface AddressFormData {
   contact_name: string;
-  contact_mobile: string;
+  contact_number: string;
   postal_code: string;
   line1: string;
   line2: string | null; 

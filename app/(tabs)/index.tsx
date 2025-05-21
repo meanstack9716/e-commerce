@@ -66,6 +66,27 @@ const HomeScreen: React.FC = () => {
   }, [dispatch]);
 
   useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        if (router.canGoBack()) {
+          router.back();
+          return true;
+        } else {
+          if (Platform.OS === "ios") {
+            router.navigate("/(tabs)");
+          } else {
+            BackHandler.exitApp();
+          }
+          return true;
+        }
+      }
+    );
+
+    return () => backHandler.remove();
+  }, []);
+
+  useEffect(() => {
     if (categoriesError || productsError) {
       Alert.alert(
         "Error",

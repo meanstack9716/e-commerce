@@ -46,7 +46,7 @@ const AddNewAddress = () => {
   } = useSelector((state: RootState) => state.address);
   const [formData, setFormData] = useState<AddressFormData>({
     contact_name: editingAddress?.contact_name || "",
-    contact_mobile: editingAddress?.contact_mobile || "",
+    contact_number: editingAddress?.contact_number || "",
     postal_code: editingAddress?.postal_code || "",
     line1: editingAddress?.line1 || "",
     line2: editingAddress?.line2 || "",
@@ -88,7 +88,7 @@ const AddNewAddress = () => {
   const handleSave = () => {
     const fields: { name: keyof AddressFormData; value: string }[] = [
       { name: "contact_name", value: formData.contact_name },
-      { name: "contact_mobile", value: formData.contact_mobile },
+      { name: "contact_number", value: formData.contact_number },
       { name: "postal_code", value: formData.postal_code },
       { name: "line1", value: formData.line1 },
       { name: "line2", value: formData.line2 || "" },
@@ -197,17 +197,17 @@ const AddNewAddress = () => {
               <Text style={styles.errorText}>{errors.contact_name}</Text>
             )}
             <TextInput
-              style={[styles.input, errors.contact_mobile && styles.inputError]}
+              style={[styles.input, errors.contact_number && styles.inputError]}
               placeholder="Mobile No*"
               placeholderTextColor={staticColors.textSecondary}
               keyboardType="numeric"
-              value={formData.contact_mobile}
-              onChangeText={(text) => handleInputChange("contact_mobile", text)}
+              value={formData.contact_number}
+              onChangeText={(text) => handleInputChange("contact_number", text)}
               onFocus={handleInputFocus}
               maxLength={10}
             />
-            {errors.contact_mobile && (
-              <Text style={styles.errorText}>{errors.contact_mobile}</Text>
+            {errors.contact_number && (
+              <Text style={styles.errorText}>{errors.contact_number}</Text>
             )}
           </View>
 

@@ -27,7 +27,7 @@ import { commonStyles } from "@/style/commonStyle";
 interface Address {
   id: string;
   contact_name: string | null;
-  contact_mobile: string | null;
+  contact_number: string | null;
   type: string;
   line1: string;
   line2: string | null;
@@ -180,8 +180,8 @@ const AddressCard: React.FC<AddressItemProps> = ({
       <Text style={styles.addressLine}>
         {address.state}, {address.postal_code}
       </Text>
-      {address.contact_mobile && (
-        <Text style={styles.mobile}>Mobile: {address.contact_mobile}</Text>
+      {address.contact_number && (
+        <Text style={styles.mobile}>Mobile: {address.contact_number}</Text>
       )}
       {selected && (
         <View style={styles.buttonRow}>

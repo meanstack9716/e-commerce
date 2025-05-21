@@ -66,7 +66,7 @@ export const saveAddress = createAsyncThunk<
         `${apiUrl}/address/add`,
         {
           contact_name: formData.contact_name,
-          contact_mobile: formData.contact_mobile,
+          contact_number: formData.contact_number,
           line1: formData.line1,
           line2: formData.line2,
           type: addressType,
@@ -85,7 +85,7 @@ export const saveAddress = createAsyncThunk<
         for (const field in apiErrors) {
           const fieldNameMap: { [key: string]: string } = {
             contact_name: "name",
-            contact_mobile: "mobile",
+            contact_number: "mobile",
             postal_code: "pinCode",
             line1: "address",
             line2: "locality",
@@ -162,7 +162,7 @@ export const updateAddress = createAsyncThunk<
         {
           address_id: addressId,
           contact_name: formData.contact_name,
-          contact_mobile: formData.contact_mobile,
+          contact_number: formData.contact_number,
           line1: formData.line1,
           line2: formData.line2,
           type: addressType,
@@ -181,7 +181,7 @@ export const updateAddress = createAsyncThunk<
         for (const field in apiErrors) {
           const fieldNameMap: { [key: string]: string } = {
             contact_name: "name",
-            contact_mobile: "mobile",
+            contact_number: "mobile",
             postal_code: "pinCode",
             line1: "address",
             line2: "locality",

@@ -98,9 +98,9 @@ const PlaceOrderScreen: React.FC = () => {
               <Text style={styles.addressDetails}>
                 {displayAddress.state}, {displayAddress.postal_code}
               </Text>
-              {displayAddress.contact_mobile && (
+              {displayAddress.contact_number && (
                 <Text style={styles.addressDetails}>
-                  Mobile: {displayAddress.contact_mobile}
+                  Mobile: {displayAddress.contact_number}
                 </Text>
               )}
             </View>
