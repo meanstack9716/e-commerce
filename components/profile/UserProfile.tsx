@@ -9,11 +9,17 @@ import {
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import {fontSizes, fontWeights} from "@/style/typography";
+import { fontSizes, fontWeights } from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
 import borderRadius from "@/style/borderRadius";
+import { router } from "expo-router";
 
 const UserProfile = () => {
+  const handleOrder = () => {
+    router.push({
+      pathname: "/order",
+    });
+  };
   return (
     <ScrollView style={styles.container}>
       {/* Banner */}
@@ -43,7 +49,7 @@ const UserProfile = () => {
 
       {/* Card Buttons */}
       <View style={styles.cardRow}>
-        <TouchableOpacity style={styles.card}>
+        <TouchableOpacity style={styles.card} onPress={handleOrder}>
           <Ionicons name="cube" size={24} />
           <Text>Orders</Text>
         </TouchableOpacity>
@@ -73,12 +79,15 @@ const styles = StyleSheet.create({
     ...spacingStyles.mb20,
   },
   bannerText: { fontSize: fontSizes.sm, ...spacingStyles.mb10 },
-  highlight: { fontWeight: fontWeights.semiBold, color: staticColors.bannerHeighlight },
+  highlight: {
+    fontWeight: fontWeights.semiBold,
+    color: staticColors.bannerHeighlight,
+  },
   knowMoreButton: {
     backgroundColor: staticColors.bannerHeighlight,
     ...spacingStyles.py5,
     ...spacingStyles.px15,
-   borderRadius: borderRadius.r6,
+    borderRadius: borderRadius.r6,
     alignSelf: "flex-start",
   },
   knowMoreText: { color: staticColors.white, fontWeight: fontWeights.semiBold },
@@ -108,7 +117,7 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.darkGray,
     ...spacingStyles.px5,
     ...spacingStyles.py2,
-   borderRadius: borderRadius.r6
+    borderRadius: borderRadius.r6,
   },
   adminText: { color: staticColors.white, fontSize: fontSizes.xs },
   addCircle: {
@@ -120,7 +129,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  plusText: { fontSize: fontSizes.xl, fontWeight: fontWeights.semiBold},
+  plusText: { fontSize: fontSizes.xl, fontWeight: fontWeights.semiBold },
   cardRow: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -132,7 +141,7 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.bgSecondary,
     ...spacingStyles.p15,
     ...spacingStyles.my5,
-   borderRadius: borderRadius.r10,
+    borderRadius: borderRadius.r10,
     alignItems: "center",
   },
 });

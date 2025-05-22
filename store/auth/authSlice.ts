@@ -93,6 +93,8 @@ export const sendEmailCode = createAsyncThunk(
   async (email: string, { rejectWithValue }) => {
     try {
       const res = await axios.post(`${apiUrl}/auth/send-email-code`, { email });
+       await AsyncStorage.setItem("authToken", res.data.token);
+      await AsyncStorage.setItem("authUser", JSON.stringify(res.data.user));
       return res.data;
     } catch (error: any) {
       return rejectWithValue(handleApiError(error, "Failed to send code"));
@@ -242,7 +244,9 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        state.isAuthenticated = true;
+        state.token = action.payload.token;
+        state.user = action.payload.user;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
