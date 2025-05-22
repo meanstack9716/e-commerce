@@ -36,7 +36,9 @@ export const loadAuthState = createAsyncThunk(
       const token = await AsyncStorage.getItem("authToken");
       const user = await AsyncStorage.getItem("authUser");
       if (!token || !user) {
-        return rejectWithValue("Authentication data not found. Please log in again.");
+        return rejectWithValue(
+          "Authentication data not found. Please log in again."
+        );
       }
       return { token, user: JSON.parse(user) };
     } catch (error: any) {
@@ -81,6 +83,11 @@ export const loginUser = createAsyncThunk(
         password,
       });
       dispatch(clearCart());
+      await AsyncStorage.setItem("authToken", response.data.token);
+      await AsyncStorage.setItem(
+        "authUser",
+        JSON.stringify(response.data.user)
+      );
       return response.data;
     } catch (error: any) {
       return rejectWithValue(handleApiError(error, "Login failed"));
@@ -93,8 +100,6 @@ export const sendEmailCode = createAsyncThunk(
   async (email: string, { rejectWithValue }) => {
     try {
       const res = await axios.post(`${apiUrl}/auth/send-email-code`, { email });
-       await AsyncStorage.setItem("authToken", res.data.token);
-      await AsyncStorage.setItem("authUser", JSON.stringify(res.data.user));
       return res.data;
     } catch (error: any) {
       return rejectWithValue(handleApiError(error, "Failed to send code"));
