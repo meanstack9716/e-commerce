@@ -3,7 +3,8 @@ const images = {
     logoBlue:require("@/assets/images/logo-blue.png"),
     genderFemale:require("@/assets/images/images/gender-female.png"),
     genderMale:require('@/assets/images/images/gender-male.png'),
-    emptyBagImage:require('@/assets/images/EMPTYBAGIMAGE.png')
+    emptyBagImage:require('@/assets/images/EMPTYBAGIMAGE.png'),
+    noOrderImage:require('@/assets/images/NOORDER.png')
   };
   
   export default images;

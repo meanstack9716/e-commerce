@@ -182,6 +182,7 @@ export const logoutUser = createAsyncThunk(
   async (_, { rejectWithValue, dispatch }) => {
     try {
       const token = await AsyncStorage.getItem("authToken");
+      console.log(apiUrl)
       if (!token) {
         throw new Error("No token found");
       }
@@ -190,11 +191,11 @@ export const logoutUser = createAsyncThunk(
         {},
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `${token}`,
+            "Content-Type": "application/json",
           },
         }
       );
-
       await AsyncStorage.removeItem("authToken");
       await AsyncStorage.removeItem("authUser");
       await clearCartFromStorage();

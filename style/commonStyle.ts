@@ -1,7 +1,7 @@
 import { StyleSheet, Dimensions } from "react-native";
 import spacingStyles from "./spacingStyles";
 import staticColors from "./staticColors";
-import {fontSizes, fontWeights} from "./typography";
+import { fontSizes, fontWeights } from "./typography";
 import borderRadius from "./borderRadius";
 
 export const commonStyles = StyleSheet.create({
@@ -11,7 +11,7 @@ export const commonStyles = StyleSheet.create({
   image: {
     width: "100%",
     height: 190,
-    borderRadius: borderRadius.r10
+    borderRadius: borderRadius.r10,
   },
   imagePlaceholderContainer: {
     backgroundColor: staticColors.errorColor,
@@ -50,13 +50,13 @@ export const commonStyles = StyleSheet.create({
     fontWeight: fontWeights.bold,
     color: staticColors.primary,
   },
-  
+
   radioOuter: {
-    width: 20,
-    height: 20,
+    width: 18,
+    height: 18,
     borderRadius: borderRadius.r10,
     borderWidth: 1,
-    borderColor: staticColors.discountText,
+    borderColor: staticColors.textDarkGray,
     justifyContent: "center",
     alignItems: "center",
     ...spacingStyles.mr10,
@@ -66,6 +66,9 @@ export const commonStyles = StyleSheet.create({
     height: 12,
     borderRadius: borderRadius.r6,
     backgroundColor: staticColors.discountText,
+  },
+  radioOuterSelected: {
+    borderColor: staticColors.discountText,
   },
   backButton: {
     ...spacingStyles.mr5,

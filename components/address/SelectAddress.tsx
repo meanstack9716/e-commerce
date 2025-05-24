@@ -166,7 +166,7 @@ const AddressCard: React.FC<AddressItemProps> = ({
     >
       <View style={styles.row}>
         <View
-          style={[commonStyles.radioOuter, selected && styles.radioOuterSelected]}
+          style={[commonStyles.radioOuter, selected && commonStyles.radioOuterSelected]}
         >
           {selected && <View style={commonStyles.radioInner} />}
         </View>
@@ -254,9 +254,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     ...spacingStyles.mb5
-  },
-  radioOuterSelected: {
-    borderColor: staticColors.discountText,
   },
   name: {
     fontWeight: fontWeights.semiBold,

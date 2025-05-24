@@ -17,12 +17,27 @@ export interface Product {
   gallery?: GalleryItem[];
   seller?: Seller;
   delivery_days?: string;
+  reviews?: Review[];
 }
 
 export interface GalleryItem {
   id: string;
   color: string;
   img_url: string;
+}
+
+export interface Review {
+  id: string;
+  product_id: string;
+  order_id: string;
+  rating: string;
+  review: string;
+  by: {
+    email: string;
+    id: string;
+    profile_url: string | null;
+    role: string | null;
+  };
 }
 
 export interface ColorVariant {
@@ -142,4 +157,19 @@ export interface AddressFormData {
   city: string;
   state: string;
   country: string;
+}
+
+export interface OrderItem {
+  selected_size: string;
+  selected_color_name: string;
+  quantity: number;
+  product: Product;
+  gallery?: GalleryItem[];
+}
+
+export interface Order {
+  id: string;
+  status: string;
+  created_at: string;
+  items: OrderItem[];
 }
