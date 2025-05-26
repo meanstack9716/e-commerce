@@ -276,9 +276,6 @@ const AddNewAddress = () => {
               </View>
             </View>
 
-            {errors.state && (
-              <Text style={styles.errorText}>{errors.state}</Text>
-            )}
             <TextInput
               style={[styles.input, errors.country && styles.inputError]}
               placeholder="Country*"
