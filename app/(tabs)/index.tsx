@@ -375,7 +375,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.ml15,
   },
   flatListContent: {
-    ...spacingStyles.px10,
+    ...spacingStyles.px5
   },
   columnWrapper: {
     justifyContent: "space-between",

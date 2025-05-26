@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: staticColors.bgSecondary,
-    ...spacingStyles.p15,
+    ...spacingStyles.p10,
   },
   headerContainer: {
     flexDirection: "row",

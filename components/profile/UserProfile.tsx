@@ -17,7 +17,7 @@ import { router } from "expo-router";
 const UserProfile = () => {
   const handleOrder = () => {
     router.push({
-      pathname: "/order",
+      pathname: "/cart",
     });
   };
   return (

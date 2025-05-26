@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   navbar: {
     flexDirection: "row",
     justifyContent: "space-around",
-    ...spacingStyles.px10,
+    ...spacingStyles.pl15,
     borderBottomWidth: 1,
     borderBottomColor: colors.lightGray,
   },
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   navItemText: {
-    fontSize: fontSizes.base,
+    fontSize: fontSizes.sm,
     fontWeight: fontWeights.semiBold,
     color: staticColors.darkGray,
     fontFamily: "Helvetica",
