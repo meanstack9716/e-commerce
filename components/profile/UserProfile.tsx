@@ -17,7 +17,12 @@ import { router } from "expo-router";
 const UserProfile = () => {
   const handleOrder = () => {
     router.push({
-      pathname: "/order",
+      pathname: "/cart",
+    });
+  };
+   const handleAccount = () => {
+    router.push({
+      pathname: "/accountManage",
     });
   };
   return (
@@ -42,9 +47,9 @@ const UserProfile = () => {
             <Text style={styles.adminText}>Admin</Text>
           </View>
         </View>
-        <TouchableOpacity style={styles.addCircle}>
+        {/* <TouchableOpacity style={styles.addCircle}>
           <Text style={styles.plusText}>+</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       {/* Card Buttons */}
@@ -53,9 +58,9 @@ const UserProfile = () => {
           <Ionicons name="cube" size={24} />
           <Text>Orders</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.card}>
+        <TouchableOpacity style={styles.card} onPress={handleAccount}>
           <MaterialIcons name="workspace-premium" size={24} />
-          <Text>Insider</Text>
+          <Text>Account</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.card}>
           <Ionicons name="help-circle-outline" size={24} />
@@ -63,7 +68,7 @@ const UserProfile = () => {
         </TouchableOpacity>
         <TouchableOpacity style={styles.card}>
           <Ionicons name="pricetags-outline" size={24} />
-          <Text>Coupons</Text>
+          <Text>Wishlist</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -143,6 +148,8 @@ const styles = StyleSheet.create({
     ...spacingStyles.my5,
     borderRadius: borderRadius.r10,
     alignItems: "center",
+    flexDirection:'row',
+    gap:gapSizes.md
   },
 });
 
