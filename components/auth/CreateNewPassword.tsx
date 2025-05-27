@@ -6,16 +6,17 @@ import { useRouter } from "expo-router";
 import PasswordField from "../common/PasswordField";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { resetPassword } from "@/store/auth/authSlice";
+import images from "@/constants/images";
 import textStyles from "@/style/textStyles";
 import spacingStyles from "@/style/spacingStyles";
-import {fontSizes} from "@/style/typography";
-import images from "@/constants/images";
+import { fontSizes } from "@/style/typography";
 import staticColors from "@/style/staticColors";
 import borderRadius from "@/style/borderRadius";
 
 export default function CreateNewPassword() {
   const { errors, handlePasswordValidation, handleConfirmPasswordMatch } =
     useFieldValidation();
+  const { error } = useAppSelector((state) => state.auth);
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [formState, setFormState] = useState({
@@ -23,10 +24,17 @@ export default function CreateNewPassword() {
     confirmPassword: "",
   });
 
-  // Get email and code from global state 
-  const { resetEmail: email, resetCode: code, loading } = useAppSelector((state) => state.auth);
+  // Get email and code from global state
+  const {
+    resetEmail: email,
+    resetCode: code,
+    loading,
+  } = useAppSelector((state) => state.auth);
 
-  const handleChange = (field: "newPassword" | "confirmPassword", value: string) => {
+  const handleChange = (
+    field: "newPassword" | "confirmPassword",
+    value: string
+  ) => {
     setFormState((prev) => ({
       ...prev,
       [field]: value,
@@ -52,7 +60,7 @@ export default function CreateNewPassword() {
           password_confirmation: formState.confirmPassword,
         })
       ).unwrap();
-      router.navigate("/categories");
+      router.navigate("/profile");
     } catch (err) {
       console.error("Reset failed:", err);
     }
@@ -82,6 +90,8 @@ export default function CreateNewPassword() {
           error={errors.confirmPassword}
         />
       </View>
+
+      {error && <Text style={styles.apiError}>{error}</Text>}
       <Button
         title="Save"
         onPress={handleSubmit}
@@ -123,5 +133,11 @@ const styles = StyleSheet.create({
   },
   inputGroup: {
     width: "90%",
+  },
+  apiError: {
+    color: staticColors.errorColor,
+    fontSize: fontSizes.sm,
+    ...spacingStyles.mb15,
+    textAlign: "left",
   },
 });

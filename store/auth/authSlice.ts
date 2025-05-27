@@ -9,6 +9,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface AuthState {
   loading: boolean;
+  loginError:string | null;
   error: string | null;
   registered: boolean;
   isAuthenticated: boolean;
@@ -20,6 +21,7 @@ interface AuthState {
 
 const initialState: AuthState = {
   loading: false,
+  loginError:null,
   error: null,
   registered: false,
   isAuthenticated: false,
@@ -105,9 +107,9 @@ export const loginUser = createAsyncThunk(
       }
       dispatch(clearCart());
       return response.data;
-    } catch (error: any) {
-      console.error("Login error:", error);
-      return rejectWithValue(handleApiError(error, "Login failed"));
+    } catch (loginError: any) {
+      console.error("Login error:", loginError);
+      return rejectWithValue(handleApiError(loginError, "Login failed"));
     }
   }
 );
@@ -263,7 +265,7 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.loginError = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
@@ -273,7 +275,7 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
+        state.loginError = action.payload as string;
       })
       .addCase(sendEmailCode.pending, (state) => {
         state.loading = true;

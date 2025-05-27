@@ -7,16 +7,18 @@ import {
   Modal,
   Dimensions,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useDispatch, useSelector } from "react-redux";
+import { CartItem } from "@/types/types";
+import { AppDispatch, RootState } from "@/store/store";
+import { updateCartItemApi, updateQuantity } from "@/store/cart/cartSlice";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
-import {fontSizes, fontWeights} from "@/style/typography";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/store/store";
-import { CartItem } from "@/types/types";
-import {updateCartItemApi, updateQuantity } from "@/store/cart/cartSlice";
+import { fontSizes, fontWeights } from "@/style/typography";
 import borderRadius from "@/style/borderRadius";
+import gapSizes from "@/style/gapSizes";
 
 interface QuantitySelectionModalProps {
   visible: boolean;
@@ -79,8 +81,8 @@ const QuantitySelectionModal: React.FC<QuantitySelectionModalProps> = ({
     setSelectedQuantity(quantity);
   };
 
- const handleDone = async () => {
-   try {
+  const handleDone = async () => {
+    try {
       if (isAuthenticated) {
         await dispatch(
           updateCartItemApi({
@@ -89,9 +91,9 @@ const QuantitySelectionModal: React.FC<QuantitySelectionModalProps> = ({
             color: item.selectedColor || "",
             quantity: selectedQuantity.toString(),
           })
-        ).unwrap(); 
+        ).unwrap();
       } else {
-         dispatch(
+        dispatch(
           updateQuantity({
             id: item.id,
             quantity: selectedQuantity,
@@ -100,7 +102,7 @@ const QuantitySelectionModal: React.FC<QuantitySelectionModalProps> = ({
             colorName: item.colorName,
             isAuthenticated,
           })
-        )
+        );
       }
       onClose();
     } catch (error) {
@@ -134,29 +136,31 @@ const QuantitySelectionModal: React.FC<QuantitySelectionModalProps> = ({
 
           {error && <Text>{error}</Text>}
 
-          <View style={styles.quantityContainer}>
-            {quantityOptions.map((quantity) => (
-              <TouchableOpacity
-                key={quantity}
-                style={[
-                  styles.quantityOption,
-                  selectedQuantity === quantity && styles.selectedOption,
-                ]}
-                onPress={() => handleQuantitySelect(quantity)}
-                disabled={loading}
-              >
-                <Text
+          <ScrollView style={styles.quantityScrollView}>
+            <View style={styles.quantityContainer}>
+              {quantityOptions.map((quantity) => (
+                <TouchableOpacity
+                  key={quantity}
                   style={[
-                    styles.quantityText,
-                    selectedQuantity === quantity &&
-                      styles.selectedQuantityText,
+                    styles.quantityOption,
+                    selectedQuantity === quantity && styles.selectedOption,
                   ]}
+                  onPress={() => handleQuantitySelect(quantity)}
+                  disabled={loading}
                 >
-                  {quantity}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
+                  <Text
+                    style={[
+                      styles.quantityText,
+                      selectedQuantity === quantity &&
+                        styles.selectedQuantityText,
+                    ]}
+                  >
+                    {quantity}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </ScrollView>
 
           <TouchableOpacity
             style={[styles.doneButton]}
@@ -212,28 +216,31 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.sm,
     color: staticColors.textSubtitle,
   },
+  quantityScrollView: {
+    maxHeight: Dimensions.get("window").height * 0.3,
+  },
   quantityContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "flex-start",
-    ...spacingStyles.m5,
+    marginLeft: 8,
   },
   quantityOption: {
-    width: 50,
-    height: 50,
+    width: 45,
+    height: 45,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
     borderColor: staticColors.lightGray,
-    borderRadius: borderRadius.r24,
-    ...spacingStyles.m5,
+    borderRadius: borderRadius.circle,
+    margin: 3,
   },
   selectedOption: {
     borderColor: staticColors.discountText,
     backgroundColor: staticColors.white,
   },
   quantityText: {
-    fontSize: fontSizes.md,
+    fontSize: fontSizes.base,
     color: staticColors.black,
   },
   selectedQuantityText: {
@@ -241,8 +248,8 @@ const styles = StyleSheet.create({
     fontWeight: fontWeights.semiBold,
   },
   doneButton: {
-    backgroundColor: staticColors.discountText,
-   borderRadius: borderRadius.r8,
+    backgroundColor: staticColors.primary,
+    borderRadius: borderRadius.r8,
     ...spacingStyles.py5,
     alignItems: "center",
     ...spacingStyles.m5,
