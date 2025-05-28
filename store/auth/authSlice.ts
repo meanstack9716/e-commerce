@@ -9,6 +9,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface AuthState {
   loading: boolean;
+  loginError:string | null;
   error: string | null;
   registered: boolean;
   isAuthenticated: boolean;
@@ -20,6 +21,7 @@ interface AuthState {
 
 const initialState: AuthState = {
   loading: false,
+  loginError:null,
   error: null,
   registered: false,
   isAuthenticated: false,
@@ -28,7 +30,6 @@ const initialState: AuthState = {
   resetCode: null,
   token: null,
 };
-
 export const loadAuthState = createAsyncThunk(
   "auth/loadAuthState",
   async (_, { rejectWithValue }) => {
@@ -38,8 +39,16 @@ export const loadAuthState = createAsyncThunk(
       if (!token || !user) {
         return rejectWithValue("Authentication data not found. Please log in again.");
       }
-      return { token, user: JSON.parse(user) };
+      let parsedUser;
+      try {
+        parsedUser = JSON.parse(user);
+      } catch (parseError) {
+        console.error("Failed to parse authUser:", parseError);
+        return rejectWithValue("Failed to parse user data.");
+      }
+      return { token, user: parsedUser };
     } catch (error: any) {
+      console.error("AsyncStorage error:", error);
       return rejectWithValue(error.message);
     }
   }
@@ -80,10 +89,27 @@ export const loginUser = createAsyncThunk(
         email,
         password,
       });
+      if (!response.data.token || !response.data.user) {
+        return rejectWithValue("Invalid login response: Missing token or user");
+      }
+      try {
+        await AsyncStorage.setItem("authToken", response.data.token);
+        await AsyncStorage.setItem("authUser", JSON.stringify(response.data.user));
+        console.log("Token saved:", response.data.token);
+        console.log("User saved:", response.data.user);
+        const savedToken = await AsyncStorage.getItem("authToken");
+        const savedUser = await AsyncStorage.getItem("authUser");
+        console.log("Retrieved token:", savedToken);
+        console.log("Retrieved user:", savedUser);
+      } catch (storageError) {
+        console.error("Failed to save to AsyncStorage:", storageError);
+        return rejectWithValue("Failed to save authentication data");
+      }
       dispatch(clearCart());
       return response.data;
-    } catch (error: any) {
-      return rejectWithValue(handleApiError(error, "Login failed"));
+    } catch (loginError: any) {
+      console.error("Login error:", loginError);
+      return rejectWithValue(handleApiError(loginError, "Login failed"));
     }
   }
 );
@@ -93,8 +119,6 @@ export const sendEmailCode = createAsyncThunk(
   async (email: string, { rejectWithValue }) => {
     try {
       const res = await axios.post(`${apiUrl}/auth/send-email-code`, { email });
-       await AsyncStorage.setItem("authToken", res.data.token);
-      await AsyncStorage.setItem("authUser", JSON.stringify(res.data.user));
       return res.data;
     } catch (error: any) {
       return rejectWithValue(handleApiError(error, "Failed to send code"));
@@ -171,32 +195,33 @@ export const verifyUser = createAsyncThunk(
     }
   }
 );
-
 export const logoutUser = createAsyncThunk(
   "auth/logoutUser",
   async (_, { rejectWithValue, dispatch }) => {
     try {
       const token = await AsyncStorage.getItem("authToken");
-      if (!token) {
-        throw new Error("No token found");
-      }
       await axios.post(
         `${apiUrl}/auth/logout`,
         {},
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `${token}`,
           },
         }
       );
-
       await AsyncStorage.removeItem("authToken");
       await AsyncStorage.removeItem("authUser");
       await clearCartFromStorage();
       dispatch(clearCart());
-
       return true;
     } catch (error: any) {
+      if (error.response && error.response.status === 401) {
+        await AsyncStorage.removeItem("authToken");
+        await AsyncStorage.removeItem("authUser");
+        await clearCartFromStorage();
+        dispatch(clearCart());
+        return true;
+      }
       return rejectWithValue(handleApiError(error, "Logout failed"));
     }
   }
@@ -240,7 +265,7 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.loginError = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
@@ -250,7 +275,7 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
+        state.loginError = action.payload as string;
       })
       .addCase(sendEmailCode.pending, (state) => {
         state.loading = true;

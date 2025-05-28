@@ -40,7 +40,7 @@ const Navbar: React.FC<NavbarProps> = ({ tabs, activeTab, setActiveTab }) => {
           >
             {tab === "Categories" ? (
               <View style={styles.categoryTab}>
-                <Ionicons name="grid-outline" size={20} color={staticColors.white} />
+                <Ionicons name="grid-outline" size={16} color={staticColors.white} />
               </View>
             ) : (
               <Text
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   navbar: {
     flexDirection: "row",
     justifyContent: "space-around",
-    ...spacingStyles.px10,
+    ...spacingStyles.pl20,
     borderBottomWidth: 1,
     borderBottomColor: colors.lightGray,
   },
@@ -72,14 +72,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   navItemText: {
-    fontSize: fontSizes.base,
+    fontSize: fontSizes.sm,
+    ...spacingStyles.pb2,
     fontWeight: fontWeights.semiBold,
     color: staticColors.darkGray,
     fontFamily: "Helvetica",
   },
   activeLine: {
     ...spacingStyles.mt5,
-    height: 2,
+    height: 2.5,
     width: "100%",
     backgroundColor: colors.primary,
     borderRadius: borderRadius.r2,
@@ -94,7 +95,6 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.r8,
     borderWidth: 1,
     borderColor: colors.white,
-    elevation: 3,
   },
 });
 

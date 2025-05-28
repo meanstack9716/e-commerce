@@ -30,12 +30,12 @@ import UserProfile from "@/components/profile/UserProfile";
 import ProfileListSection from "@/components/profile/ProfileListSection";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
+import staticColors from "@/style/staticColors";
+import borderRadius from "@/style/borderRadius";
 import {fontSizes, fontWeights} from "@/style/typography";
 import { APP_VERSION } from "@/constants/constants";
-import staticColors from "@/style/staticColors";
 import { useAppDispatch } from "@/store/hooks";
 import { logoutUser } from "@/store/auth/authSlice";
-import borderRadius from "@/style/borderRadius";
 
 export default function ProfileScreen() {
   const [activeProfileSection, setActiveProfileSection] = useState("Profile");
