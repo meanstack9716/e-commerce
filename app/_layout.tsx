@@ -32,7 +32,8 @@ function AppLayout() {
         <Stack.Screen name="/addNewAddress" />
         <Stack.Screen name="/payment" />
         <Stack.Screen name="/placeorder" />
-         <Stack.Screen name="/order" />
+        <Stack.Screen name="/order" />
+        <Stack.Screen name="/wishlist" />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>

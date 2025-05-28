@@ -20,6 +20,11 @@ const UserProfile = () => {
       pathname: "/order",
     });
   };
+  const handleWishList = () => {
+    router.push({
+      pathname: "/wishlist",
+    });
+  };
   return (
     <ScrollView style={styles.container}>
       {/* Banner */}
@@ -61,9 +66,9 @@ const UserProfile = () => {
           <Ionicons name="help-circle-outline" size={24} />
           <Text>Help Center</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.card}>
+        <TouchableOpacity style={styles.card} onPress={handleWishList}>
           <Ionicons name="pricetags-outline" size={24} />
-          <Text>Coupons</Text>
+          <Text>WishList</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

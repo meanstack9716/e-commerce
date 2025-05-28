@@ -17,6 +17,7 @@ export interface Product {
   gallery?: GalleryItem[];
   seller?: Seller;
   delivery_days?: string;
+  reviews?: Review[];
 }
 
 export interface GalleryItem {
@@ -142,4 +143,27 @@ export interface AddressFormData {
   city: string;
   state: string;
   country: string;
+}
+
+export interface Review {
+  id: string;
+  product_id: string;
+  order_id: string;
+  rating: string;
+  review: string;
+  by: {
+    email: string;
+    id: string;
+    profile_url: string | null;
+    role: string | null;
+  };
+}
+
+export interface WishlistItem {
+  id: string;
+  selected_size: string;
+  selected_color: string;
+  selected_color_name: string;
+  quantity: string;
+  product: Product;
 }
