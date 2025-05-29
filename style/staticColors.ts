@@ -77,5 +77,6 @@ export default {
   lightRose:'#FFEBEB',
   iceBlue:'#E5EBFC',
   CharcoalGray:'#1F1F1F',
-  MatteBlack:'#202020'
+  MatteBlack:'#202020',
+  dotColor:'#C7D6FB'
 };

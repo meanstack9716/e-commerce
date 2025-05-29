@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.py10,
     width: 200,
     borderRadius: borderRadius.r16,
-    ...spacingStyles.my10,  
+    ...spacingStyles.px20,  
     alignItems:'center'
   },
 

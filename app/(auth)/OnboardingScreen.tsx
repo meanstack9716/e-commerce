@@ -96,7 +96,7 @@ const OnboardingScreen: React.FC = () => {
 };
 
 export default OnboardingScreen;
-
+const CARD_HEIGHT = 500;
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -105,6 +105,7 @@ const styles = StyleSheet.create({
   },
   cardWrapper: {
     width,
+    height: CARD_HEIGHT,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -117,11 +118,11 @@ const styles = StyleSheet.create({
     width: 16,
     height: 16,
     borderRadius: borderRadius.r8,
-    backgroundColor: "#d0d4f7",
+    backgroundColor: staticColors.dotColor,
     ...spacingStyles.mx5,
   },
   activeDot: {
-    backgroundColor: "#0057FF",
+    backgroundColor: staticColors.primaryBlue,
   },
   shapeTopLeft: {
     position: "absolute",
