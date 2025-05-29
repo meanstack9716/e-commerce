@@ -233,6 +233,7 @@ const authSlice = createSlice({
   reducers: {
     clearAuthError: (state) => {
       state.error = null;
+      state.loginError = null
     },
     resetRegistration: (state) => {
       state.registered = false;
