@@ -49,7 +49,6 @@ export default function CreateAccountScreen() {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [submissionAttempted, setSubmissionAttempted] = useState(false);
 
   const {
     errors,
@@ -96,7 +95,6 @@ export default function CreateAccountScreen() {
   };
 
   const handleDoneButton = (): void => {
-    setSubmissionAttempted(true);
     handleEmailValidation(formData.email);
     handlePasswordValidation(formData.password);
     handleConfirmPasswordMatch(formData.password, formData.confirmPassword);
@@ -223,7 +221,7 @@ export default function CreateAccountScreen() {
               {errors.confirmPassword && (
                 <Text style={styles.errorText}>{errors.confirmPassword}</Text>
               )}
-              {submissionAttempted && error && (
+              { error && (
                 <Text style={styles.apiError}>{error}</Text>
               )}
             </View>
