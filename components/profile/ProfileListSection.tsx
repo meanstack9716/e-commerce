@@ -38,7 +38,7 @@ export default function ProfileListSection() {
             <Ionicons name="heart-outline" size={10} color={colors.white} />
           }
           label="Change Base Url"
-          onPress={() => router.navigate("/Base_URL")}
+          onPress={() => router.navigate("/BaseURL")}
           customStyle={{ ...spacingStyles.mt5 }}
         />
         <ProfileOption

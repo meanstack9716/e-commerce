@@ -20,22 +20,17 @@ import images from "@/constants/images";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import { fontSizes } from "@/style/typography";
-import borderRadius from "@/style/borderRadius";
 import { commonStyles } from "@/style/commonStyle";
 import useBackHandler from "@/utils/useBackHandler";
-
-const { width, height } = Dimensions.get("window");
+import { Button } from "@/components/common/Button";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const { errors, handleEmailValidation, resetErrors, validateEmail } =
     useFieldValidation();
 
-  const handleNextButton = () => {
+  const onEmailSubmit = () => {
     handleEmailValidation(email);
-    if (!email.trim()) {
-      return;
-    }
     if (validateEmail(email) && !errors.email) {
       resetErrors();
       router.navigate({
@@ -46,12 +41,7 @@ export default function LoginScreen() {
   };
 
   useBackHandler(() => {
-    if (router.canGoBack()) {
-      router.back();
-    } else {
-      router.replace("/profile");
-    }
-    resetErrors();
+    handleCancelButton();
     return true;
   });
 
@@ -118,13 +108,13 @@ export default function LoginScreen() {
             {errors.email && (
               <Text style={styles.errorText}>{errors.email}</Text>
             )}
-
-            <TouchableOpacity
+            <Button
+              title="Next"
+              onPress={onEmailSubmit}
               style={commonStyles.authButton}
-              onPress={handleNextButton}
-            >
-              <Text style={commonStyles.authButtonText}>Next</Text>
-            </TouchableOpacity>
+              textStyle={commonStyles.authButtonText}
+            />
+
             <TouchableOpacity onPress={handleCancelButton}>
               <Text style={styles.cancelText}>Cancel</Text>
             </TouchableOpacity>

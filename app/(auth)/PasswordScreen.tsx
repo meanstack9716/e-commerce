@@ -25,6 +25,7 @@ import { fontSizes } from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
 import { commonStyles } from "@/style/commonStyle";
 import { Button } from "@/components/common/Button";
+import PasswordTextField from "@/components/common/PasswordTextField";
 
 export default function PasswordScreen() {
   const [password, setPassword] = useState("");
@@ -43,10 +44,6 @@ export default function PasswordScreen() {
 
   const handleSubmit = async () => {
     handleLoginPasswordValidation(password);
-    if (!email) {
-      setFieldErrors({ ...errors });
-      return;
-    }
     if (!errors.password && password.trim()) {
       const resultAction = await dispatch(
         loginUser({
@@ -85,36 +82,28 @@ export default function PasswordScreen() {
         <Text style={styles.greeting}>Hello User !!</Text>
 
         <Text style={styles.label}>Type your password</Text>
-
-        <TextInput
-          style={[
-            commonStyles.authInput,
-            styles.input,
-            errors.password && styles.errorInput,
-          ]}
-          placeholder="Enter password"
-          secureTextEntry={true}
-          value={password}
-          onChangeText={(text) => {
-            setPassword(text);
-            handleLoginPasswordValidation(text);
-          }}
-        />
-
-        {errors.password && (
-          <Text style={styles.errorText}>{errors.password}</Text>
-        )}
-        {loginError && <Text style={styles.errorText}>{loginError}</Text>}
-        {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
-        {errors.apiError && (
-          <Text style={styles.errorText}>{errors.apiError}</Text>
-        )}
+        <View style={styles.passwordContainer}>
+          <PasswordTextField
+            placeholder="Confirm Password"
+            value={password}
+            onChangeText={(text) => {
+              setPassword(text);
+              handleLoginPasswordValidation(text);
+            }}
+            error={errors.password}
+          />
+          {loginError && <Text style={styles.errorText}>{loginError}</Text>}
+          {errors.apiError && (
+            <Text style={styles.errorText}>{errors.apiError}</Text>
+          )}
+        </View>
 
         <Button
           title="SUBMIT"
           onPress={handleSubmit}
           loading={loading}
           style={commonStyles.authButton}
+          textStyle={commonStyles.authButtonText}
         />
 
         <TouchableOpacity onPress={handleForgetPassword}>
@@ -181,12 +170,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.my15,
     textAlign: "center",
   },
-  input: {
-    ...spacingStyles.mb25,
-  },
-  errorInput: {
-    borderColor: staticColors.errorColor,
-  },
+  passwordContainer: { ...spacingStyles.mb20 },
   errorText: {
     color: staticColors.errorColor,
     fontSize: fontSizes.sm,

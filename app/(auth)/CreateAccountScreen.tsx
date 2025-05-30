@@ -24,13 +24,15 @@ import { fontSizes } from "@/style/typography";
 import { commonStyles } from "@/style/commonStyle";
 import borderRadius from "@/style/borderRadius";
 import gapSizes from "@/style/gapSizes";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useFieldValidation } from "@/hooks/useFieldValidation";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   clearAuthError,
   registerUser,
   resetRegistration,
 } from "@/store/auth/authSlice";
+import { Button } from "@/components/common/Button";
+import PasswordTextField from "@/components/common/PasswordTextField";
 
 interface FormData {
   email: string;
@@ -47,8 +49,6 @@ export default function CreateAccountScreen() {
     password: "",
     confirmPassword: "",
   });
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const {
     errors,
@@ -66,7 +66,7 @@ export default function CreateAccountScreen() {
     if (registered) {
       router.replace({
         pathname: "/OtpConfirmationScreen",
-        params: { email: formData.email, source: "create-account" },
+        params: { email: formData.email, useCase: "create-account" },
       });
       dispatch(resetRegistration());
     }
@@ -93,21 +93,14 @@ export default function CreateAccountScreen() {
         break;
     }
   };
-
-  const handleDoneButton = (): void => {
+  const handleCreateAccountSubmit  = (): void => {
+    resetErrors();
     handleEmailValidation(formData.email);
     handlePasswordValidation(formData.password);
     handleConfirmPasswordMatch(formData.password, formData.confirmPassword);
+    const hasErrors = Object.keys(errors).some((key) => errors[key]);
 
-    const hasErrors = !!(
-      errors.email ||
-      errors.password ||
-      errors.confirmPassword
-    );
-    const allFieldsFilled =
-      formData.email && formData.password && formData.confirmPassword;
-
-    if (!hasErrors && allFieldsFilled) {
+    if (!hasErrors) {
       dispatch(
         registerUser({
           email: formData.email,
@@ -167,82 +160,35 @@ export default function CreateAccountScreen() {
               )}
 
               <View style={styles.passwordContainer}>
-                <TextInput
-                  style={[
-                    commonStyles.authInput,
-                    errors.password && styles.inputError,
-                  ]}
+                <PasswordTextField
                   placeholder="Password"
-                  placeholderTextColor={staticColors.mutedGray}
-                  secureTextEntry={!showPassword}
                   value={formData.password}
                   onChangeText={(text) => handleInputChange("password", text)}
+                  error={errors.password}
                 />
-                <TouchableOpacity
-                  style={styles.eyeIcon}
-                  onPress={() => setShowPassword(!showPassword)}
-                >
-                  <Ionicons
-                    name={showPassword ? "eye" : "eye-off"}
-                    size={fontSizes.md}
-                    color={staticColors.CharcoalGray}
-                  />
-                </TouchableOpacity>
               </View>
-              {errors.password && (
-                <Text style={styles.errorText}>{errors.password}</Text>
-              )}
 
               <View style={styles.passwordContainer}>
-                <TextInput
-                  style={[
-                    commonStyles.authInput,
-                    errors.confirmPassword && styles.inputError,
-                  ]}
+                <PasswordTextField
                   placeholder="Confirm Password"
-                  placeholderTextColor={staticColors.mutedGray}
-                  secureTextEntry={!showConfirmPassword}
                   value={formData.confirmPassword}
                   onChangeText={(text) =>
                     handleInputChange("confirmPassword", text)
                   }
+                  error={errors.confirmPassword}
                 />
-                <TouchableOpacity
-                  style={styles.eyeIcon}
-                  onPress={() => setShowConfirmPassword(!showConfirmPassword)}
-                >
-                  <Ionicons
-                    name={showConfirmPassword ? "eye" : "eye-off"}
-                    size={fontSizes.md}
-                    color={staticColors.CharcoalGray}
-                  />
-                </TouchableOpacity>
               </View>
-              {errors.confirmPassword && (
-                <Text style={styles.errorText}>{errors.confirmPassword}</Text>
-              )}
-              { error && (
-                <Text style={styles.apiError}>{error}</Text>
-              )}
             </View>
           </View>
 
           <View style={styles.bottomButtonContainer}>
-            <TouchableOpacity
-              style={[
-                commonStyles.authButton,
-                loading && styles.disabledButton,
-              ]}
-              onPress={handleDoneButton}
-              disabled={loading}
-            >
-              {loading ? (
-                <ActivityIndicator size="small" color={staticColors.white} />
-              ) : (
-                <Text style={commonStyles.authButtonText}>Done</Text>
-              )}
-            </TouchableOpacity>
-
+            <Button
+              title="Done"
+              onPress={handleCreateAccountSubmit}
+              style={commonStyles.authButton}
+              loading={loading}
+              textStyle={commonStyles.authButtonText}
+            />
             <TouchableOpacity onPress={handleCancelButton} disabled={loading}>
               <Text style={[styles.cancelText, loading && styles.disabledText]}>
                 Cancel
@@ -329,12 +275,6 @@ const styles = StyleSheet.create({
   passwordContainer: {
     position: "relative",
   },
-  eyeIcon: {
-    position: "absolute",
-    right: 20,
-    top: "50%",
-    transform: [{ translateY: -10 }],
-  },
   inputError: {
     borderColor: staticColors.errorColor,
     borderWidth: 1,
@@ -343,12 +283,6 @@ const styles = StyleSheet.create({
     color: staticColors.errorColor,
     fontSize: fontSizes.xs,
     ...spacingStyles.mt5,
-  },
-  apiError: {
-    color: staticColors.errorColor,
-    fontSize: fontSizes.xs,
-    ...spacingStyles.mt10,
-    textAlign: "center",
   },
   cancelText: {
     color: staticColors.darkSlate,

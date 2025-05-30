@@ -10,6 +10,7 @@ import { fontSizes } from "@/style/typography";
 import { commonStyles } from "@/style/commonStyle";
 import gapSizes from "@/style/gapSizes";
 import { router } from "expo-router";
+import { Button } from "@/components/common/Button";
 
 const WelcomeScreen = () => {
   const handleNextButton = () => {
@@ -33,15 +34,17 @@ const WelcomeScreen = () => {
         </Text>
 
         <View style={styles.bottomContainer}>
-          <TouchableOpacity
-            style={commonStyles.authButton}
+          <Button
+            title="Let's get started"
             onPress={handleNextButton}
-          >
-            <Text style={commonStyles.authButtonText}>Let's get started</Text>
-          </TouchableOpacity>
+            style={commonStyles.authButton}
+            textStyle={commonStyles.authButtonText}
+          />
 
-          {/* Login Link */}
-          <TouchableOpacity style={styles.linkContainer} onPress={handleAlreadyButton}>
+          <TouchableOpacity
+            style={styles.linkContainer}
+            onPress={handleAlreadyButton}
+          >
             <Text style={styles.linkText}>I already have an account</Text>
             <Ionicons
               name="arrow-forward"

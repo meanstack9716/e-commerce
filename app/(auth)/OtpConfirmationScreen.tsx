@@ -18,17 +18,17 @@ const OtpConfirmationScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
   const params = useLocalSearchParams();
   const email = params.email ? String(params.email) : "";
-  const source = params.source ? String(params.source) : "";
+  const useCase = params.useCase ? String(params.useCase) : "";
   const dispatch = useAppDispatch();
 
   const onVerifySuccess = async (otpCode: string) => {
     try {
-      if (source === "create-account") {
+      if (useCase === "create-account") {
         const result = await dispatch(
           verifyUser({ email, code: otpCode })
         ).unwrap();
         router.navigate("/profile");
-      } else if (source === "password-recovery") {
+      } else if (useCase === "password-recovery") {
         const result = await dispatch(
           verifyEmailCode({ email, code: otpCode })
         ).unwrap();

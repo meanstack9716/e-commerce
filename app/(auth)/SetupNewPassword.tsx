@@ -17,17 +17,17 @@ import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
+import { useRouter, useLocalSearchParams } from "expo-router";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { resetPassword } from "@/store/auth/authSlice";
 import images from "@/constants/images";
 import { commonStyles } from "@/style/commonStyle";
 import staticColors from "@/style/staticColors";
 import { fontSizes } from "@/style/typography";
 import spacingStyles from "@/style/spacingStyles";
-import borderRadius from "@/style/borderRadius";
 import gapSizes from "@/style/gapSizes";
 import { useFieldValidation } from "@/hooks/useFieldValidation";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { useRouter, useLocalSearchParams } from "expo-router";
-import { resetPassword } from "@/store/auth/authSlice";
+import { Button } from "@/components/common/Button";
 
 const SetupNewPassword: React.FC = () => {
   const insets = useSafeAreaInsets();
@@ -198,24 +198,15 @@ const SetupNewPassword: React.FC = () => {
           </View>
 
           <View style={styles.bottomButtonContainer}>
-            <TouchableOpacity
-              style={[
-                commonStyles.authButton,
-                loading && styles.disabledButton,
-              ]}
+            <Button
+              title="Save"
               onPress={handleSubmit}
-              disabled={loading}
-            >
-              {loading ? (
-                <ActivityIndicator size="small" color={staticColors.white} />
-              ) : (
-                <Text style={commonStyles.authButtonText}>Save</Text>
-              )}
-            </TouchableOpacity>
+              style={commonStyles.authButton}
+              loading={loading}
+              textStyle={commonStyles.authButtonText}
+            />
             <TouchableOpacity onPress={handleCancel} disabled={loading}>
-              <Text style={[styles.cancelText, loading && styles.disabledText]}>
-                Cancel
-              </Text>
+              <Text style={styles.cancelText}>Cancel</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -291,16 +282,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     ...spacingStyles.mt15,
   },
-  disabledText: {
-    opacity: 0.5,
-  },
+
   bottomButtonContainer: {
     ...spacingStyles.py25,
     width: "100%",
     ...spacingStyles.pb20,
-  },
-  disabledButton: {
-    opacity: 0.5,
   },
 });
 

@@ -21,6 +21,7 @@ import { fontSizes, fontWeights } from "@/style/typography";
 import borderRadius from "@/style/borderRadius";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { sendEmailCode } from "@/store/auth/authSlice";
+import { Button } from "@/components/common/Button";
 
 export default function PasswordRecoveryScreen() {
   const [selectedOption, setSelectedOption] = useState<"Email" | null>(null);
@@ -43,7 +44,7 @@ export default function PasswordRecoveryScreen() {
       if (sendEmailCode.fulfilled.match(resultAction)) {
         router.navigate({
           pathname: "/OtpConfirmationScreen",
-          params: { email: email as string, source: "password-recovery" },
+          params: { email: email as string, useCase: "password-recovery" },
         });
       } else {
         Toast.show({
@@ -104,16 +105,13 @@ export default function PasswordRecoveryScreen() {
           </TouchableOpacity>
         </View>
         <View style={[commonStyles.bottomContainer, { bottom: insets.bottom }]}>
-          <TouchableOpacity
-            style={commonStyles.authButton}
+          <Button
+            title="Next"
             onPress={handleNextPress}
-          >
-            {loading ? (
-              <ActivityIndicator size="small" color={staticColors.white} />
-            ) : (
-              <Text style={commonStyles.authButtonText}>Next</Text>
-            )}
-          </TouchableOpacity>
+            style={commonStyles.authButton}
+            loading={loading}
+            textStyle={commonStyles.authButtonText}
+          />
 
           <TouchableOpacity
             style={styles.cancelButton}
