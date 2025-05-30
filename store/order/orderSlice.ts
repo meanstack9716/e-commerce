@@ -1,8 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { RootState } from "../store";
-
-const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+import { getApiUrl } from "@/utils/apiUtils";
 
 interface OrderPayload {
   cart_items_ids: (string | number)[];
@@ -25,24 +24,24 @@ const initialState: OrderState = {
 export const placeOrder = createAsyncThunk<
   any,
   OrderPayload,
-  { state: RootState } 
+  { state: RootState }
 >(
   "order/placeOrder",
   async (payload: OrderPayload, { getState, rejectWithValue }) => {
     try {
       const state = getState();
-      const token = state.auth.token; 
+      const token = state.auth.token;
       if (!token) {
         return rejectWithValue("No authentication token found.");
       }
-
+      const apiUrl = await getApiUrl();
       const response = await axios.post(`${apiUrl}/orders/new`, payload, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `${token}`,
         },
       });
-      return response.data; 
+      return response.data;
     } catch (error: any) {
       const errorMessage =
         error.response?.data?.message || "Failed to place order.";
@@ -70,7 +69,7 @@ const orderSlice = createSlice({
       })
       .addCase(placeOrder.fulfilled, (state, action) => {
         state.loading = false;
-        state.orderId = action.payload.orderId || "success"; 
+        state.orderId = action.payload.orderId || "success";
         state.error = null;
       })
       .addCase(placeOrder.rejected, (state, action) => {

@@ -43,6 +43,10 @@ export default function AuthLayout() {
         name="WelcomeScreen"
         options={{ title: "WelcomeScreen", headerShown: false }}
       />
+        <Stack.Screen
+        name="Base_URL"
+        options={{ title: "Base_URL", headerShown: false }}
+      />
     </Stack>
   );
 }

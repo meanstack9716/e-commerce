@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  BackHandler,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -21,6 +22,7 @@ import spacingStyles from "@/style/spacingStyles";
 import { fontSizes } from "@/style/typography";
 import borderRadius from "@/style/borderRadius";
 import { commonStyles } from "@/style/commonStyle";
+import useBackHandler from "@/utils/useBackHandler";
 
 const { width, height } = Dimensions.get("window");
 
@@ -43,8 +45,22 @@ export default function LoginScreen() {
     }
   };
 
+  useBackHandler(() => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace("/profile");
+    }
+    resetErrors();
+    return true;
+  });
+
   const handleCancelButton = () => {
-    router.back();
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace("/profile");
+    }
     resetErrors();
   };
 

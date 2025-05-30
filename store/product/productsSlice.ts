@@ -3,9 +3,8 @@ import axios from "axios";
 import { Product } from "@/types/types";
 import { normalizeProduct } from "@/utils/normalizeProduct";
 import { handleApiError } from "@/utils/handleApiError";
-import Constants from "expo-constants";
-const apiUrl = process.env.EXPO_PUBLIC_API_URL;
-// const apiUrl = Constants.expoConfig?.extra?.API_URL;
+import { getApiUrl } from "@/utils/apiUtils";
+
 interface ProductsState {
   data: Product[];
   selectedProduct: Product | null;
@@ -30,6 +29,7 @@ export const fetchProducts = createAsyncThunk<
   { rejectValue: string }
 >("products/fetchProducts", async (_, { rejectWithValue }) => {
   try {
+    const apiUrl = await getApiUrl();
     const response = await axios.get(`${apiUrl}/products/list`);
     if (response.data?.data) {
       const formattedProducts = response.data.data.map(normalizeProduct);
@@ -47,6 +47,7 @@ export const fetchProductById = createAsyncThunk<
   { rejectValue: string }
 >("products/fetchProductById", async (id, { rejectWithValue }) => {
   try {
+    const apiUrl = await getApiUrl();
     const response = await axios.get(`${apiUrl}/products/${id}`);
     console.log(id);
     const apiProduct = response.data.data;

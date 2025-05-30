@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
     fontSize: fontSizes["2xl"],
     fontFamily: "RalewayeExtraBold",
     color: staticColors.darkSlate,
-    ...spacingStyles.mt20,
+    ...spacingStyles.mt25,
     textAlign: "center",
   },
   label: {
@@ -197,11 +197,10 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.sm,
     fontFamily: "NunitoSans",
     textAlign: "center",
-    ...spacingStyles.mt15,
   },
   bottomButtonContainer: {
     position: "absolute",
-    ...spacingStyles.pb25,
+    ...spacingStyles.pb2,
     alignItems: "center",
     width: "100%",
   },

@@ -9,7 +9,7 @@ import staticColors from "@/style/staticColors";
 
 const ProfileHeader = () => {
   const handleLoginPress = () => {
-    router.navigate("/OnboardingScreen");
+    router.replace("/LoginScreen");
   };
 
   return (
