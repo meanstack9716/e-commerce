@@ -25,6 +25,7 @@ import { CategoryItem , SubSubCategory  } from "@/types/types";
 import {fontSizes, fontWeights} from "@/style/typography";
 import FullScreenLoader from "@/components/common/FullScreenLoader";
 import borderRadius from "@/style/borderRadius";
+import { fontFamilies } from "@/style/fontFamilies";
 const CategoriesScreen: React.FC = () => {
   const params = useLocalSearchParams();
   const { categoryId, categoryTitle } = params;
@@ -323,7 +324,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: fontSizes.sm,
-    fontFamily: "HelveticaBold",
+    fontFamily: fontFamilies.helveticaBold,
     ...spacingStyles.mx10,
     color: colors.primary,
   },

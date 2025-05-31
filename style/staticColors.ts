@@ -69,5 +69,14 @@ export default {
   slateBlue:"#5b3ec8",
   bannerColor:'#fff6e5',
   bannerHeighlight:'#d4a200',
-  profileBg:'#e6f5f0'
+  profileBg:'#e6f5f0',
+  darkSlate:"#202020",
+  paperWhite:'#F8F8F8',
+  mutedGray:'#D2D2D2',
+  primaryBlue:'#004CFF',
+  lightRose:'#FFEBEB',
+  iceBlue:'#E5EBFC',
+  CharcoalGray:'#1F1F1F',
+  MatteBlack:'#202020',
+  dotColor:'#C7D6FB'
 };

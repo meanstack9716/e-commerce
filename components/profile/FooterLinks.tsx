@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import {fontSizes} from "@/style/typography";
 import colors from '@/style/staticColors';
 import spacingStyles from '@/style/spacingStyles';
+import { fontFamilies } from '@/style/fontFamilies';
 
 type FooterLinksProps = {
   onLinkPress: (label: string) => void;
@@ -32,7 +33,7 @@ const styles = StyleSheet.create({
     fontSize:fontSizes.xs,
     ...spacingStyles.p10,
     color: colors.textMuted,
-    fontFamily:'HelveticaBold'
+    fontFamily:fontFamilies.helveticaBold
   },
 });
 

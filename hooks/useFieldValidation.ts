@@ -123,6 +123,7 @@ export const useFieldValidation = () => {
     handleConfirmPasswordMatch ,
     handleLoginPasswordValidation,
     resetErrors,
+    validateEmail,
     setFieldErrors
   };
 };

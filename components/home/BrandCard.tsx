@@ -14,6 +14,7 @@ import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import {fontSizes, fontWeights} from "@/style/typography";
 import borderRadius from "@/style/borderRadius";
+import { fontFamilies } from "@/style/fontFamilies";
 const { width } = Dimensions.get("window");
 
 interface Brand {
@@ -68,7 +69,7 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.lg,
     fontWeight: fontWeights.semiBold,
     color: staticColors.primary,
-    fontFamily: "helveticaBold",
+    fontFamily: fontFamilies.helveticaBold,
     textAlign: "center",
   },
   brandList: {
