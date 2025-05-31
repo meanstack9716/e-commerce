@@ -5,8 +5,9 @@ import { RootState } from "@/store/store";
 import { clearCartFromStorage, saveCartToStorage } from "@/utils/cartStorage";
 import { handleApiError } from "@/utils/handleApiError";
 import { getAuthHeaders } from "@/utils/apiHeader";
+import { getApiUrl } from "@/utils/apiUtils";
+import axiosConfig from "@/utils/axiosConfig";
 
-const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 const generateUniqueId = () => {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
 };
@@ -41,7 +42,7 @@ export const addToCartApi = createAsyncThunk<
         selected_color: selectedColor || "",
         quantity: 1,
       };
-      await axios.post(`${apiUrl}/cart/add`, payload, getAuthHeaders(state));
+      await axiosConfig.post(`/cart/add`, payload, getAuthHeaders(state));
     } catch (error: any) {
       return rejectWithValue({
         message:
@@ -62,8 +63,8 @@ export const fetchCartItemsApi = createAsyncThunk<
 >("cart/fetchCartItemsApi", async (_, { getState, rejectWithValue }) => {
   try {
     const state = getState();
-    const response = await axios.get(
-      `${apiUrl}/cart/list`,
+    const response = await axiosConfig.get(
+      `/cart/list`,
       getAuthHeaders(state)
     );
     const cartItemsData = response.data.data;
@@ -121,12 +122,13 @@ export const removeFromCartApi = createAsyncThunk<
   { state: RootState }
 >("cart/removeFromCartApi", async ({ ids }, { getState, rejectWithValue }) => {
   try {
+    const apiUrl = await getApiUrl();
     const state = getState();
     const token = state.auth.token;
     const payload = {
       item_ids: ids,
     };
-    await axios.delete(`${apiUrl}/cart/remove`, {
+    await axiosConfig.delete(`/cart/remove`, {
       headers: {
         Authorization: `${token}`,
         "Content-Type": "application/json",
@@ -161,8 +163,7 @@ export const updateCartItemApi = createAsyncThunk<
         color,
         quantity,
       };
-
-      await axios.put(`${apiUrl}/cart/update`, payload, getAuthHeaders(state));
+      await axiosConfig.put(`/cart/update`, payload, getAuthHeaders(state));
       dispatch(fetchCartItemsApi());
     } catch (error: any) {
       const errorMessage =

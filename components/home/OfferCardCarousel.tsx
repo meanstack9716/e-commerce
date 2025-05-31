@@ -14,6 +14,7 @@ import staticColors from "@/style/staticColors";
 import {fontSizes, fontWeights} from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
 import borderRadius from "@/style/borderRadius";
+import { fontFamilies } from "@/style/fontFamilies";
 
 const { width } = Dimensions.get("window");
 
@@ -114,7 +115,7 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.lg,
     fontWeight: fontWeights.semiBold,
     color: staticColors.primary,
-    fontFamily: "helveticaBold",
+    fontFamily: fontFamilies.helveticaBold,
   },
   subheading: {
     fontSize: fontSizes.xs,

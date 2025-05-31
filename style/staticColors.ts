@@ -77,4 +77,13 @@ export default {
   blue300: "#004CFF",
   blue400: "#0042E0",
   pink100: "#FFEBEB",
+  darkSlate: "#202020",
+  paperWhite: "#F8F8F8",
+  mutedGray: "#D2D2D2",
+  primaryBlue: "#004CFF",
+  lightRose: "#FFEBEB",
+  iceBlue: "#E5EBFC",
+  CharcoalGray: "#1F1F1F",
+  MatteBlack: "#202020",
+  dotColor: "#C7D6FB",
 };

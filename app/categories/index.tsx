@@ -24,6 +24,7 @@ import FullScreenLoader from "@/components/common/FullScreenLoader";
 import borderRadius from "@/style/borderRadius";
 import { CategoryItem, SubCategoryItem } from "@/interfaces";
 import gapSizes from "@/style/gapSizes";
+import { fontFamilies } from "@/style/fontFamilies";
 
 const CategoriesScreen: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -247,6 +248,7 @@ const styles = StyleSheet.create({
   headingText: {
     fontSize: fontSizes["2xl"],
     fontWeight: fontWeights.bold,
+    fontFamily: fontFamilies.ralewayBold
   },
   cancelButton: {
     fontSize: fontSizes["xl"],

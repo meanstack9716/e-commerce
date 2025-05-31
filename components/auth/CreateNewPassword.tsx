@@ -12,6 +12,7 @@ import spacingStyles from "@/style/spacingStyles";
 import { fontSizes } from "@/style/typography";
 import staticColors from "@/style/staticColors";
 import borderRadius from "@/style/borderRadius";
+import { fontFamilies } from "@/style/fontFamilies";
 
 export default function CreateNewPassword() {
   const { errors, handlePasswordValidation, handleConfirmPasswordMatch } =
@@ -128,7 +129,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     width: "80%",
     ...spacingStyles.mb20,
-    fontFamily: "Helvetica",
+    fontFamily: fontFamilies.helvetica,
     lineHeight: 20,
   },
   inputGroup: {
