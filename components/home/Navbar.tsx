@@ -13,6 +13,7 @@ import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import {fontSizes, fontWeights} from "@/style/typography";
 import borderRadius from "@/style/borderRadius";
+import { fontFamilies } from "@/style/fontFamilies";
 
 interface NavbarProps {
   tabs: string[];
@@ -76,7 +77,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.pb2,
     fontWeight: fontWeights.semiBold,
     color: staticColors.darkGray,
-    fontFamily: "Helvetica",
+    fontFamily: fontFamilies.helvetica,
   },
   activeLine: {
     ...spacingStyles.mt5,
@@ -87,7 +88,7 @@ const styles = StyleSheet.create({
   },
   activeNavItemText: {
     color: colors.primary,
-    fontFamily: "HelveticaBold",
+    fontFamily: fontFamilies.helveticaBold,
   },
   categoryTab: {
     backgroundColor: colors.primary,

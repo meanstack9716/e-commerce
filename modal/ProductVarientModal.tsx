@@ -13,36 +13,13 @@ import staticColors from "@/style/staticColors";
 import borderRadius from "@/style/borderRadius";
 import { BlurView } from "expo-blur";
 import { fontSizes, fontWeights } from "@/style/typography";
-
-interface AvailableSize {
-  label: string;
-  left: number;
-  sizeData: any;
-}
-
-interface ColorOption {
-  id: string;
-  color: string;
-  value: string;
-  img_url: string;
-  stock_quantity: string;
-  images: string[];
-}
-
-interface ProductModalProps {
-  visible: boolean;
-  onClose: () => void;
-  selectedSize: string;
-  selectedColor: string;
-  allSizes: AvailableSize[];
-  availableColors: ColorOption[];
-  onSizeSelect: (size: string) => void;
-  onColorSelect: (colorData: {
-    color: string;
-    colorName: string;
-    images: string[];
-  }) => void;
-}
+import {
+  AvailableSize,
+  ColorOption,
+  ProductModalProps,
+} from "./ProductVarientModal.types";
+import spacingStyles from "@/style/spacingStyles";
+import { fontFamilies } from "@/style/fontFamilies";
 
 const ProductVarientModal: React.FC<ProductModalProps> = ({
   visible,
@@ -53,15 +30,14 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
   availableColors,
   onSizeSelect,
   onColorSelect,
+  price,  
 }) => {
   const [quantity, setQuantity] = useState(1);
 
-  // Find the selected color's images for the main image
   const selectedColorData = availableColors.find(
     (c) => c.color === selectedColor
   );
-  const mainImage =
-    selectedColorData?.images[0] || "https://via.placeholder.com/400x200";
+  const mainImage = selectedColorData?.images[0];
 
   const handleSizeSelect = (size: AvailableSize) => {
     if (size.left > 0) {
@@ -84,88 +60,108 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
       visible={visible}
       onRequestClose={onClose}
     >
-      <BlurView intensity={40} tint="light" style={styles.centeredView}>
+      <BlurView intensity={50} tint="light" style={styles.centeredView}>
         <View style={styles.modalView}>
           <View style={styles.content}>
             <View style={styles.header}>
               <Image source={{ uri: mainImage }} style={styles.avatar} />
               <View>
-                <Text style={styles.price}>$17.00</Text>
-                <Text style={styles.color}>
-                  {selectedColor || "No color selected"}
-                </Text>
-                <Text style={styles.size}>
-                  {selectedSize || "No size selected"}
-                </Text>
+                <Text style={styles.priceTag}>₹{price}</Text>
+
+                <View style={styles.colorSizeRow}>
+                  <Text style={styles.colorTag}>
+                    {selectedColor || "No color"}
+                  </Text>
+                  <Text style={styles.sizeTag}>
+                    {selectedSize || "No size"}
+                  </Text>
+                </View>
               </View>
             </View>
+            <View style={styles.imageSizeContent}>
+              <Text style={styles.sectionTitle}>Color Options</Text>
+              <FlatList
+                horizontal
+                data={availableColors}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    onPress={() => handleColorSelect(item)}
+                    style={[
+                      styles.colorOption,
+                      selectedColor === item.color && styles.selectedColor,
+                    ]}
+                  >
+                    <Image
+                      source={{ uri: item.img_url }}
+                      style={styles.colorImage}
+                    />
+                  </TouchableOpacity>
+                )}
+              />
 
-            <Text style={styles.sectionTitle}>Color Options</Text>
-            <FlatList
-              horizontal
-              data={availableColors}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  onPress={() => handleColorSelect(item)}
-                  style={[
-                    styles.colorOption,
-                    selectedColor === item.color && styles.selectedColor,
-                  ]}
-                >
-                  <Image
-                    source={{ uri: item.img_url }}
-                    style={styles.colorImage}
+              <Text style={styles.sectionTitle}>Size</Text>
+              <View style={styles.sizeContainer}>
+                {allSizes.map((size) => (
+                  <TouchableOpacity
+                    key={size.label}
+                    onPress={() => handleSizeSelect(size)}
+                    style={[
+                      styles.sizeButton,
+                      selectedSize === size.label && styles.selectedSize,
+                      size.left === 0 && styles.disabledSize,
+                    ]}
+                    disabled={size.left === 0}
+                  >
+                    <Text style={styles.sizeText}>{size.label}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              <View style={styles.quantityContainer}>
+                <Text style={styles.sectionTitle}>Quantity</Text>
+                <View style={styles.quantityControl}>
+                  <TouchableOpacity
+                    onPress={() => setQuantity(Math.max(1, quantity - 1))}
+                    style={styles.quantityButton}
+                  >
+                    <Ionicons
+                      name="remove"
+                      size={fontSizes["xl"]}
+                      color={staticColors.primaryBlue}
+                    />
+                  </TouchableOpacity>
+
+                  <Text style={styles.quantity}>{quantity}</Text>
+
+                  <TouchableOpacity
+                    onPress={() => setQuantity(quantity + 1)}
+                    style={styles.quantityButton}
+                  >
+                    <Ionicons
+                      name="add"
+                      size={fontSizes["xl"]}
+                      color={staticColors.primaryBlue}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity style={styles.favoriteButton}>
+                  <Ionicons
+                    name="heart-outline"
+                    size={26}
+                    color={staticColors.darkSlate}
                   />
                 </TouchableOpacity>
-              )}
-            />
-
-            <Text style={styles.sectionTitle}>Size</Text>
-            <View style={styles.sizeContainer}>
-              {allSizes.map((size) => (
-                <TouchableOpacity
-                  key={size.label}
-                  onPress={() => handleSizeSelect(size)}
-                  style={[
-                    styles.sizeButton,
-                    selectedSize === size.label && styles.selectedSize,
-                    size.left === 0 && styles.disabledSize,
-                  ]}
-                  disabled={size.left === 0}
-                >
-                  <Text style={styles.sizeText}>{size.label}</Text>
+                <TouchableOpacity style={styles.addToCartButton}>
+                  <Text style={styles.buttonText}>Add to cart</Text>
                 </TouchableOpacity>
-              ))}
-            </View>
-
-            <Text style={styles.sectionTitle}>Quantity</Text>
-            <View style={styles.quantityContainer}>
-              <TouchableOpacity
-                onPress={() => setQuantity(Math.max(1, quantity - 1))}
-                style={styles.quantityButton}
-              >
-                <Text style={styles.quantityText}>-</Text>
-              </TouchableOpacity>
-              <Text style={styles.quantity}>{quantity}</Text>
-              <TouchableOpacity
-                onPress={() => setQuantity(quantity + 1)}
-                style={styles.quantityButton}
-              >
-                <Text style={styles.quantityText}>+</Text>
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity style={styles.favoriteButton}>
-                <Ionicons name="heart-outline" size={24} color="black" />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.addToCartButton}>
-                <Text style={styles.buttonText}>Add to cart</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.buyNowButton}>
-                <Text style={styles.buttonText}>Buy now</Text>
-              </TouchableOpacity>
+                <TouchableOpacity style={styles.buyNowButton}>
+                  <Text style={styles.buttonText}>Buy now</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </View>
@@ -187,138 +183,171 @@ const styles = StyleSheet.create({
   },
 
   modalView: {
-    backgroundColor: "white",
+    backgroundColor: staticColors.white,
     width: "100%",
     maxHeight: "80%",
     overflow: "hidden",
+    borderTopRightRadius: borderRadius.r10,
+    borderTopLeftRadius: borderRadius.r10,
   },
-  mainImage: {
-    width: "100%",
-    height: 200,
-    resizeMode: "cover",
-  },
-  content: {
-    padding: 20,
-  },
+  content: {},
   header: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 20,
+    ...spacingStyles.mb10,
+    ...spacingStyles.p20,
+    backgroundColor: staticColors.bgSoftBlue,
   },
   avatar: {
-    width: 100,
-    height: 100,
+    width: 85,
+    height: 85,
     borderRadius: borderRadius.r8,
-    marginRight: 10,
+    ...spacingStyles.mr15,
   },
-  price: {
+
+  colorSizeRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 6,
+    gap: 8,
+  },
+  priceTag: {
     fontSize: fontSizes["2xl"],
-    fontFamily: "Raleway",
-    fontWeight: fontWeights.extraBold,
-    color: staticColors.primary,
+    fontFamily: fontFamilies.ralewayExtraBold,
+    color: staticColors.black,
+    alignSelf: "flex-start",
+    ...spacingStyles.py2,
   },
-  color: {
-    fontSize: 16,
-    color: "#666",
+
+  colorTag: {
+    fontSize: fontSizes.sm,
+    fontFamily: fontFamilies.raleway,
+    color: staticColors.darkSlate,
+    backgroundColor: staticColors.iceBlue,
+    ...spacingStyles.px10,
+    ...spacingStyles.py2,
+    borderRadius: borderRadius.r4,
   },
-  size: {
-    fontSize: 16,
-    color: "#666",
+  sizeTag: {
+    fontSize: fontSizes.sm,
+    fontFamily: fontFamilies.raleway,
+    color: staticColors.darkSlate,
+    backgroundColor: staticColors.iceBlue,
+    ...spacingStyles.px20,
+    ...spacingStyles.py2,
+    borderRadius: borderRadius.r4,
   },
+  imageSizeContent: {
+    ...spacingStyles.px20,
+  },
+
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginTop: 10,
-    marginBottom: 10,
+    fontSize: fontSizes.md,
+    fontFamily: fontFamilies.ralewayExtraBold,
+    ...spacingStyles.my10,
   },
   colorOption: {
-    marginRight: 10,
-    borderWidth: 2,
-    borderColor: "transparent",
-    borderRadius: 10,
+    ...spacingStyles.mr10,
   },
-  selectedColor: {
-    borderColor: "#007AFF",
-  },
+  selectedColor: {},
   colorImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 10,
+    width: 80,
+    height: 80,
+    borderRadius: borderRadius.r8,
   },
   sizeContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    marginBottom: 10,
   },
   sizeButton: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    padding: 10,
-    marginRight: 10,
-    marginBottom: 10,
+    width: 50,
+    height: 25,
+    borderRadius: borderRadius.r5,
+    backgroundColor: staticColors.bgSoftGray,
+    justifyContent: "center",
+    alignItems: "center",
+    ...spacingStyles.mr5,
+    ...spacingStyles.mb15,
   },
+
   selectedSize: {
-    borderColor: "#007AFF",
-    backgroundColor: "#E6F0FA",
+    borderWidth: 1,
+    borderColor: staticColors.primaryBlue,
+    backgroundColor: staticColors.iceBlue,
   },
   disabledSize: {
-    backgroundColor: "#f0f0f0",
-    opacity: 0.5,
+    backgroundColor: staticColors.iceBlue,
+    opacity: 0.2,
   },
   sizeText: {
-    fontSize: 16,
+    fontSize: fontSizes.sm,
+    fontFamily: fontFamilies.ralewayeMedium,
   },
   quantityContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 20,
+    justifyContent: "space-between",
+    ...spacingStyles.mt15,
+    ...spacingStyles.mb25,
+  },
+  quantityControl: {
+    flexDirection: "row",
+    alignItems: "center",
+    textAlign: "center",
   },
   quantityButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: "#ccc",
+    width: 50,
+    height: 50,
+    borderRadius: borderRadius.circle,
+    borderWidth: 2,
+    borderColor: staticColors.primaryBlue,
     justifyContent: "center",
     alignItems: "center",
   },
-  quantityText: {
-    fontSize: 20,
-  },
   quantity: {
-    fontSize: 18,
+    width: 75,
+    height: 50,
+    borderRadius: borderRadius.r20,
+    backgroundColor: staticColors.iceBlue,
+    fontSize: fontSizes["2xl"],
+    fontFamily: fontFamilies.ralewayeMedium,
     marginHorizontal: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    textAlign: "center",
   },
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
   },
   favoriteButton: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 10,
-    padding: 10,
+    backgroundColor: staticColors.bgSoftGray,
+    justifyContent: "center",
+    borderRadius: borderRadius.r10,
+    ...spacingStyles.p10,
   },
   addToCartButton: {
-    backgroundColor: "#E6E6E6",
-    borderRadius: 10,
-    padding: 15,
+    backgroundColor: staticColors.darkSlate,
+    borderRadius: borderRadius.r10,
+    ...spacingStyles.py10,
+
+    justifyContent: "center",
     flex: 1,
-    marginHorizontal: 10,
+    ...spacingStyles.mx15,
     alignItems: "center",
   },
   buyNowButton: {
-    backgroundColor: "#007AFF",
+    backgroundColor: staticColors.primaryBlue,
     borderRadius: 10,
-    padding: 15,
+    ...spacingStyles.py10,
+    justifyContent: "center",
     flex: 1,
     alignItems: "center",
   },
   buttonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
+    color: staticColors.textSoftGray,
+    fontSize: fontSizes.base,
+    fontFamily: fontFamilies.nunitoSans,
   },
 });
 

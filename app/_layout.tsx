@@ -50,6 +50,7 @@ export default function RootLayout() {
     AbriFatfaceRegular: require("../assets/fonts/AbrilFatface-Regular.otf"),
     RalewayeBold:require("../assets/fonts/Raleway/static/Raleway-Bold.ttf"),
     RalewayeSemiBold: require("../assets/fonts/Raleway/static/Raleway-SemiBold.ttf"),
+    RalewayeMedium: require("../assets/fonts/Raleway/static/Raleway-Medium.ttf"),
     RalewayeExtraBold: require("../assets/fonts/Raleway/static/Raleway-ExtraBold.ttf"),
     NunitoSans: require("../assets/fonts/Nunito_Sans/NunitoSans-VariableFont_YTLC,opsz,wdth,wght.ttf"),
   });

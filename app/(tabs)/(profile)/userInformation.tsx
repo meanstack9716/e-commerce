@@ -21,6 +21,7 @@ import images from "@/constants/images";
 import gapSizes from "@/style/gapSizes";
 import { pickImages } from "@/utils/imagePicker";
 import borderRadius from "@/style/borderRadius";
+import { fontFamilies } from "@/style/fontFamilies";
 
 const { height } = Dimensions.get("window");
 interface UserData {
@@ -250,7 +251,7 @@ const styles = StyleSheet.create({
   cardText: {
     fontSize: fontSizes.sm,
     color: staticColors.textSecondary,
-    fontFamily: "HelveticaBold",
+    fontFamily: fontFamilies.helveticaBold,
   },
   helpContainer: {
     flexDirection: "row",

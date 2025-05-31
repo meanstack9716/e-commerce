@@ -32,6 +32,7 @@ import {
 import { useAppDispatch } from "@/store/hooks";
 import SelectAddress from "@/components/address/SelectAddress";
 import { AddressFormData } from "@/types/types";
+import { fontFamilies } from "@/style/fontFamilies";
 
 const AddNewAddress = () => {
   const dispatch = useAppDispatch();
@@ -384,7 +385,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontWeight: fontWeights.semiBold,
     fontSize: fontSizes.sm,
-    fontFamily: "HelveticaBold",
+    fontFamily: fontFamilies.helveticaBold,
     ...spacingStyles.mb10,
   },
   input: {
@@ -430,7 +431,7 @@ const styles = StyleSheet.create({
   addressTypeText: {
     fontSize: fontSizes.sm,
     fontWeight: fontWeights.semiBold,
-    fontFamily: "Helvetica",
+    fontFamily: fontFamilies.helvetica,
   },
   checkboxContainer: {
     flexDirection: "row",
@@ -453,7 +454,7 @@ const styles = StyleSheet.create({
   },
   checkboxText: {
     fontSize: fontSizes.sm,
-    fontFamily: "Helvetica",
+    fontFamily: fontFamilies.helvetica,
   },
   buttonContainer: {
     flexDirection: "row",
@@ -484,13 +485,13 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.sm,
     fontWeight: fontWeights.semiBold,
     color: staticColors.white,
-    fontFamily: "Helvetica",
+    fontFamily: fontFamilies.helvetica,
   },
   cancelButtonText: {
     fontSize: fontSizes.sm,
     fontWeight: fontWeights.semiBold,
     color: staticColors.primary,
-    fontFamily: "Helvetica",
+    fontFamily: fontFamilies.helvetica,
   },
 });
 

@@ -1,11 +1,11 @@
 import { clearCartFromStorage } from "@/utils/cartStorage";
 import { handleApiError } from "@/utils/handleApiError";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import axios from "axios";
 import { clearCart } from "../cart/cartSlice";
-import { AppDispatch } from "@/store/store";
-import { fetchCartItemsApi } from "../cart/cartSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getApiUrl } from "@/utils/apiUtils";
+import axiosConfig from "@/utils/axiosConfig";
+
 
 interface AuthState {
   loading: boolean;
@@ -54,7 +54,6 @@ export const loadAuthState = createAsyncThunk(
   }
 );
 
-const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 export const registerUser = createAsyncThunk(
   "auth/register",
   async (
@@ -66,7 +65,7 @@ export const registerUser = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axios.post(`${apiUrl}/auth/register`, {
+      const response = await axiosConfig.post("/auth/register", {
         email,
         password,
         password_confirmation,
@@ -85,7 +84,7 @@ export const loginUser = createAsyncThunk(
     { rejectWithValue, dispatch }
   ) => {
     try {
-      const response = await axios.post(`${apiUrl}/auth/login`, {
+      const response = await axiosConfig.post(`/auth/login`, {
         email,
         password,
       });
@@ -95,14 +94,9 @@ export const loginUser = createAsyncThunk(
       try {
         await AsyncStorage.setItem("authToken", response.data.token);
         await AsyncStorage.setItem("authUser", JSON.stringify(response.data.user));
-        console.log("Token saved:", response.data.token);
-        console.log("User saved:", response.data.user);
         const savedToken = await AsyncStorage.getItem("authToken");
         const savedUser = await AsyncStorage.getItem("authUser");
-        console.log("Retrieved token:", savedToken);
-        console.log("Retrieved user:", savedUser);
       } catch (storageError) {
-        console.error("Failed to save to AsyncStorage:", storageError);
         return rejectWithValue("Failed to save authentication data");
       }
       dispatch(clearCart());
@@ -118,7 +112,7 @@ export const sendEmailCode = createAsyncThunk(
   "auth/sendEmailCode",
   async (email: string, { rejectWithValue }) => {
     try {
-      const res = await axios.post(`${apiUrl}/auth/send-email-code`, { email });
+      const res = await axiosConfig.post(`/auth/send-email-code`, { email });
       return res.data;
     } catch (error: any) {
       return rejectWithValue(handleApiError(error, "Failed to send code"));
@@ -133,7 +127,7 @@ export const verifyEmailCode = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const res = await axios.post(`${apiUrl}/auth/verify-email-code`, {
+      const res = await axiosConfig.post(`/auth/verify-email-code`, {
         email,
         code,
       });
@@ -161,7 +155,8 @@ export const resetPassword = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axios.post(`${apiUrl}/auth/reset-password`, {
+      const apiUrl = await getApiUrl();
+      const response = await axiosConfig.post(`/auth/reset-password`, {
         email,
         code,
         password,
@@ -181,7 +176,7 @@ export const verifyUser = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const res = await axios.post(`${apiUrl}/auth/verify-user`, {
+      const res = await axiosConfig.post(`/auth/verify-user`, {
         email,
         code,
       });
@@ -200,8 +195,7 @@ export const logoutUser = createAsyncThunk(
   async (_, { rejectWithValue, dispatch }) => {
     try {
       const token = await AsyncStorage.getItem("authToken");
-      await axios.post(
-        `${apiUrl}/auth/logout`,
+      await axiosConfig.post(`/auth/logout`,
         {},
         {
           headers: {
@@ -233,6 +227,7 @@ const authSlice = createSlice({
   reducers: {
     clearAuthError: (state) => {
       state.error = null;
+      state.loginError = null
     },
     resetRegistration: (state) => {
       state.registered = false;

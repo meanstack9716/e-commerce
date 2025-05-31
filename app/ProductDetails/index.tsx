@@ -39,6 +39,7 @@ import ViewSimilarModal from "@/modal/ViewSimilarModal";
 import borderRadius from "@/style/borderRadius";
 import { LinearGradient } from "expo-linear-gradient";
 import RatingReview from "@/components/productDetails/RatingReview";
+import { fontFamilies } from "@/style/fontFamilies";
 
 const { width: screenWidth } = Dimensions.get("window");
 const screenHeight = Dimensions.get("window").height;
@@ -272,7 +273,7 @@ const ProductDetailsScreen: React.FC = () => {
                 <View style={styles.row}>
                   <Text style={styles.price}>₹{product.price}</Text>
                   <LinearGradient
-                    colors={[staticColors.BoldPink, "#F81140"]}
+                    colors={[staticColors.BoldPink, staticColors.HotRed]}
                     start={{ x: 1, y: 0 }}
                     end={{ x: 0, y: 0 }}
                     style={styles.discountWrapper}
@@ -291,6 +292,7 @@ const ProductDetailsScreen: React.FC = () => {
               product={product}
               onColorSelect={handleColorSelect}
               onSizeSelect={setSelectedSize}
+              price={product.final_price}
             />
             {product.reviews && product.reviews.length > 0 ? (
               <>
@@ -442,11 +444,11 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: fontSizes.md,
-    fontFamily: "RalewayeBold",
+    fontFamily: fontFamilies.ralewayeBold,
     ...spacingStyles.pb2,
   },
   description: {
-    fontFamily: "NunitoSans",
+    fontFamily: fontFamilies.nunitoSans,
     fontWeight: fontWeights.normal,
     fontSize: fontSizes.sm,
     color: staticColors.black,
@@ -456,13 +458,13 @@ const styles = StyleSheet.create({
   },
   discountedPrice: {
     fontSize: fontSizes["2xl"],
-    fontFamily: "Raleway",
+    fontFamily: fontFamilies.raleway,
     fontWeight: fontWeights.extraBold,
     color: colors.primary,
   },
   price: {
     fontSize: fontSizes.sm,
-    fontFamily: "Raleway",
+    fontFamily: fontFamilies.raleway,
     fontWeight: fontWeights.extraBold,
     color: colors.PastelRose,
     textDecorationLine: "line-through",
@@ -477,7 +479,7 @@ const styles = StyleSheet.create({
 
   discountText: {
     fontSize: fontSizes.xs,
-    fontFamily: "Raleway",
+    fontFamily: fontFamilies.raleway,
     fontWeight: fontWeights.bold,
     color: staticColors.white,
   },

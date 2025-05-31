@@ -19,7 +19,6 @@ import { AppDispatch, RootState } from "@/store/store";
 import { fetchAddresses } from "@/store/address/addressSlice";
 import { fetchCartItemsApi } from "@/store/cart/cartSlice";
 import borderRadius from "@/style/borderRadius";
-import gapSizes from "@/style/gapSizes";
 
 const ShoppingBagScreen: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -173,16 +172,15 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
-    ...spacingStyles.px10,
+    ...spacingStyles.px15,
     ...spacingStyles.py10,
   },
   backButton: {
-   
+    ...spacingStyles.p5,
   },
   headerContain: {
     flexDirection: "row",
     alignItems: "center",
-    gap:gapSizes.md
   },
   headerTitle: {
     fontSize: fontSizes.base,

@@ -40,6 +40,7 @@ interface SizeSelectorProps {
     images: string[];
   }) => void;
   onSizeSelect: (size: string) => void;
+  price: number;
 }
 
 interface AvailableSize {
@@ -52,6 +53,7 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
   product,
   onColorSelect,
   onSizeSelect,
+  price,
 }) => {
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState<string>("");
@@ -256,6 +258,7 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
         selectedColor={selectedColorName}
         allSizes={allSizes}
         availableColors={availableColors}
+        price={price}
         onSizeSelect={(size) => {
           const sizeData = allSizes.find((s) => s.label === size);
           if (sizeData) {
