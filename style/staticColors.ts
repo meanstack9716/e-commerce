@@ -76,6 +76,7 @@ export default {
   blue100: "#E5EBFC",
   blue300: "#004CFF",
   blue400: "#0042E0",
+  blue500: "#004BFE",
   pink100: "#FFEBEB",
   darkSlate: "#202020",
   paperWhite: "#F8F8F8",
