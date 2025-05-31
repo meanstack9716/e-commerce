@@ -42,6 +42,7 @@ import { fetchCategories } from "@/store/category/categoriesSlice";
 import { fetchProducts } from "@/store/product/productsSlice";
 import borderRadius from "@/style/borderRadius";
 import { CategoryItem, SubCategoryItem } from "@/interfaces";
+import { fontFamilies } from "@/style/fontFamilies";
 
 const HomeScreen: React.FC = () => {
   const [likedProductItems, setLikedProductItems] = useState<string[]>([]);
@@ -293,6 +294,7 @@ const HomeScreen: React.FC = () => {
             numColumns={2}
             keyExtractor={(item) => item.id}
             renderItem={renderProductItem}
+            scrollEnabled={false}
             // ListHeaderComponent={ListHeader}
             contentContainerStyle={styles.flatListContent}
             columnWrapperStyle={styles.columnWrapper}
@@ -327,7 +329,7 @@ const styles = StyleSheet.create({
     gap: gapSizes.xl,
     ...spacingStyles.mb10,
     ...spacingStyles.pt10,
-    ...spacingStyles.px4
+    ...spacingStyles.px4,
   },
   searchContainerText: {
     fontSize: fontSizes.xl,
@@ -354,11 +356,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     ...spacingStyles.pt10,
-    ...spacingStyles.px4
+    ...spacingStyles.px4,
   },
   headingText: {
     fontSize: fontSizes.lg,
-    fontWeight: fontWeights.semiBold,
+    fontFamily: fontFamilies.ralewayBold,
   },
   seeAllContainer: {
     flexDirection: "row",
@@ -368,7 +370,7 @@ const styles = StyleSheet.create({
   },
   seeAllText: {
     fontSize: fontSizes.sm,
-    fontWeight: fontWeights.bold,
+    fontFamily: fontFamilies.ralewayBold,
   },
   cardContainer: {
     flexDirection: "row",
@@ -376,7 +378,7 @@ const styles = StyleSheet.create({
     rowGap: gapSizes.md,
     justifyContent: "space-between",
     ...spacingStyles.py10,
-    ...spacingStyles.px4
+    ...spacingStyles.px4,
   },
   cardItem: {
     width: "48.5%",
@@ -416,17 +418,17 @@ const styles = StyleSheet.create({
   },
   categoryName: {
     fontSize: fontSizes.sm,
-    fontWeight: fontWeights.bold,
+    fontFamily: fontFamilies.ralewayExtraBold,
   },
   categoryCountWrap: {
     backgroundColor: "#DFE9FF",
     borderRadius: borderRadius.r6,
     ...spacingStyles.px15,
-    ...spacingStyles.py2,
+    ...spacingStyles.py4,
   },
   categoryCountText: {
     fontSize: fontSizes.xs,
-    fontWeight: fontWeights.bold,
+    fontFamily: fontFamilies.ralewayExtraBold,
   },
 
   addressContainer: {

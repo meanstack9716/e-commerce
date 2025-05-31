@@ -173,6 +173,7 @@ const CategoriesScreen: React.FC = () => {
       <FullScreenLoader visible={isLoading} />
       <ScrollView
         style={styles.mainContent}
+        nestedScrollEnabled={true}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.headingWrap}>
@@ -207,6 +208,7 @@ const CategoriesScreen: React.FC = () => {
                         <FlatList
                           data={option.sub_categories}
                           keyExtractor={(item) => item.id}
+                          scrollEnabled={false}
                           renderItem={renderSubCategoryList}
                           showsVerticalScrollIndicator={false}
                         />
@@ -247,8 +249,7 @@ const styles = StyleSheet.create({
   },
   headingText: {
     fontSize: fontSizes["2xl"],
-    fontWeight: fontWeights.bold,
-    fontFamily: fontFamilies.ralewayBold
+    fontFamily: fontFamilies.ralewayBold,
   },
   cancelButton: {
     fontSize: fontSizes["xl"],
@@ -281,6 +282,7 @@ const styles = StyleSheet.create({
   },
   categoryName: {
     fontWeight: fontWeights.medium,
+    fontFamily: fontFamilies.ralewayMedium,
   },
   selectedCategoryName: {
     color: staticColors.blue300,
@@ -311,6 +313,7 @@ const styles = StyleSheet.create({
   subCategoryName: {
     fontSize: fontSizes.base,
     fontWeight: fontWeights.bold,
+    fontFamily: fontFamilies.ralewayBold,
   },
   categoryImgContainer: {
     width: 50,
@@ -349,6 +352,7 @@ const styles = StyleSheet.create({
   categoryListItemText: {
     fontWeight: fontWeights.semiBold,
     textAlign: "center",
+    fontFamily: fontFamilies.ralewayBold,
   },
   expandedIcon: {
     transform: [{ rotate: "180deg" }],
