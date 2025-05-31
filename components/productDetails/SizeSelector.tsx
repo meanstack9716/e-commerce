@@ -14,9 +14,23 @@ import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import borderRadius from "@/style/borderRadius";
 import { Product } from "../../types/types";
+import gapSizes from "@/style/gapSizes";
+import ProductVarientModal from "@/modal/ProductVarientModal";
 
 const standardSizes = ["XS", "S", "M", "L", "XL", "XXL"];
-const numericSizes = ["30", "32", "34", "36", "38", "40", "42", "44", "46", "48", "50"];
+const numericSizes = [
+  "30",
+  "32",
+  "34",
+  "36",
+  "38",
+  "40",
+  "42",
+  "44",
+  "46",
+  "48",
+  "50",
+];
 
 interface SizeSelectorProps {
   product: Product | null;
@@ -42,6 +56,8 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState<string>("");
   const [selectedColorName, setSelectedColorName] = useState<string>("");
+  const [isProductVariantModalVisible, setIsProductVariantModalVisible] =
+    useState(false);
   const [showSizeChart, setShowSizeChart] = useState(false);
   const [availableColors, setAvailableColors] = useState<
     Array<{
@@ -53,6 +69,9 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
       images: string[];
     }>
   >([]);
+
+  const selectedColorImages =
+    availableColors.find((c) => c.color === selectedColorName)?.images || [];
 
   const allPossibleSizes = useMemo(() => {
     if (!product || !product.sizes || product.sizes.length === 0) {
@@ -122,7 +141,7 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
           ?.map((item) => item.img_url) || [];
       const imgUrl = galleryItem?.img_url || product?.thumbnail_url || "";
       const images =
-        colorImages.length > 0 ? colorImages : (product?.images || []);
+        colorImages.length > 0 ? colorImages : product?.images || [];
 
       return {
         id: variant.id,
@@ -184,139 +203,73 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
     });
   };
 
-  const isNumericSizes = product?.sizes && product.sizes[0]?.size_type === "numeric";
+  const isNumericSizes =
+    product?.sizes && product.sizes[0]?.size_type === "numeric";
 
   return (
     <View style={styles.container}>
-      {availableColors.length > 0 ? (
-        <View style={styles.colorSection}>
-          <Text style={styles.colorTitle}>
-            Color: <Text style={styles.bold}>{selectedColorName}</Text>
-          </Text>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={styles.colorScroll}
-          >
-            {availableColors.map((colorOption) => {
-              const isColorSelected = selectedColor === colorOption.value;
-
-              return (
-                <TouchableOpacity
-                  key={colorOption.id}
-                  onPress={() => handleColorClick(colorOption)}
-                  style={[
-                    styles.colorOption,
-                    isColorSelected && styles.selectedColorOption,
-                  ]}
-                >
-                  <Image
-                    source={{ uri: colorOption.img_url }}
-                    style={styles.colorImage}
-                    resizeMode="cover"
-                  />
-                  <Text style={styles.colorName}>{colorOption.color}</Text>
-                  <Text style={styles.colorStock}>
-                    {colorOption.stock_quantity} left
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </ScrollView>
-        </View>
-      ) : (
-        <Text style={styles.noColorsText}>
-          No colors available for this size
-        </Text>
-      )}
+      {/* Header Section */}
       <View style={styles.headerRow}>
-        <Text style={styles.labelText}>
-          Size: <Text style={styles.bold}>{selectedSize}</Text>
-        </Text>
-        <TouchableOpacity onPress={() => setShowSizeChart(true)}>
-          <Text style={styles.sizeChart}>
-            Size Chart{" "}
-            <AntDesign
-              name="right"
-              size={12}
-              color={staticColors.discountText}
-            />
-          </Text>
+        <View style={styles.selectionContainer}>
+          <Text style={styles.variationsText}>Variations</Text>
+          <Text style={styles.selectionText}>{selectedColorName || ""}</Text>
+          <Text style={styles.selectionText}>{selectedSize || ""}</Text>
+        </View>
+        <TouchableOpacity onPress={() => setIsProductVariantModalVisible(true)}>
+          <AntDesign
+            name="arrowright"
+            size={20}
+            color={staticColors.white}
+            style={styles.arrowIcon}
+          />
         </TouchableOpacity>
-
-        <SizeChartModal
-          visible={showSizeChart}
-          onClose={() => setShowSizeChart(false)}
-          product={
-            product
-              ? {
-                  title: product.title,
-                  price: product.final_price,
-                  image:
-                    product.images && product.images.length > 0
-                      ? product.images[0]
-                      : "",
-                }
-              : null
-          }
-        />
       </View>
 
-      {allSizes.length > 0 ? (
+      {/* Image Section */}
+      {availableColors.length > 0 ? (
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          style={styles.sizeScroll}
+          style={styles.imageScroll}
         >
-          {allSizes.map((size) => {
-            const isSelected = selectedSize === size.label;
-            const isDisabled = size.left === 0;
-
-            return (
-              <View key={size.label} style={styles.sizeOption}>
-                <TouchableOpacity
-                  disabled={isDisabled}
-                  onPress={() => handleSizeClick(size)}
-                  style={[
-                    styles.sizeButton,
-                    isDisabled && styles.disabledButton,
-                    isSelected && !isDisabled && styles.selectedButton,
-                  ]}
-                >
-                  {isDisabled && <View style={styles.diagonalLine} />}
-                  {isDisabled && <View style={styles.diagonalLine1} />}
-                  <Text
-                    style={[
-                      styles.sizeLabel,
-                      isDisabled && styles.disabledText,
-                      isSelected && !isDisabled && styles.selectedText,
-                    ]}
-                  >
-                    {size.label}
-                  </Text>
-                </TouchableOpacity>
-                {size.left > 0 && (
-                  <Text style={styles.leftText}>{size.left} left</Text>
-                )}
-              </View>
-            );
-          })}
+          {availableColors.map((colorOption) => (
+            <TouchableOpacity
+              key={colorOption.id}
+              onPress={() => handleColorClick(colorOption)}
+              style={styles.imageOption}
+            >
+              <Image
+                source={{ uri: colorOption.img_url }}
+                style={styles.variationImage}
+                resizeMode="cover"
+              />
+            </TouchableOpacity>
+          ))}
         </ScrollView>
       ) : (
-        <Text style={styles.noSizesText}>No sizes available</Text>
+        <Text style={styles.noColorsText}>No variations available</Text>
       )}
-
-      <View style={styles.lengthBox}>
-        <Text>
-          <Text style={styles.lengthLabel}>Length: </Text>
-          <Text style={styles.lengthValue}>Regular</Text>
-        </Text>
-        <View style={styles.measurements}>
-          <Text style={styles.measureText}>Bust: 40.0in</Text>
-          <Text style={styles.measureText}>Front Length: 26.0in</Text>
-          <Text style={styles.measureText}>Across Shoulder: 15.0in</Text>
-        </View>
-      </View>
+      <ProductVarientModal
+        visible={isProductVariantModalVisible}
+        onClose={() => setIsProductVariantModalVisible(false)}
+        selectedSize={selectedSize}
+        selectedColor={selectedColorName}
+        allSizes={allSizes}
+        availableColors={availableColors}
+        onSizeSelect={(size) => {
+          const sizeData = allSizes.find((s) => s.label === size);
+          if (sizeData) {
+            handleSizeClick(sizeData);
+          }
+        }}
+        onColorSelect={(colorData) => {
+          handleColorClick({
+            color: colorData.colorName,
+            value: colorData.color,
+            images: colorData.images,
+          });
+        }}
+      />
     </View>
   );
 };
@@ -329,148 +282,54 @@ const styles = StyleSheet.create({
   },
   headerRow: {
     flexDirection: "row",
+    alignItems: "center",
     justifyContent: "space-between",
-  },
-  labelText: {
-    fontSize: fontSizes.base,
-  },
-  bold: {
-    fontWeight: fontWeights.semiBold,
-  },
-  sizeChart: {
-    color: staticColors.discountText,
-    fontWeight: fontWeights.semiBold,
-    fontSize: fontSizes.sm,
-  },
-  sizeScroll: {
     ...spacingStyles.mb10,
   },
-  sizeOption: {
+  selectionContainer: {
+    flexDirection: "row",
     alignItems: "center",
+    justifyContent: "flex-start",
+    gap: gapSizes.xxl,
+  },
+  variationsText: {
+    fontSize: fontSizes.lg,
+    fontFamily: "RalewayeExtraBold",
+    color: staticColors.black,
     ...spacingStyles.mr10,
-    ...spacingStyles.py10,
   },
-  sizeButton: {
-    width: 54,
-    height: 54,
-    borderRadius: borderRadius.r12,
-    borderWidth: 1,
-    borderColor: staticColors.borderLight,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: staticColors.white,
-  },
-  disabledButton: {
-    backgroundColor: staticColors.white,
-    borderColor: staticColors.borderSecondaryLight,
-  },
-  selectedButton: {
-    backgroundColor: staticColors.shadowColor,
-    borderColor: staticColors.shadowColor,
-  },
-  sizeLabel: {
+
+  selectionText: {
     fontSize: fontSizes.sm,
-    fontWeight: fontWeights.semiBold,
+    fontFamily: "RalewayeSemiBold",
+    color: staticColors.black,
+    textTransform: "capitalize",
+    ...spacingStyles.mr10,
   },
-  disabledText: {
-    color: staticColors.softGray,
+  arrowIcon: {
+    backgroundColor: staticColors.primaryBlue,
+    borderRadius: borderRadius.circle,
+    padding: 8,
+    fontWeight: fontWeights.extraBold,
   },
-  selectedText: {
-    color: staticColors.white,
-  },
-  leftText: {
-    fontSize: fontSizes.xs,
-    color: staticColors.discountText,
-    ...spacingStyles.mt5,
-  },
-  colorSection: {
-    ...spacingStyles.mb10,
-  },
-  colorTitle: {
-    fontSize: fontSizes.base,
-    ...spacingStyles.mb10,
-  },
-  colorScroll: {
+  imageScroll: {
     flexGrow: 0,
   },
-  colorOption: {
-   ...spacingStyles.mr10,
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "transparent",
-    borderRadius: borderRadius.r8,
-    ...spacingStyles.p5,
+  imageOption: {
+    ...spacingStyles.my15,
+    ...spacingStyles.mr10,
+    borderRadius: borderRadius.r12,
+    overflow: "hidden",
   },
-  selectedColorOption: {
-    borderColor: staticColors.darkGray,
+  variationImage: {
+    width: 100,
+    height: 100,
+    borderRadius: borderRadius.r12,
   },
-  colorImage: {
-    width: 70,
-    height: 70,
-    borderRadius: borderRadius.r6,
-  },
-  colorName: {
-    fontSize: fontSizes.xs,
-    fontWeight: fontWeights.semiBold,
-    ...spacingStyles.mt5,
-  },
-  colorStock: {
-    fontSize: fontSizes.xs,
-    color: staticColors.discountText,
-  },
+
   noColorsText: {
     fontSize: fontSizes.sm,
     color: staticColors.darkGray,
     ...spacingStyles.mt10,
-  },
-  noSizesText: {
-    fontSize: fontSizes.sm,
-    color: staticColors.darkGray,
-    ...spacingStyles.mt10,
-  },
-  lengthBox: {
-    ...spacingStyles.p10,
-    borderWidth: 1,
-    borderColor: staticColors.borderLight,
-    borderRadius: borderRadius.r10,
-  },
-  lengthLabel: {
-    fontSize: fontSizes.xs,
-    color: staticColors.textMuted,
-  },
-  lengthValue: {
-    fontWeight: fontWeights.semiBold,
-    backgroundColor: staticColors.lightGray,
-    color: staticColors.slateBlue,
-    borderRadius: borderRadius.r4,
-  },
-  measurements: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-  },
-  measureText: {
-    ...spacingStyles.mr10,
-    fontSize: fontSizes.xs,
-    color: staticColors.darkGray,
-  },
-  diagonalLine: {
-    position: "absolute",
-    width: "130%",
-    height: 1,
-    backgroundColor: staticColors.lightGray,
-    transform: [{ rotate: "45deg" }],
-    top: "50%",
-    left: "-20%",
-    zIndex: 1,
-  },
-  diagonalLine1: {
-    position: "absolute",
-    width: "130%",
-    height: 1,
-    backgroundColor: staticColors.lightGray,
-    transform: [{ rotate: "-45deg" }],
-    top: "50%",
-    left: "-20%",
-    zIndex: 1,
   },
 });

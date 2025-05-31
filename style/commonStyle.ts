@@ -75,4 +75,5 @@ export const commonStyles = StyleSheet.create({
     fontWeight: "bold",
     color: staticColors.textDarkGray,
   },
+  
 });

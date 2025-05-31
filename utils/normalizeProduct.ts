@@ -6,7 +6,7 @@ export const normalizeProduct = (Product: any): Product => {
     title: Product.title || "Product Title",
     description: Product.description || "",
     discount_percent: Product.discount_percent || 0,
-    price:Product.price || 0,
+    price: Product.price || 0,
     final_price: Product.final_price || 0,
     stock_quantity: Product.stock_quantity || "0",
     thumbnail_url: Product.thumbnail_url || "",
@@ -31,6 +31,24 @@ export const normalizeProduct = (Product: any): Product => {
           business_mobile: Product.seller.business_mobile,
         }
       : undefined,
-      delivery_days: Product.delivery_days,
+    delivery_days: Product.delivery_days,
+    reviews: Product.reviews
+      ? Product.reviews.map((review: any) => ({
+          id: review.id,
+          product_id: review.product_id,
+          order_id: review.order_id,
+          rating: review.rating,
+          review: review.review,
+          img_urls: review.img_urls || [],
+          by: {
+            email: review.by.email,
+            first_name: review.by.first_name || "",
+            last_name: review.by.last_name || "",
+            id: review.by.id,
+            profile_url: review.by.profile_url || null,
+            role: review.by.role || null,
+          },
+        }))
+      : [],
   };
 };

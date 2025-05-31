@@ -58,6 +58,7 @@ export default {
   lightGreen: "#e6ffe6",
   secondaryGray:'#e3e3e3',
   lightYellow:"#F7CD03",
+  starYellow:'#ECA61B',
   indigoNavy:"#242555",
   ceruleanBlue:"#1B7CA5",
   softGray:'#ccc',
@@ -69,5 +70,15 @@ export default {
   slateBlue:"#5b3ec8",
   bannerColor:'#fff6e5',
   bannerHeighlight:'#d4a200',
-  profileBg:'#e6f5f0'
+  profileBg:'#e6f5f0',
+  primaryBlue:'#004CFF',
+  lightRose:'#FFEBEB',
+  iceBlue:'#E5EBFC',
+  CharcoalGray:'#1F1F1F',
+  MatteBlack:'#202020',
+  dotColor:'#C7D6FB',
+  RoyalBlue:'#0042E033',
+  PastelRose:'#F1AEAE',
+  BoldPink:'#FF5790',
+  HotRed:'#F81140'
 };

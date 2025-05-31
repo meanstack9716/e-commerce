@@ -32,7 +32,7 @@ function AppLayout() {
         <Stack.Screen name="/addNewAddress" />
         <Stack.Screen name="/payment" />
         <Stack.Screen name="/placeorder" />
-         <Stack.Screen name="/order" />
+        <Stack.Screen name="/order" />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>
@@ -48,6 +48,10 @@ export default function RootLayout() {
     helveticaOblique: require("../assets/fonts/Helvetica/Helvetica-Oblique.ttf"),
     helveticaRoundedBold: require("../assets/fonts/Helvetica/helvetica-rounded-bold.otf"),
     AbriFatfaceRegular: require("../assets/fonts/AbrilFatface-Regular.otf"),
+    RalewayeBold:require("../assets/fonts/Raleway/static/Raleway-Bold.ttf"),
+    RalewayeSemiBold: require("../assets/fonts/Raleway/static/Raleway-SemiBold.ttf"),
+    RalewayeExtraBold: require("../assets/fonts/Raleway/static/Raleway-ExtraBold.ttf"),
+    NunitoSans: require("../assets/fonts/Nunito_Sans/NunitoSans-VariableFont_YTLC,opsz,wdth,wght.ttf"),
   });
 
   useEffect(() => {
