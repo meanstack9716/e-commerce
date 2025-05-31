@@ -12,7 +12,6 @@ import {
   Alert,
   BackHandler,
   Platform,
-  ScrollView,
 } from "react-native";
 import { Ionicons, MaterialIcons, FontAwesome6 } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
@@ -33,7 +32,7 @@ import FullScreenLoader from "@/components/common/FullScreenLoader";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import { fontSizes, fontWeights } from "@/style/typography";
+import {fontSizes, fontWeights} from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
 import { Product } from "@/types/types";
 import images from "@/constants/images";
@@ -41,7 +40,6 @@ import { useAppDispatch } from "@/store/hooks";
 import { fetchCategories } from "@/store/category/categoriesSlice";
 import { fetchProducts } from "@/store/product/productsSlice";
 import borderRadius from "@/style/borderRadius";
-import { CategoryItem, SubCategoryItem } from "@/interfaces";
 
 const HomeScreen: React.FC = () => {
   const [likedProductItems, setLikedProductItems] = useState<string[]>([]);
@@ -174,6 +172,10 @@ const HomeScreen: React.FC = () => {
     );
   };
 
+  const handleCategorySelect = (categoryId: string) => {
+    setSelectedCategory(categoryId || null);
+  };
+
   const renderProductItem = ({ item }: { item: Product }) => (
     <ProductCard
       {...item}
@@ -186,6 +188,21 @@ const HomeScreen: React.FC = () => {
         })
       }
     />
+  );
+
+  const ListHeader = () => (
+    <>
+      {activeProductTab !== "Categories" && (
+        <CategoryGrid
+          activeTab={activeProductTab}
+          onCategorySelect={handleCategorySelect}
+        />
+      )}
+      {/* <ImageSlider slides={bannerData} /> */}
+      {/* <PromotionalCards cards={promotionalData.promotionalCards} /> */}
+      {/* <OfferCardCarousel /> */}
+      {/* <BrandCard /> <OfferPriceCard /> <PocketFriendlyBargain /> */}
+    </>
   );
 
   const isLoading = categoriesLoading || productsLoading;
@@ -207,105 +224,94 @@ const HomeScreen: React.FC = () => {
           translucent
           backgroundColor="transparent"
         />
+        <View style={styles.addressContainer}>
+          <View style={styles.addressTextContainer}>
+            <FontAwesome6
+              name="location-dot"
+              size={14}
+              color={colors.primary}
+            />
+            <Text style={[styles.addressText, { marginLeft: insets.left }]}>
+              Add Delivery Address
+            </Text>
+          </View>
+          <MaterialIcons
+            name="keyboard-arrow-down"
+            size={24}
+            color={colors.primary}
+          />
+        </View>
+
         <View style={styles.searchContainer}>
-          <Text style={styles.searchContainerText}>Shop</Text>
           <View style={styles.searchInputContainer}>
+            <Image
+              source={images.logo}
+              style={styles.logo}
+              resizeMode="contain"
+            />
             <TextInput
-              placeholder="Search"
+              placeholder="Search products..."
               style={styles.searchInput}
-              placeholderTextColor={staticColors.gray200}
+              placeholderTextColor={staticColors.lightGray}
               value={productSearchQuery}
               onChangeText={setProductSearchQuery}
             />
             <TouchableOpacity>
               <Ionicons
-                name="camera-outline"
+                name="search"
                 size={20}
-                color={staticColors.blue400}
+                color={staticColors.lightGray}
               />
             </TouchableOpacity>
           </View>
+
+          <TouchableOpacity
+            style={styles.iconButton}
+            onPress={handleUserIconPress}
+          >
+            <Ionicons
+              name="notifications-outline"
+              size={22}
+              color={colors.primary}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.iconButton}>
+            <Ionicons name="heart-outline" size={22} color={colors.primary} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.iconButton}
+            onPress={handleUserIconPress}
+          >
+            <FontAwesome6 name="user-circle" size={22} color={colors.primary} />
+          </TouchableOpacity>
         </View>
 
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={styles.headingWrap}>
-            <Text style={styles.headingText}>Categories</Text>
-            <View style={styles.seeAllContainer}>
-              <Text style={styles.seeAllText}>See All</Text>
-              <TouchableOpacity onPress={() => router.navigate("/categories")}>
-                <Ionicons
-                  name="arrow-forward-circle"
-                  size={30}
-                  color={staticColors.blue300}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          <View style={styles.cardContainer}>
-            {categories.map((option: CategoryItem, index: number) => {
-              if (
-                index <= 5 &&
-                option.sub_categories &&
-                option.sub_categories.length
-              ) {
-                return (
-                  <View style={styles.cardItem} key={option.id}>
-                    <View style={styles.subCardContainer}>
-                      {option.sub_categories.map(
-                        (subOption: SubCategoryItem, subIndex: number) => {
-                          if (subIndex <= 3) {
-                            return (
-                              <View
-                                style={styles.categoryImgContainer}
-                                key={subOption.id}
-                              >
-                                <Image
-                                  style={styles.categoryImage}
-                                  source={{ uri: subOption.img_url }}
-                                />
-                              </View>
-                            );
-                          }
-                          return null;
-                        }
-                      )}
-                    </View>
-                    <View style={styles.cardDetails}>
-                      <Text style={styles.categoryName}>{option.name}</Text>
-                      <View style={styles.categoryCountWrap}>
-                        <Text style={styles.categoryCountText}>
-                          {option.sub_sub_category_count}
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                );
-              }
-              return null;
-            })}
-          </View>
-
-          {hasError && <Text style={styles.errorText}>Error: {hasError}</Text>}
-
-          <FlatList
-            data={getFilteredProducts()}
-            numColumns={2}
-            keyExtractor={(item) => item.id}
-            renderItem={renderProductItem}
-            // ListHeaderComponent={ListHeader}
-            contentContainerStyle={styles.flatListContent}
-            columnWrapperStyle={styles.columnWrapper}
-            showsVerticalScrollIndicator={false}
-            ListEmptyComponent={() => (
-              <View style={styles.emptyContainer}>
-                <Text style={styles.emptyText}>
-                  {isLoading ? "Loading products..." : "No products Available"}
-                </Text>
-              </View>
-            )}
+        {hasError && <Text style={styles.errorText}>Error: {hasError}</Text>}
+        {tabs.length > 1 && !hasError && (
+          <Navbar
+            tabs={tabs}
+            activeTab={activeProductTab}
+            setActiveTab={setActiveProductTab}
           />
-        </ScrollView>
+        )}
+
+        <FlatList
+          data={getFilteredProducts()}
+          numColumns={2}
+          keyExtractor={(item) => item.id}
+          renderItem={renderProductItem}
+          ListHeaderComponent={ListHeader}
+          contentContainerStyle={styles.flatListContent}
+          columnWrapperStyle={styles.columnWrapper}
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={() => (
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>
+                {isLoading ? "Loading products..." : "No products Available"}
+              </Text>
+            </View>
+          )}
+        />
       </SafeAreaView>
     </View>
   );
@@ -314,121 +320,11 @@ const HomeScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: staticColors.white,
+    backgroundColor: staticColors.bgPrimary,
   },
   contentWrapper: {
     flex: 1,
-    ...spacingStyles.px15,
   },
-  searchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: gapSizes.xl,
-    ...spacingStyles.mb10,
-    ...spacingStyles.pt10,
-    ...spacingStyles.px4
-  },
-  searchContainerText: {
-    fontSize: fontSizes.xl,
-    fontWeight: fontWeights.semiBold,
-  },
-  searchInputContainer: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: staticColors.gray100,
-    borderRadius: borderRadius.r20,
-    ...spacingStyles.px15,
-    justifyContent: "space-between",
-  },
-  searchInput: {
-    flex: 1,
-    height: 40,
-    fontSize: fontSizes.sm,
-    color: staticColors.darkGray,
-    fontWeight: fontWeights.medium,
-  },
-  headingWrap: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    ...spacingStyles.pt10,
-    ...spacingStyles.px4
-  },
-  headingText: {
-    fontSize: fontSizes.lg,
-    fontWeight: fontWeights.semiBold,
-  },
-  seeAllContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    gap: gapSizes.sm,
-  },
-  seeAllText: {
-    fontSize: fontSizes.sm,
-    fontWeight: fontWeights.bold,
-  },
-  cardContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    rowGap: gapSizes.md,
-    justifyContent: "space-between",
-    ...spacingStyles.py10,
-    ...spacingStyles.px4
-  },
-  cardItem: {
-    width: "48.5%",
-    backgroundColor: staticColors.white,
-    borderRadius: borderRadius.r12,
-    shadowColor: staticColors.black,
-    shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 4,
-    overflow: "hidden",
-    ...spacingStyles.py6,
-    ...spacingStyles.px6,
-  },
-  subCardContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    width: "100%",
-    rowGap: gapSizes.sm,
-  },
-  categoryImgContainer: {
-    width: "48.5%",
-    aspectRatio: 1,
-    overflow: "hidden",
-    borderRadius: borderRadius.r10,
-  },
-  categoryImage: {
-    width: "100%",
-    height: "100%",
-  },
-  cardDetails: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    ...spacingStyles.mt8,
-  },
-  categoryName: {
-    fontSize: fontSizes.sm,
-    fontWeight: fontWeights.bold,
-  },
-  categoryCountWrap: {
-    backgroundColor: "#DFE9FF",
-    borderRadius: borderRadius.r6,
-    ...spacingStyles.px15,
-    ...spacingStyles.py2,
-  },
-  categoryCountText: {
-    fontSize: fontSizes.xs,
-    fontWeight: fontWeights.bold,
-  },
-
   addressContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -446,18 +342,40 @@ const styles = StyleSheet.create({
     color: colors.primary,
     ...spacingStyles.mx5,
   },
+  searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    ...spacingStyles.mb10,
+    ...spacingStyles.px10,
+  },
+  searchInputContainer: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    borderColor: staticColors.lightGray,
+    borderWidth: 1,
+    borderRadius: borderRadius.r12,
+    ...spacingStyles.px10,
+    backgroundColor: colors.white,
+    justifyContent: "space-between",
+  },
   logo: {
     width: 20,
     height: 20,
     resizeMode: "contain",
     ...spacingStyles.mr10,
   },
-
+  searchInput: {
+    flex: 1,
+    height: 40,
+    fontSize: fontSizes.sm,
+    color: staticColors.darkGray,
+  },
   iconButton: {
     ...spacingStyles.ml15,
   },
   flatListContent: {
-    ...spacingStyles.px5,
+    ...spacingStyles.px5
   },
   columnWrapper: {
     justifyContent: "space-between",

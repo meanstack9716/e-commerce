@@ -1,4 +1,4 @@
-import { CategoryItem } from "@/types/types";
+import { CategoryItem } from "@/interfaces";
 import { handleApiError } from "@/utils/handleApiError";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
