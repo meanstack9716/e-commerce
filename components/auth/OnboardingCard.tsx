@@ -12,6 +12,7 @@ import spacingStyles from "@/style/spacingStyles";
 import borderRadius from "@/style/borderRadius";
 import { fontSizes } from "@/style/typography";
 import { commonStyles } from "@/style/commonStyle";
+import { fontFamilies } from "@/style/fontFamilies";
 
 interface OnboardingCardProps {
   imageSource: any;
@@ -71,14 +72,14 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: fontSizes["2xl"],
-    fontFamily: "RalewayeExtraBold",
+    fontFamily: fontFamilies.ralewayExtraBold,
     color: staticColors.darkSlate,
     ...spacingStyles.py15,
   },
   description: {
     color: staticColors.black,
     fontSize: fontSizes.md,
-    fontFamily: "NunitoSans",
+    fontFamily: fontFamilies.nunitoSans,
     textAlign: "center",
     ...spacingStyles.px25,
     ...spacingStyles.pb25,

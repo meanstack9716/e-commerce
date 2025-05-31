@@ -3,6 +3,7 @@ import spacingStyles from "./spacingStyles";
 import staticColors from "./staticColors";
 import { fontSizes, fontWeights } from "./typography";
 import borderRadius from "./borderRadius";
+import { fontFamilies } from "./fontFamilies";
 
 export const commonStyles = StyleSheet.create({
   imageContainer: {
@@ -87,7 +88,7 @@ export const commonStyles = StyleSheet.create({
   authButtonText: {
     color: staticColors.white,
     fontSize: fontSizes.lg,
-    fontFamily: "NunitoSans",
+    fontFamily: fontFamilies.nunitoSans,
   },
   authInput: {
     width: "100%",
@@ -134,9 +135,9 @@ export const commonStyles = StyleSheet.create({
   },
   shape5: {
     position: "absolute",
-    top: -60,
+    top: -100,
     right: -50,
-    width: 310,
+    width: 320,
     height: 250,
     opacity: 1,
     resizeMode: "contain",
@@ -144,10 +145,10 @@ export const commonStyles = StyleSheet.create({
   },
   shape6: {
     position: "absolute",
-    top: 0,
+    top: -65,
     right: -25,
-    width: 350,
-    height: 200,
+    width: 360,
+    height: 250,
     opacity: 1,
     resizeMode: "contain",
   },

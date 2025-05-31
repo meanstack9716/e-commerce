@@ -6,6 +6,7 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import {
   SafeAreaView,
@@ -26,6 +27,7 @@ import gapSizes from "@/style/gapSizes";
 import { commonStyles } from "@/style/commonStyle";
 import { Button } from "@/components/common/Button";
 import PasswordTextField from "@/components/common/PasswordTextField";
+import { SafeKeyboardView } from "@/components/common/SafeKeyboardView";
 
 export default function PasswordScreen() {
   const [password, setPassword] = useState("");
@@ -52,7 +54,7 @@ export default function PasswordScreen() {
         })
       );
       if (loginUser.fulfilled.match(resultAction)) {
-        router.navigate("/profile");
+        router.navigate("/OnboardingScreen");
       }
     }
   };
@@ -73,88 +75,101 @@ export default function PasswordScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Image source={images.shape01} style={styles.shape1} />
-      <Image source={images.shape02} style={styles.shape2} />
+    <SafeKeyboardView>
+      <Image source={images.loginPasswordShape} style={styles.shape1} />
+      <Image source={images.createLoginPwdShape} style={styles.shape2} />
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={[commonStyles.contentContainer, styles.contentWrapper]}>
+          <Image source={images.avatar} style={[commonStyles.avatar, styles.avatar]} />
+          <Text style={styles.greeting}>Hello User !!</Text>
 
-      <View style={commonStyles.contentContainer}>
-        <Image source={images.avatar} style={commonStyles.avatar} />
-        <Text style={styles.greeting}>Hello User !!</Text>
+          <Text style={styles.label}>Type your password</Text>
+          <View style={styles.passwordContainer}>
+            <PasswordTextField
+              placeholder="Confirm Password"
+              value={password}
+              onChangeText={(text) => {
+                setPassword(text);
+                handleLoginPasswordValidation(text);
+              }}
+              error={errors.password}
+            />
+            {loginError && <Text style={styles.errorText}>{loginError}</Text>}
+            {errors.apiError && (
+              <Text style={styles.errorText}>{errors.apiError}</Text>
+            )}
+          </View>
 
-        <Text style={styles.label}>Type your password</Text>
-        <View style={styles.passwordContainer}>
-          <PasswordTextField
-            placeholder="Confirm Password"
-            value={password}
-            onChangeText={(text) => {
-              setPassword(text);
-              handleLoginPasswordValidation(text);
-            }}
-            error={errors.password}
+          <Button
+            title="SUBMIT"
+            onPress={handleSubmit}
+            loading={loading}
+            style={commonStyles.authButton}
+            textStyle={commonStyles.authButtonText}
           />
-          {loginError && <Text style={styles.errorText}>{loginError}</Text>}
-          {errors.apiError && (
-            <Text style={styles.errorText}>{errors.apiError}</Text>
-          )}
+
+          <TouchableOpacity onPress={handleForgetPassword}>
+            <Text style={styles.forgetPasswordText}>Forget your password?</Text>
+          </TouchableOpacity>
+
+          {/* Bottom "Not you?" button */}
+          <View style={[styles.bottomButtonContainer, { paddingBottom: insets.bottom + 20 }]}>
+            <TouchableOpacity
+              style={styles.bottomButton}
+              onPress={handleNotYouButton}
+            >
+              <Text style={styles.buttonText}>Not you?</Text>
+              <Ionicons
+                name="arrow-forward"
+                size={fontSizes.base}
+                color={staticColors.white}
+                style={styles.icon}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
-
-        <Button
-          title="SUBMIT"
-          onPress={handleSubmit}
-          loading={loading}
-          style={commonStyles.authButton}
-          textStyle={commonStyles.authButtonText}
-        />
-
-        <TouchableOpacity onPress={handleForgetPassword}>
-          <Text style={styles.forgetPasswordText}>Forget your password?</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={[styles.bottomButtonContainer, { bottom: insets.bottom }]}>
-        <TouchableOpacity
-          style={styles.bottomButton}
-          onPress={handleNotYouButton}
-        >
-          <Text style={styles.buttonText}>Not you?</Text>
-          <Ionicons
-            name="arrow-forward"
-            size={fontSizes.base}
-            color={staticColors.white}
-            style={styles.icon}
-          />
-        </TouchableOpacity>
-      </View>
-      <StatusBar style="dark" />
-    </SafeAreaView>
+        <StatusBar style="dark" />
+      </ScrollView>
+    </SafeKeyboardView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: staticColors.white,
-    alignItems: "center",
-    justifyContent: "center",
+  scrollContent: {
+    flexGrow: 1,
+    minHeight: '100%',
+  },
+  contentWrapper: {
+    justifyContent: 'center',
+    ...spacingStyles.px20
   },
   shape1: {
     position: "absolute",
     top: -50,
     left: -50,
-    width: 300,
+    width: 280,
     height: 300,
     opacity: 1,
     resizeMode: "contain",
-    zIndex: 1,
+    zIndex: -1,
   },
   shape2: {
     position: "absolute",
-    top: 0,
+    top: -50,
     left: -25,
     width: 320,
-    height: 300,
+    height: 340,
     opacity: 1,
     resizeMode: "contain",
+    zIndex: -2, 
+  },
+  avatar: {
+    zIndex: 10, 
+    position: "relative", 
   },
   greeting: {
     fontSize: fontSizes["2xl"],
@@ -181,10 +196,9 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.sm,
     fontFamily: "NunitoSans",
     textAlign: "center",
+    ...spacingStyles.mb10
   },
   bottomButtonContainer: {
-    position: "absolute",
-    ...spacingStyles.pb2,
     alignItems: "center",
     width: "100%",
   },

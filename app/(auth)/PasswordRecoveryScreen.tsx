@@ -5,11 +5,9 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
-  ActivityIndicator,
 } from "react-native";
 import Toast from "react-native-toast-message";
 import {
-  SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
@@ -22,6 +20,8 @@ import borderRadius from "@/style/borderRadius";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { sendEmailCode } from "@/store/auth/authSlice";
 import { Button } from "@/components/common/Button";
+import { SafeKeyboardView } from "@/components/common/SafeKeyboardView";
+import { fontFamilies } from "@/style/fontFamilies";
 
 export default function PasswordRecoveryScreen() {
   const [selectedOption, setSelectedOption] = useState<"Email" | null>(null);
@@ -67,10 +67,10 @@ export default function PasswordRecoveryScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeKeyboardView>
       <View style={commonStyles.topRightImages}>
-        <Image source={images.shape05} style={commonStyles.shape5} />
-        <Image source={images.shape06} style={commonStyles.shape6} />
+        <Image source={images.OtpCnfrmPwdNewPwd1} style={commonStyles.shape5} />
+        <Image source={images.OtpCnfrmPwdNewPwd2} style={commonStyles.shape6} />
 
         <View style={commonStyles.contentContainer}>
           <Image source={images.avatar} style={commonStyles.avatar} />
@@ -120,28 +120,23 @@ export default function PasswordRecoveryScreen() {
             <Text style={styles.cancelText}>Cancel</Text>
           </TouchableOpacity>
 
-          <View style={commonStyles.homeIndicator} />
         </View>
       </View>
-    </SafeAreaView>
+    </SafeKeyboardView>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: staticColors.white,
-  },
   title: {
     fontSize: fontSizes.lg,
-    fontFamily: "RalewayeExtraBold",
+    fontFamily: fontFamilies.ralewayExtraBold,
     color: staticColors.darkSlate,
     ...spacingStyles.my15,
     textAlign: "center",
   },
   subtitle: {
     fontSize: fontSizes.md,
-    fontFamily: "NunitoSans",
+    fontFamily: fontFamilies.nunitoSans,
     color: staticColors.black,
     textAlign: "center",
     ...spacingStyles.mb20,

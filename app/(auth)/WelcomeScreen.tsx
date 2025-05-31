@@ -1,7 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { SafeAreaView } from "react-native-safe-area-context";
 import images from "@/constants/images";
 import borderRadius from "@/style/borderRadius";
 import spacingStyles from "@/style/spacingStyles";
@@ -11,6 +10,8 @@ import { commonStyles } from "@/style/commonStyle";
 import gapSizes from "@/style/gapSizes";
 import { router } from "expo-router";
 import { Button } from "@/components/common/Button";
+import { SafeKeyboardView } from "@/components/common/SafeKeyboardView";
+import { fontFamilies } from "@/style/fontFamilies";
 
 const WelcomeScreen = () => {
   const handleNextButton = () => {
@@ -21,7 +22,7 @@ const WelcomeScreen = () => {
     router.navigate("/LoginScreen");
   };
   return (
-    <SafeAreaView style={styles.safeContainer}>
+    <SafeKeyboardView style={styles.safeContainer}>
       <View style={styles.container}>
         <View style={styles.shadowContainer}>
           <Image source={images.welcomeBag} style={styles.bagImage} />
@@ -55,7 +56,7 @@ const WelcomeScreen = () => {
           </TouchableOpacity>
         </View>
       </View>
-    </SafeAreaView>
+    </SafeKeyboardView>
   );
 };
 
@@ -87,14 +88,14 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: fontSizes["5xl"],
-    fontFamily: "RalewayeExtraBold",
+    fontFamily: fontFamilies.ralewayExtraBold,
     color: staticColors.MatteBlack,
     ...spacingStyles.mt20,
     ...spacingStyles.mb15,
   },
   subtitle: {
     fontSize: fontSizes.lg,
-    fontFamily: "NunitoSans",
+    fontFamily: fontFamilies.nunitoSans,
     color: staticColors.darkSlate,
     textAlign: "center",
     ...spacingStyles.px25,
@@ -115,7 +116,7 @@ const styles = StyleSheet.create({
   linkText: {
     color: staticColors.darkSlate,
     fontSize: fontSizes.base,
-    fontFamily: "NunitoSans",
+    fontFamily: fontFamilies.nunitoSans,
   },
   icon: {
     ...spacingStyles.p5,

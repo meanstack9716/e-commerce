@@ -1,9 +1,9 @@
 import { CategoryItem } from "@/types/types";
 import { getApiUrl } from "@/utils/apiUtils";
+import axiosConfig from "@/utils/axiosConfig";
 import { handleApiError } from "@/utils/handleApiError";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import Constants from "expo-constants";
 
 interface CategoriesState {
   data: CategoryItem[];
@@ -25,8 +25,7 @@ export const fetchCategories = createAsyncThunk<
 >("categories/fetchCategories", async (_, { rejectWithValue }) => {
   
   try {
-    const apiUrl = await getApiUrl();
-    const response = await axios.get(`${apiUrl}/categories/list`);
+    const response = await axiosConfig.get(`/categories/list`);
     if (!Array.isArray(response.data.data)) {
       throw new Error("Invalid response format: expected an array");
     }

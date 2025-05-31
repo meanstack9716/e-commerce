@@ -10,37 +10,37 @@ import {
 } from "react-native";
 import OnboardingCard from "@/components/auth/OnboardingCard";
 import images from "@/constants/images";
-import { SafeAreaView } from "react-native-safe-area-context";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import borderRadius from "@/style/borderRadius";
 import { router } from "expo-router";
+import { SafeKeyboardView } from "@/components/common/SafeKeyboardView";
 
 const { width, height } = Dimensions.get("window");
 
 const slides = [
   {
     id: "1",
-    image: images.card01,
+    image: images.onBoardingCard1,
     title: "Welcome",
     description: "Welcome to our app. Let’s get started!",
   },
   {
     id: "2",
-    image: images.card02,
+    image: images.onBoardingCard2,
     title: "Hello",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non consectetur turpis. Morbi eu eleifend lacus.",
+      "Welcome to Shoppe! Discover the latest trends, top deals, and must-have products — all in one place.",
   },
   {
     id: "3",
-    image: images.card03,
+    image: images.onBoardingCard3,
     title: "Shop Easily",
     description: "Shop your favorite products in just a few taps!",
   },
   {
     id: "4",
-    image: images.card04,
+    image: images.onBoardingCard4,
     title: "Ready?",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
   },
@@ -55,10 +55,13 @@ const OnboardingScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeKeyboardView>
       {/* Decorative Shapes */}
-      <Image source={images.shape08} style={styles.shapeTopLeft} />
-      <Image source={images.shape04} style={styles.shapeBottomRight} />
+      <Image source={images.onBoardingShape} style={styles.shapeTopLeft} />
+      <Image
+        source={images.loginOnboardingShape}
+        style={styles.shapeBottomRight}
+      />
 
       <FlatList
         data={slides}
@@ -91,18 +94,13 @@ const OnboardingScreen: React.FC = () => {
           />
         ))}
       </View>
-    </SafeAreaView>
+    </SafeKeyboardView>
   );
 };
 
 export default OnboardingScreen;
 const CARD_HEIGHT = 500;
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: staticColors.white,
-    justifyContent: "center",
-  },
   cardWrapper: {
     width,
     height: CARD_HEIGHT,
@@ -126,7 +124,7 @@ const styles = StyleSheet.create({
   },
   shapeTopLeft: {
     position: "absolute",
-    top: 0,
+    top: -50,
     left: -30,
     width: 250,
     height: 250,
@@ -135,10 +133,10 @@ const styles = StyleSheet.create({
   },
   shapeBottomRight: {
     position: "absolute",
-    bottom: 0,
+    bottom: -100,
     right: -50,
-    width: 250,
-    height: 250,
+    width: 275,
+    height: 275,
     resizeMode: "contain",
   },
 });

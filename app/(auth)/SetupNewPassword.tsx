@@ -6,15 +6,12 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
-  ActivityIndicator,
   ScrollView,
-  KeyboardAvoidingView,
   Platform,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
 import {
-  SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import { useRouter, useLocalSearchParams } from "expo-router";
@@ -28,6 +25,8 @@ import spacingStyles from "@/style/spacingStyles";
 import gapSizes from "@/style/gapSizes";
 import { useFieldValidation } from "@/hooks/useFieldValidation";
 import { Button } from "@/components/common/Button";
+import { SafeKeyboardView } from "@/components/common/SafeKeyboardView";
+import { fontFamilies } from "@/style/fontFamilies";
 
 const SetupNewPassword: React.FC = () => {
   const insets = useSafeAreaInsets();
@@ -117,16 +116,12 @@ const SetupNewPassword: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeKeyboardView keyboardVerticalOffset={Platform.OS === "ios" ? insets.top + 40 : 0}>
       <View style={styles.absoluteShapesContainer} pointerEvents="none">
-        <Image source={images.shape05} style={commonStyles.shape5} />
-        <Image source={images.shape06} style={commonStyles.shape6} />
+        <Image source={images.OtpCnfrmPwdNewPwd1} style={commonStyles.shape5} />
+        <Image source={images.OtpCnfrmPwdNewPwd2} style={commonStyles.shape6} />
       </View>
-      <KeyboardAvoidingView
-        style={styles.keyboardAvoiding}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? insets.top + 40 : 0}
-      >
+
         <ScrollView
           contentContainerStyle={styles.scrollViewContainer}
           keyboardShouldPersistTaps="handled"
@@ -210,19 +205,11 @@ const SetupNewPassword: React.FC = () => {
             </TouchableOpacity>
           </View>
         </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
-  );
+    </SafeKeyboardView>
+  )
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: staticColors.white,
-  },
-  keyboardAvoiding: {
-    flex: 1,
-  },
   scrollViewContainer: {
     flexGrow: 1,
     justifyContent: "space-between",
@@ -239,14 +226,14 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: fontSizes.lg,
-    fontFamily: "RalewayeExtraBold",
+    fontFamily: fontFamilies.ralewayExtraBold,
     color: staticColors.darkSlate,
     ...spacingStyles.my15,
     textAlign: "center",
   },
   subtitle: {
     fontSize: fontSizes.md,
-    fontFamily: "NunitoSans",
+    fontFamily: fontFamilies.nunitoSans,
     color: staticColors.black,
     textAlign: "center",
     ...spacingStyles.mb20,

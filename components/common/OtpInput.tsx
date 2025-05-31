@@ -19,6 +19,7 @@ import { AppDispatch } from "@/store/store";
 import { OtpInputProps } from "@/types/types";
 import { OTP_LENGTH, OTP_RESEND_TIMER } from "@/constants/constants";
 import borderRadius from "@/style/borderRadius";
+import { fontFamilies } from "@/style/fontFamilies";
 
 const OtpInput: React.FC<OtpInputProps> = ({
   email,
@@ -230,10 +231,10 @@ const styles = StyleSheet.create({
   },
   cancelText: {
     color: colors.primary,
-    fontFamily: "HelveticaBold",
+    fontFamily: fontFamilies.helveticaBold,
   },
   confirmText: {
     color: colors.white,
-    fontFamily: "HelveticaBold",
+    fontFamily: fontFamilies.helveticaBold,
   },
 });

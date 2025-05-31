@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   Image,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -16,6 +15,7 @@ import OtpInput from "@/components/common/OtpInput";
 import images from "@/constants/images";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { verifyEmailCode, verifyUser } from "@/store/auth/authSlice";
+import { SafeKeyboardView } from "@/components/common/SafeKeyboardView";
 
 const VerifyEmailOtpScreen = () => {
   const insets = useSafeAreaInsets();
@@ -39,7 +39,7 @@ const VerifyEmailOtpScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeKeyboardView >
       <View style={[styles.container, { paddingTop: insets.top }]}>
         <Image source={images.logo} style={styles.logo} resizeMode="contain" />
 
@@ -58,17 +58,13 @@ const VerifyEmailOtpScreen = () => {
           confirmText="Continue"
         />
       </View>
-    </SafeAreaView>
+    </SafeKeyboardView>
   );
 };
 
 export default VerifyEmailOtpScreen;
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: colors.white,
-  },
   container: {
     flex: 1,
     ...spacingStyles.mt25,

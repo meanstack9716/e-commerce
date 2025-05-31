@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 import { RootState } from "../store";
-import { getApiUrl } from "@/utils/apiUtils";
+import axiosConfig from "@/utils/axiosConfig";
 
 interface OrderPayload {
   cart_items_ids: (string | number)[];
@@ -34,8 +33,7 @@ export const placeOrder = createAsyncThunk<
       if (!token) {
         return rejectWithValue("No authentication token found.");
       }
-      const apiUrl = await getApiUrl();
-      const response = await axios.post(`${apiUrl}/orders/new`, payload, {
+      const response = await axiosConfig.post(`/orders/new`, payload, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `${token}`,

@@ -6,13 +6,9 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
-  KeyboardAvoidingView,
-  Platform,
   ScrollView,
-  ActivityIndicator,
 } from "react-native";
 import {
-  SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import { router } from "expo-router";
@@ -33,15 +29,11 @@ import {
 } from "@/store/auth/authSlice";
 import { Button } from "@/components/common/Button";
 import PasswordTextField from "@/components/common/PasswordTextField";
-
-interface FormData {
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
+import { SafeKeyboardView } from "@/components/common/SafeKeyboardView";
+import { fontFamilies } from "@/style/fontFamilies";
+import { FormData } from "./CreateAccount.types";
 
 export default function CreateAccountScreen() {
-  const insets = useSafeAreaInsets();
   const dispatch = useAppDispatch();
   const { loading, error, registered } = useAppSelector((state) => state.auth);
   const [formData, setFormData] = useState<FormData>({
@@ -93,7 +85,7 @@ export default function CreateAccountScreen() {
         break;
     }
   };
-  const handleCreateAccountSubmit  = (): void => {
+  const handleCreateAccountSubmit = (): void => {
     resetErrors();
     handleEmailValidation(formData.email);
     handlePasswordValidation(formData.password);
@@ -116,88 +108,86 @@ export default function CreateAccountScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeKeyboardView>
       <View style={styles.absoluteShapesContainer} pointerEvents="none">
-        <Image source={images.shape02} style={styles.shape2} />
-        <Image source={images.shape07} style={styles.shape7} />
+        <Image source={images.createLoginPwdShape} style={styles.shape2} />
+        <Image source={images.CreatAccountShape} style={styles.shape7} />
       </View>
-      <KeyboardAvoidingView
-        style={styles.keyboardAvoiding}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
+
+      <ScrollView
+        contentContainerStyle={styles.scrollViewContainer}
+        keyboardShouldPersistTaps="handled"
       >
-        <ScrollView
-          contentContainerStyle={styles.scrollViewContainer}
-          keyboardShouldPersistTaps="handled"
-        >
-          <View style={styles.contentContainer}>
-            <Text style={styles.title}>Create{"\n"}Account</Text>
-            <View style={styles.profilePicContainer}>
-              <Ionicons
-                name="camera-outline"
-                size={fontSizes["5xl"]}
-                color={staticColors.primaryBlue}
-                style={styles.cameraIcon}
-              />
-            </View>
-
-            {/* Input Fields */}
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={[
-                  commonStyles.authInput,
-                  errors.email && styles.inputError,
-                ]}
-                placeholder="Email"
-                placeholderTextColor={staticColors.mutedGray}
-                autoCapitalize="none"
-                keyboardType="email-address"
-                value={formData.email}
-                onChangeText={(text) => handleInputChange("email", text)}
-              />
-              {errors.email && (
-                <Text style={styles.errorText}>{errors.email}</Text>
-              )}
-
-              <View style={styles.passwordContainer}>
-                <PasswordTextField
-                  placeholder="Password"
-                  value={formData.password}
-                  onChangeText={(text) => handleInputChange("password", text)}
-                  error={errors.password}
-                />
-              </View>
-
-              <View style={styles.passwordContainer}>
-                <PasswordTextField
-                  placeholder="Confirm Password"
-                  value={formData.confirmPassword}
-                  onChangeText={(text) =>
-                    handleInputChange("confirmPassword", text)
-                  }
-                  error={errors.confirmPassword}
-                />
-              </View>
-            </View>
-          </View>
-
-          <View style={styles.bottomButtonContainer}>
-            <Button
-              title="Done"
-              onPress={handleCreateAccountSubmit}
-              style={commonStyles.authButton}
-              loading={loading}
-              textStyle={commonStyles.authButtonText}
+        <View style={styles.contentContainer}>
+          <Text style={styles.title}>Create{"\n"}Account</Text>
+          <View style={styles.profilePicContainer}>
+            <Ionicons
+              name="camera-outline"
+              size={fontSizes["5xl"]}
+              color={staticColors.primaryBlue}
+              style={styles.cameraIcon}
             />
-            <TouchableOpacity onPress={handleCancelButton} disabled={loading}>
-              <Text style={[styles.cancelText, loading && styles.disabledText]}>
-                Cancel
-              </Text>
-            </TouchableOpacity>
           </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+
+          {/* Input Fields */}
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={[
+                commonStyles.authInput,
+                errors.email && styles.inputError,
+              ]}
+              placeholder="Email"
+              placeholderTextColor={staticColors.mutedGray}
+              autoCapitalize="none"
+              keyboardType="email-address"
+              value={formData.email}
+              onChangeText={(text) => handleInputChange("email", text)}
+              autoComplete="off"
+              textContentType="none"
+              autoCorrect={false}
+            />
+            {errors.email && (
+              <Text style={styles.errorText}>{errors.email}</Text>
+            )}
+
+            <View style={styles.passwordContainer}>
+              <PasswordTextField
+                placeholder="Password"
+                value={formData.password}
+                onChangeText={(text) => handleInputChange("password", text)}
+                error={errors.password}
+              />
+            </View>
+
+            <View style={styles.passwordContainer}>
+              <PasswordTextField
+                placeholder="Confirm Password"
+                value={formData.confirmPassword}
+                onChangeText={(text) =>
+                  handleInputChange("confirmPassword", text)
+                }
+                error={errors.confirmPassword}
+              />
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.bottomButtonContainer}>
+          <Button
+            title="Done"
+            onPress={handleCreateAccountSubmit}
+            style={commonStyles.authButton}
+            loading={loading}
+            textStyle={commonStyles.authButtonText}
+          />
+          <TouchableOpacity onPress={handleCancelButton} disabled={loading}>
+            <Text style={[styles.cancelText, loading && styles.disabledText]}>
+              Cancel
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </SafeKeyboardView>
   );
 }
 
@@ -244,7 +234,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: fontSizes["5xl"],
-    fontFamily: "RalewayeExtraBold",
+    fontFamily: fontFamilies.ralewayExtraBold,
     color: staticColors.darkSlate,
     textAlign: "left",
     alignSelf: "flex-start",

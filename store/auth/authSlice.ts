@@ -1,12 +1,10 @@
 import { clearCartFromStorage } from "@/utils/cartStorage";
 import { handleApiError } from "@/utils/handleApiError";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import axios from "axios";
 import { clearCart } from "../cart/cartSlice";
-import { AppDispatch } from "@/store/store";
-import { fetchCartItemsApi } from "../cart/cartSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getApiUrl } from "@/utils/apiUtils";
+import axiosConfig from "@/utils/axiosConfig";
 
 
 interface AuthState {
@@ -67,8 +65,7 @@ export const registerUser = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const apiUrl = await getApiUrl();
-      const response = await axios.post(`${apiUrl}/auth/register`, {
+      const response = await axiosConfig.post("/auth/register", {
         email,
         password,
         password_confirmation,
@@ -87,8 +84,7 @@ export const loginUser = createAsyncThunk(
     { rejectWithValue, dispatch }
   ) => {
     try {
-      const apiUrl = await getApiUrl();
-      const response = await axios.post(`${apiUrl}/auth/login`, {
+      const response = await axiosConfig.post(`/auth/login`, {
         email,
         password,
       });
@@ -101,7 +97,6 @@ export const loginUser = createAsyncThunk(
         const savedToken = await AsyncStorage.getItem("authToken");
         const savedUser = await AsyncStorage.getItem("authUser");
       } catch (storageError) {
-        console.error("Failed to save to AsyncStorage:", storageError);
         return rejectWithValue("Failed to save authentication data");
       }
       dispatch(clearCart());
@@ -117,8 +112,7 @@ export const sendEmailCode = createAsyncThunk(
   "auth/sendEmailCode",
   async (email: string, { rejectWithValue }) => {
     try {
-      const apiUrl = await getApiUrl();
-      const res = await axios.post(`${apiUrl}/auth/send-email-code`, { email });
+      const res = await axiosConfig.post(`/auth/send-email-code`, { email });
       return res.data;
     } catch (error: any) {
       return rejectWithValue(handleApiError(error, "Failed to send code"));
@@ -132,9 +126,8 @@ export const verifyEmailCode = createAsyncThunk(
     { email, code }: { email: string; code: string },
     { rejectWithValue }
   ) => {
-    try {4
-      const apiUrl = await getApiUrl();
-      const res = await axios.post(`${apiUrl}/auth/verify-email-code`, {
+    try {
+      const res = await axiosConfig.post(`/auth/verify-email-code`, {
         email,
         code,
       });
@@ -163,7 +156,7 @@ export const resetPassword = createAsyncThunk(
   ) => {
     try {
       const apiUrl = await getApiUrl();
-      const response = await axios.post(`${apiUrl}/auth/reset-password`, {
+      const response = await axiosConfig.post(`/auth/reset-password`, {
         email,
         code,
         password,
@@ -183,8 +176,7 @@ export const verifyUser = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const apiUrl = await getApiUrl();
-      const res = await axios.post(`${apiUrl}/auth/verify-user`, {
+      const res = await axiosConfig.post(`/auth/verify-user`, {
         email,
         code,
       });
@@ -202,10 +194,8 @@ export const logoutUser = createAsyncThunk(
   "auth/logoutUser",
   async (_, { rejectWithValue, dispatch }) => {
     try {
-      const apiUrl = await getApiUrl();
       const token = await AsyncStorage.getItem("authToken");
-      await axios.post(
-        `${apiUrl}/auth/logout`,
+      await axiosConfig.post(`/auth/logout`,
         {},
         {
           headers: {

@@ -1,18 +1,19 @@
 import React from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import images from "@/constants/images";
 import { commonStyles } from "@/style/commonStyle";
-import staticColors from "@/style/staticColors";
+
 import spacingStyles from "@/style/spacingStyles";
-import OtpInput from "@/components/common/OtpInput";
 import { fontSizes } from "@/style/typography";
+
+import OtpInput from "@/components/common/OtpInput";
 import { router, useLocalSearchParams } from "expo-router";
 import { useAppDispatch } from "@/store/hooks";
 import { verifyUser, verifyEmailCode } from "@/store/auth/authSlice";
+import { SafeKeyboardView } from "@/components/common/SafeKeyboardView";
+import { fontFamilies } from "@/style/fontFamilies";
+import staticColors from "@/style/staticColors";
 
 const OtpConfirmationScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
@@ -27,7 +28,7 @@ const OtpConfirmationScreen: React.FC = () => {
         const result = await dispatch(
           verifyUser({ email, code: otpCode })
         ).unwrap();
-        router.navigate("/profile");
+        router.navigate("/OnboardingScreen");
       } else if (useCase === "password-recovery") {
         const result = await dispatch(
           verifyEmailCode({ email, code: otpCode })
@@ -47,42 +48,45 @@ const OtpConfirmationScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeKeyboardView>
       <View style={commonStyles.topRightImages}>
-        <Image source={images.shape05} style={commonStyles.shape5} />
-        <Image source={images.shape06} style={commonStyles.shape6} />
+        <Image source={images.OtpCnfrmPwdNewPwd1} style={commonStyles.shape5} />
+        <Image source={images.OtpCnfrmPwdNewPwd2} style={commonStyles.shape6} />
       </View>
 
-      <View style={commonStyles.contentContainer}>
-        <Image source={images.avatar} style={commonStyles.avatar} />
-        <Text style={styles.title}>Password Recovery</Text>
+      <ScrollView
+        contentContainerStyle={styles.scrollViewContainer}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={commonStyles.contentContainer}>
+          <Image source={images.avatar} style={commonStyles.avatar} />
+          <Text style={styles.title}>Password Recovery</Text>
 
-        {/* OTP Input Component */}
-        <OtpInput
-          email={email}
-          onVerifySuccess={onVerifySuccess}
-          onStepBack={onStepBack}
-          cancelText="Cancel"
-        />
-      </View>
+          {/* OTP Input Component */}
+          <OtpInput
+            email={email}
+            onVerifySuccess={onVerifySuccess}
+            onStepBack={onStepBack}
+            cancelText="Cancel"
+          />
+        </View>
 
-      <View style={[commonStyles.bottomContainer, { bottom: insets.bottom }]}>
-        <View style={commonStyles.homeIndicator} />
-      </View>
-    </SafeAreaView>
+      </ScrollView>
+    </SafeKeyboardView>
   );
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: staticColors.white,
-    alignItems: "center",
+  scrollViewContainer: {
+    flexGrow: 1,
+    justifyContent: "center",
+    alignItems:'center',
+    ...spacingStyles.px20,
   },
   title: {
     fontSize: fontSizes.lg,
-    fontFamily: "RalewayeExtraBold",
-    color: staticColors.darkSlate,
+    fontFamily: fontFamilies.ralewayExtraBold, 
+    color: staticColors.darkSlate, 
     ...spacingStyles.my15,
     textAlign: "center",
   },
