@@ -36,6 +36,7 @@ import staticColors from "@/style/staticColors";
 import { useAppDispatch } from "@/store/hooks";
 import { logoutUser } from "@/store/auth/authSlice";
 import borderRadius from "@/style/borderRadius";
+import { fontFamilies } from "@/style/fontFamilies";
 
 export default function ProfileScreen() {
   const [activeProfileSection, setActiveProfileSection] = useState("Profile");
@@ -130,7 +131,7 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.base,
     fontWeight: "bold",
     color: colors.primary,
-    fontFamily: "Arial",
+    fontFamily:fontFamilies.arial,
   },
   container: {
     flex: 1,

@@ -1,10 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 import { RootState } from "../store";
 import { Order } from "@/types/types";
 import { getAuthHeaders } from "@/utils/apiHeader";
-
-const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+import axiosConfig from "@/utils/axiosConfig";
 
 interface OrderPayload {
   cart_items_ids: (string | number)[];
@@ -42,8 +40,8 @@ export const fetchOrders = createAsyncThunk<
       return rejectWithValue("No authentication token found.");
     }
 
-    const response = await axios.get(
-      `${apiUrl}/orders/list`,
+    const response = await axiosConfig.get(
+      `/orders/list`,
       getAuthHeaders(state)
     );
     return response.data.data;
@@ -67,12 +65,12 @@ export const placeOrder = createAsyncThunk<
       if (!token) {
         return rejectWithValue("No authentication token found.");
       }
-
-      const response = await axios.post(
-        `${apiUrl}/orders/new`,
-        payload,
-        getAuthHeaders(state)
-      );
+      const response = await axiosConfig.post(`/orders/new`, payload, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+      });
       return response.data;
     } catch (error: any) {
       const errorMessage =
@@ -94,8 +92,8 @@ export const fetchStatusTypes = createAsyncThunk<
       return rejectWithValue("No authentication token found.");
     }
 
-    const response = await axios.get(
-      `${apiUrl}/orders/status-types`,
+    const response = await axiosConfig.get(
+      `/orders/status-types`,
       getAuthHeaders(state)
     );
     return response.data.data;
@@ -118,8 +116,8 @@ export const fetchOrderDetails = createAsyncThunk<
       return rejectWithValue("No authentication token found.");
     }
 
-    const response = await axios.get(
-      `${apiUrl}/orders/${orderId}`,
+    const response = await axiosConfig.get(
+      `/orders/${orderId}`,
       getAuthHeaders(state)
     );
     return response.data.data;

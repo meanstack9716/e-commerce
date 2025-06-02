@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { getAuthHeaders } from "@/utils/apiHeader";
 import { RootState } from "@/store/store";
+import { handleApiError } from "@/utils/handleApiError";
 
 const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
@@ -44,9 +45,7 @@ export const submitReview = createAsyncThunk<
       );
       return response.data;
     } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.message || "Failed to submit review.";
-      return rejectWithValue(errorMessage);
+      return rejectWithValue(handleApiError(error, "Registration failed"));
     }
   }
 );

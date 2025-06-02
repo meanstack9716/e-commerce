@@ -6,6 +6,7 @@ import textStyles from "@/style/textStyles";
 import spacingStyles from "@/style/spacingStyles";
 import {fontSizes} from "@/style/typography";
 import borderRadius from "@/style/borderRadius";
+import { fontFamilies } from "@/style/fontFamilies";
 type FaqItem = {
   heading: string;
   description: string;
@@ -68,7 +69,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: colors.buttonPrimary,
     fontSize: fontSizes.sm,
-    fontFamily:'HelveticaBold'
+    fontFamily:fontFamilies.helveticaBold
   },
   answer: {
     fontSize:fontSizes.sm,

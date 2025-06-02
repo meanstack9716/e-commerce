@@ -5,6 +5,7 @@ import ProfileHeader from "./ProfileHeader";
 import ProfileOption from "./ProfileOption";
 import spacingStyles from "@/style/spacingStyles";
 import colors from "@/style/staticColors";
+import { router } from "expo-router";
 
 export default function ProfileListSection() {
   return (
@@ -13,11 +14,7 @@ export default function ProfileListSection() {
       <View style={styles.optionsContainer}>
         <ProfileOption
           icon={
-            <FontAwesome5
-              name="box-open"
-              size={24}
-              color={colors.textMuted}
-            />
+            <FontAwesome5 name="box-open" size={24} color={colors.textMuted} />
           }
           label="Orders"
           subtitle="Check your order status"
@@ -31,14 +28,18 @@ export default function ProfileListSection() {
         />
         <ProfileOption
           icon={
-            <Ionicons
-              name="heart-outline"
-              size={24}
-              color={colors.textMuted}
-            />
+            <Ionicons name="heart-outline" size={24} color={colors.textMuted} />
           }
           label="Wishlist"
           subtitle="Your most loved styles"
+        />
+        <ProfileOption
+          icon={
+            <Ionicons name="heart-outline" size={10} color={colors.white} />
+          }
+          label="Change Base Url"
+          onPress={() => router.navigate("/BaseURL")}
+          customStyle={{ ...spacingStyles.mt5 }}
         />
         <ProfileOption
           icon={

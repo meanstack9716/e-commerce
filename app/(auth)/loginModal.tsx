@@ -44,7 +44,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
     password: "",
   });
   const [rememberMe, setRememberMe] = useState<boolean>(false);
-  const { error, loading } = useAppSelector((state) => state.auth);
+  const { loginError , error, loading } = useAppSelector((state) => state.auth);
   const {
     errors,
     handleEmailValidation,
@@ -136,7 +136,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
                 onChangeText={(text) => handleInputChange("password", text)}
                 error={errors.password}
               />
-              {error && <Text style={styles.apiError}>{error}</Text>}
+              {loginError && <Text style={styles.apiError}>{loginError}</Text>}
 
               <View style={styles.rowContainer}>
                 <TouchableOpacity

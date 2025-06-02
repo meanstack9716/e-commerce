@@ -5,10 +5,16 @@ const fontSizes = {
   base: 16,
   md: 18,
   lg: 20,
+  xxl:22,
   xl: 24,
   "2xl": 28,
   "3xl": 32,
   "4xl": 36,
+  "5xl": 40,
+  "6xl": 44,
+  "7xl": 48,
+  "8xl": 52,
+  "9xl": 56,
 };
 
 const fontWeights = {
@@ -19,6 +25,6 @@ const fontWeights = {
   semiBold: "600",
   bold: "700",
   black: "900",
-}as const;
+} as const;
 
 export { fontSizes, fontWeights };

@@ -5,6 +5,7 @@ import textStyles from "@/style/textStyles";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import {fontSizes} from "@/style/typography";
+import { fontFamilies } from "@/style/fontFamilies";
 
 const aboutUsData = [
   {
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
   },
   title: {
     ...textStyles.title,
-    fontFamily: "AbriFatfaceRegular",
+    fontFamily: fontFamilies.abriFatfaceRegular,
     textAlign: "center",
   },
   subtitle: {
@@ -89,7 +90,7 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.sm,
     textAlign: "center",
     lineHeight: 20,
-    fontFamily: "Helvetica",
+    fontFamily: fontFamilies.helvetica,
     ...spacingStyles.px25,
   },
   content: {
