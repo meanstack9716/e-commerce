@@ -160,4 +160,30 @@ export const commonStyles = StyleSheet.create({
     alignItems: "center",
     ...spacingStyles.px20,
   },
+  reviewAvtar :{
+    width: 60,
+    height: 60,
+    borderRadius: borderRadius.circle,
+    borderColor: staticColors.white,
+    backgroundColor: staticColors.white,
+    zIndex: 10,
+    elevation: 4,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    resizeMode: "contain",
+    ...spacingStyles.mr10,
+  },
+   starIcon: {
+    ...spacingStyles.m2,
+  },
+    reviewImageContainer: {
+    ...spacingStyles.mt5
+  },
+  reviewImage: {
+    width: 100,
+    height: 100,
+    borderRadius: borderRadius.r8,
+    ...spacingStyles.mr5
+  },
 });

@@ -295,14 +295,10 @@ const ProductDetailsScreen: React.FC = () => {
               price={product.final_price}
             />
             {product.reviews && product.reviews.length > 0 ? (
-              <>
-                <RatingReview
-                  review={product.reviews[0]} 
-                  onViewAllReviews={() => {
-                    // router.push({ pathname: "/reviews", params: { productId: product.id } });
-                  }}
-                />
-              </>
+              <RatingReview
+                review={product.reviews[0]}
+                productId={product.id}
+              />
             ) : (
               <></>
             )}

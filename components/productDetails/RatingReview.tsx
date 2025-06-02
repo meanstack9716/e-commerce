@@ -1,32 +1,34 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
+import { View, Text, TouchableOpacity, StyleSheet, Image, FlatList } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import staticColors from "@/style/staticColors";
 import { fontSizes, fontWeights } from "@/style/typography";
 import spacingStyles from "@/style/spacingStyles";
 import borderRadius from "@/style/borderRadius";
+import { commonStyles } from "@/style/commonStyle";
 import { Review } from "../../types/types";
 
 interface RatingReviewProps {
   review: Review;
-  onViewAllReviews: () => void;
+  productId: string;
 }
 
 const RatingReview: React.FC<RatingReviewProps> = ({
   review,
-  onViewAllReviews,
+  productId,
 }) => {
   const renderStars = (rating: string, size: number) => {
     const ratingValue = parseFloat(rating);
     const stars = [];
     for (let i = 1; i <= 5; i++) {
       stars.push(
-        <FontAwesome
+        <Ionicons
           key={`star-${i}`}
-          name={i <= ratingValue ? "star" : "star-o"}
+          name={i <= ratingValue ? "star" : "star-outline"}
           size={size}
           color={staticColors.starYellow}
-          style={styles.starIcon}
+          style={commonStyles.starIcon}
         />
       );
     }
@@ -42,10 +44,14 @@ const RatingReview: React.FC<RatingReviewProps> = ({
   };
 
   const getAvatarSource = () => {
-    if (review.img_urls && review.img_urls.length > 0 && review.img_urls[0]) {
-      return { uri: review.img_urls[0] };
-    }
     return require("@/assets/images/images/gender-female.png");
+  };
+
+  const handleViewAllReview = () => {
+    router.navigate({
+      pathname: "/review",
+      params: { productId },
+    });
   };
 
   return (
@@ -59,14 +65,14 @@ const RatingReview: React.FC<RatingReviewProps> = ({
       </View>
 
       <View style={styles.userContainer}>
-          <Image
-            source={getAvatarSource()}
-            style={styles.avatar}
-            resizeMode="cover"
-          />
+        <Image
+          source={getAvatarSource()}
+          style={commonStyles.reviewAvtar}
+          resizeMode="cover"
+        />
         <View style={styles.userInfo}>
           <Text style={styles.username}>{getUsername(review)}</Text>
-          <View style={[styles.starsContainer]}>
+          <View style={styles.starsContainer}>
             {renderStars(review.rating, 18)}
           </View>
         </View>
@@ -76,8 +82,25 @@ const RatingReview: React.FC<RatingReviewProps> = ({
         {review.review}
       </Text>
 
-      <TouchableOpacity onPress={onViewAllReviews} style={styles.button}>
-        <Text style={styles.buttonText}>View All Reviews</Text>
+      {review.img_urls && review.img_urls.length > 0 && (
+        <FlatList
+          horizontal
+          data={review.img_urls}
+          renderItem={({ item: imgUrl }) => (
+            <Image
+              source={{ uri: imgUrl }}
+              style={commonStyles.reviewImage}
+              resizeMode="cover"
+            />
+          )}
+          keyExtractor={(imgUrl, index) => `review-img-${index}`}
+          showsHorizontalScrollIndicator={false}
+          style={styles.reviewImageContainer}
+        />
+      )}
+
+      <TouchableOpacity onPress={handleViewAllReview} style={commonStyles.authButton}>
+        <Text style={commonStyles.authButtonText}>View All Reviews</Text>
       </TouchableOpacity>
     </View>
   );
@@ -106,9 +129,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     ...spacingStyles.mr5,
   },
-  starIcon: {
-    ...spacingStyles.m2,
-  },
+ 
   ratingBox: {
     backgroundColor: "#E8ECFF",
     paddingHorizontal: 8,
@@ -127,47 +148,24 @@ const styles = StyleSheet.create({
     alignItems: "center",
     ...spacingStyles.mb10,
   },
-  avatar: {
-    width: 60,
-    height: 60,
-    borderRadius: borderRadius.circle,
-    borderColor: staticColors.white,
-    alignSelf: "center",
-    backgroundColor: staticColors.white,
-    zIndex: 10,
-    elevation: 4,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    resizeMode: "contain",
-    ...spacingStyles.mr10
-  },
   userInfo: {
     flex: 1,
   },
   username: {
     fontSize: fontSizes.base,
-    fontFamily:'RalewayeSemiBold',
+    fontFamily: "RalewayeSemiBold",
     color: staticColors.black,
     ...spacingStyles.mb5,
   },
   reviewText: {
     fontSize: fontSizes.xs,
-    fontFamily:'NunitoSans',
-    fontWeight:fontWeights.normal,
+    fontFamily: "NunitoSans",
+    fontWeight: fontWeights.normal,
     color: staticColors.black,
     ...spacingStyles.mb10,
   },
-  button: {
-    backgroundColor: staticColors.primaryBlue,
-   ...spacingStyles.p10,
-    borderRadius: borderRadius.r10,
-    alignItems: "center",
-  },
-  buttonText: {
-     color: staticColors.white,
-    fontSize: fontSizes.lg,
-    fontFamily: "NunitoSans",
+  reviewImageContainer: {
+    ...spacingStyles.mt5,
   },
 });
 
