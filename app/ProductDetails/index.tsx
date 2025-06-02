@@ -299,11 +299,6 @@ const ProductDetailsScreen: React.FC = () => {
                 <RatingReview
                   review={product.reviews[0]} 
                   onViewAllReviews={() => {
-                    console.log(
-                      "View all reviews:",
-                      JSON.stringify(product.reviews, null, 2)
-                    );
-                    // Optionally navigate to a reviews screen
                     // router.push({ pathname: "/reviews", params: { productId: product.id } });
                   }}
                 />
