@@ -6,15 +6,9 @@ import {
   ViewStyle,
 } from "react-native";
 import staticColors from "@/style/staticColors";
+import { KeyboardAvoidingViewProps } from "./KeyboardAvoidingView.types";
 
-interface KeyboardAvoidingViewProps {
-  children: ReactNode;
-  style?: ViewStyle;
-  keyboardVerticalOffset?: number;
-  backgroundColor?: string;
-}
-
-export const KeyboardAvoidingViewComponent: React.FC<
+export const KeyboardAvoidingViewWrapper: React.FC<
   KeyboardAvoidingViewProps
 > = ({
   children,

@@ -9,7 +9,7 @@ interface SafeAreaViewProps {
   backgroundColor?: string;
 }
 
-export const SafeAreaViewComponent: React.FC<SafeAreaViewProps> = ({
+export const SafeAreaViewWrapper: React.FC<SafeAreaViewProps> = ({
   children,
   style,
   backgroundColor = staticColors.white,
@@ -27,6 +27,5 @@ export const SafeAreaViewComponent: React.FC<SafeAreaViewProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: staticColors.white,
   },
 });

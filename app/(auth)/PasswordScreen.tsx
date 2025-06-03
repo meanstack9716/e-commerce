@@ -27,8 +27,8 @@ import gapSizes from "@/style/gapSizes";
 import { commonStyles } from "@/style/commonStyle";
 import { Button } from "@/components/common/Button";
 import PasswordTextField from "@/components/common/PasswordTextField";
-import { SafeAreaViewComponent } from "@/components/common/SafeAreaViewComponent";
-import { KeyboardAvoidingViewComponent } from "@/components/common/KeyboardAvoidingViewComponent";
+import { SafeAreaViewWrapper } from "@/components/common/SafeAreaViewWrapper";
+import { KeyboardAvoidingViewWrapper } from "@/components/common/KeyboardAvoidingView/KeyboardAvoidingViewWrapper";
 
 export default function PasswordScreen() {
   const [password, setPassword] = useState("");
@@ -76,7 +76,7 @@ export default function PasswordScreen() {
   };
 
   return (
-      <KeyboardAvoidingViewComponent style={styles.keyboardAvoidingView}>
+      <KeyboardAvoidingViewWrapper style={styles.keyboardAvoidingView}>
         <ScrollView
           contentContainerStyle={styles.scrollContent}
           keyboardShouldPersistTaps="handled"
@@ -146,7 +146,7 @@ export default function PasswordScreen() {
           </View>
           <StatusBar style="dark" />
         </ScrollView>
-      </KeyboardAvoidingViewComponent>
+      </KeyboardAvoidingViewWrapper>
   
   );
 }

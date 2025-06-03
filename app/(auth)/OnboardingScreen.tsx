@@ -14,7 +14,7 @@ import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import borderRadius from "@/style/borderRadius";
 import { router } from "expo-router";
-import { SafeAreaViewComponent } from "@/components/common/SafeAreaViewComponent";
+import { SafeAreaViewWrapper } from "@/components/common/SafeAreaViewWrapper";
 
 const { width, height } = Dimensions.get("window");
 
@@ -55,7 +55,7 @@ const OnboardingScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaViewComponent>
+    <SafeAreaViewWrapper>
       {/* Decorative Shapes */}
       <Image source={images.onBoardingShape} style={styles.shapeTopLeft} />
       <Image
@@ -94,7 +94,7 @@ const OnboardingScreen: React.FC = () => {
           />
         ))}
       </View>
-    </SafeAreaViewComponent>
+    </SafeAreaViewWrapper>
   );
 };
 

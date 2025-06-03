@@ -20,7 +20,7 @@ import borderRadius from "@/style/borderRadius";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { sendEmailCode } from "@/store/auth/authSlice";
 import { Button } from "@/components/common/Button";
-import { SafeAreaViewComponent } from "@/components/common/SafeAreaViewComponent";
+import { SafeAreaViewComponent } from "@/components/common/SafeAreaViewWrapper";
 import { fontFamilies } from "@/style/fontFamilies";
 
 export default function PasswordRecoveryScreen() {

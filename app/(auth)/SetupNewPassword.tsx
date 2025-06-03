@@ -23,8 +23,8 @@ import { fontSizes } from "@/style/typography";
 import spacingStyles from "@/style/spacingStyles";
 import gapSizes from "@/style/gapSizes";
 import { Button } from "@/components/common/Button";
-import { SafeAreaViewComponent } from "@/components/common/SafeAreaViewComponent";
-import { KeyboardAvoidingViewComponent } from "@/components/common/KeyboardAvoidingViewComponent";
+import { SafeAreaViewWrapper } from "@/components/common/SafeAreaViewWrapper";
+import { KeyboardAvoidingViewWrapper } from "@/components/common/KeyboardAvoidingView/KeyboardAvoidingViewWrapper";
 
 const SetupNewPassword: React.FC = () => {
   const { errors, handlePasswordValidation, handleConfirmPasswordMatch } =
@@ -113,8 +113,8 @@ const SetupNewPassword: React.FC = () => {
   };
 
   return (
-    <SafeAreaViewComponent>
-      <KeyboardAvoidingViewComponent style={styles.keyboardAvoidingView}>
+    <SafeAreaViewWrapper>
+      <KeyboardAvoidingViewWrapper style={styles.keyboardAvoidingView}>
         <ScrollView
           contentContainerStyle={styles.scrollViewContainer}
           keyboardShouldPersistTaps="handled"
@@ -209,8 +209,8 @@ const SetupNewPassword: React.FC = () => {
             </TouchableOpacity>
           </View>
         </ScrollView>
-      </KeyboardAvoidingViewComponent>
-    </SafeAreaViewComponent>
+      </KeyboardAvoidingViewWrapper>
+    </SafeAreaViewWrapper>
   );
 };
 

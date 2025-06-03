@@ -27,9 +27,9 @@ import {
 } from "@/store/auth/authSlice";
 import { Button } from "@/components/common/Button";
 import PasswordTextField from "@/components/common/PasswordTextField";
-import { SafeAreaViewComponent } from "@/components/common/SafeAreaViewComponent";
+import { SafeAreaViewWrapper } from "@/components/common/SafeAreaViewWrapper";
 import { FormData } from "./CreateAccount.types";
-import { KeyboardAvoidingViewComponent } from "@/components/common/KeyboardAvoidingViewComponent";
+import { KeyboardAvoidingViewWrapper } from "@/components/common/KeyboardAvoidingView/KeyboardAvoidingViewWrapper";
 
 export default function CreateAccountScreen() {
   const dispatch = useAppDispatch();
@@ -107,8 +107,8 @@ export default function CreateAccountScreen() {
   };
 
   return (
-    <SafeAreaViewComponent>
-      <KeyboardAvoidingViewComponent style={styles.keyboardAvoidingView}>
+    <SafeAreaViewWrapper>
+      <KeyboardAvoidingViewWrapper style={styles.keyboardAvoidingView}>
         <ScrollView
           contentContainerStyle={styles.scrollViewContainer}
           keyboardShouldPersistTaps="handled"
@@ -187,8 +187,8 @@ export default function CreateAccountScreen() {
             </View>
           </View>
         </ScrollView>
-      </KeyboardAvoidingViewComponent>
-    </SafeAreaViewComponent>
+      </KeyboardAvoidingViewWrapper>
+    </SafeAreaViewWrapper>
   );
 }
 

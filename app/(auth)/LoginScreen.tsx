@@ -18,10 +18,9 @@ import { fontSizes } from "@/style/typography";
 import { commonStyles } from "@/style/commonStyle";
 import useBackHandler from "@/utils/useBackHandler";
 import { Button } from "@/components/common/Button";
-import { SafeAreaViewComponent } from "@/components/common/SafeAreaViewComponent";
+import { SafeAreaViewWrapper } from "@/components/common/SafeAreaViewWrapper";
 import { fontFamilies } from "@/style/fontFamilies";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { KeyboardAvoidingViewComponent } from "@/components/common/KeyboardAvoidingViewComponent";
+import { KeyboardAvoidingViewWrapper } from "@/components/common/KeyboardAvoidingView/KeyboardAvoidingViewWrapper";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -59,13 +58,13 @@ export default function LoginScreen() {
   };
 
   return (
-    <SafeAreaViewComponent>
+    <SafeAreaViewWrapper>
       <Image source={images.loginPasswordShape} style={styles.shape1} />
       <Image source={images.createLoginPwdShape} style={styles.shape2} />
       <Image source={images.loginShape} style={styles.shape3} />
       <Image source={images.loginOnboardingShape} style={styles.shape4} />
 
-      <KeyboardAvoidingViewComponent>
+      <KeyboardAvoidingViewWrapper>
         <View style={styles.contentContainer}>
           <Text style={styles.title}>Login</Text>
 
@@ -111,8 +110,8 @@ export default function LoginScreen() {
             </Text>
           </TouchableOpacity>
         </View>
-      </KeyboardAvoidingViewComponent>
-    </SafeAreaViewComponent>
+      </KeyboardAvoidingViewWrapper>
+    </SafeAreaViewWrapper>
   );
 }
 

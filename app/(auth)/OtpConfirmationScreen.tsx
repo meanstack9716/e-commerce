@@ -8,7 +8,7 @@ import { fontSizes } from "@/style/typography";
 import OtpInput from "@/components/common/OtpInput";
 import { useAppDispatch } from "@/store/hooks";
 import { verifyUser, verifyEmailCode } from "@/store/auth/authSlice";
-import { SafeAreaViewComponent } from "@/components/common/SafeAreaViewComponent";
+import { SafeAreaViewWrapper } from "@/components/common/SafeAreaViewWrapper";
 import { fontFamilies } from "@/style/fontFamilies";
 import staticColors from "@/style/staticColors";
 
@@ -44,7 +44,7 @@ const OtpConfirmationScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaViewComponent>
+    <SafeAreaViewWrapper>
       <View style={commonStyles.topRightImages}>
         <Image source={images.OtpCnfrmPwdNewPwd1} style={commonStyles.shape5} />
         <Image source={images.OtpCnfrmPwdNewPwd2} style={commonStyles.shape6} />
@@ -67,7 +67,7 @@ const OtpConfirmationScreen: React.FC = () => {
           />
         </View>
       </ScrollView>
-    </SafeAreaViewComponent>
+    </SafeAreaViewWrapper>
   );
 };
 
