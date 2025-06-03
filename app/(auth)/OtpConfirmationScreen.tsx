@@ -1,22 +1,18 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { router, useLocalSearchParams } from "expo-router";
 import images from "@/constants/images";
 import { commonStyles } from "@/style/commonStyle";
-
 import spacingStyles from "@/style/spacingStyles";
 import { fontSizes } from "@/style/typography";
-
 import OtpInput from "@/components/common/OtpInput";
-import { router, useLocalSearchParams } from "expo-router";
 import { useAppDispatch } from "@/store/hooks";
 import { verifyUser, verifyEmailCode } from "@/store/auth/authSlice";
-import { SafeKeyboardView } from "@/components/common/SafeKeyboardView";
+import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import { fontFamilies } from "@/style/fontFamilies";
 import staticColors from "@/style/staticColors";
 
 const OtpConfirmationScreen: React.FC = () => {
-  const insets = useSafeAreaInsets();
   const params = useLocalSearchParams();
   const email = params.email ? String(params.email) : "";
   const useCase = params.useCase ? String(params.useCase) : "";
@@ -48,7 +44,7 @@ const OtpConfirmationScreen: React.FC = () => {
   };
 
   return (
-    <SafeKeyboardView>
+    <SafeAreaViewWrapper>
       <View style={commonStyles.topRightImages}>
         <Image source={images.OtpCnfrmPwdNewPwd1} style={commonStyles.shape5} />
         <Image source={images.OtpCnfrmPwdNewPwd2} style={commonStyles.shape6} />
@@ -70,9 +66,8 @@ const OtpConfirmationScreen: React.FC = () => {
             cancelText="Cancel"
           />
         </View>
-
       </ScrollView>
-    </SafeKeyboardView>
+    </SafeAreaViewWrapper>
   );
 };
 
@@ -80,13 +75,13 @@ const styles = StyleSheet.create({
   scrollViewContainer: {
     flexGrow: 1,
     justifyContent: "center",
-    alignItems:'center',
+    alignItems: "center",
     ...spacingStyles.px20,
   },
   title: {
     fontSize: fontSizes.lg,
-    fontFamily: fontFamilies.ralewayExtraBold, 
-    color: staticColors.darkSlate, 
+    fontFamily: fontFamilies.ralewayExtraBold,
+    color: staticColors.darkSlate,
     ...spacingStyles.my15,
     textAlign: "center",
   },

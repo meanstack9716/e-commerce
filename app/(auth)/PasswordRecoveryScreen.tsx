@@ -20,7 +20,7 @@ import borderRadius from "@/style/borderRadius";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { sendEmailCode } from "@/store/auth/authSlice";
 import { Button } from "@/components/common/Button";
-import { SafeKeyboardView } from "@/components/common/SafeKeyboardView";
+import { SafeAreaViewComponent } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import { fontFamilies } from "@/style/fontFamilies";
 
 export default function PasswordRecoveryScreen() {
@@ -67,7 +67,7 @@ export default function PasswordRecoveryScreen() {
   };
 
   return (
-    <SafeKeyboardView>
+    <SafeAreaViewComponent>
       <View style={commonStyles.topRightImages}>
         <Image source={images.OtpCnfrmPwdNewPwd1} style={commonStyles.shape5} />
         <Image source={images.OtpCnfrmPwdNewPwd2} style={commonStyles.shape6} />
@@ -122,7 +122,7 @@ export default function PasswordRecoveryScreen() {
 
         </View>
       </View>
-    </SafeKeyboardView>
+    </SafeAreaViewComponent>
   );
 }
 

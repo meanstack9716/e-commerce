@@ -11,25 +11,22 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
-import {
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { resetPassword } from "@/store/auth/authSlice";
 import images from "@/constants/images";
+import { useFieldValidation } from "@/hooks/useFieldValidation";
+import { fontFamilies } from "@/style/fontFamilies";
 import { commonStyles } from "@/style/commonStyle";
 import staticColors from "@/style/staticColors";
 import { fontSizes } from "@/style/typography";
 import spacingStyles from "@/style/spacingStyles";
 import gapSizes from "@/style/gapSizes";
-import { useFieldValidation } from "@/hooks/useFieldValidation";
 import { Button } from "@/components/common/Button";
-import { SafeKeyboardView } from "@/components/common/SafeKeyboardView";
-import { fontFamilies } from "@/style/fontFamilies";
+import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
+import { KeyboardAvoidingViewWrapper } from "@/components/common/KeyboardAvoidingView/KeyboardAvoidingViewWrapper";
 
 const SetupNewPassword: React.FC = () => {
-  const insets = useSafeAreaInsets();
   const { errors, handlePasswordValidation, handleConfirmPasswordMatch } =
     useFieldValidation();
   const { error, loading } = useAppSelector((state) => state.auth);
@@ -116,17 +113,24 @@ const SetupNewPassword: React.FC = () => {
   };
 
   return (
-    <SafeKeyboardView keyboardVerticalOffset={Platform.OS === "ios" ? insets.top + 40 : 0}>
-      <View style={styles.absoluteShapesContainer} pointerEvents="none">
-        <Image source={images.OtpCnfrmPwdNewPwd1} style={commonStyles.shape5} />
-        <Image source={images.OtpCnfrmPwdNewPwd2} style={commonStyles.shape6} />
-      </View>
-
+    <SafeAreaViewWrapper>
+      <KeyboardAvoidingViewWrapper style={styles.keyboardAvoidingView}>
         <ScrollView
           contentContainerStyle={styles.scrollViewContainer}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
+          <View style={styles.absoluteShapesContainer} pointerEvents="none">
+            <Image
+              source={images.OtpCnfrmPwdNewPwd1}
+              style={commonStyles.shape5}
+            />
+            <Image
+              source={images.OtpCnfrmPwdNewPwd2}
+              style={commonStyles.shape6}
+            />
+          </View>
+
           <View style={styles.contentContainer}>
             <Image source={images.avatar} style={commonStyles.avatar} />
             <Text style={styles.title}>Setup New Password</Text>
@@ -205,20 +209,30 @@ const SetupNewPassword: React.FC = () => {
             </TouchableOpacity>
           </View>
         </ScrollView>
-    </SafeKeyboardView>
-  )
+      </KeyboardAvoidingViewWrapper>
+    </SafeAreaViewWrapper>
+  );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    backgroundColor: "transparent",
+  },
   scrollViewContainer: {
     flexGrow: 1,
     justifyContent: "space-between",
     ...spacingStyles.px20,
+    ...spacingStyles.pt25,
   },
   contentContainer: {
     justifyContent: "center",
+    top: 50,
     ...spacingStyles.mt25,
-    ...spacingStyles.pt20,
+    ...spacingStyles.pt25,
+  },
+  keyboardAvoidingView: {
+    zIndex: 10,
+    backgroundColor: "transparent",
   },
   absoluteShapesContainer: {
     ...StyleSheet.absoluteFillObject,

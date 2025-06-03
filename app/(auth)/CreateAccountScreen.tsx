@@ -8,9 +8,6 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
-import {
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import images from "@/constants/images";
@@ -20,6 +17,7 @@ import { fontSizes } from "@/style/typography";
 import { commonStyles } from "@/style/commonStyle";
 import borderRadius from "@/style/borderRadius";
 import gapSizes from "@/style/gapSizes";
+import { fontFamilies } from "@/style/fontFamilies";
 import { useFieldValidation } from "@/hooks/useFieldValidation";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
@@ -29,9 +27,9 @@ import {
 } from "@/store/auth/authSlice";
 import { Button } from "@/components/common/Button";
 import PasswordTextField from "@/components/common/PasswordTextField";
-import { SafeKeyboardView } from "@/components/common/SafeKeyboardView";
-import { fontFamilies } from "@/style/fontFamilies";
+import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import { FormData } from "./CreateAccount.types";
+import { KeyboardAvoidingViewWrapper } from "@/components/common/KeyboardAvoidingView/KeyboardAvoidingViewWrapper";
 
 export default function CreateAccountScreen() {
   const dispatch = useAppDispatch();
@@ -85,6 +83,7 @@ export default function CreateAccountScreen() {
         break;
     }
   };
+
   const handleCreateAccountSubmit = (): void => {
     resetErrors();
     handleEmailValidation(formData.email);
@@ -108,110 +107,110 @@ export default function CreateAccountScreen() {
   };
 
   return (
-    <SafeKeyboardView>
-      <View style={styles.absoluteShapesContainer} pointerEvents="none">
-        <Image source={images.createLoginPwdShape} style={styles.shape2} />
-        <Image source={images.CreatAccountShape} style={styles.shape7} />
-      </View>
-
-      <ScrollView
-        contentContainerStyle={styles.scrollViewContainer}
-        keyboardShouldPersistTaps="handled"
-      >
-        <View style={styles.contentContainer}>
-          <Text style={styles.title}>Create{"\n"}Account</Text>
-          <View style={styles.profilePicContainer}>
-            <Ionicons
-              name="camera-outline"
-              size={fontSizes["5xl"]}
-              color={staticColors.primaryBlue}
-              style={styles.cameraIcon}
-            />
-          </View>
-
-          {/* Input Fields */}
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={[
-                commonStyles.authInput,
-                errors.email && styles.inputError,
-              ]}
-              placeholder="Email"
-              placeholderTextColor={staticColors.mutedGray}
-              autoCapitalize="none"
-              keyboardType="email-address"
-              value={formData.email}
-              onChangeText={(text) => handleInputChange("email", text)}
-              autoComplete="off"
-              textContentType="none"
-              autoCorrect={false}
-            />
-            {errors.email && (
-              <Text style={styles.errorText}>{errors.email}</Text>
-            )}
-
-            <View style={styles.passwordContainer}>
-              <PasswordTextField
-                placeholder="Password"
-                value={formData.password}
-                onChangeText={(text) => handleInputChange("password", text)}
-                error={errors.password}
+    <SafeAreaViewWrapper>
+      <KeyboardAvoidingViewWrapper style={styles.keyboardAvoidingView}>
+        <ScrollView
+          contentContainerStyle={styles.scrollViewContainer}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.backgroundView} />
+          <Image source={images.createLoginPwdShape} style={styles.shape2} />
+          <Image source={images.CreatAccountShape} style={styles.shape7} />
+          <View style={styles.content}>
+            <Text style={styles.title}>Create{"\n"}Account</Text>
+            <View style={styles.profilePicContainer}>
+              <Ionicons
+                name="camera-outline"
+                size={fontSizes["5xl"]}
+                color={staticColors.primaryBlue}
+                style={styles.cameraIcon}
               />
             </View>
 
-            <View style={styles.passwordContainer}>
-              <PasswordTextField
-                placeholder="Confirm Password"
-                value={formData.confirmPassword}
-                onChangeText={(text) =>
-                  handleInputChange("confirmPassword", text)
-                }
-                error={errors.confirmPassword}
+            {/* Input Fields */}
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={[
+                  commonStyles.authInput,
+                  errors.email && styles.inputError,
+                ]}
+                placeholder="Email"
+                placeholderTextColor={staticColors.mutedGray}
+                autoCapitalize="none"
+                keyboardType="email-address"
+                value={formData.email}
+                onChangeText={(text) => handleInputChange("email", text)}
+                autoComplete="off"
+                textContentType="none"
+                autoCorrect={false}
               />
+              {errors.email && (
+                <Text style={styles.errorText}>{errors.email}</Text>
+              )}
+
+              <View style={styles.passwordContainer}>
+                <PasswordTextField
+                  placeholder="Password"
+                  value={formData.password}
+                  onChangeText={(text) => handleInputChange("password", text)}
+                  error={errors.password}
+                />
+              </View>
+
+              <View style={styles.passwordContainer}>
+                <PasswordTextField
+                  placeholder="Confirm Password"
+                  value={formData.confirmPassword}
+                  onChangeText={(text) =>
+                    handleInputChange("confirmPassword", text)
+                  }
+                  error={errors.confirmPassword}
+                />
+              </View>
+            </View>
+
+            <View style={styles.bottomButtonContainer}>
+              <Button
+                title="Done"
+                onPress={handleCreateAccountSubmit}
+                style={commonStyles.authButton}
+                loading={loading}
+                textStyle={commonStyles.authButtonText}
+              />
+              <TouchableOpacity onPress={handleCancelButton} disabled={loading}>
+                <Text
+                  style={[styles.cancelText, loading && styles.disabledText]}
+                >
+                  Cancel
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
-        </View>
-
-        <View style={styles.bottomButtonContainer}>
-          <Button
-            title="Done"
-            onPress={handleCreateAccountSubmit}
-            style={commonStyles.authButton}
-            loading={loading}
-            textStyle={commonStyles.authButtonText}
-          />
-          <TouchableOpacity onPress={handleCancelButton} disabled={loading}>
-            <Text style={[styles.cancelText, loading && styles.disabledText]}>
-              Cancel
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    </SafeKeyboardView>
+        </ScrollView>
+      </KeyboardAvoidingViewWrapper>
+    </SafeAreaViewWrapper>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: staticColors.white,
+  backgroundView: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "white",
+    zIndex: 0,
   },
-  keyboardAvoiding: {
-    flex: 1,
+  keyboardAvoidingView: {
+    zIndex: 10,
+    backgroundColor: "transparent",
   },
   scrollViewContainer: {
     flexGrow: 1,
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
     ...spacingStyles.px20,
+
+    backgroundColor: "transparent",
   },
-  contentContainer: {
-    justifyContent: "center",
-    ...spacingStyles.mt25,
-    ...spacingStyles.pt25,
-  },
-  absoluteShapesContainer: {
-    ...StyleSheet.absoluteFillObject,
-    zIndex: 0,
+  content: {
+    zIndex: 10,
   },
   shape2: {
     position: "absolute",
@@ -231,6 +230,7 @@ const styles = StyleSheet.create({
     height: 250,
     opacity: 1,
     resizeMode: "contain",
+    zIndex: 1,
   },
   title: {
     fontSize: fontSizes["5xl"],
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     ...spacingStyles.px10,
     ...spacingStyles.py25,
-    ...spacingStyles.mt25,
+    ...spacingStyles.mt20,
   },
   profilePicContainer: {
     width: 90,
@@ -261,6 +261,8 @@ const styles = StyleSheet.create({
     ...spacingStyles.mb25,
     flexDirection: "column",
     gap: gapSizes.md,
+    zIndex: 15,
+    backgroundColor: "transparent", // Already transparent
   },
   passwordContainer: {
     position: "relative",
