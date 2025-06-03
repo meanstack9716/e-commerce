@@ -17,30 +17,12 @@ export interface Product {
   gallery?: GalleryItem[];
   seller?: Seller;
   delivery_days?: string;
-  reviews?: Review[];
 }
 
 export interface GalleryItem {
   id: string;
   color: string;
   img_url: string;
-}
-
-export interface Review {
-  id: string;
-  product_id: string;
-  order_id: string;
-  rating: string;
-  review: string;
-  img_urls?: string[];
-  by: {
-    email: string;
-    first_name?: string;
-    last_name?: string;
-    id: string;
-    profile_url: string | null;
-    role: string | null;
-  };
 }
 
 export interface ColorVariant {

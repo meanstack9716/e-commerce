@@ -22,7 +22,7 @@ export default {
   // Border Colors
   borderLight: "#e0e0e0",
   borderDark: "#bdbdbd",
-  borderSecondaryLight:'#ddd',
+  borderSecondaryLight: "#ddd",
 
   // Button Colors
   buttonPrimary: "#1E2637",
@@ -51,10 +51,10 @@ export default {
 
   // Misc
   lightGray: "#eee",
-  darkGray:'#333',
-  brightRed: "#dc2626", 
+  darkGray: "#333",
+  brightRed: "#dc2626",
   lightPink: "#fee2e2",
-  sorftPink:"#fac0c0",
+  sorftPink: "#fac0c0",
   lightGreen: "#e6ffe6",
   secondaryGray:'#e3e3e3',
   lightYellow:"#F7CD03",
@@ -85,5 +85,12 @@ export default {
   HotRed:'#F81140',
   bgSoftBlue:'#F8FAFF',
   bgSoftGray:'#F9F9F9',
-  textSoftGray:'#F3F3F3'
+  textSoftGray:'#F3F3F3',
+  gray100: "#F8F8F8",
+  gray200: "#C7C7C7",
+  gray300: "#F9F9F9",
+  blue100: "#E5EBFC",
+  blue300: "#004CFF",
+  blue400: "#0042E0",
+  pink100: "#FFEBEB",
 };

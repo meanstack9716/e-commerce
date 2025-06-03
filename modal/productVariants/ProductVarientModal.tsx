@@ -30,7 +30,7 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
   availableColors,
   onSizeSelect,
   onColorSelect,
-  price,  
+  price,
 }) => {
   const [quantity, setQuantity] = useState(1);
 

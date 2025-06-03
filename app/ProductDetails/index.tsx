@@ -38,7 +38,6 @@ import { Product } from "../../types/types";
 import ViewSimilarModal from "@/modal/ViewSimilarModal";
 import borderRadius from "@/style/borderRadius";
 import { LinearGradient } from "expo-linear-gradient";
-import RatingReview from "@/components/productDetails/RatingReview";
 import { fontFamilies } from "@/style/fontFamilies";
 
 const { width: screenWidth } = Dimensions.get("window");
@@ -294,18 +293,6 @@ const ProductDetailsScreen: React.FC = () => {
               onSizeSelect={setSelectedSize}
               price={product.final_price}
             />
-            {product.reviews && product.reviews.length > 0 ? (
-              <>
-                <RatingReview
-                  review={product.reviews[0]} 
-                  onViewAllReviews={() => {
-                    // router.push({ pathname: "/reviews", params: { productId: product.id } });
-                  }}
-                />
-              </>
-            ) : (
-              <></>
-            )}
             {/* <DeliveryCheck />
             <ReturnPolicy /> */}
 
