@@ -9,11 +9,9 @@ import {
   SafeAreaView,
   FlatList,
   BackHandler,
-  Platform,
-  StatusBar,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { router, useLocalSearchParams } from "expo-router";
+import { router } from "expo-router";
 import { useSelector } from "react-redux";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
@@ -21,83 +19,80 @@ import staticColors from "@/style/staticColors";
 import { useAppDispatch } from "@/store/hooks";
 import { RootState } from "@/store/store";
 import { fetchCategories } from "@/store/category/categoriesSlice";
-import { CategoryItem , SubSubCategory  } from "@/types/types";
-import {fontSizes, fontWeights} from "@/style/typography";
+import { fontSizes, fontWeights } from "@/style/typography";
 import FullScreenLoader from "@/components/common/FullScreenLoader";
 import borderRadius from "@/style/borderRadius";
+import { CategoryItem, SubCategoryItem } from "@/interfaces";
+import gapSizes from "@/style/gapSizes";
 import { fontFamilies } from "@/style/fontFamilies";
+
 const CategoriesScreen: React.FC = () => {
-  const params = useLocalSearchParams();
-  const { categoryId, categoryTitle } = params;
-
   const dispatch = useAppDispatch();
-  const { data: categories, loading: isLoading, error } = useSelector(
-    (state: RootState) => state.categories
-  );
+  const {
+    data: categories,
+    loading: isLoading,
+    error,
+  } = useSelector((state: RootState) => state.categories);
 
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(
-    (categoryId as string) || null
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [expandedSubCategory, setExpandedSubCategory] = useState<string | null>(
+    null
   );
 
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
 
+  const handleGoBack = () => {
+    router.back();
+  };
+
   useEffect(() => {
-    if (categoryId) {
-      setSelectedCategory(categoryId as string);
-    } else if (categories.length > 0 && !selectedCategory) {
-      const firstCategoryId = categories[0].id;
-      setSelectedCategory(firstCategoryId);
+    if (categories && categories.length) {
+      setSelectedCategory(categories[0].id);
     }
-  }, [categoryId, categories, selectedCategory]);
+  }, [categories]);
+
+  useEffect(() => {
+    setExpandedSubCategory(null);
+  }, [selectedCategory]);
 
   useEffect(() => {
     const onBackPress = () => {
       router.back();
       return true;
     };
-  
+
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
       onBackPress
     );
-  
+
     return () => {
       backHandler.remove();
     };
   }, []);
-  
 
-  const handleCategorySelect = (categoryId: string) => {
-    setSelectedCategory(categoryId);
+  const onExpandCategory = (item: SubCategoryItem) => {
+    if (expandedSubCategory === item.id || !item.sub_sub_categories.length) {
+      setExpandedSubCategory(null);
+    } else {
+      setExpandedSubCategory(item.id);
+    }
   };
 
-  const handleGoBack = () => {
-    router.back();
-  };
-
-  const renderSidebarItem = ({ item }: { item: CategoryItem }) => (
+  const renderCategoryList = ({ item }: { item: CategoryItem }) => (
     <TouchableOpacity
       style={[
-        styles.sidebarItem,
-        selectedCategory === item.id && styles.selectedSidebarItem,
+        styles.categoryItem,
+        selectedCategory === item.id && styles.selectedCategoryItem,
       ]}
-      onPress={() => handleCategorySelect(item.id)}
+      onPress={() => setSelectedCategory(item.id)}
     >
-      <View style={styles.sidebarItemInner}>
-        <View
-          style={[
-            styles.sidebarBorder,
-            selectedCategory === item.id && styles.selectedSidebarBorder,
-          ]}
-        />
-        <Image source={{ uri: item.img_url }} style={styles.sidebarImage} />
-      </View>
       <Text
         style={[
-          styles.sidebarText,
-          selectedCategory === item.id && styles.selectedSidebarText,
+          styles.categoryName,
+          selectedCategory === item.id && styles.selectedCategoryName,
         ]}
       >
         {item.name}
@@ -105,45 +100,56 @@ const CategoriesScreen: React.FC = () => {
     </TouchableOpacity>
   );
 
-  const renderSpotlightItem = ({ item }: { item: SubSubCategory }) => (
-    <TouchableOpacity style={styles.spotlightItem}>
-      <View style={styles.spotlightImageContainer}>
-        <Image source={{ uri: item.img_url }} style={styles.spotlightImage} />
-      </View>
-      <Text style={styles.spotlightTitle}>{item.name}</Text>
-    </TouchableOpacity>
-  );
-
-  const renderGridSection = (title: string, items: SubSubCategory[]) => (
-    <View style={styles.section}>
-      <Text style={styles.sectionTitle}>{title}</Text>
-      <View style={styles.spotlightGrid}>
-        {items.map((item) => (
-          <View key={item.id} style={styles.spotlightItemWrapper}>
-            {renderSpotlightItem({ item })}
+  const renderSubCategoryList = ({ item }: { item: SubCategoryItem }) => (
+    <View style={styles.listItemWrap}>
+      <TouchableOpacity
+        style={styles.subCategoryContainer}
+        onPress={() => onExpandCategory(item)}
+      >
+        <View style={styles.subCategoryItem}>
+          <View style={styles.categoryImgContainer}>
+            <Image src={item.img_url} style={styles.categoryImage} />
           </View>
-        ))}
-      </View>
+          <Text style={styles.subCategoryName}>{item.name}</Text>
+        </View>
+        {item.sub_sub_categories.length && (
+          <View
+            style={[
+              styles.toggleIcon,
+              expandedSubCategory === item.id && styles.expandedIcon,
+            ]}
+          >
+            <Ionicons
+              name="chevron-down-sharp"
+              size={26}
+              color={
+                expandedSubCategory === item.id
+                  ? staticColors.blue300
+                  : staticColors.black
+              }
+            />
+          </View>
+        )}
+      </TouchableOpacity>
+      {expandedSubCategory === item.id && (
+        <View style={styles.categoryList}>
+          {item.sub_sub_categories.length ? (
+            item.sub_sub_categories.map((subSubCategory, index) => (
+              <View style={styles.categoryListItem} key={subSubCategory.id}>
+                <Text style={styles.categoryListItemText}>
+                  {subSubCategory.name}
+                </Text>
+              </View>
+            ))
+          ) : (
+            <View style={styles.notFoundContainer}>
+              <Text style={styles.errorText}>No categories available</Text>
+            </View>
+          )}
+        </View>
+      )}
     </View>
   );
-
-  const renderCategoryDetails = () => {
-    const selectedCategoryData = categories.find(
-      (category) => category.id === selectedCategory
-    );
-
-    if (!selectedCategoryData || !selectedCategoryData.sub_categories) {
-      return <Text style={styles.errorText}>No subcategories available</Text>;
-    }
-
-    return selectedCategoryData.sub_categories.map((subCategory) => (
-      <View key={subCategory.id}>
-        {subCategory.sub_sub_categories &&
-          subCategory.sub_sub_categories.length > 0 &&
-          renderGridSection(subCategory.name, subCategory.sub_sub_categories)}
-      </View>
-    ));
-  };
 
   const renderError = () => {
     if (error) {
@@ -165,51 +171,61 @@ const CategoriesScreen: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <FullScreenLoader visible={isLoading} />
-      <View style={styles.header}>
-        <View style={styles.headerContain}>
-          <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
-            <Ionicons name="arrow-back" size={20} color={staticColors.darkGray} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>
-            {categoryTitle ? categoryTitle : "Categories"}
-          </Text>
-        </View>
-        <View style={styles.headerRight}>
-          <TouchableOpacity style={styles.iconButton}>
-            <Ionicons name="heart-outline" size={22} color={staticColors.darkGray} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton}>
-            <Ionicons name="bag-outline" size={22} color={staticColors.darkGray} />
-            <View style={styles.badge}>
-              <Text style={styles.badgeText}>0</Text>
-            </View>
+      <ScrollView
+        style={styles.mainContent}
+        nestedScrollEnabled={true}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.headingWrap}>
+          <Text style={styles.headingText}>All Categories</Text>
+          <TouchableOpacity onPress={handleGoBack}>
+            <Text style={styles.cancelButton}>✕</Text>
           </TouchableOpacity>
         </View>
-      </View>
-      {error ? (
-        <View style={styles.centeredContent}>{renderError()}</View>
-      ) : (
-        <View style={styles.contentContainer}>
-          <View style={styles.sidebar}>
-            {categories.length === 0 && !isLoading ? (
+
+        {error ? (
+          <View style={styles.centeredContent}>{renderError()}</View>
+        ) : (
+          <View style={styles.contentContainer}>
+            {!categories.length && !isLoading ? (
               <Text style={styles.errorText}>No categories available</Text>
             ) : (
               <FlatList
                 data={categories}
                 keyExtractor={(item) => item.id}
-                renderItem={renderSidebarItem}
-                showsVerticalScrollIndicator={false}
+                renderItem={renderCategoryList}
+                horizontal
+                showsHorizontalScrollIndicator={false}
               />
             )}
+            {selectedCategory &&
+              categories.length &&
+              categories.map((option: CategoryItem, index: number) => {
+                if (option.id === selectedCategory) {
+                  return (
+                    <View key={option.id} style={{ ...spacingStyles.mt25 }}>
+                      {option.sub_categories.length ? (
+                        <FlatList
+                          data={option.sub_categories}
+                          keyExtractor={(item) => item.id}
+                          scrollEnabled={false}
+                          renderItem={renderSubCategoryList}
+                          showsVerticalScrollIndicator={false}
+                        />
+                      ) : (
+                        <View style={styles.notFoundContainer}>
+                          <Text style={styles.errorText}>
+                            No Sub categories available
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+                  );
+                }
+              })}
           </View>
-          <ScrollView
-            style={styles.mainContent}
-            showsVerticalScrollIndicator={false}
-          >
-            {renderCategoryDetails()}
-          </ScrollView>
-        </View>
-      )}
+        )}
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -218,165 +234,156 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.white,
-    ...spacingStyles.pt25
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    ...spacingStyles.px15,
-    ...spacingStyles.py10,
-  },
-  backButton: {
-    ...spacingStyles.p5,
-  },
-  headerContain: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  headerTitle: {
-    fontSize: fontSizes.base,
-    fontWeight:fontWeights.medium,
-    color: staticColors.darkGray,
-  },
-  headerRight: {
-    flexDirection: "row",
-  },
-  iconButton: {
-    ...spacingStyles.ml10,
-    position: "relative",
-  },
-  badge: {
-    position: "absolute",
-    right: -8,
-    top: -8,
-    backgroundColor: colors.primary,
-    borderRadius: borderRadius.r10,
-    width: 18,
-    height: 18,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  badgeText: {
-    color: colors.white,
-    fontSize: fontSizes.xs,
-    fontWeight: fontWeights.semiBold,
-  },
-  contentContainer: {
-    flex: 1,
-    flexDirection: "row",
-  },
-  centeredContent: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  sidebar: {
-    width: 90,
-    backgroundColor: staticColors.bgPrimary,
-  },
-  sidebarItem: {
-    alignItems: "center",
-    ...spacingStyles.p10,
-  },
-  sidebarItemInner: {
-    position: "relative",
-    flexDirection: "row",
-  },
-  sidebarBorder: {
-    position: "absolute",
-    left: -18,
-    width: 6,
-    height: 45,
-    backgroundColor: "transparent",
-  },
-  selectedSidebarBorder: {
-    backgroundColor: colors.primary,
-  },
-  selectedSidebarItem: {
-    backgroundColor: colors.white,
-  },
-  sidebarImage: {
-    width: 55,
-    height: 45,
-    borderRadius: borderRadius.r10,
-    resizeMode: "cover",
-  },
-  sidebarText: {
-    fontSize: fontSizes.xs,
-    textAlign: "center",
-    ...spacingStyles.mt5,
-    fontWeight:fontWeights.semiBold,
-    color: staticColors.darkGray,
-  },
-  selectedSidebarText: {
-    color: colors.primary,
-    fontWeight: fontWeights.bold,
-    fontSize: fontSizes.sm,
+    ...spacingStyles.pt25,
   },
   mainContent: {
     flex: 1,
     ...spacingStyles.py10,
     ...spacingStyles.px15,
   },
-  section: {
-    ...spacingStyles.mb5,
-  },
-  sectionTitle: {
-    fontSize: fontSizes.sm,
-    fontFamily: fontFamilies.helveticaBold,
-    ...spacingStyles.mx10,
-    color: colors.primary,
-  },
-  spotlightGrid: {
+  headingWrap: {
     flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    ...spacingStyles.pt15,
+  },
+  headingText: {
+    fontSize: fontSizes["2xl"],
+    fontFamily: fontFamilies.ralewayBold,
+  },
+  cancelButton: {
+    fontSize: fontSizes["xl"],
+    fontWeight: fontWeights.semiBold,
+  },
+  centeredContent: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  contentContainer: {
+    flex: 1,
+    ...spacingStyles.py20,
+  },
+  categoryItem: {
+    backgroundColor: staticColors.gray300,
+    borderRadius: borderRadius.r10,
+    minWidth: 120,
+    flexDirection: "row",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: staticColors.gray300,
+    ...spacingStyles.py8,
+    ...spacingStyles.px25,
+    ...spacingStyles.mx5,
+  },
+  selectedCategoryItem: {
+    borderColor: staticColors.blue300,
+    backgroundColor: staticColors.blue100,
+  },
+  categoryName: {
+    fontWeight: fontWeights.medium,
+    fontFamily: fontFamilies.ralewayMedium,
+  },
+  selectedCategoryName: {
+    color: staticColors.blue300,
+  },
+  listItemWrap: {
+    ...spacingStyles.py10,
+    ...spacingStyles.mx4,
+  },
+  subCategoryContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: staticColors.white,
+    shadowColor: staticColors.black,
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 4,
+    alignItems: "center",
+    borderRadius: borderRadius.r10,
+    ...spacingStyles.p4,
+  },
+  subCategoryItem: {
+    flexDirection: "row",
+    gap: gapSizes.lg,
+    alignItems: "center",
     flexWrap: "wrap",
   },
-  spotlightItemWrapper: {
-    width: "33%",
-    ...spacingStyles.mb20,
-    alignItems: "center",
+  subCategoryName: {
+    fontSize: fontSizes.base,
+    fontWeight: fontWeights.bold,
+    fontFamily: fontFamilies.ralewayBold,
   },
-  spotlightItem: {
-    alignItems: "center",
-    width: 90,
-  },
-  spotlightImageContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: borderRadius.circle,
+  categoryImgContainer: {
+    width: 50,
+    aspectRatio: 1,
     overflow: "hidden",
-    backgroundColor: staticColors.bgMuted,
+    borderRadius: borderRadius.r10,
   },
-  spotlightImage: {
+  categoryImage: {
     width: "100%",
     height: "100%",
-    resizeMode: "cover",
   },
-  spotlightTitle: {
-    fontSize: fontSizes.xs,
+  toggleIcon: {
+    ...spacingStyles.px15,
+  },
+  categoryList: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    rowGap: gapSizes.md,
+    flexWrap: "wrap",
+    alignItems: "center",
     textAlign: "center",
-    ...spacingStyles.mt8,
-    color: colors.primary,
+    ...spacingStyles.mt5,
+    ...spacingStyles.py10,
+    ...spacingStyles.px4,
+  },
+  categoryListItem: {
+    width: "48.5%",
+    flexDirection: "row",
+    justifyContent: "center",
+    borderRadius: borderRadius.r10,
+    borderWidth: 2,
+    borderColor: staticColors.pink100,
+    ...spacingStyles.py10,
+    ...spacingStyles.px6,
+  },
+  categoryListItemText: {
     fontWeight: fontWeights.semiBold,
+    textAlign: "center",
+    fontFamily: fontFamilies.ralewayBold,
+  },
+  expandedIcon: {
+    transform: [{ rotate: "180deg" }],
+  },
+  notFoundContainer: {
+    backgroundColor: staticColors.white,
+    shadowColor: staticColors.black,
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 4,
+    borderRadius: borderRadius.r10,
+    ...spacingStyles.mt20,
   },
   errorText: {
     textAlign: "center",
-    marginTop: 20,
-    color: colors.errorColor || "#FF0000",
+    color: staticColors.errorColor || "#FF0000",
+    ...spacingStyles.p20,
   },
   errorContainer: {
     alignItems: "center",
-    ...spacingStyles.p20
+    ...spacingStyles.p20,
   },
   retryButton: {
-    backgroundColor: colors.primary,
+    backgroundColor: staticColors.primary,
     ...spacingStyles.p10,
     borderRadius: borderRadius.r5,
-   ...spacingStyles.mt10
+    ...spacingStyles.mt10,
   },
   retryButtonText: {
-    color: colors.white,
+    color: staticColors.white,
     fontWeight: fontWeights.semiBold,
   },
 });
