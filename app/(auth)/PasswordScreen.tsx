@@ -27,7 +27,7 @@ import gapSizes from "@/style/gapSizes";
 import { commonStyles } from "@/style/commonStyle";
 import { Button } from "@/components/common/Button";
 import PasswordTextField from "@/components/common/PasswordTextField";
-import { SafeAreaViewWrapper } from "@/components/common/SafeAreaViewWrapper";
+import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import { KeyboardAvoidingViewWrapper } from "@/components/common/KeyboardAvoidingView/KeyboardAvoidingViewWrapper";
 
 export default function PasswordScreen() {

@@ -18,7 +18,7 @@ import { fontSizes } from "@/style/typography";
 import { commonStyles } from "@/style/commonStyle";
 import useBackHandler from "@/utils/useBackHandler";
 import { Button } from "@/components/common/Button";
-import { SafeAreaViewWrapper } from "@/components/common/SafeAreaViewWrapper";
+import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import { fontFamilies } from "@/style/fontFamilies";
 import { KeyboardAvoidingViewWrapper } from "@/components/common/KeyboardAvoidingView/KeyboardAvoidingViewWrapper";
 

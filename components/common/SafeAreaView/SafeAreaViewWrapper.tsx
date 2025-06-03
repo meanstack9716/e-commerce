@@ -2,12 +2,7 @@ import React, { ReactNode } from "react";
 import { StyleSheet, ViewStyle } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import staticColors from "@/style/staticColors";
-
-interface SafeAreaViewProps {
-  children: ReactNode;
-  style?: ViewStyle;
-  backgroundColor?: string;
-}
+import { SafeAreaViewProps } from "./SafeAreaViewWrapper.types";
 
 export const SafeAreaViewWrapper: React.FC<SafeAreaViewProps> = ({
   children,

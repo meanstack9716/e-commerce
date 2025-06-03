@@ -23,7 +23,7 @@ import { fontSizes } from "@/style/typography";
 import spacingStyles from "@/style/spacingStyles";
 import gapSizes from "@/style/gapSizes";
 import { Button } from "@/components/common/Button";
-import { SafeAreaViewWrapper } from "@/components/common/SafeAreaViewWrapper";
+import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import { KeyboardAvoidingViewWrapper } from "@/components/common/KeyboardAvoidingView/KeyboardAvoidingViewWrapper";
 
 const SetupNewPassword: React.FC = () => {

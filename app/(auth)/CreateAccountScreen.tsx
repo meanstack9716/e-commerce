@@ -27,7 +27,7 @@ import {
 } from "@/store/auth/authSlice";
 import { Button } from "@/components/common/Button";
 import PasswordTextField from "@/components/common/PasswordTextField";
-import { SafeAreaViewWrapper } from "@/components/common/SafeAreaViewWrapper";
+import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import { FormData } from "./CreateAccount.types";
 import { KeyboardAvoidingViewWrapper } from "@/components/common/KeyboardAvoidingView/KeyboardAvoidingViewWrapper";
 

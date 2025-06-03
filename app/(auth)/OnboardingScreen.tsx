@@ -14,7 +14,7 @@ import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import borderRadius from "@/style/borderRadius";
 import { router } from "expo-router";
-import { SafeAreaViewWrapper } from "@/components/common/SafeAreaViewWrapper";
+import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 
 const { width, height } = Dimensions.get("window");
 

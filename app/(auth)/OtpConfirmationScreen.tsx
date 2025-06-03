@@ -8,7 +8,7 @@ import { fontSizes } from "@/style/typography";
 import OtpInput from "@/components/common/OtpInput";
 import { useAppDispatch } from "@/store/hooks";
 import { verifyUser, verifyEmailCode } from "@/store/auth/authSlice";
-import { SafeAreaViewWrapper } from "@/components/common/SafeAreaViewWrapper";
+import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import { fontFamilies } from "@/style/fontFamilies";
 import staticColors from "@/style/staticColors";
 
