@@ -10,7 +10,7 @@ import { commonStyles } from "@/style/commonStyle";
 import gapSizes from "@/style/gapSizes";
 import { router } from "expo-router";
 import { Button } from "@/components/common/Button";
-import { SafeKeyboardView } from "@/components/common/SafeKeyboardView";
+import { SafeKeyboardView } from "@/components/common/SafeAreaViewComponent";
 import { fontFamilies } from "@/style/fontFamilies";
 
 const WelcomeScreen = () => {

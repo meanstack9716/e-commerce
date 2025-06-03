@@ -18,9 +18,10 @@ import { fontSizes } from "@/style/typography";
 import { commonStyles } from "@/style/commonStyle";
 import useBackHandler from "@/utils/useBackHandler";
 import { Button } from "@/components/common/Button";
-import { SafeKeyboardView } from "@/components/common/SafeKeyboardView";
+import { SafeAreaViewComponent } from "@/components/common/SafeAreaViewComponent";
 import { fontFamilies } from "@/style/fontFamilies";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { KeyboardAvoidingViewComponent } from "@/components/common/KeyboardAvoidingViewComponent";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -31,7 +32,7 @@ export default function LoginScreen() {
     handleEmailValidation(email);
     if (validateEmail(email) && !errors.email) {
       resetErrors();
-      router.navigate({
+      router.push({
         pathname: "/PasswordScreen",
         params: { email: email.trim() },
       });
@@ -47,71 +48,71 @@ export default function LoginScreen() {
     if (router.canGoBack()) {
       router.back();
     } else {
-      router.replace("/profile");
+      router.push("/profile");
     }
     resetErrors();
   };
 
   const handleSignUpButton = () => {
-    router.navigate("/CreateAccountScreen");
+    router.push("/CreateAccountScreen");
     resetErrors();
   };
 
   return (
-    <SafeKeyboardView>
-      <View style={styles.absoluteShapesContainer} pointerEvents="none">
-        <Image source={images.loginPasswordShape} style={styles.shape1} />
-        <Image source={images.createLoginPwdShape} style={styles.shape2} />
-        <Image source={images.loginShape} style={styles.shape3} />
-        <Image source={images.loginOnboardingShape} style={styles.shape4} />
-      </View>
+    <SafeAreaViewComponent>
+      <Image source={images.loginPasswordShape} style={styles.shape1} />
+      <Image source={images.createLoginPwdShape} style={styles.shape2} />
+      <Image source={images.loginShape} style={styles.shape3} />
+      <Image source={images.loginOnboardingShape} style={styles.shape4} />
 
-      <View style={styles.contentContainer}>
-        <Text style={styles.title}>Login</Text>
+      <KeyboardAvoidingViewComponent>
+        <View style={styles.contentContainer}>
+          <Text style={styles.title}>Login</Text>
 
-        <View style={styles.subtitleContainer}>
-          <Text style={styles.subtitle}>Good to see you back! </Text>
-          <Ionicons
-            name="heart"
-            size={fontSizes.md}
-            color={staticColors.darkSlate}
+          <View style={styles.subtitleContainer}>
+            <Text style={styles.subtitle}>Good to see you back! </Text>
+            <Ionicons
+              name="heart"
+              size={fontSizes.md}
+              color={staticColors.darkSlate}
+            />
+          </View>
+
+          <TextInput
+            style={[
+              commonStyles.authInput,
+              styles.input,
+              errors.email && styles.errorInput,
+            ]}
+            placeholder="Email"
+            placeholderTextColor={staticColors.mutedGray}
+            autoCapitalize="none"
+            keyboardType="email-address"
+            value={email}
+            onChangeText={(text) => {
+              setEmail(text);
+              handleEmailValidation(text);
+            }}
           />
+          {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
+          <Button
+            title="Next"
+            onPress={onEmailSubmit}
+            style={commonStyles.authButton}
+            textStyle={commonStyles.authButtonText}
+          />
+
+          <TouchableOpacity onPress={handleCancelButton}>
+            <Text style={styles.cancelText}>Cancel</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleSignUpButton}>
+            <Text style={styles.signUpButtonText}>
+              Don't have an account ? SignUp
+            </Text>
+          </TouchableOpacity>
         </View>
-
-        <TextInput
-          style={[
-            commonStyles.authInput,
-            styles.input,
-            errors.email && styles.errorInput,
-          ]}
-          placeholder="Email"
-          placeholderTextColor={staticColors.mutedGray}
-          autoCapitalize="none"
-          keyboardType="email-address"
-          value={email}
-          onChangeText={(text) => {
-            setEmail(text);
-            handleEmailValidation(text);
-          }}
-        />
-        {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
-        <Button
-          title="Next"
-          onPress={onEmailSubmit}
-          style={commonStyles.authButton}
-          textStyle={commonStyles.authButtonText}
-        />
-
-        <TouchableOpacity onPress={handleCancelButton}>
-          <Text style={styles.cancelText}>Cancel</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleSignUpButton}>
-          <Text style={styles.signUpButtonText}>
-            Don't have an account ? SignUp
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </SafeKeyboardView>
+      </KeyboardAvoidingViewComponent>
+    </SafeAreaViewComponent>
   );
 }
 
@@ -120,10 +121,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "flex-end",
     ...spacingStyles.px20,
-  },
-  absoluteShapesContainer: {
-    ...StyleSheet.absoluteFillObject,
-    zIndex: 0,
+    zIndex: 2,
   },
   shape1: {
     position: "absolute",
@@ -133,7 +131,7 @@ const styles = StyleSheet.create({
     height: 290,
     opacity: 0.9,
     resizeMode: "contain",
-    zIndex: 1,
+    zIndex: 2,
   },
   shape2: {
     position: "absolute",
@@ -143,6 +141,7 @@ const styles = StyleSheet.create({
     height: 320,
     opacity: 1,
     resizeMode: "contain",
+    zIndex: 1,
   },
   shape3: {
     position: "absolute",
@@ -152,6 +151,7 @@ const styles = StyleSheet.create({
     height: 150,
     opacity: 1,
     resizeMode: "contain",
+    zIndex: 1,
   },
   shape4: {
     position: "absolute",
@@ -161,6 +161,7 @@ const styles = StyleSheet.create({
     height: 360,
     opacity: 1,
     resizeMode: "contain",
+    zIndex: 1,
   },
   title: {
     fontSize: fontSizes["6xl"],
@@ -169,7 +170,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.mb5,
   },
   input: {
-    ...spacingStyles.mb25,
+    ...spacingStyles.mb10,
   },
   errorInput: {
     borderColor: staticColors.errorColor,
@@ -177,7 +178,6 @@ const styles = StyleSheet.create({
   errorText: {
     color: staticColors.errorColor,
     fontSize: fontSizes.sm,
-    ...spacingStyles.mb20,
   },
   signUpButtonText: {
     color: staticColors.darkSlate,

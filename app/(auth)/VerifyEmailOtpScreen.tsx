@@ -15,7 +15,7 @@ import OtpInput from "@/components/common/OtpInput";
 import images from "@/constants/images";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { verifyEmailCode, verifyUser } from "@/store/auth/authSlice";
-import { SafeKeyboardView } from "@/components/common/SafeKeyboardView";
+import { SafeKeyboardView } from "@/components/common/SafeAreaViewComponent";
 
 const VerifyEmailOtpScreen = () => {
   const insets = useSafeAreaInsets();
