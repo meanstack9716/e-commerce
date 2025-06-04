@@ -77,5 +77,6 @@
       }
     }
   },
+  "apk:build:local": "npm run uploadenv && eas build --platform android --local --profile preview",
   "private": true
 }
