@@ -13,6 +13,7 @@ import { fontSizes } from "@/style/typography";
 import spacingStyles from "@/style/spacingStyles";
 import { commonStyles } from "@/style/commonStyle";
 import { Review } from "./review.types";
+import images from "@/constants/images";
 
 const ReviewsScreen: React.FC = () => {
   const { productId } = useLocalSearchParams();
@@ -49,7 +50,7 @@ const ReviewsScreen: React.FC = () => {
   };
 
   const getAvatarSource = () => {
-    return require("@/assets/images/images/gender-female.png");
+    return images.genderFemale;
   };
 
   const renderItem = ({ item }: { item: Review }) => (
