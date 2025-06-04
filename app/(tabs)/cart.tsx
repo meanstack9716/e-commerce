@@ -126,7 +126,11 @@ const ShoppingBagScreen: React.FC = () => {
 
       <View style={styles.notfoundContainer}>
         <View style={styles.notFoundLogoWrap}>
-                    <Image source={images.emptyCart} style={styles.cartImage} resizeMode="contain"/>
+          <Image
+            source={images.emptyCart}
+            style={styles.cartImage}
+            resizeMode="contain"
+          />
         </View>
       </View>
 
@@ -236,8 +240,8 @@ const styles = StyleSheet.create({
   },
   cartImage: {
     width: 100,
-    height: 100  
-  }
+    height: 100,
+  },
   // headerContain: {
   //   flexDirection: "row",
   //   alignItems: "center",
