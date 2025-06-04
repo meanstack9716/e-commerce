@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
@@ -39,38 +40,25 @@ const PlaceOrderScreen: React.FC = () => {
   const cartItems = useSelector((state: RootState) => state.cart.cartItems);
   const selectedItems = cartItems.filter((item) => item.isSelected);
   const addresses = useSelector((state: RootState) => state.address.addresses);
-  const selectedAddressId = useSelector(
-    (state: RootState) => state.address.selectedAddressId
-  );
+  const selectedAddressId = useSelector((state: RootState) => state.address.selectedAddressId);
 
-  const selectedAddress = addresses.find(
-    (addr) => addr.id === selectedAddressId
-  );
+  const selectedAddress = addresses.find((addr) => addr.id === selectedAddressId);
   const primaryAddress = addresses.find((addr) => addr.is_primary);
   const displayAddress = selectedAddress || primaryAddress;
   const deliveryData: DeliveryItem[] = selectedItems.map((item) => ({
     imageUri: item.images?.[0],
     estimatedDelivery: item.delivery_days || ESTIMATED_DELIVERY,
   }));
-  const { shippingAddressId } = useLocalSearchParams<{
-    shippingAddressId: string;
-  }>();
+  const { shippingAddressId } = useLocalSearchParams<{ shippingAddressId: string }>();
 
-  const { loading, error, orderId } = useSelector(
-    (state: RootState) => state.order
-  );
+  const { loading, error, orderId } = useSelector((state: RootState) => state.order);
 
-  const totalPrice = selectedItems.reduce(
-    (sum, item) => sum + (item.final_price || 0),
-    0
-  );
+  const totalPrice = selectedItems.reduce((sum, item) => sum + (item.final_price || 0), 0);
 
   const renderDeliveryItem = ({ item }: { item: DeliveryItem }) => (
     <View style={styles.deliveryItem}>
       <Image source={{ uri: item.imageUri }} style={styles.itemImage} />
-      <Text style={styles.deliveryText}>
-        Estimated delivery in {item.estimatedDelivery} days
-      </Text>
+      <Text style={styles.deliveryText}>Estimated delivery in {item.estimatedDelivery} days</Text>
     </View>
   );
 
@@ -118,100 +106,101 @@ const PlaceOrderScreen: React.FC = () => {
     <>
       {showAddressSelector ? (
         <SelectAddress onGoBack={() => setShowAddressSelector(false)} />
-      ) : (
+        ) : (
         <SafeAreaViewWrapper style={styles.container}>
-          <View style={styles.header}>
-            <TouchableOpacity onPress={handleBack} style={styles.backButton}>
-              <Ionicons
-                name="arrow-back"
-                size={20}
-                color={staticColors.black}
-              />
-            </TouchableOpacity>
-            <Text style={styles.headerTitle}>ADDRESS</Text>
-          </View>
-          {/* Address Section */}
-          {displayAddress ? (
-            <View style={styles.addressContainer}>
-              <View style={styles.addressHeader}>
-                <Text style={styles.addressName}>
-                  {displayAddress.contact_name || "No Name"}
-                  {displayAddress.is_primary && "(Default)"}
-                </Text>
-                <Text style={styles.addressType}>{displayAddress.type}</Text>
-                <TouchableOpacity onPress={() => setShowAddressSelector(true)}>
-                  <Text style={styles.changeText}>CHANGE</Text>
-                </TouchableOpacity>
-              </View>
-              <Text style={styles.addressDetails}>{displayAddress.line1}</Text>
-              {displayAddress.line2 && (
-                <Text style={styles.addressDetails}>
-                  {displayAddress.line2}
-                </Text>
-              )}
-              <Text style={styles.addressDetails}>{displayAddress.city}</Text>
-              <Text style={styles.addressDetails}>
-                {displayAddress.state}, {displayAddress.postal_code}
-              </Text>
-              {displayAddress.contact_number && (
-                <Text style={styles.addressDetails}>
-                  Mobile: {displayAddress.contact_number}
-                </Text>
-              )}
-            </View>
-          ) : (
-            <View style={styles.addressContainer}>
-              <Text style={styles.addressDetails}>No address selected</Text>
-            </View>
-          )}
-
-          <Text style={styles.sectionTitle}>
-            ITEMS ({cartItems.length})
-          </Text>
-
-          {cartItems.map((item, index) => (
-            <View key={item.productId + index} style={styles.itemContainer}>
-              <View style={styles.leftSection}>
-                <View style={styles.imageShadowWrapper}>
-                  <View style={styles.imageWrapper}>
-                    <Image
-                      source={{ uri: item.images[0] }}
-                      style={styles.itemImage}
-                      resizeMode="cover"
-                    />
-                  </View>
+          <View style={styles.mainContainer}>
+            {/* Scrollable Content */}
+            <ScrollView contentContainerStyle={styles.scrollContent}>
+              <View style={styles.subContainer}>
+                <View style={styles.header}>
+                  <TouchableOpacity onPress={handleBack} style={styles.backButton}>
+                    <Ionicons name="arrow-back" size={20} color={staticColors.black} />
+                  </TouchableOpacity>
+                  <Text style={styles.headerTitle}>ADDRESS</Text>
                 </View>
-                <Text style={styles.itemTitle}>{item.title}</Text>
-              </View>
-              <View style={styles.rightSection}>
-                <Text style={styles.itemPrice}>₹{item.final_price}</Text>
-              </View>
-            </View>
-          ))}
+                {/* Address Section */}
+                {displayAddress ? (
+                  <View style={styles.addressContainer}>
+                    <View style={styles.addressHeader}>
+                      <Text style={styles.addressName}>
+                        {displayAddress.contact_name || "No Name"}
+                        {displayAddress.is_primary && "(Default)"}
+                      </Text>
+                      <Text style={styles.addressType}>{displayAddress.type}</Text>
+                      <TouchableOpacity onPress={() => setShowAddressSelector(true)}>
+                        <Text style={styles.changeText}>CHANGE</Text>
+                      </TouchableOpacity>
+                    </View>
+                    <Text style={styles.addressDetails}>{displayAddress.line1}</Text>
+                    {displayAddress.line2 && (
+                      <Text style={styles.addressDetails}>{displayAddress.line2}</Text>
+                    )}
+                    <Text style={styles.addressDetails}>{displayAddress.city}</Text>
+                    <Text style={styles.addressDetails}>
+                      {displayAddress.state}, {displayAddress.postal_code}
+                    </Text>
+                    {displayAddress.contact_number && (
+                      <Text style={styles.addressDetails}>
+                        Mobile: {displayAddress.contact_number}
+                      </Text>
+                    )}
+                  </View>
+                ) : (
+                  <View style={styles.addressContainer}>
+                    <Text style={styles.addressDetails}>No address selected</Text>
+                  </View>
+                )}
 
-          <PaymentMethod
-            paymentOptions={paymentOptions}
-            selectedPaymentMethod={selectedPaymentMethod}
-            onSelectPaymentMethod={setSelectedPaymentMethod}
-            orderNotes={orderNotes}
-            onOrderNoteChange={handleOrderNoteChange}
-          />
+                <View>
+                  <Text style={styles.sectionTitle}>ITEMS ({cartItems.length})</Text>
+                  {cartItems.map((item, index) => (
+                    <View key={item.productId + index} style={styles.itemContainer}>
+                      <View style={styles.leftSection}>
+                        <View style={styles.imageShadowWrapper}>
+                          <View style={styles.imageWrapper}>
+                            <Image
+                              source={{ uri: item.images[0] }}
+                              style={styles.itemImage}
+                              resizeMode="cover"
+                            />
+                          </View>
+                        </View>
+                        <Text style={styles.itemTitle}>{item.title}</Text>
+                      </View>
+                      <View style={styles.rightSection}>
+                        <Text style={styles.itemPrice}>₹{item.final_price}</Text>
+                      </View>
+                    </View>
+                  ))}
+                </View>
 
-          <View style={styles.footer}>
-            <View>
-              <Text style={styles.totalText}>Total ₹{totalPrice}</Text>
+                <PaymentMethod
+                  paymentOptions={paymentOptions}
+                  selectedPaymentMethod={selectedPaymentMethod}
+                  onSelectPaymentMethod={setSelectedPaymentMethod}
+                  orderNotes={orderNotes}
+                  onOrderNoteChange={handleOrderNoteChange}
+                />
+              </View>
+            </ScrollView>
+
+            {/* Fixed Footer */}
+            <View style={styles.footer}>
+              <View>
+                <Text style={styles.totalText}>Total ₹{totalPrice}</Text>
+              </View>
+              <TouchableOpacity
+                style={[styles.payButton, loading && styles.payButtonDisabled]}
+                onPress={handlePayNow}
+                disabled={loading}
+              >
+                {loading ? (
+                  <ActivityIndicator size="small" color={staticColors.white} />
+                ) : (
+                  <Text style={styles.payButtonText}>Pay</Text>
+                )}
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              style={[styles.payButton, loading && styles.payButtonDisabled]}
-              onPress={handlePayNow}
-              disabled={loading}
-            >
-              {loading ? (
-                <ActivityIndicator size="small" color={staticColors.white} />
-              ) : (
-                <Text style={styles.payButtonText}>Pay</Text>
-              )}
-            </TouchableOpacity>
           </View>
         </SafeAreaViewWrapper>
       )}
@@ -223,10 +212,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  mainContainer: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "space-between",
+  },
+
+  subContainer: {
+    flexDirection: "column",
+    gap: 15,
+  },
   header: {
     flexDirection: "row",
     alignItems: "center",
-    ...spacingStyles.mb10,
   },
   headerTitle: {
     fontSize: fontSizes.base,
@@ -237,7 +235,6 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.white,
     ...spacingStyles.p15,
     borderRadius: borderRadius.r8,
-    ...spacingStyles.mb15,
   },
   addressHeader: {
     flexDirection: "row",
@@ -273,7 +270,6 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.base,
     fontWeight: fontWeights.semiBold,
     color: staticColors.darkGray,
-    ...spacingStyles.mb10,
   },
   deliveryItem: {
     flexDirection: "row",
@@ -293,6 +289,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    ...spacingStyles.pt10
   },
   totalText: {
     fontSize: fontSizes.base,
