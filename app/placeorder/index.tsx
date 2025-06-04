@@ -22,6 +22,7 @@ import { ESTIMATED_DELIVERY } from "@/constants/constants";
 import { placeOrder } from "@/store/order/orderSlice";
 import { useAppDispatch } from "@/store/hooks";
 import Toast from "react-native-toast-message";
+import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 
 interface DeliveryItem {
   imageUri: string;
@@ -107,7 +108,7 @@ const PlaceOrderScreen: React.FC = () => {
       {showAddressSelector ? (
         <SelectAddress onGoBack={() => setShowAddressSelector(false)} />
       ) : (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaViewWrapper style={styles.container}>
           <View style={styles.header}>
             <TouchableOpacity onPress={handleBack} style={styles.backButton}>
               <Ionicons
@@ -179,7 +180,7 @@ const PlaceOrderScreen: React.FC = () => {
               )}
             </TouchableOpacity>
           </View>
-        </SafeAreaView>
+        </SafeAreaViewWrapper>
       )}
     </>
   );
