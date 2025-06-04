@@ -319,6 +319,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
+    ...spacingStyles.my10
   },
   favoriteButton: {
     backgroundColor: staticColors.bgSoftGray,
@@ -330,7 +331,6 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.darkSlate,
     borderRadius: borderRadius.r10,
     ...spacingStyles.py10,
-
     justifyContent: "center",
     flex: 1,
     ...spacingStyles.mx15,

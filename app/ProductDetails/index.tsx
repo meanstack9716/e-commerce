@@ -39,6 +39,7 @@ import ViewSimilarModal from "@/modal/ViewSimilarModal";
 import borderRadius from "@/style/borderRadius";
 import { LinearGradient } from "expo-linear-gradient";
 import { fontFamilies } from "@/style/fontFamilies";
+import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 
 const { width: screenWidth } = Dimensions.get("window");
 const screenHeight = Dimensions.get("window").height;
@@ -162,29 +163,29 @@ const ProductDetailsScreen: React.FC = () => {
 
   if (loading || error) {
     return (
-      <SafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
+      <SafeAreaViewWrapper>
         <FullScreenLoader visible={loading} />
         <View style={styles.loadingContainer}>
           <Text style={styles.loadingText}>{error}</Text>
         </View>
-      </SafeAreaView>
+      </SafeAreaViewWrapper>
     );
   }
 
   if (!product) {
     return (
-      <SafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
+      <SafeAreaViewWrapper>
         <View style={styles.loadingContainer}>
           <Text style={styles.loadingText}>Product not found</Text>
         </View>
-      </SafeAreaView>
+      </SafeAreaViewWrapper>
     );
   }
 
   const dummyData = [{ key: "dummy" }];
 
   return (
-    <SafeAreaView style={[styles.container, { paddingBottom: insets.bottom }]}>
+    <SafeAreaViewWrapper>
       <FlatList
         ref={flatListRef}
         data={dummyData}
@@ -325,15 +326,11 @@ const ProductDetailsScreen: React.FC = () => {
         onClose={() => setViewSimilarModalVisible(false)}
         currentProduct={product}
       /> */}
-    </SafeAreaView>
+    </SafeAreaViewWrapper>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: staticColors.white,
-  },
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
