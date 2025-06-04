@@ -8,11 +8,12 @@ export const SafeAreaViewWrapper: React.FC<SafeAreaViewProps> = ({
   children,
   style,
   backgroundColor = staticColors.white,
+  edges = ["top", "bottom"],
 }) => {
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor }, style]}
-      edges={["bottom"]} 
+      edges={edges}
     >
       {children}
     </SafeAreaView>
