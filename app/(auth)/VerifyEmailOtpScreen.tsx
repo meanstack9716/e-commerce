@@ -15,7 +15,7 @@ import OtpInput from "@/components/common/OtpInput";
 import images from "@/constants/images";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { verifyEmailCode, verifyUser } from "@/store/auth/authSlice";
-import { SafeKeyboardView } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
+import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 
 const VerifyEmailOtpScreen = () => {
   const insets = useSafeAreaInsets();
@@ -39,7 +39,7 @@ const VerifyEmailOtpScreen = () => {
   };
 
   return (
-    <SafeKeyboardView >
+    <SafeAreaViewWrapper >
       <View style={[styles.container, { paddingTop: insets.top }]}>
         <Image source={images.logo} style={styles.logo} resizeMode="contain" />
 
@@ -58,7 +58,7 @@ const VerifyEmailOtpScreen = () => {
           confirmText="Continue"
         />
       </View>
-    </SafeKeyboardView>
+    </SafeAreaViewWrapper>
   );
 };
 

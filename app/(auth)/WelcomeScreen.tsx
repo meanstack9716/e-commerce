@@ -10,8 +10,8 @@ import { commonStyles } from "@/style/commonStyle";
 import gapSizes from "@/style/gapSizes";
 import { router } from "expo-router";
 import { Button } from "@/components/common/Button";
-import { SafeKeyboardView } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import { fontFamilies } from "@/style/fontFamilies";
+import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 
 const WelcomeScreen = () => {
   const handleNextButton = () => {
@@ -22,7 +22,7 @@ const WelcomeScreen = () => {
     router.navigate("/LoginScreen");
   };
   return (
-    <SafeKeyboardView style={styles.safeContainer}>
+    <SafeAreaViewWrapper style={styles.safeContainer}>
       <View style={styles.container}>
         <View style={styles.shadowContainer}>
           <Image source={images.welcomeBag} style={styles.bagImage} />
@@ -56,7 +56,7 @@ const WelcomeScreen = () => {
           </TouchableOpacity>
         </View>
       </View>
-    </SafeKeyboardView>
+    </SafeAreaViewWrapper>
   );
 };
 
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: fontSizes["5xl"],
     fontFamily: fontFamilies.ralewayExtraBold,
-    color: staticColors.MatteBlack,
+    color: staticColors.darkSlate,
     ...spacingStyles.mt20,
     ...spacingStyles.mb15,
   },

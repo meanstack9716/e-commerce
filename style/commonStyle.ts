@@ -76,6 +76,7 @@ export const commonStyles = StyleSheet.create({
     fontWeight: "bold",
     color: staticColors.textDarkGray,
   },
+  
   authButton: {
     width: "100%",
     height: 60,

@@ -118,7 +118,6 @@ export interface CartItem extends Product {
   productId: string;
 }
 
-
 export interface Address {
   id: string;
   contact_name: string | null;
