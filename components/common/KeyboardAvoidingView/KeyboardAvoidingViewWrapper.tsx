@@ -1,0 +1,34 @@
+import React, { ReactNode } from "react";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  ViewStyle,
+} from "react-native";
+import staticColors from "@/style/staticColors";
+import { KeyboardAvoidingViewProps } from "./KeyboardAvoidingView.types";
+
+export const KeyboardAvoidingViewWrapper: React.FC<
+  KeyboardAvoidingViewProps
+> = ({
+  children,
+  style,
+  keyboardVerticalOffset = Platform.OS === "ios" ? 20 : 0,
+  backgroundColor = staticColors.white,
+}) => {
+  return (
+    <KeyboardAvoidingView
+      style={[styles.keyboardAvoiding, { backgroundColor }, style]}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={keyboardVerticalOffset}
+    >
+      {children}
+    </KeyboardAvoidingView>
+  );
+};
+
+const styles = StyleSheet.create({
+  keyboardAvoiding: {
+    flex: 1,
+  },
+});
