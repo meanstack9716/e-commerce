@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: fontSizes["5xl"],
     fontFamily: fontFamilies.ralewayExtraBold,
-    color: staticColors.MatteBlack,
+    color: staticColors.darkSlate,
     ...spacingStyles.mt20,
     ...spacingStyles.mb15,
   },
