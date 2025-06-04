@@ -23,6 +23,7 @@ import { placeOrder } from "@/store/order/orderSlice";
 import { useAppDispatch } from "@/store/hooks";
 import Toast from "react-native-toast-message";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
+import PaymentMethod from "../payment";
 
 interface DeliveryItem {
   imageUri: string;
@@ -32,12 +33,10 @@ interface DeliveryItem {
 const PlaceOrderScreen: React.FC = () => {
   const dispatch = useAppDispatch();
 
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
-    string | null
-  >(null);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string | null>(null);
+  const [orderNotes, setOrderNotes] = useState<{ [key: string]: string }>({});
   const [showAddressSelector, setShowAddressSelector] = useState(false);
   const cartItems = useSelector((state: RootState) => state.cart.cartItems);
-  console.log(cartItems, ">>>>>>")
   const selectedItems = cartItems.filter((item) => item.isSelected);
   const addresses = useSelector((state: RootState) => state.address.addresses);
   const selectedAddressId = useSelector(
@@ -53,7 +52,6 @@ const PlaceOrderScreen: React.FC = () => {
     imageUri: item.images?.[0],
     estimatedDelivery: item.delivery_days || ESTIMATED_DELIVERY,
   }));
-  console.log(deliveryData, "LLLL")
   const { shippingAddressId } = useLocalSearchParams<{
     shippingAddressId: string;
   }>();
@@ -66,6 +64,7 @@ const PlaceOrderScreen: React.FC = () => {
     (sum, item) => sum + (item.final_price || 0),
     0
   );
+
   const renderDeliveryItem = ({ item }: { item: DeliveryItem }) => (
     <View style={styles.deliveryItem}>
       <Image source={{ uri: item.imageUri }} style={styles.itemImage} />
@@ -78,11 +77,22 @@ const PlaceOrderScreen: React.FC = () => {
   const handleBack = () => {
     router.back();
   };
+
   const handleConfirm = () => {
     router.push({
       pathname: "/payment",
       params: { shippingAddressId: displayAddress?.id || "" },
     });
+  };
+
+  const paymentOptions = [
+    {
+      label: "Cash On Delivery",
+    },
+  ];
+
+  const handleOrderNoteChange = (label: string, text: string) => {
+    setOrderNotes((prev) => ({ ...prev, [label]: text }));
   };
 
   const handlePayNow = async () => {
@@ -103,6 +113,7 @@ const PlaceOrderScreen: React.FC = () => {
 
     dispatch(placeOrder(payload));
   };
+
   return (
     <>
       {showAddressSelector ? (
@@ -154,14 +165,36 @@ const PlaceOrderScreen: React.FC = () => {
             </View>
           )}
 
-          <Text style={styles.sectionTitle}>ITEMS</Text>
-          
-          <Text style={styles.sectionTitle}>DELIVERY ESTIMATES</Text>
-          <FlatList
-            data={deliveryData}
-            renderItem={renderDeliveryItem}
-            keyExtractor={(item, index) => index.toString()}
-            ItemSeparatorComponent={() => <View style={styles.separator} />}
+          <Text style={styles.sectionTitle}>
+            ITEMS ({cartItems.length})
+          </Text>
+
+          {cartItems.map((item, index) => (
+            <View key={item.productId + index} style={styles.itemContainer}>
+              <View style={styles.leftSection}>
+                <View style={styles.imageShadowWrapper}>
+                  <View style={styles.imageWrapper}>
+                    <Image
+                      source={{ uri: item.images[0] }}
+                      style={styles.itemImage}
+                      resizeMode="cover"
+                    />
+                  </View>
+                </View>
+                <Text style={styles.itemTitle}>{item.title}</Text>
+              </View>
+              <View style={styles.rightSection}>
+                <Text style={styles.itemPrice}>₹{item.final_price}</Text>
+              </View>
+            </View>
+          ))}
+
+          <PaymentMethod
+            paymentOptions={paymentOptions}
+            selectedPaymentMethod={selectedPaymentMethod}
+            onSelectPaymentMethod={setSelectedPaymentMethod}
+            orderNotes={orderNotes}
+            onOrderNoteChange={handleOrderNoteChange}
           />
 
           <View style={styles.footer}>
@@ -189,8 +222,6 @@ const PlaceOrderScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: staticColors.bgSecondary,
-    ...spacingStyles.px10,
   },
   header: {
     flexDirection: "row",
@@ -251,32 +282,9 @@ const styles = StyleSheet.create({
     ...spacingStyles.p10,
     borderRadius: borderRadius.r8,
   },
-  itemImage: {
-    width: 50,
-    height: 60,
-    borderRadius: borderRadius.r5,
-    ...spacingStyles.mr15,
-  },
   deliveryText: {
     fontSize: fontSizes.sm,
     color: staticColors.darkGray,
-  },
-  separator: {
-    height: 1,
-    backgroundColor: staticColors.borderLight,
-    ...spacingStyles.my5,
-  },
-  continueButton: {
-    backgroundColor: staticColors.primary,
-    ...spacingStyles.py10,
-    borderRadius: borderRadius.r8,
-    alignItems: "center",
-    ...spacingStyles.mt15,
-  },
-  continueButtonText: {
-    fontSize: fontSizes.sm,
-    color: staticColors.white,
-    fontWeight: fontWeights.semiBold,
   },
   backButton: {
     ...spacingStyles.p5,
@@ -301,11 +309,60 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.sm,
     fontWeight: fontWeights.semiBold,
     ...spacingStyles.px20,
-    ...spacingStyles.py2
+    ...spacingStyles.py2,
   },
   payButtonDisabled: {
     backgroundColor: staticColors.lightGray,
     opacity: 0.6,
+  },
+  itemContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginVertical: 10,
+  },
+  leftSection: {
+    flexDirection: "row",
+    alignItems: "center",
+    flex: 1,
+  },
+  imageShadowWrapper: {
+    width: 60,
+    height: 60,
+    backgroundColor: staticColors.white,
+    borderRadius: borderRadius.circle,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: staticColors.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
+    ...spacingStyles.mr10,
+  },
+  imageWrapper: {
+    width: 50,
+    height: 50,
+    borderRadius: borderRadius.circle,
+    overflow: "hidden",
+  },
+  itemImage: {
+    width: "100%",
+    height: "100%",
+  },
+  itemTitle: {
+    fontSize: fontSizes.base,
+    fontWeight: fontWeights.semiBold,
+    flexShrink: 1,
+    flexWrap: "wrap",
+  },
+  rightSection: {
+    justifyContent: "center",
+    alignItems: "flex-end",
+  },
+  itemPrice: {
+    fontSize: 16,
+    fontWeight: fontWeights.semiBold,
   },
 });
 

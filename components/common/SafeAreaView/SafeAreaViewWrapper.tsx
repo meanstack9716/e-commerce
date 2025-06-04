@@ -3,6 +3,7 @@ import { StyleSheet, ViewStyle } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import staticColors from "@/style/staticColors";
 import { SafeAreaViewProps } from "./SafeAreaViewWrapper.types";
+import spacingStyles from "@/style/spacingStyles";
 
 export const SafeAreaViewWrapper: React.FC<SafeAreaViewProps> = ({
   children,
@@ -23,5 +24,6 @@ export const SafeAreaViewWrapper: React.FC<SafeAreaViewProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    ...spacingStyles.px10,
   },
 });
