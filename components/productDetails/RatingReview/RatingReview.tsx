@@ -7,12 +7,8 @@ import { fontSizes, fontWeights } from "@/style/typography";
 import spacingStyles from "@/style/spacingStyles";
 import borderRadius from "@/style/borderRadius";
 import { commonStyles } from "@/style/commonStyle";
-import { Review } from "../../types/types";
-
-interface RatingReviewProps {
-  review: Review;
-  productId: string;
-}
+import { Review } from "@/app/review/review.types";
+import { RatingReviewProps } from "./RatingReview.types";
 
 const RatingReview: React.FC<RatingReviewProps> = ({
   review,

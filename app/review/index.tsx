@@ -7,13 +7,13 @@ import { AppDispatch, RootState } from "@/store/store";
 import { fetchProductById } from "@/store/product/productsSlice";
 import FullScreenLoader from "@/components/common/FullScreenLoader";
 import staticColors from "@/style/staticColors";
-import { SafeKeyboardView } from "@/components/common/SafeKeyboardView";
 import { fontFamilies } from "@/style/fontFamilies";
 import { fontSizes } from "@/style/typography";
 import spacingStyles from "@/style/spacingStyles";
 import { commonStyles } from "@/style/commonStyle";
 import { Review } from "./review.types";
 import images from "@/constants/images";
+import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 
 const ReviewsScreen: React.FC = () => {
   const { productId } = useLocalSearchParams();
@@ -81,7 +81,7 @@ const ReviewsScreen: React.FC = () => {
   );
 
   return (
-    <SafeKeyboardView backgroundColor={staticColors.white}>
+    <SafeAreaViewWrapper backgroundColor={staticColors.white}>
       <FullScreenLoader visible={loading} />
       <View style={styles.header}>
         <Text style={styles.title}>REVIEWS</Text>
@@ -97,7 +97,7 @@ const ReviewsScreen: React.FC = () => {
           </View>
         }
       />
-    </SafeKeyboardView>
+    </SafeAreaViewWrapper>
   );
 };
 

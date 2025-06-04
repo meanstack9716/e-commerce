@@ -1,4 +1,4 @@
-import { CategoryItem } from "@/types/types";
+import { CategoryItem } from "@/interfaces";
 import { getApiUrl } from "@/utils/apiUtils";
 import axiosConfig from "@/utils/axiosConfig";
 import { handleApiError } from "@/utils/handleApiError";

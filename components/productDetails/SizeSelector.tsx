@@ -15,7 +15,7 @@ import staticColors from "@/style/staticColors";
 import borderRadius from "@/style/borderRadius";
 import { Product } from "../../types/types";
 import gapSizes from "@/style/gapSizes";
-import ProductVarientModal from "@/modal/ProductVarientModal";
+import ProductVarientModal from "@/modal/productVariants/ProductVarientModal";
 
 const standardSizes = ["XS", "S", "M", "L", "XL", "XXL"];
 const numericSizes = [
