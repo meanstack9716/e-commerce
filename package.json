@@ -11,7 +11,7 @@
     "test": "jest --watchAll",
     "lint": "expo lint",
     "apkbuild": "npm run uploadenv && eas build --platform android --profile preview",
-    "uploadenv":"eas secret:push --force --scope project --env-file .env"
+    "uploadenv": "eas secret:push --force --scope project --env-file .env"
   },
   "jest": {
     "preset": "jest-expo"
@@ -63,6 +63,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
+    "@react-native-community/cli": "^18.0.0",
     "@types/jest": "^29.5.12",
     "@types/react": "~19.0.10",
     "@types/react-test-renderer": "^18.3.0",

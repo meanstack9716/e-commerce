@@ -6,18 +6,22 @@ import {
   FlatList,
   TouchableOpacity,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { router } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";  
+import { router, useLocalSearchParams } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import SelectAddress from "@/components/address/SelectAddress";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
-import {fontSizes, fontWeights} from "@/style/typography";
+import { fontSizes, fontWeights } from "@/style/typography";
 import borderRadius from "@/style/borderRadius";
 import { ESTIMATED_DELIVERY } from "@/constants/constants";
+import { placeOrder } from "@/store/order/orderSlice";
+import { useAppDispatch } from "@/store/hooks";
+import Toast from "react-native-toast-message";
 
 interface DeliveryItem {
   imageUri: string;
@@ -25,8 +29,14 @@ interface DeliveryItem {
 }
 
 const PlaceOrderScreen: React.FC = () => {
+  const dispatch = useAppDispatch();
+
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
+    string | null
+  >(null);
   const [showAddressSelector, setShowAddressSelector] = useState(false);
   const cartItems = useSelector((state: RootState) => state.cart.cartItems);
+  console.log(cartItems, ">>>>>>")
   const selectedItems = cartItems.filter((item) => item.isSelected);
   const addresses = useSelector((state: RootState) => state.address.addresses);
   const selectedAddressId = useSelector(
@@ -42,7 +52,19 @@ const PlaceOrderScreen: React.FC = () => {
     imageUri: item.images?.[0],
     estimatedDelivery: item.delivery_days || ESTIMATED_DELIVERY,
   }));
+  console.log(deliveryData, "LLLL")
+  const { shippingAddressId } = useLocalSearchParams<{
+    shippingAddressId: string;
+  }>();
 
+  const { loading, error, orderId } = useSelector(
+    (state: RootState) => state.order
+  );
+
+  const totalPrice = selectedItems.reduce(
+    (sum, item) => sum + (item.final_price || 0),
+    0
+  );
   const renderDeliveryItem = ({ item }: { item: DeliveryItem }) => (
     <View style={styles.deliveryItem}>
       <Image source={{ uri: item.imageUri }} style={styles.itemImage} />
@@ -60,6 +82,25 @@ const PlaceOrderScreen: React.FC = () => {
       pathname: "/payment",
       params: { shippingAddressId: displayAddress?.id || "" },
     });
+  };
+
+  const handlePayNow = async () => {
+    if (!selectedPaymentMethod) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Please select a payment method.",
+      });
+      return;
+    }
+
+    const payload = {
+      cart_items_ids: selectedItems.map((item) => item.id),
+      shipping_address_id: shippingAddressId,
+      payment_method: selectedPaymentMethod,
+    };
+
+    dispatch(placeOrder(payload));
   };
   return (
     <>
@@ -112,6 +153,8 @@ const PlaceOrderScreen: React.FC = () => {
             </View>
           )}
 
+          <Text style={styles.sectionTitle}>ITEMS</Text>
+          
           <Text style={styles.sectionTitle}>DELIVERY ESTIMATES</Text>
           <FlatList
             data={deliveryData}
@@ -120,12 +163,22 @@ const PlaceOrderScreen: React.FC = () => {
             ItemSeparatorComponent={() => <View style={styles.separator} />}
           />
 
-          <TouchableOpacity
-            style={styles.continueButton}
-            onPress={handleConfirm}
-          >
-            <Text style={styles.continueButtonText}>CONTINUE</Text>
-          </TouchableOpacity>
+          <View style={styles.footer}>
+            <View>
+              <Text style={styles.totalText}>Total ₹{totalPrice}</Text>
+            </View>
+            <TouchableOpacity
+              style={[styles.payButton, loading && styles.payButtonDisabled]}
+              onPress={handlePayNow}
+              disabled={loading}
+            >
+              {loading ? (
+                <ActivityIndicator size="small" color={staticColors.white} />
+              ) : (
+                <Text style={styles.payButtonText}>Pay</Text>
+              )}
+            </TouchableOpacity>
+          </View>
         </SafeAreaView>
       )}
     </>
@@ -136,7 +189,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: staticColors.bgSecondary,
-    ...spacingStyles.p10,
+    ...spacingStyles.px10,
   },
   header: {
     flexDirection: "row",
@@ -185,7 +238,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.mb5,
   },
   sectionTitle: {
-    fontSize: fontSizes.sm,
+    fontSize: fontSizes.base,
     fontWeight: fontWeights.semiBold,
     color: staticColors.darkGray,
     ...spacingStyles.mb10,
@@ -226,6 +279,32 @@ const styles = StyleSheet.create({
   },
   backButton: {
     ...spacingStyles.p5,
+  },
+  footer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  totalText: {
+    fontSize: fontSizes.base,
+    fontWeight: fontWeights.semiBold,
+  },
+  payButton: {
+    backgroundColor: staticColors.primary,
+    ...spacingStyles.py10,
+    ...spacingStyles.px25,
+    borderRadius: borderRadius.r8,
+  },
+  payButtonText: {
+    color: staticColors.white,
+    fontSize: fontSizes.sm,
+    fontWeight: fontWeights.semiBold,
+    ...spacingStyles.px20,
+    ...spacingStyles.py2
+  },
+  payButtonDisabled: {
+    backgroundColor: staticColors.lightGray,
+    opacity: 0.6,
   },
 });
 
