@@ -31,7 +31,7 @@ export default function TabLayout() {
             if (route.name === "cart")
               iconName = focused ? "cart" : "cart-outline";
             if (route.name === "(profile)")
-              iconName = focused ? "settings" : "settings-outline";
+              iconName = focused ? "profile" : "person-outline";
 
             return <Ionicons name={iconName} size={size} color={color} />;
           },
@@ -57,7 +57,7 @@ export default function TabLayout() {
                 ? "Home"
                 : route.name === "cart"
                 ? "Cart"
-                : "Setting"}
+                : "Profile"}
             </Text>
           ),
           headerShown: false,
