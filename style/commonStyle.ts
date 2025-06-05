@@ -53,11 +53,11 @@ export const commonStyles = StyleSheet.create({
   },
 
   radioOuter: {
-    width: 20,
-    height: 20,
+    width: 18,
+    height: 18,
     borderRadius: borderRadius.r10,
     borderWidth: 1,
-    borderColor: staticColors.discountText,
+    borderColor: staticColors.textDarkGray,
     justifyContent: "center",
     alignItems: "center",
     ...spacingStyles.mr10,
@@ -67,6 +67,9 @@ export const commonStyles = StyleSheet.create({
     height: 12,
     borderRadius: borderRadius.r6,
     backgroundColor: staticColors.discountText,
+  },
+  radioOuterSelected: {
+    borderColor: staticColors.discountText,
   },
   backButton: {
     ...spacingStyles.mr5,

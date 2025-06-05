@@ -17,7 +17,7 @@ import borderRadius from "@/style/borderRadius";
 const UserProfile = () => {
   const handleOrder = () => {
     router.push({
-      pathname: "/cart",
+      pathname: "/orderHistory",
     });
   };
   return (
@@ -26,7 +26,7 @@ const UserProfile = () => {
       <View style={styles.banner}>
         <Text style={styles.bannerText}>
           Become An Insider{" "}
-          <Text style={styles.highlight}>Free Shipping, Extra Discounts</Text>{" "}
+          <Text style={styles.highlight}>Free Shipping, Extra Discounts</Text>
           and More Rewards!
         </Text>
         <TouchableOpacity style={styles.knowMoreButton}>

@@ -1,4 +1,4 @@
-import { Product } from "@/interfaces";
+import { GalleryItem, Product } from "@/interfaces";
 
 export interface SubSubCategory {
   id: string;
@@ -83,3 +83,4 @@ export interface AddressFormData {
   state: string;
   country: string;
 }
+
