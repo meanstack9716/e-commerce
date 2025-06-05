@@ -12,11 +12,12 @@ interface Props {
   label: string;
   subtitle?: string;
   customStyle?: object;
+  onPress?: () => void;
 }
 
-export default function ProfileOption({ icon, label, subtitle, customStyle }: Props) {
+export default function ProfileOption({ icon, label, subtitle, customStyle ,onPress }: Props) {
   return (
-    <TouchableOpacity style={[styles.option, customStyle]}>
+    <TouchableOpacity style={[styles.option, customStyle]} onPress={onPress}>
       <View style={styles.leftSection}>
         <View style={styles.iconWrapper}>{icon}</View>
         <View>

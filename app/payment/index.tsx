@@ -14,13 +14,13 @@ import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
 import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { placeOrder, clearOrderStatus } from "@/store/order/orderSlice";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import {fontSizes, fontWeights} from "@/style/typography";
-import { RootState } from "@/store/store";
 import { commonStyles } from "@/style/commonStyle";
 import { useAppDispatch } from "@/store/hooks";
-import { placeOrder, clearOrderStatus } from "@/store/order/orderSlice";
 import borderRadius from "@/style/borderRadius";
 
 const PaymentScreen: React.FC = () => {
@@ -131,7 +131,7 @@ const PaymentScreen: React.FC = () => {
                 >
                   <View
                     style={[
-                      styles.radioButtonInner,
+                      commonStyles.radioInner,
                       selectedPaymentMethod === option.label &&
                         styles.radioButtonSelected,
                     ]}
@@ -203,7 +203,7 @@ const PaymentScreen: React.FC = () => {
           {loading ? (
             <ActivityIndicator size="small" color={staticColors.white} />
           ) : (
-            <Text style={styles.payButtonText}>PAY NOW</Text>
+            <Text style={styles.payButtonText}>PLACEORDER</Text>
           )}
         </TouchableOpacity>
       </View>
@@ -242,12 +242,6 @@ const styles = StyleSheet.create({
   optionRow: {
     flexDirection: "row",
     alignItems: "center",
-  },
-  radioButtonInner: {
-    width: 12,
-    height: 12,
-    borderRadius: borderRadius.r6,
-    backgroundColor: "transparent",
   },
   radioButtonSelected: {
     backgroundColor: staticColors.discountText,

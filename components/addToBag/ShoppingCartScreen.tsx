@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    ...spacingStyles.px20,
+    ...spacingStyles.px15,
   },
   deliveryText: { fontSize: fontSizes.sm, color: staticColors.shadowColor },
   enterPincode: {

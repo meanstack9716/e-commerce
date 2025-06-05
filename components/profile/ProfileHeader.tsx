@@ -1,36 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-import LoginModal from "@/app/(auth)/loginModal";
-import SignUpModal from "@/app/(auth)/signUpModal";
+import { router } from "expo-router";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import { fontSizes, fontWeights } from "@/style/typography";
 import borderRadius from "@/style/borderRadius";
+import staticColors from "@/style/staticColors";
+import images from "@/constants/images";
 
-const ProfileHeader: React.FC = () => {
-  const [loginModalVisible, setLoginModalVisible] = useState<boolean>(false);
-  const [signupModalVisible, setSignupModalVisible] = useState<boolean>(false);
-
-  const handleLoginPress = (): void => {
-    setLoginModalVisible(true);
-  };
-
-  const closeLoginModal = (): void => {
-    setLoginModalVisible(false);
-  };
-
-  const closeSignupModal = (): void => {
-    setSignupModalVisible(false);
-  };
-
-  const openSignupModal = (): void => {
-    setLoginModalVisible(false);
-    setSignupModalVisible(true);
-  };
-
-  const openLoginModal = (): void => {
-    setSignupModalVisible(false);
-    setLoginModalVisible(true);
+const ProfileHeader = () => {
+  const handleLoginPress = () => {
+    router.replace("/LoginScreen");
   };
 
   return (
@@ -41,7 +21,7 @@ const ProfileHeader: React.FC = () => {
           <View style={styles.rowContainer}>
             <View style={styles.avatarContainer}>
               <Image
-                source={require("../../assets/images/avtar-profile.png")}
+                source={images.unKnownUser}
                 style={styles.avatarImage}
               />
             </View>
@@ -56,18 +36,6 @@ const ProfileHeader: React.FC = () => {
           </View>
         </View>
       </View>
-
-      <LoginModal
-        visible={loginModalVisible}
-        onClose={closeLoginModal}
-        onSignupPress={openSignupModal}
-      />
-
-      <SignUpModal
-        visible={signupModalVisible}
-        onClose={closeSignupModal}
-        onLoginPress={openLoginModal}
-      />
     </View>
   );
 };
