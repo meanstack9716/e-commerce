@@ -72,7 +72,7 @@ const OrderHistoryScreen: React.FC = () => {
 
   return (
     <SafeAreaViewWrapper backgroundColor={staticColors.white}>
-      {/* <ProfileHeader title="History" profileImage={images.unKnownUser} /> */}
+      <ProfileHeader title="History" profileImage={images.unKnownUser} />
       {error ? (
         <Text style={styles.errorText}>{error}</Text>
       ) : filteredOrders.length === 0 ? (
