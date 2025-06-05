@@ -1,6 +1,6 @@
 import { CartItem } from "@/interfaces";
 
-export interface CardItemCardProps {
+export interface CartItemCardProps {
   cartItem: CartItem;
   from: "cart" | "wishlist";
   onPressDelete?: (id: string) => void;

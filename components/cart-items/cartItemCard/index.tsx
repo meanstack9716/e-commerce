@@ -6,10 +6,10 @@ import { fontSizes, fontWeights } from "@/style/typography";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { CardItemCardProps } from "./CardItemCard.types";
+import { CartItemCardProps } from "./CartItemCard.types";
 import gapSizes from "@/style/gapSizes";
 
-const CardItemCard: React.FC<CardItemCardProps> = ({
+const CardItemCard: React.FC<CartItemCardProps> = ({
   cartItem,
   from = "cart",
   onPressDelete,
