@@ -8,5 +8,8 @@ export const fontFamilies = {
   helvetica:'Helvetica',
   abriFatfaceRegular:'AbriFatfaceRegular',
    ralewayeMedium:'RalewayeMedium',
-  arial: "Arial"
+  arial: "Arial",
+  ralewayeBold:'RalewayeBold',
+  raleway:'Raleway',
+  ralewayeSemiBold:'RalewayeSemiBold',
 };

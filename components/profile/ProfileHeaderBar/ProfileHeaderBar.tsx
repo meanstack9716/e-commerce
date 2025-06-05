@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   activeIcon: {
-    backgroundColor: "#dbeafe",
+    backgroundColor: staticColors.blue50,
   },
   dotIndicator: {
     position: "absolute",

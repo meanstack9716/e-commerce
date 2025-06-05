@@ -17,18 +17,7 @@ import spacingStyles from "@/style/spacingStyles";
 import borderRadius from "@/style/borderRadius";
 import { fontSizes, fontWeights } from "@/style/typography";
 import { Ionicons } from "@expo/vector-icons";
-
-interface FilterValues {
-  status: string;
-  time: string;
-  dateRange: string;
-}
-
-interface OrderFilterModalProps {
-  visible: boolean;
-  onClose: () => void;
-  onApply: (filters: FilterValues) => void;
-}
+import { FilterValues, OrderFilterModalProps } from "./OrderFilterModal.types";
 
 const OrderFilterModal: React.FC<OrderFilterModalProps> = ({
   visible,

@@ -34,12 +34,14 @@ import DeliveryCheck from "@/components/productDetails/DeliveryCheck";
 import ProductActionButtons from "@/components/productDetails/ProductActionButtons";
 import FullScreenLoader from "@/components/common/FullScreenLoader";
 import ReturnPolicy from "./ReturnPolicy";
-import { Product } from "../../types/types";
 import ViewSimilarModal from "@/modal/ViewSimilarModal";
 import borderRadius from "@/style/borderRadius";
 import { LinearGradient } from "expo-linear-gradient";
 import { fontFamilies } from "@/style/fontFamilies";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
+import RatingReview from "@/components/productDetails/RatingReview/RatingReview";
+import { commonStyles } from "@/style/commonStyle";
+import { renderStars } from "@/utils/starUtils";
 
 const { width: screenWidth } = Dimensions.get("window");
 const screenHeight = Dimensions.get("window").height;
@@ -182,6 +184,13 @@ const ProductDetailsScreen: React.FC = () => {
     );
   }
 
+  const handleViewAllReview = () => {
+    router.navigate({
+      pathname: "/product-reviews",
+      params: { productId: product.id },
+    });
+  };
+
   const dummyData = [{ key: "dummy" }];
 
   return (
@@ -221,7 +230,7 @@ const ProductDetailsScreen: React.FC = () => {
                 {(displayImages.length > 0
                   ? displayImages
                   : product?.images || []
-                ).map((_, index) => {
+                ).map((_: string, index: number) => {
                   const isActive = activeIndex === index;
                   return (
                     <View
@@ -294,6 +303,41 @@ const ProductDetailsScreen: React.FC = () => {
               onSizeSelect={setSelectedSize}
               price={product.final_price}
             />
+            {product.reviews && product.reviews.length > 0 && (
+              <View style={styles.reviewSection}>
+                {/* Title + Stars + Rating */}
+                <Text style={styles.reviewTitle}>Rating & Reviews</Text>
+                <View style={styles.reveiwHeader}>
+                  <View style={styles.starsContainer}>
+                    {renderStars(product.total_rating, 22)}
+                  </View>
+                  <View style={styles.ratingBox}>
+                    <Text style={styles.ratingBoxText}>
+                      {product.total_rating}/5
+                    </Text>
+                  </View>
+                </View>
+
+                {/* First Review Card */}
+                <RatingReview
+                  productId={product.id}
+                  review={product.reviews[0]}
+                />
+
+                {/* View All Button (if more than 1 review) */}
+                {product.reviews.length > 1 && (
+                  <TouchableOpacity
+                    onPress={handleViewAllReview}
+                    style={styles.reviewButton}
+                  >
+                    <Text style={styles.reviewButtonText}>
+                      View All Reviews
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            )}
+
             {/* <DeliveryCheck />
             <ReturnPolicy /> */}
 
@@ -485,6 +529,44 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.base,
     fontWeight: fontWeights.semiBold,
     ...spacingStyles.ml5,
+  },
+  reviewSection: { ...spacingStyles.mx15 },
+  reviewTitle: {
+    fontSize: fontSizes.lg,
+    fontFamily: "RalewayeExtraBold",
+    color: staticColors.black,
+    ...spacingStyles.mr10,
+  },
+  reveiwHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    ...spacingStyles.my10,
+  },
+  ratingBox: {
+    backgroundColor: staticColors.blue200,
+    ...spacingStyles.px10,
+    ...spacingStyles.py2,
+    borderRadius: borderRadius.r2,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  ratingBoxText: {
+    fontSize: fontSizes.sm,
+    fontWeight: fontWeights.bold,
+    color: staticColors.black,
+  },
+  reviewButton: {
+    height: 50,
+    backgroundColor: staticColors.primaryBlue,
+    borderRadius: borderRadius.r14,
+    justifyContent: "center",
+    alignItems: "center",
+    ...spacingStyles.my10,
+  },
+  reviewButtonText: {
+    color: staticColors.white,
+    fontSize: fontSizes.md,
+    fontFamily: fontFamilies.nunitoSans,
   },
 });
 
