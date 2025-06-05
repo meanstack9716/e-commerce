@@ -13,7 +13,6 @@ import { RootState } from '@/store/store';
 import { clearOrderStatus, fetchOrders } from '@/store/order/orderSlice';
 import { textTruncate } from '@/utils/textTruncate';
 import { Order } from '@/types/types';
-import { SafeKeyboardView } from '@/components/common/SafeKeyboardView';
 import ProfileHeaderBar from '@/components/profile/ProfileHeaderBar/ProfileHeaderBar';
 import FullScreenLoader from '@/components/common/FullScreenLoader'; 
 import images from '@/constants/images';
@@ -24,6 +23,7 @@ import { fontSizes, fontWeights } from '@/style/typography';
 import staticColors from '@/style/staticColors';
 import gapSizes from '@/style/gapSizes';
 import ReviewModal from '@/modal/ReviewModal/ReviewModal';
+import { SafeAreaViewWrapper } from '@/components/common/SafeAreaView/SafeAreaViewWrapper';
 
 const HistoryScreen: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -101,7 +101,7 @@ const HistoryScreen: React.FC = () => {
   };
 
   return (
-    <SafeKeyboardView backgroundColor={staticColors.white}>
+    <SafeAreaViewWrapper backgroundColor={staticColors.white}>
       <ProfileHeaderBar title="History" profileImage={images.genderFemale} />
       {error ? (
         <Text style={styles.errorText}>{error}</Text>
@@ -126,7 +126,7 @@ const HistoryScreen: React.FC = () => {
         productId={selectedProductId}
         productDescription={selectedProductDescription}
       />
-    </SafeKeyboardView>
+    </SafeAreaViewWrapper>
   );
 };
 

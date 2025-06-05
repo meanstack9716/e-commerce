@@ -11,7 +11,7 @@
     "test": "jest --watchAll",
     "lint": "expo lint",
     "apkbuild": "npm run uploadenv && eas build --platform android --profile preview",
-    "uploadenv":"eas secret:push --force --scope project --env-file .env"
+    "uploadenv": "eas secret:push --force --scope project --env-file .env"
   },
   "jest": {
     "preset": "jest-expo"
@@ -19,6 +19,7 @@
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
     "@react-native-async-storage/async-storage": "^2.1.2",
+    "@react-native-community/blur": "^4.4.1",
     "@react-native-community/datetimepicker": "8.3.0",
     "@react-navigation/bottom-tabs": "^7.3.10",
     "@react-navigation/elements": "^2.3.8",
@@ -55,7 +56,7 @@
     "react-native-gesture-handler": "~2.24.0",
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "5.4.0",
-    "react-native-screens": "~4.10.0",
+    "react-native-screens": "^4.11.1",
     "react-native-toast-message": "^2.3.0",
     "react-native-web": "^0.20.0",
     "react-native-webview": "13.13.5",
@@ -70,5 +71,13 @@
     "jest-expo": "~53.0.4",
     "typescript": "^5.3.3"
   },
+  "expo": {
+    "doctor": {
+      "reactNativeDirectoryCheck": {
+        "listUnknownPackages": false
+      }
+    }
+  },
+  "apk:build:local": "npm run uploadenv && eas build --platform android --local --profile preview",
   "private": true
 }

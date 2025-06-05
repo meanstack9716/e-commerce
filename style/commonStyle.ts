@@ -79,6 +79,7 @@ export const commonStyles = StyleSheet.create({
     fontWeight: "bold",
     color: staticColors.textDarkGray,
   },
+  
   authButton: {
     width: "100%",
     height: 60,
@@ -100,6 +101,7 @@ export const commonStyles = StyleSheet.create({
     borderRadius: borderRadius.r24,
     ...spacingStyles.px20,
     fontSize: fontSizes.base,
+    color:staticColors.textDarkGray
   },
   avatar: {
     width: 100,
@@ -138,8 +140,8 @@ export const commonStyles = StyleSheet.create({
   },
   shape5: {
     position: "absolute",
-    top: -100,
-    right: -50,
+    top: -50,
+    right: -55,
     width: 320,
     height: 250,
     opacity: 1,
@@ -148,8 +150,8 @@ export const commonStyles = StyleSheet.create({
   },
   shape6: {
     position: "absolute",
-    top: -65,
-    right: -25,
+    top: -20,
+    right: -30,
     width: 360,
     height: 250,
     opacity: 1,

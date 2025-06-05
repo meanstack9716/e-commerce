@@ -13,11 +13,7 @@ import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import { fontSizes } from "@/style/typography";
 import { fontFamilies } from "@/style/fontFamilies";
-
-interface ProfileHeaderBarProps {
-  title: string;
-  profileImage: ImageSourcePropType;
-}
+import { ProfileHeaderBarProps } from "./ProfileHeaderBar.types";
 
 const ProfileHeaderBar: React.FC<ProfileHeaderBarProps> = ({
   title,

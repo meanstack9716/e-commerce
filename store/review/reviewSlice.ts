@@ -45,7 +45,7 @@ export const submitReview = createAsyncThunk<
       );
       return response.data;
     } catch (error: any) {
-      return rejectWithValue(handleApiError(error, "Registration failed"));
+      return rejectWithValue(handleApiError(error, "Review not submitted"));
     }
   }
 );
