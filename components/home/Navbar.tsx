@@ -13,6 +13,7 @@ import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import {fontSizes, fontWeights} from "@/style/typography";
 import borderRadius from "@/style/borderRadius";
+import { fontFamilies } from "@/style/fontFamilies";
 
 interface NavbarProps {
   tabs: string[];
@@ -40,7 +41,7 @@ const Navbar: React.FC<NavbarProps> = ({ tabs, activeTab, setActiveTab }) => {
           >
             {tab === "Categories" ? (
               <View style={styles.categoryTab}>
-                <Ionicons name="grid-outline" size={20} color={staticColors.white} />
+                <Ionicons name="grid-outline" size={16} color={staticColors.white} />
               </View>
             ) : (
               <Text
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
   navbar: {
     flexDirection: "row",
     justifyContent: "space-around",
-    ...spacingStyles.px10,
+    ...spacingStyles.pl20,
     borderBottomWidth: 1,
     borderBottomColor: colors.lightGray,
   },
@@ -72,21 +73,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   navItemText: {
-    fontSize: fontSizes.base,
+    fontSize: fontSizes.sm,
+    ...spacingStyles.pb2,
     fontWeight: fontWeights.semiBold,
     color: staticColors.darkGray,
-    fontFamily: "Helvetica",
+    fontFamily: fontFamilies.helvetica,
   },
   activeLine: {
     ...spacingStyles.mt5,
-    height: 2,
+    height: 2.5,
     width: "100%",
     backgroundColor: colors.primary,
     borderRadius: borderRadius.r2,
   },
   activeNavItemText: {
     color: colors.primary,
-    fontFamily: "HelveticaBold",
+    fontFamily: fontFamilies.helveticaBold,
   },
   categoryTab: {
     backgroundColor: colors.primary,
@@ -94,7 +96,6 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.r8,
     borderWidth: 1,
     borderColor: colors.white,
-    elevation: 3,
   },
 });
 

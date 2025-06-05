@@ -27,6 +27,7 @@ import OTPInput from "@/components/common/OtpInput";
 import CreateNewPassword from "@/components/auth/CreateNewPassword";
 import TextField from "@/components/common/TextField";
 import borderRadius from "@/style/borderRadius";
+import { fontFamilies } from "@/style/fontFamilies";
 export default function ForgetPassword() {
   const router = useRouter();
   const { errors, handleEmailValidation } = useFieldValidation();
@@ -183,10 +184,10 @@ const styles = StyleSheet.create({
   },
   cancelText: {
     color: colors.primary,
-    fontFamily: "HelveticaBold",
+    fontFamily: fontFamilies.helveticaBold,
   },
   confirmText: {
     color: colors.white,
-    fontFamily: "HelveticaBold",
+    fontFamily: fontFamilies.helveticaBold,
   },
 });

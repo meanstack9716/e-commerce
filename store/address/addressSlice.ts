@@ -5,6 +5,7 @@ import { handleApiError } from "@/utils/handleApiError";
 import { Address, AddressFormData } from "@/types/types";
 import Constants from "expo-constants";
 import { getAuthHeaders } from "@/utils/apiHeader";
+import axiosConfig from "@/utils/axiosConfig";
 
 interface AddressState {
   addressTypes: string[];
@@ -37,7 +38,7 @@ export const fetchAddressTypes = createAsyncThunk<
 >("address/fetchAddressTypes", async (_, { getState, rejectWithValue }) => {
   try {
     const state = getState();
-    const response = await axios.get(`${apiUrl}/address/types-list`, getAuthHeaders(state))
+    const response = await axiosConfig.get(`/address/types-list`, getAuthHeaders(state))
     return response.data.data;
   } catch (error: any) {
     return rejectWithValue(
@@ -62,8 +63,8 @@ export const saveAddress = createAsyncThunk<
   ) => {
     try {
       const state = getState();
-      await axios.post(
-        `${apiUrl}/address/add`,
+      await axiosConfig.post(
+        `/address/add`,
         {
           contact_name: formData.contact_name,
           contact_number: formData.contact_number,
@@ -112,7 +113,7 @@ export const fetchAddresses = createAsyncThunk<
 >("address/fetchAddresses", async (_, { getState, rejectWithValue }) => {
   try {
     const state = getState();
-    const response = await axios.get(`${apiUrl}/address/list`,getAuthHeaders(state));
+    const response = await axiosConfig.get(`/address/list`,getAuthHeaders(state));
     return response.data.data;
   } catch (error: any) {
     return rejectWithValue(
@@ -130,7 +131,7 @@ export const removeAddress = createAsyncThunk<
   async (id: string, { getState, rejectWithValue }) => {
     try {
       const state = getState();
-      await axios.delete(`${apiUrl}/address/remove/${id}`, getAuthHeaders(state));
+      await axiosConfig.delete(`/address/remove/${id}`, getAuthHeaders(state));
       return id;
     } catch (error: any) {
       return rejectWithValue(
@@ -224,7 +225,7 @@ const addressSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchAddressTypes.pending, (state) => {
-        state.loading = true;
+        // state.loading = true;
         state.error = null;
       })
       .addCase(fetchAddressTypes.fulfilled, (state, action) => {

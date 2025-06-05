@@ -99,7 +99,7 @@ export default ProductCard;
 
 const styles = StyleSheet.create({
   card: {
-    width: Dimensions.get("window").width / 2 - 16,
+    width: Dimensions.get("window").width/2-10,
     overflow: "hidden",
   },
   cardImage: {

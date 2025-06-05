@@ -1,14 +1,14 @@
 import { clearCartFromStorage } from "@/utils/cartStorage";
 import { handleApiError } from "@/utils/handleApiError";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import axios from "axios";
 import { clearCart } from "../cart/cartSlice";
-import { AppDispatch } from "@/store/store";
-import { fetchCartItemsApi } from "../cart/cartSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getApiUrl } from "@/utils/apiUtils";
+import axiosConfig from "@/utils/axiosConfig";
 
 interface AuthState {
   loading: boolean;
+  loginError:string | null;
   error: string | null;
   registered: boolean;
   isAuthenticated: boolean;
@@ -20,6 +20,7 @@ interface AuthState {
 
 const initialState: AuthState = {
   loading: false,
+  loginError:null,
   error: null,
   registered: false,
   isAuthenticated: false,
@@ -28,7 +29,6 @@ const initialState: AuthState = {
   resetCode: null,
   token: null,
 };
-
 export const loadAuthState = createAsyncThunk(
   "auth/loadAuthState",
   async (_, { rejectWithValue }) => {
@@ -36,16 +36,25 @@ export const loadAuthState = createAsyncThunk(
       const token = await AsyncStorage.getItem("authToken");
       const user = await AsyncStorage.getItem("authUser");
       if (!token || !user) {
-        return rejectWithValue("Authentication data not found. Please log in again.");
+        return rejectWithValue(
+          "Authentication data not found. Please log in again."
+        );
       }
-      return { token, user: JSON.parse(user) };
+      let parsedUser;
+      try {
+        parsedUser = JSON.parse(user);
+      } catch (parseError) {
+        console.error("Failed to parse authUser:", parseError);
+        return rejectWithValue("Failed to parse user data.");
+      }
+      return { token, user: parsedUser };
     } catch (error: any) {
+      console.error("AsyncStorage error:", error);
       return rejectWithValue(error.message);
     }
   }
 );
 
-const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 export const registerUser = createAsyncThunk(
   "auth/register",
   async (
@@ -57,7 +66,7 @@ export const registerUser = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axios.post(`${apiUrl}/auth/register`, {
+      const response = await axiosConfig.post("/auth/register", {
         email,
         password,
         password_confirmation,
@@ -76,14 +85,31 @@ export const loginUser = createAsyncThunk(
     { rejectWithValue, dispatch }
   ) => {
     try {
-      const response = await axios.post(`${apiUrl}/auth/login`, {
+      const response = await axiosConfig.post(`/auth/login`, {
         email,
         password,
       });
+      if (!response.data.token || !response.data.user) {
+        return rejectWithValue("Invalid login response: Missing token or user");
+      }
+      try {
+        await AsyncStorage.setItem("authToken", response.data.token);
+        await AsyncStorage.setItem("authUser", JSON.stringify(response.data.user));
+        const savedToken = await AsyncStorage.getItem("authToken");
+        const savedUser = await AsyncStorage.getItem("authUser");
+      } catch (storageError) {
+        return rejectWithValue("Failed to save authentication data");
+      }
       dispatch(clearCart());
+      await AsyncStorage.setItem("authToken", response.data.token);
+      await AsyncStorage.setItem(
+        "authUser",
+        JSON.stringify(response.data.user)
+      );
       return response.data;
-    } catch (error: any) {
-      return rejectWithValue(handleApiError(error, "Login failed"));
+    } catch (loginError: any) {
+      console.error("Login error:", loginError);
+      return rejectWithValue(handleApiError(loginError, "Login failed"));
     }
   }
 );
@@ -92,9 +118,7 @@ export const sendEmailCode = createAsyncThunk(
   "auth/sendEmailCode",
   async (email: string, { rejectWithValue }) => {
     try {
-      const res = await axios.post(`${apiUrl}/auth/send-email-code`, { email });
-       await AsyncStorage.setItem("authToken", res.data.token);
-      await AsyncStorage.setItem("authUser", JSON.stringify(res.data.user));
+      const res = await axiosConfig.post(`/auth/send-email-code`, { email });
       return res.data;
     } catch (error: any) {
       return rejectWithValue(handleApiError(error, "Failed to send code"));
@@ -109,7 +133,7 @@ export const verifyEmailCode = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const res = await axios.post(`${apiUrl}/auth/verify-email-code`, {
+      const res = await axiosConfig.post(`/auth/verify-email-code`, {
         email,
         code,
       });
@@ -137,7 +161,8 @@ export const resetPassword = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axios.post(`${apiUrl}/auth/reset-password`, {
+      const apiUrl = await getApiUrl();
+      const response = await axiosConfig.post(`/auth/reset-password`, {
         email,
         code,
         password,
@@ -157,7 +182,7 @@ export const verifyUser = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const res = await axios.post(`${apiUrl}/auth/verify-user`, {
+      const res = await axiosConfig.post(`/auth/verify-user`, {
         email,
         code,
       });
@@ -171,32 +196,32 @@ export const verifyUser = createAsyncThunk(
     }
   }
 );
-
 export const logoutUser = createAsyncThunk(
   "auth/logoutUser",
   async (_, { rejectWithValue, dispatch }) => {
     try {
       const token = await AsyncStorage.getItem("authToken");
-      if (!token) {
-        throw new Error("No token found");
-      }
-      await axios.post(
-        `${apiUrl}/auth/logout`,
+      await axiosConfig.post(`/auth/logout`,
         {},
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `${token}`,
           },
         }
       );
-
       await AsyncStorage.removeItem("authToken");
       await AsyncStorage.removeItem("authUser");
       await clearCartFromStorage();
       dispatch(clearCart());
-
       return true;
     } catch (error: any) {
+      if (error.response && error.response.status === 401) {
+        await AsyncStorage.removeItem("authToken");
+        await AsyncStorage.removeItem("authUser");
+        await clearCartFromStorage();
+        dispatch(clearCart());
+        return true;
+      }
       return rejectWithValue(handleApiError(error, "Logout failed"));
     }
   }
@@ -208,6 +233,7 @@ const authSlice = createSlice({
   reducers: {
     clearAuthError: (state) => {
       state.error = null;
+      state.loginError = null
     },
     resetRegistration: (state) => {
       state.registered = false;
@@ -240,7 +266,7 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.loginError = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
@@ -250,7 +276,7 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
+        state.loginError = action.payload as string;
       })
       .addCase(sendEmailCode.pending, (state) => {
         state.loading = true;

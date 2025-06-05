@@ -11,3 +11,5 @@ export const PIN_CODE_LENGTH = 6;
 export const OTP_LENGTH = 6;
 export const APP_VERSION = "4.2503.21";
 export const ESTIMATED_DELIVERY ="15 days"
+export const EXCHANGE_DAY = "7 days"
+export const LOCALE_DATE_FORMAT = "en-IN";

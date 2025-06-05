@@ -9,13 +9,17 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useDispatch, useSelector } from "react-redux";
+import { CartItem } from "@/types/types";
+import {
+  fetchCartItemsApi,
+  updateCartItemApi,
+  updateSize,
+} from "@/store/cart/cartSlice";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
-import {fontSizes, fontWeights} from "@/style/typography";
-import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
-import { CartItem } from "@/types/types";
-import { fetchCartItemsApi, updateCartItemApi, updateSize } from "@/store/cart/cartSlice";
+import { fontSizes, fontWeights } from "@/style/typography";
 import borderRadius from "@/style/borderRadius";
 
 interface SizeSelectionModalProps {
@@ -24,7 +28,20 @@ interface SizeSelectionModalProps {
   item: CartItem;
 }
 
-const allPossibleSizes = ["XS", "S", "M", "L", "XL", "XXL"];
+const standardSizes = ["XS", "S", "M", "L", "XL", "XXL"];
+const numericSizes = [
+  "30",
+  "32",
+  "34",
+  "36",
+  "38",
+  "40",
+  "42",
+  "44",
+  "46",
+  "48",
+  "50",
+];
 
 const SizeSelectionModal: React.FC<SizeSelectionModalProps> = ({
   visible,
@@ -37,6 +54,14 @@ const SizeSelectionModal: React.FC<SizeSelectionModalProps> = ({
   );
   const loading = useSelector((state: RootState) => state.cart.loading);
   const error = useSelector((state: RootState) => state.cart.error);
+
+  const allPossibleSizes =
+    item?.sizes &&
+    item.sizes.length > 0 &&
+    item.sizes[0]?.size_type === "numeric"
+      ? numericSizes
+      : standardSizes;
+
   const availableSizes = allPossibleSizes
     .map((size) => {
       const productSize = item?.sizes?.find((s) => s.value === size);
@@ -89,7 +114,7 @@ const SizeSelectionModal: React.FC<SizeSelectionModalProps> = ({
       }
       onClose();
     } catch (error) {
-      console.error("Failed to update quantity:", error);
+      console.error("Failed to update size:", error);
     }
   };
 
@@ -103,38 +128,44 @@ const SizeSelectionModal: React.FC<SizeSelectionModalProps> = ({
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           <View style={styles.modalHeader}>
-            <Text style={styles.headerTitle}>Select Size</Text>
+            <Text style={styles.headerTitle}>
+              Select Size
+            </Text>
             <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-              <Ionicons name="close" size={24} color={staticColors.black} />
+              <Ionicons name="close" size={22} color={staticColors.black} />
             </TouchableOpacity>
           </View>
 
           <View style={styles.sizeContainer}>
-            {availableSizes.map((size) => (
-              <TouchableOpacity
-                key={size.label}
-                style={[
-                  styles.sizeOption,
-                  selectedSize === size.label && styles.selectedOption,
-                ]}
-                onPress={() => handleSizeSelect(size.label)}
-              >
-                <Text
+            {availableSizes.length > 0 ? (
+              availableSizes.map((size) => (
+                <TouchableOpacity
+                  key={size.label}
                   style={[
-                    styles.sizeText,
-                    selectedSize === size.label && styles.selectedSizeText,
+                    styles.sizeOption,
+                    selectedSize === size.label && styles.selectedOption,
                   ]}
+                  onPress={() => handleSizeSelect(size.label)}
                 >
-                  {size.label}
-                </Text>
-              </TouchableOpacity>
-            ))}
+                  <Text
+                    style={[
+                      styles.sizeText,
+                      selectedSize === size.label && styles.selectedSizeText,
+                    ]}
+                  >
+                    {size.label}
+                  </Text>
+                </TouchableOpacity>
+              ))
+            ) : (
+              <Text style={styles.noSizesText}>No sizes available</Text>
+            )}
           </View>
 
           <TouchableOpacity
-            style={styles.doneButton}
+            style={[styles.doneButton, loading && styles.disabledButton]}
             onPress={handleDone}
-            disabled={loading}
+            disabled={loading || !selectedSize}
           >
             {loading ? (
               <ActivityIndicator size="small" color={staticColors.white} />
@@ -168,7 +199,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.mb5,
   },
   headerTitle: {
-    fontSize: fontSizes.lg,
+    fontSize: fontSizes.md,
     fontWeight: fontWeights.semiBold,
     color: staticColors.black,
   },
@@ -182,14 +213,13 @@ const styles = StyleSheet.create({
     ...spacingStyles.m5,
   },
   sizeOption: {
-    width: 50,
-    height: 50,
+    width: 44,
+    height: 44,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
     borderColor: staticColors.lightGray,
-    borderRadius: borderRadius.r24,
-    ...spacingStyles.m5,
+    borderRadius: borderRadius.circle,
   },
   selectedOption: {
     borderColor: staticColors.discountText,
@@ -204,16 +234,24 @@ const styles = StyleSheet.create({
     fontWeight: fontWeights.semiBold,
   },
   doneButton: {
-    backgroundColor: staticColors.discountText,
+    backgroundColor: staticColors.primary,
     borderRadius: borderRadius.r8,
     ...spacingStyles.py5,
     alignItems: "center",
     ...spacingStyles.m5,
   },
+  disabledButton: {
+    backgroundColor: staticColors.lightGray,
+  },
   doneButtonText: {
     color: staticColors.white,
     fontSize: fontSizes.md,
     fontWeight: fontWeights.semiBold,
+  },
+  noSizesText: {
+    fontSize: fontSizes.sm,
+    color: staticColors.darkGray,
+    ...spacingStyles.mt10,
   },
 });
 

@@ -47,6 +47,7 @@ export interface Brand {
   description: string;
   img_url: string;
 }
+import { GalleryItem, Product } from "@/interfaces";
 
 export interface SubSubCategory {
   id: string;
@@ -80,14 +81,6 @@ export interface BannerSlide {
   title: string;
 }
 
-export interface Seller {
-  business_name: string;
-  business_type: string;
-  business_email: string;
-  business_mobile: string;
-  id: string;
-}
-
 export interface PromotionalCard {
   id: string;
   title: string;
@@ -95,10 +88,6 @@ export interface PromotionalCard {
   image: string;
   actionText: string;
   actionLink: string;
-}
-
-export interface ProductData {
-  products: Product[];
 }
 
 export type OtpInputProps = {
@@ -118,7 +107,6 @@ export interface CartItem extends Product {
   colorName?: string;
   productId: string;
 }
-
 
 export interface Address {
   id: string;

@@ -5,6 +5,7 @@ import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import {fontSizes, fontWeights} from "@/style/typography";
 import borderRadius from "@/style/borderRadius";
+import { fontFamilies } from "@/style/fontFamilies";
 interface ExpandableContentProps {
   heading: string;
   description: string;
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: fontSizes.sm,
-    fontFamily:'HelveticaBold',
+    fontFamily:fontFamilies.helveticaBold,
     color: staticColors.darkGray,
     flexShrink: 1,
   },
@@ -59,7 +60,7 @@ const styles = StyleSheet.create({
     textAlign: "justify",
     fontSize: fontSizes.sm,
     color: staticColors.textLightGray,
-    fontFamily:'Helvetica'
+    fontFamily:fontFamilies.helvetica
   },
 });
 

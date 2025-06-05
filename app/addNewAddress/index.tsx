@@ -17,6 +17,7 @@ import staticColors from "@/style/staticColors";
 import { fontSizes, fontWeights } from "@/style/typography";
 import spacingStyles from "@/style/spacingStyles";
 import { commonStyles } from "@/style/commonStyle";
+import borderRadius from "@/style/borderRadius";
 import { useFieldValidation } from "@/hooks/useFieldValidation";
 import { RootState } from "@/store/store";
 import {
@@ -31,7 +32,7 @@ import {
 import { useAppDispatch } from "@/store/hooks";
 import SelectAddress from "@/components/address/SelectAddress";
 import { AddressFormData } from "@/types/types";
-import borderRadius from "@/style/borderRadius";
+import { fontFamilies } from "@/style/fontFamilies";
 
 const AddNewAddress = () => {
   const dispatch = useAppDispatch();
@@ -141,12 +142,6 @@ const AddNewAddress = () => {
       });
   };
 
-  const handleInputFocus = () => {
-    if (scrollViewRef.current) {
-      scrollViewRef.current.scrollTo({ y: 100, animated: true });
-    }
-  };
-
   if (showSelectAddress) {
     return <SelectAddress onGoBack={() => setShowSelectAddress(false)} />;
   }
@@ -156,7 +151,7 @@ const AddNewAddress = () => {
       <KeyboardAvoidingView
         style={styles.flex}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : -5}
       >
         <View style={styles.headerContainer}>
           <TouchableOpacity
@@ -192,7 +187,6 @@ const AddNewAddress = () => {
               placeholderTextColor={staticColors.textSecondary}
               value={formData.contact_name}
               onChangeText={(text) => handleInputChange("contact_name", text)}
-              onFocus={handleInputFocus}
             />
             {errors.contact_name && (
               <Text style={styles.errorText}>{errors.contact_name}</Text>
@@ -204,7 +198,6 @@ const AddNewAddress = () => {
               keyboardType="numeric"
               value={formData.contact_number}
               onChangeText={(text) => handleInputChange("contact_number", text)}
-              onFocus={handleInputFocus}
               maxLength={10}
             />
             {errors.contact_number && (
@@ -221,7 +214,6 @@ const AddNewAddress = () => {
               keyboardType="numeric"
               value={formData.postal_code}
               onChangeText={(text) => handleInputChange("postal_code", text)}
-              onFocus={handleInputFocus}
               maxLength={6}
             />
             {errors.postal_code && (
@@ -233,7 +225,6 @@ const AddNewAddress = () => {
               placeholderTextColor={staticColors.textSecondary}
               value={formData.line1}
               onChangeText={(text) => handleInputChange("line1", text)}
-              onFocus={handleInputFocus}
             />
             {errors.line1 && (
               <Text style={styles.errorText}>{errors.line1}</Text>
@@ -247,48 +238,51 @@ const AddNewAddress = () => {
               placeholderTextColor={staticColors.textSecondary}
               value={formData.line2 || ""}
               onChangeText={(text) => handleInputChange("line2", text)}
-              onFocus={handleInputFocus}
             />
             {errors.line2 && (
               <Text style={styles.errorText}>{errors.line2}</Text>
             )}
             <View style={styles.row}>
-              <TextInput
-                style={[
-                  styles.input,
-                  styles.halfInput,
-                  errors.city && styles.inputError,
-                ]}
-                placeholder="City /District*"
-                placeholderTextColor={staticColors.textSecondary}
-                value={formData.city}
-                onChangeText={(text) => handleInputChange("city", text)}
-                onFocus={handleInputFocus}
-              />
-              <TextInput
-                style={[
-                  styles.input,
-                  styles.halfInput,
-                  errors.state && styles.inputError,
-                ]}
-                placeholder="State*"
-                placeholderTextColor={staticColors.textSecondary}
-                value={formData.state}
-                onChangeText={(text) => handleInputChange("state", text)}
-                onFocus={handleInputFocus}
-              />
+              <View style={styles.halfInputContainer}>
+                <TextInput
+                  style={[
+                    styles.input,
+                    styles.halfInput,
+                    errors.city && styles.inputError,
+                  ]}
+                  placeholder="City /District*"
+                  placeholderTextColor={staticColors.textSecondary}
+                  value={formData.city}
+                  onChangeText={(text) => handleInputChange("city", text)}
+                />
+                {errors.city && (
+                  <Text style={styles.errorText}>{errors.city}</Text>
+                )}
+              </View>
+              <View style={styles.halfInputContainer}>
+                <TextInput
+                  style={[
+                    styles.input,
+                    styles.halfInput,
+                    errors.state && styles.inputError,
+                  ]}
+                  placeholder="State*"
+                  placeholderTextColor={staticColors.textSecondary}
+                  value={formData.state}
+                  onChangeText={(text) => handleInputChange("state", text)}
+                />
+                {errors.state && (
+                  <Text style={styles.errorText}>{errors.state}</Text>
+                )}
+              </View>
             </View>
-            {errors.city && <Text style={styles.errorText}>{errors.city}</Text>}
-            {errors.state && (
-              <Text style={styles.errorText}>{errors.state}</Text>
-            )}
+
             <TextInput
               style={[styles.input, errors.country && styles.inputError]}
               placeholder="Country*"
               placeholderTextColor={staticColors.textSecondary}
               value={formData.country}
               onChangeText={(text) => handleInputChange("country", text)}
-              onFocus={handleInputFocus}
             />
             {errors.country && (
               <Text style={styles.errorText}>{errors.country}</Text>
@@ -298,7 +292,7 @@ const AddNewAddress = () => {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Address Type</Text>
             <View style={styles.addressTypeContainer}>
-              {addressTypes.map((type) => (
+              {addressTypes.slice(0, 2).map((type) => (
                 <TouchableOpacity
                   key={type}
                   style={styles.addressTypeOption}
@@ -362,7 +356,7 @@ const AddNewAddress = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: staticColors.white,
+    backgroundColor: staticColors.bgSecondary,
   },
   flex: {
     flex: 1,
@@ -371,7 +365,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     ...spacingStyles.p10,
-    backgroundColor: staticColors.white,
     zIndex: 1,
   },
   scrollView: {
@@ -384,13 +377,15 @@ const styles = StyleSheet.create({
   section: {
     backgroundColor: staticColors.white,
     borderRadius: borderRadius.r10,
-    ...spacingStyles.p10,
+    ...spacingStyles.px10,
+    ...spacingStyles.pt10,
+    ...spacingStyles.pb5,
     ...spacingStyles.mb10,
   },
   sectionTitle: {
     fontWeight: fontWeights.semiBold,
     fontSize: fontSizes.sm,
-    fontFamily: "HelveticaBold",
+    fontFamily: fontFamilies.helveticaBold,
     ...spacingStyles.mb10,
   },
   input: {
@@ -418,13 +413,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
   },
-  halfInput: {
+  halfInput: {},
+  halfInputContainer: {
     width: "48%",
   },
   addressTypeContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    ...spacingStyles.mb10,
+    ...spacingStyles.mb25,
   },
   addressTypeOption: {
     flexDirection: "row",
@@ -435,7 +431,7 @@ const styles = StyleSheet.create({
   addressTypeText: {
     fontSize: fontSizes.sm,
     fontWeight: fontWeights.semiBold,
-    fontFamily: "Helvetica",
+    fontFamily: fontFamilies.helvetica,
   },
   checkboxContainer: {
     flexDirection: "row",
@@ -458,7 +454,7 @@ const styles = StyleSheet.create({
   },
   checkboxText: {
     fontSize: fontSizes.sm,
-    fontFamily: "Helvetica",
+    fontFamily: fontFamilies.helvetica,
   },
   buttonContainer: {
     flexDirection: "row",
@@ -489,13 +485,13 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.sm,
     fontWeight: fontWeights.semiBold,
     color: staticColors.white,
-    fontFamily: "Helvetica",
+    fontFamily: fontFamilies.helvetica,
   },
   cancelButtonText: {
     fontSize: fontSizes.sm,
     fontWeight: fontWeights.semiBold,
     color: staticColors.primary,
-    fontFamily: "Helvetica",
+    fontFamily: fontFamilies.helvetica,
   },
 });
 

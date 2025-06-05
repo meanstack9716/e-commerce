@@ -7,17 +7,17 @@ import {
   ScrollView,
 } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { fontSizes, fontWeights } from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
 import borderRadius from "@/style/borderRadius";
-import { router } from "expo-router";
 
 const UserProfile = () => {
   const handleOrder = () => {
     router.push({
-      pathname: "/order",
+      pathname: "/orderHistory",
     });
   };
   const handleWishList = () => {
@@ -31,7 +31,7 @@ const UserProfile = () => {
       <View style={styles.banner}>
         <Text style={styles.bannerText}>
           Become An Insider{" "}
-          <Text style={styles.highlight}>Free Shipping, Extra Discounts</Text>{" "}
+          <Text style={styles.highlight}>Free Shipping, Extra Discounts</Text>
           and More Rewards!
         </Text>
         <TouchableOpacity style={styles.knowMoreButton}>
