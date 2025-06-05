@@ -93,4 +93,5 @@ export default {
   blue300: "#004CFF",
   blue400: "#0042E0",
   pink100: "#FFEBEB",
+  blue200:'#E8ECFF'
 };

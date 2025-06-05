@@ -1,5 +1,3 @@
-import { Review } from "@/app/product-reviews/review.types";
-
 export interface Product {
   id: string;
   title: string;
@@ -19,12 +17,19 @@ export interface Product {
   gallery?: GalleryItem[];
   seller?: Seller;
   delivery_days?: string;
-  reviews?:Review[]
+  reviews?:Review[];
+  total_rating:number,
 }
 
-export interface RatingReviewProps {
-  review: Review;
-  productId: string;
+export interface Review {
+  id: string;
+  rating: string;
+  review: string;
+  by: {
+    first_name?: string;
+    last_name?: string;
+  };
+  img_urls?: string[];
 }
 
 export interface GalleryItem {

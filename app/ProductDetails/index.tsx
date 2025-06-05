@@ -309,11 +309,11 @@ const ProductDetailsScreen: React.FC = () => {
                 <Text style={styles.reviewTitle}>Rating & Reviews</Text>
                 <View style={styles.reveiwHeader}>
                   <View style={styles.starsContainer}>
-                    {renderStars(product.reviews[0].rating, 22)}
+                    {renderStars(product.total_rating, 22)}
                   </View>
                   <View style={styles.ratingBox}>
                     <Text style={styles.ratingBoxText}>
-                      {product.reviews[0].rating}/5
+                      {product.total_rating}/5
                     </Text>
                   </View>
                 </View>
@@ -530,7 +530,7 @@ const styles = StyleSheet.create({
     fontWeight: fontWeights.semiBold,
     ...spacingStyles.ml5,
   },
-  reviewSection:{ ...spacingStyles.mx15,},
+  reviewSection: { ...spacingStyles.mx15 },
   reviewTitle: {
     fontSize: fontSizes.lg,
     fontFamily: "RalewayeExtraBold",
@@ -543,8 +543,8 @@ const styles = StyleSheet.create({
     ...spacingStyles.my10,
   },
   ratingBox: {
-    backgroundColor: "#E8ECFF",
-    paddingHorizontal: 8,
+    backgroundColor: staticColors.blue200,
+    ...spacingStyles.px10,
     ...spacingStyles.py2,
     borderRadius: borderRadius.r2,
     justifyContent: "center",

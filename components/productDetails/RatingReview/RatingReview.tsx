@@ -5,11 +5,11 @@ import { fontSizes, fontWeights } from "@/style/typography";
 import spacingStyles from "@/style/spacingStyles";
 import borderRadius from "@/style/borderRadius";
 import { commonStyles } from "@/style/commonStyle";
-import { Review } from "@/app/product-reviews/review.types";
-import { RatingReviewProps } from "@/interfaces";
 import images from "@/constants/images";
 import { renderStars } from "@/utils/starUtils";
 import gapSizes from "@/style/gapSizes";
+import { RatingReviewProps } from "./RatingReview.types";
+import { Review } from "@/interfaces";
 
 const RatingReview: React.FC<RatingReviewProps> = ({ review }) => {
   const getUsername = (review: Review) => {
