@@ -432,7 +432,6 @@ const ProductDetailsScreen: React.FC = () => {
         onClose={() => setViewSimilarModalVisible(false)}
         currentProduct={product}
       /> */}
-<<<<<<< HEAD
 
       {/* Login Modal */}
       <LoginModal
@@ -447,10 +446,7 @@ const ProductDetailsScreen: React.FC = () => {
         onClose={handleCloseSignupModal}
         onLoginPress={handleOpenLoginModal}
       />
-    </SafeAreaView>
-=======
     </SafeAreaViewWrapper>
->>>>>>> 7ccd460996fc9547f05a89b42c44c386bca60a28
   );
 };
 
