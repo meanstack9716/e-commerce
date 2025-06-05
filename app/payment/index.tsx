@@ -13,14 +13,7 @@ import { fontSizes, fontWeights } from "@/style/typography";
 import spacingStyles from "@/style/spacingStyles";
 import borderRadius from "@/style/borderRadius";
 import { commonStyles } from "@/style/commonStyle";
-
-interface PaymentMethodProps {
-  paymentOptions: { label: string }[];
-  selectedPaymentMethod: string | null;
-  onSelectPaymentMethod: (label: string) => void;
-  orderNotes: { [key: string]: string };
-  onOrderNoteChange: (label: string, text: string) => void;
-}
+import { PaymentMethodProps } from "./payment.types";
 
 const PaymentMethod: React.FC<PaymentMethodProps> = ({
   paymentOptions,
