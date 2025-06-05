@@ -4,6 +4,7 @@ import staticColors from "./staticColors";
 import { fontSizes, fontWeights } from "./typography";
 import borderRadius from "./borderRadius";
 import { fontFamilies } from "./fontFamilies";
+import gapSizes from "./gapSizes";
 
 export const commonStyles = StyleSheet.create({
   imageContainer: {
@@ -187,5 +188,34 @@ export const commonStyles = StyleSheet.create({
     height: 100,
     borderRadius: borderRadius.r8,
     ...spacingStyles.mr5,
+  },
+    searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: gapSizes.xl,
+    ...spacingStyles.mb10,
+    ...spacingStyles.pt10,
+    ...spacingStyles.px4,
+  },
+  searchContainerText: {
+    fontSize: fontSizes.xl,
+    fontWeight: fontWeights.semiBold,
+  },
+  searchInputContainer: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: staticColors.gray100,
+    borderRadius: borderRadius.r20,
+    ...spacingStyles.px15,
+    justifyContent: "space-between",
+  },
+  searchInput: {
+    flex: 1,
+    height: 40,
+    fontSize: fontSizes.sm,
+    color: staticColors.darkGray,
+    fontWeight: fontWeights.medium,
   },
 });

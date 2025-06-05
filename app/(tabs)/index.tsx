@@ -35,7 +35,6 @@ import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { fontSizes, fontWeights } from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
-import { Product } from "@/types/types";
 import images from "@/constants/images";
 import { useAppDispatch } from "@/store/hooks";
 import { fetchCategories } from "@/store/category/categoriesSlice";
@@ -43,6 +42,7 @@ import { fetchProducts } from "@/store/product/productsSlice";
 import borderRadius from "@/style/borderRadius";
 import { CategoryItem, SubCategoryItem } from "@/interfaces";
 import { fontFamilies } from "@/style/fontFamilies";
+import { commonStyles } from "@/style/commonStyle";
 
 const HomeScreen: React.FC = () => {
   const [likedProductItems, setLikedProductItems] = useState<string[]>([]);
@@ -208,15 +208,16 @@ const HomeScreen: React.FC = () => {
           translucent
           backgroundColor="transparent"
         />
-        <View style={styles.searchContainer}>
-          <Text style={styles.searchContainerText}>Shop</Text>
-          <View style={styles.searchInputContainer}>
+        <View style={commonStyles.searchContainer}>
+          <Text style={commonStyles.searchContainerText}>Shop</Text>
+          <View style={commonStyles.searchInputContainer}>
             <TextInput
               placeholder="Search"
-              style={styles.searchInput}
+              style={commonStyles.searchInput}
               placeholderTextColor={staticColors.gray200}
               value={productSearchQuery}
               onChangeText={setProductSearchQuery}
+              onFocus={() => router.navigate("/product-search")}
             />
             <TouchableOpacity>
               <Ionicons
@@ -322,35 +323,9 @@ const styles = StyleSheet.create({
     flex: 1,
     ...spacingStyles.px15,
   },
-  searchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: gapSizes.xl,
-    ...spacingStyles.mb10,
-    ...spacingStyles.pt10,
-    ...spacingStyles.px4,
-  },
-  searchContainerText: {
-    fontSize: fontSizes.xl,
-    fontWeight: fontWeights.semiBold,
-  },
-  searchInputContainer: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: staticColors.gray100,
-    borderRadius: borderRadius.r20,
-    ...spacingStyles.px15,
-    justifyContent: "space-between",
-  },
-  searchInput: {
-    flex: 1,
-    height: 40,
-    fontSize: fontSizes.sm,
-    color: staticColors.darkGray,
-    fontWeight: fontWeights.medium,
-  },
+
+
+
   headingWrap: {
     flexDirection: "row",
     alignItems: "center",

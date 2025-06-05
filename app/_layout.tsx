@@ -34,6 +34,7 @@ function AppLayout() {
         <Stack.Screen name="/placeorder" />
         <Stack.Screen name="/order" />
         <Stack.Screen name="/product-reviews" />
+         <Stack.Screen name="/product-search" />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>
