@@ -57,7 +57,6 @@ const RatingReview: React.FC<RatingReviewProps> = ({ review }) => {
           )}
           keyExtractor={(imgUrl, index) => `review-img-${index}`}
           showsHorizontalScrollIndicator={false}
-          style={styles.reviewImageContainer}
         />
       )}
     </View>
@@ -93,9 +92,6 @@ const styles = StyleSheet.create({
     fontWeight: fontWeights.black,
     color: staticColors.black,
     ...spacingStyles.mb10,
-  },
-  reviewImageContainer: {
- 
   },
 });
 
