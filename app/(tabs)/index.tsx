@@ -41,9 +41,9 @@ import { useAppDispatch } from "@/store/hooks";
 import { fetchCategories } from "@/store/category/categoriesSlice";
 import { fetchProducts } from "@/store/product/productsSlice";
 import borderRadius from "@/style/borderRadius";
-import { CategoriresCard } from "@/components/categoriesCard";
 import { CategoryItem, Product, SubCategoryItem } from "@/interfaces";
 import { fontFamilies } from "@/style/fontFamilies";
+import { CategoriresCard } from "@/components/categoriesCard";
 
 const HomeScreen: React.FC = () => {
   const [likedProductItems, setLikedProductItems] = useState<string[]>([]);

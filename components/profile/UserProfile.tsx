@@ -15,17 +15,19 @@ import { CategoriresCard } from "../categoriesCard";
 import { useSelector } from "react-redux";
 import { SafeAreaViewWrapper } from "../common/SafeAreaView/SafeAreaViewWrapper";
 import ProductCard from "../home/ProductCard";
-import { Product } from "@/types/types";
+
 import { fontFamilies } from "@/style/fontFamilies";
-import ProfileHeaderBar from "./profileHeaderBar/ProfileHeaderBar";
+
 import images from "@/constants/images";
+import { Product } from "@/interfaces";
+import ProfileHeaderBar from "./ProfileHeaderBar/ProfileHeaderBar";
 
 const UserProfile = () => {
   const [likedProductItems, setLikedProductItems] = useState<string[]>([]);
 
   const handleOrder = () => {
     router.push({
-      pathname: "/orderHistory",
+      pathname: "/cart",
     });
   };
   const handleAccount = () => {

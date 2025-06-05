@@ -26,7 +26,6 @@ import PrivacyPolicy from "@/components/profile/PrivacyPolicy";
 import Grievance from "@/components/profile/Grievance";
 import ProfileHeader from "@/components/profile/ProfileHeader";
 import FooterLinks from "@/components/profile/FooterLinks";
-import UserProfile from "@/components/profile/UserProfile";
 import ProfileListSection from "@/components/profile/ProfileListSection";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
@@ -37,6 +36,7 @@ import { useAppDispatch } from "@/store/hooks";
 import { logoutUser } from "@/store/auth/authSlice";
 import borderRadius from "@/style/borderRadius";
 import { fontFamilies } from "@/style/fontFamilies";
+import UserProfile from "@/components/profile/UserProfile";
 
 export default function ProfileScreen() {
   const [activeProfileSection, setActiveProfileSection] = useState("Profile");
