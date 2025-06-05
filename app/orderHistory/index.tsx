@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,24 +6,25 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
-} from 'react-native';
-import { useSelector } from 'react-redux';
-import { useAppDispatch } from '@/store/hooks';
-import { RootState } from '@/store/store';
-import { clearOrderStatus, fetchOrders } from '@/store/order/orderSlice';
-import { textTruncate } from '@/utils/textTruncate';
-import { Order } from '@/types/types';
-import ProfileHeaderBar from '@/components/profile/ProfileHeaderBar/ProfileHeaderBar';
-import FullScreenLoader from '@/components/common/FullScreenLoader'; 
-import images from '@/constants/images';
-import borderRadius from '@/style/borderRadius';
-import spacingStyles from '@/style/spacingStyles';
-import { fontFamilies } from '@/style/fontFamilies';
-import { fontSizes, fontWeights } from '@/style/typography';
-import staticColors from '@/style/staticColors';
-import gapSizes from '@/style/gapSizes';
-import ReviewModal from '@/modal/ReviewModal/ReviewModal';
-import { SafeAreaViewWrapper } from '@/components/common/SafeAreaView/SafeAreaViewWrapper';
+} from "react-native";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "@/store/hooks";
+import { RootState } from "@/store/store";
+import { clearOrderStatus, fetchOrders } from "@/store/order/orderSlice";
+import { textTruncate } from "@/utils/textTruncate";
+
+import ProfileHeaderBar from "@/components/profile/ProfileHeaderBar/ProfileHeaderBar";
+import FullScreenLoader from "@/components/common/FullScreenLoader";
+import images from "@/constants/images";
+import borderRadius from "@/style/borderRadius";
+import spacingStyles from "@/style/spacingStyles";
+import { fontFamilies } from "@/style/fontFamilies";
+import { fontSizes, fontWeights } from "@/style/typography";
+import staticColors from "@/style/staticColors";
+import gapSizes from "@/style/gapSizes";
+import ReviewModal from "@/modal/ReviewModal/ReviewModal";
+import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
+import { Order } from "./orderHistory.types";
 
 const HistoryScreen: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -32,9 +33,10 @@ const HistoryScreen: React.FC = () => {
   );
   const [filteredOrders, setFilteredOrders] = useState<Order[]>(orders);
   const [isReviewModalVisible, setReviewModalVisible] = useState(false);
-  const [selectedOrderId, setSelectedOrderId] = useState<string>('');
-  const [selectedProductId, setSelectedProductId] = useState<string>('');
-  const [selectedProductDescription, setSelectedProductDescription] = useState<string>('');
+  const [selectedOrderId, setSelectedOrderId] = useState<string>("");
+  const [selectedProductId, setSelectedProductId] = useState<string>("");
+  const [selectedProductDescription, setSelectedProductDescription] =
+    useState<string>("");
 
   useEffect(() => {
     dispatch(fetchOrders());
@@ -48,7 +50,11 @@ const HistoryScreen: React.FC = () => {
     setFilteredOrders(orders);
   }, [orders]);
 
-  const handleReviewPress = (orderId: string, productId: string, description: string) => {
+  const handleReviewPress = (
+    orderId: string,
+    productId: string,
+    description: string
+  ) => {
     setSelectedOrderId(orderId.slice(-6));
     setSelectedProductId(productId);
     setSelectedProductDescription(description);
@@ -61,13 +67,13 @@ const HistoryScreen: React.FC = () => {
 
     if (!product || !product.id) return null;
 
-    const createdDate = new Date(item.created_at).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
+    const createdDate = new Date(item.created_at).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
     });
 
     const imageUrl =
-      firstItem?.gallery?.[0]?.img_url || product.thumbnail_url || '';
+      firstItem?.gallery?.[0]?.img_url || product.thumbnail_url || "";
 
     return (
       <View style={styles.card}>
@@ -77,7 +83,7 @@ const HistoryScreen: React.FC = () => {
 
         <View style={styles.cardContent}>
           <Text style={styles.description}>
-            {textTruncate(product.description, 10, '...')}
+            {textTruncate(product.description, 10, "...")}
           </Text>
           <Text style={styles.orderNumber}>Order #{item.id.slice(-6)}</Text>
 
@@ -89,7 +95,9 @@ const HistoryScreen: React.FC = () => {
             <View style={styles.button}>
               <TouchableOpacity
                 style={styles.reviewButton}
-                onPress={() => handleReviewPress(item.id, product.id, product.description)}
+                onPress={() =>
+                  handleReviewPress(item.id, product.id, product.description)
+                }
               >
                 <Text style={styles.reviewButtonText}>Review</Text>
               </TouchableOpacity>
@@ -102,12 +110,12 @@ const HistoryScreen: React.FC = () => {
 
   return (
     <SafeAreaViewWrapper backgroundColor={staticColors.white}>
-      <ProfileHeaderBar title="History" profileImage={images.genderFemale} />
+      <ProfileHeaderBar title="History" profileImage={images.unKnownUser} />
       {error ? (
         <Text style={styles.errorText}>{error}</Text>
       ) : filteredOrders.length === 0 ? (
         <View style={styles.noOrdersContainer}>
-          <Text style={styles.noOrdersText}>No Orders Found</Text>
+          <Image source={images.noOrderImage} style={styles.noOrderImage} />
         </View>
       ) : (
         <FlatList
@@ -118,7 +126,7 @@ const HistoryScreen: React.FC = () => {
         />
       )}
 
-      <FullScreenLoader visible={loading} /> 
+      <FullScreenLoader visible={loading} />
       <ReviewModal
         visible={isReviewModalVisible}
         onClose={() => setReviewModalVisible(false)}
@@ -136,14 +144,14 @@ const styles = StyleSheet.create({
     ...spacingStyles.py15,
   },
   card: {
-    flexDirection: 'row',
+    flexDirection: "row",
     ...spacingStyles.mb15,
-    alignItems: 'center',
+    alignItems: "center",
   },
   cardContent: {
     flex: 1,
     ...spacingStyles.ml10,
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
   },
   orderImage: {
     width: 145,
@@ -158,23 +166,21 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 3,
-    resizeMode: 'cover',
+    resizeMode: "cover",
   },
   errorText: {
     fontSize: fontSizes.xs,
     color: staticColors.errorColor,
-    textAlign: 'center',
+    textAlign: "center",
     ...spacingStyles.mt20,
   },
   noOrdersContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: "center",
   },
-  noOrdersText: {
-    fontSize: fontSizes.md,
-    fontWeight: fontWeights.bold,
-    color: staticColors.black,
+  noOrderImage: {
+    width: "50%",
+    height: "50%",
   },
   description: {
     fontSize: fontSizes.xs,
@@ -188,30 +194,30 @@ const styles = StyleSheet.create({
     ...spacingStyles.my10,
   },
   footer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: gapSizes.md,
   },
   button: {
-    width: '50%',
+    width: "50%",
   },
   date: {
     backgroundColor: staticColors.bgSoftGray,
     borderRadius: borderRadius.r10,
     ...spacingStyles.py5,
-    textAlign: 'center',
+    textAlign: "center",
     fontFamily: fontFamilies.ralewayeMedium,
     fontSize: fontSizes.base,
-    width: '100%',
+    width: "100%",
   },
   reviewButton: {
     borderWidth: 2,
     borderColor: staticColors.primaryBlue,
     borderRadius: borderRadius.r10,
     ...spacingStyles.py5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
   },
   reviewButtonText: {
     color: staticColors.primaryBlue,

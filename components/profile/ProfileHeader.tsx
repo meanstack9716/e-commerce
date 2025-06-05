@@ -6,6 +6,7 @@ import spacingStyles from "@/style/spacingStyles";
 import { fontSizes, fontWeights } from "@/style/typography";
 import borderRadius from "@/style/borderRadius";
 import staticColors from "@/style/staticColors";
+import images from "@/constants/images";
 
 const ProfileHeader = () => {
   const handleLoginPress = () => {
@@ -20,7 +21,7 @@ const ProfileHeader = () => {
           <View style={styles.rowContainer}>
             <View style={styles.avatarContainer}>
               <Image
-                source={require("../../assets/images/avtar-profile.png")}
+                source={images.unKnownUser}
                 style={styles.avatarImage}
               />
             </View>

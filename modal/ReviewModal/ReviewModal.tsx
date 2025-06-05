@@ -293,7 +293,7 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.bgSoftBlue,
     borderTopLeftRadius: borderRadius.r20,
     borderTopRightRadius: borderRadius.r20,
-    fontSize: fontSizes.xxl,
+    fontSize: fontSizes.l,
     fontFamily: fontFamilies.ralewayExtraBold,
     color: staticColors.black,
     ...spacingStyles.mb15,
