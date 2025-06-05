@@ -1,20 +1,26 @@
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { fontSizes, fontWeights } from "@/style/typography";
 import { router } from "expo-router";
 import { useDispatch } from "react-redux";
 import { logoutUser } from "@/store/auth/authSlice";
+import { useCallback } from "react";
 
 export default function SettingPage() {
   const dispatch = useDispatch();
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     dispatch(logoutUser());
     router.push("/");
-  };
+  }, [dispatch]);
+
+  const handleGoBack = useCallback(() => {
+    router.back();
+    return true;
+  }, []);
 
   const settingsData = [
     {
@@ -28,42 +34,53 @@ export default function SettingPage() {
     {
       title: "Shop",
       items: [
-        { label: "Order", route: null },
-        { label: "Terms and Conditions", route: null },
+        { label: "Order", route: "/orderHistory" },
+        { label: "Faq", route: null },
+        { label: "About Us", route: null },
+        { label: "Terms and Use", route: null },
+        { label: "Privacy Policy", route: null },
         { label: "Logout", isLogout: true },
       ],
     },
   ];
 
+  const SettingItem = ({ item }: { item: any }) => (
+    <>
+      <TouchableOpacity
+        style={styles.item}
+        onPress={() => {
+          if (item.isLogout) handleLogout();
+          else if (item.route) router.push(item.route);
+        }}
+        accessible
+        accessibilityLabel={item.label}
+      >
+        <Text style={styles.itemText}>{item.label}</Text>
+        <FontAwesome name="chevron-right" size={14} color="black" />
+      </TouchableOpacity>
+      <View style={styles.spacer} />
+    </>
+  );
+
   return (
     <SafeAreaViewWrapper>
       <View style={styles.container}>
-        <Text style={styles.header}>Settings</Text>
+        <View style={styles.headerContain}>
+          <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
+            <Ionicons
+              name="arrow-back"
+              size={20}
+              color={staticColors.darkGray}
+            />
+          </TouchableOpacity>
+          <Text style={styles.header}>Settings</Text>
+        </View>
 
         {settingsData.map((section, sectionIndex) => (
           <View style={styles.section} key={sectionIndex}>
             <Text style={styles.sectionTitle}>{section.title}</Text>
-
             {section.items.map((item, itemIndex) => (
-              <View key={itemIndex}>
-                <TouchableOpacity
-                  style={styles.item}
-                  onPress={() => {
-                    if (item.isLogout) {
-                      handleLogout();
-                    } else if (item.route) {
-                      router.push(item.route);
-                    }
-                  }}
-                >
-                  <Text style={styles.itemText}>{item.label}</Text>
-                  <FontAwesome name="chevron-right" size={14} color="black" />
-                </TouchableOpacity>
-
-                {itemIndex !== section.items.length - 1 && (
-                  <View style={styles.spacer} />
-                )}
-              </View>
+              <SettingItem item={item} key={itemIndex} />
             ))}
           </View>
         ))}
@@ -78,10 +95,17 @@ const styles = StyleSheet.create({
     ...spacingStyles.px5,
     backgroundColor: staticColors.white,
   },
+  headerContain: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    ...spacingStyles.mb25,
+  },
+  backButton: {
+    ...spacingStyles.mr15
+  },
   header: {
     fontSize: fontSizes.xl,
-    fontWeight: "bold",
-    ...spacingStyles.mb25,
+    fontWeight: fontWeights.bold,
     color: staticColors.black,
   },
   section: {
@@ -97,7 +121,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    ...spacingStyles.py10,
+    ...spacingStyles.py15,
   },
   itemText: {
     fontSize: fontSizes.base,
@@ -105,7 +129,7 @@ const styles = StyleSheet.create({
   },
   spacer: {
     height: 1,
-    backgroundColor: "#eee",
-    marginVertical: 8,
+    backgroundColor: staticColors.lightGray || "#eee",
+    marginVertical: 4,
   },
 });

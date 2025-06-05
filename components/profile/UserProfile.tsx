@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   FlatList,
+  SafeAreaView,
 } from "react-native";
 import { router } from "expo-router";
 import spacingStyles from "@/style/spacingStyles";
@@ -27,11 +28,6 @@ import borderRadius from "@/style/borderRadius";
 const UserProfile = () => {
   const [likedProductItems, setLikedProductItems] = useState<string[]>([]);
 
-  const handleOrder = () => {
-    router.push({
-      pathname: "/cart",
-    });
-  };
   const handleAccount = () => {
     router.push({
       pathname: "/accountManage",
@@ -74,10 +70,10 @@ const UserProfile = () => {
 
   return (
     <SafeAreaViewWrapper style={styles.container}>
-      <ProfileHeaderBar title="My Activity" profileImage={images.genderFemale} containerStyle={styles.profileHeaderContainer} titleStyle={styles.profileHeaderTitle} />
+      <ProfileHeaderBar title="category" profileImage={images.genderFemale} titleStyle={styles.profileHeaderTitle}/>
       <CategoriresCard categoryList={categories} />
       <View style={styles.allProductsContainer}>
-        <Text style={styles.headingText}>Just For You</Text>
+        <Text style={styles.headingText}>Just for you</Text>
         <FlatList
           data={products}
           numColumns={2}
@@ -96,7 +92,6 @@ const UserProfile = () => {
           )}
         />
       </View>
-
     </SafeAreaViewWrapper>
   );
 };
@@ -110,15 +105,15 @@ const styles = StyleSheet.create({
   profileHeaderContainer: {
     ...spacingStyles.pb0
   },
-  profileHeaderTitle:{
-...spacingStyles.py5,
-...spacingStyles.px15,
-backgroundColor:staticColors.primaryBlue,
-color:staticColors.white,
-fontFamily:fontFamilies.ralewayMedium,
-borderRadius:borderRadius.r20,
-fontSize:fontSizes.base,
-textAlign:'center'
+  profileHeaderTitle: {
+    ...spacingStyles.pb5,
+    ...spacingStyles.px15,
+    backgroundColor: staticColors.primaryBlue,
+    color: staticColors.white,
+    fontFamily: fontFamilies.ralewayMedium,
+    borderRadius: borderRadius.r16,
+    fontSize: fontSizes.base,
+    textAlign: 'center'
   },
   headingText: {
     fontSize: fontSizes.lg,
