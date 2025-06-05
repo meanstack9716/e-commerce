@@ -26,7 +26,7 @@ import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaVi
 import { Order } from "../../interfaces/orderHistory.interface";
 import { SelectedItem } from "./orderHistory.types";
 import OrderItem from "@/components/order/orderItem/OrderItem";
-import ProfileHeader from "@/components/profile/ProfileHeader";
+import ProfileHeaderBar from "@/components/profile/ProfileHeaderBar/ProfileHeaderBar";
 
 const OrderHistoryScreen: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -72,7 +72,7 @@ const OrderHistoryScreen: React.FC = () => {
 
   return (
     <SafeAreaViewWrapper backgroundColor={staticColors.white}>
-      <ProfileHeader title="History" profileImage={images.unKnownUser} />
+      <ProfileHeaderBar title="History" profileImage={images.unKnownUser} />
       {error ? (
         <Text style={styles.errorText}>{error}</Text>
       ) : filteredOrders.length === 0 ? (
