@@ -26,7 +26,7 @@ import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaVi
 import { Order } from "../../interfaces/orderHistory.interface";
 import { SelectedItem } from "./orderHistory.types";
 import OrderItem from "@/components/order/orderItem/OrderItem";
-import ProfileHeaderBar from "@/components/profile/profileHeaderBar/ProfileHeaderBar";
+import ProfileHeaderBar from "@/components/profile/ProfileHeaderBar/ProfileHeaderBar";
 
 const OrderHistoryScreen: React.FC = () => {
   const dispatch = useAppDispatch();
