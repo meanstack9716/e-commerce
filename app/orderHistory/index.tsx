@@ -12,7 +12,6 @@ import { useAppDispatch } from "@/store/hooks";
 import { RootState } from "@/store/store";
 import { clearOrderStatus, fetchOrders } from "@/store/order/orderSlice";
 import { textTruncate } from "@/utils/textTruncate";
-
 import ProfileHeaderBar from "@/components/profile/ProfileHeaderBar/ProfileHeaderBar";
 import FullScreenLoader from "@/components/common/FullScreenLoader";
 import images from "@/constants/images";
@@ -24,7 +23,8 @@ import staticColors from "@/style/staticColors";
 import gapSizes from "@/style/gapSizes";
 import ReviewModal from "@/modal/ReviewModal/ReviewModal";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
-import { Order } from "./orderHistory.types";
+import { Order } from "../../interfaces/orderHistory.interface";
+import { SelectedItem } from "./orderHistory.types";
 
 const HistoryScreen: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -32,11 +32,12 @@ const HistoryScreen: React.FC = () => {
     (state: RootState) => state.order
   );
   const [filteredOrders, setFilteredOrders] = useState<Order[]>(orders);
+  const [selectedItem, setSelectedItem] = useState<SelectedItem>({
+    orderId: "",
+    productId: "",
+    productDescription: "",
+  });
   const [isReviewModalVisible, setReviewModalVisible] = useState(false);
-  const [selectedOrderId, setSelectedOrderId] = useState<string>("");
-  const [selectedProductId, setSelectedProductId] = useState<string>("");
-  const [selectedProductDescription, setSelectedProductDescription] =
-    useState<string>("");
 
   useEffect(() => {
     dispatch(fetchOrders());
@@ -55,9 +56,11 @@ const HistoryScreen: React.FC = () => {
     productId: string,
     description: string
   ) => {
-    setSelectedOrderId(orderId.slice(-6));
-    setSelectedProductId(productId);
-    setSelectedProductDescription(description);
+    setSelectedItem({
+      orderId: orderId,
+      productId,
+      productDescription: description,
+    });
     setReviewModalVisible(true);
   };
 
@@ -130,9 +133,9 @@ const HistoryScreen: React.FC = () => {
       <ReviewModal
         visible={isReviewModalVisible}
         onClose={() => setReviewModalVisible(false)}
-        orderId={selectedOrderId}
-        productId={selectedProductId}
-        productDescription={selectedProductDescription}
+        orderId={selectedItem.orderId}
+        productId={selectedItem.productId}
+        productDescription={selectedItem.productDescription}
       />
     </SafeAreaViewWrapper>
   );

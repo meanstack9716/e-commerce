@@ -5,3 +5,10 @@ export interface ReviewModalProps {
   productId: string;
   productDescription: string;
 }
+
+export interface ReviewState {
+  rating: number;
+  comment: string;
+  selectedImages: string[];
+  showImagePickerModal: boolean;
+}

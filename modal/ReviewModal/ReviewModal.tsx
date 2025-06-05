@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Modal,
   View,
@@ -25,8 +25,16 @@ import { RootState } from "@/store/store";
 import { resetReviewState, submitReview } from "@/store/review/reviewSlice";
 import { useAppDispatch } from "@/store/hooks";
 import images from "@/constants/images";
-import { ReviewModalProps } from "./ReviewModal.types";
+import { ReviewModalProps, ReviewState } from "./ReviewModal.types";
 import ConfirmationModal from "./confirmationModal/ConfirmationModal";
+import { useFieldValidation } from "@/hooks/useFieldValidation";
+
+const initialReviewState: ReviewState = {
+  rating: 0,
+  comment: "",
+  selectedImages: [],
+  showImagePickerModal: false,
+};
 
 const ReviewModal: React.FC<ReviewModalProps> = ({
   visible,
@@ -39,67 +47,120 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
   const { loading, error, success } = useSelector(
     (state: RootState) => state.review
   );
-  const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState("");
-  const [selectedImages, setSelectedImages] = useState<string[]>([]);
-  const [showImagePickerModal, setShowImagePickerModal] = useState(false);
+  const [reviewState, setReviewState] =
+    useState<ReviewState>(initialReviewState);
+  const {
+    errors,
+    handleFieldChange,
+    setFieldErrors,
+    resetErrors,
+    validateAllFields,
+  } = useFieldValidation();
+
+  const setImagePickerModal = (value: boolean) => {
+    setReviewState((prev) => ({ ...prev, showImagePickerModal: value }));
+  };
 
   const handleRating = (selectedRating: number) => {
-    setRating(selectedRating);
+    setReviewState((prev) => ({ ...prev, rating: selectedRating }));
+    handleFieldChange(
+      "rating",
+      selectedRating.toString(),
+      (value) => parseInt(value) >= 1,
+      "Please select at least one star"
+    );
+  };
+
+  const handleCommentChange = (text: string) => {
+    setReviewState((prev) => ({ ...prev, comment: text }));
+    handleFieldChange(
+      "comment",
+      text,
+      (value) => value.trim().length >= 200,
+      "Comment must be at least 200 characters"
+    );
   };
 
   const handleSubmit = () => {
+    const isValid = validateAllFields({
+      rating: {
+        value: reviewState.rating.toString(),
+        validator: (v) => parseInt(v) >= 1,
+        errorMessage: "Please select at least one star",
+      },
+      comment: {
+        value: reviewState.comment,
+        validator: (v) => v.trim().length >= 200,
+        errorMessage: "Comment must be at least 200 characters",
+      },
+    });
+
+    if (!isValid) return;
+
     dispatch(
       submitReview({
         product_id: productId,
-        rating: rating.toString(),
-        review: comment.trim() || "No comment provided",
+        rating: reviewState.rating.toString(),
+        review: reviewState.comment.trim(),
       })
     );
   };
 
   const handleClose = () => {
     if (loading) return;
-    setRating(0);
-    setComment("");
-    setSelectedImages([]);
+    setReviewState(initialReviewState);
+    resetErrors();
     dispatch(resetReviewState());
     onClose();
   };
 
   const handleConfirmationClose = () => {
-    setRating(0);
-    setComment("");
-    setSelectedImages([]);
+    setReviewState(initialReviewState);
+    resetErrors();
     dispatch(resetReviewState());
     onClose();
   };
 
   const handleImagePick = () => {
-    setShowImagePickerModal(true);
+    setReviewState((prev) => ({ ...prev, showImagePickerModal: true }));
   };
 
   const handleCameraPick = async () => {
-    const uris = await pickImages(setShowImagePickerModal, "camera");
+    const uris = await pickImages(setImagePickerModal, "camera");
     if (uris.length > 0) {
-      setSelectedImages((prev) => [...prev, ...uris]);
+      setReviewState((prev) => ({
+        ...prev,
+        selectedImages: [...prev.selectedImages, ...uris],
+      }));
     }
   };
 
   const handleGalleryPick = async () => {
-    const uris = await pickImages(setShowImagePickerModal, "gallery");
+    const uris = await pickImages(setImagePickerModal, "gallery");
     if (uris.length > 0) {
-      setSelectedImages((prev) => [...prev, ...uris]);
+      setReviewState((prev) => ({
+        ...prev,
+        selectedImages: [...prev.selectedImages, ...uris],
+      }));
     }
   };
 
   const handleImagePickerCancel = async () => {
-    await pickImages(setShowImagePickerModal, "cancel");
+    await pickImages(setImagePickerModal, "cancel");
   };
 
   const removeImage = (uriToRemove: string) => {
-    setSelectedImages((prev) => prev.filter((uri) => uri !== uriToRemove));
+    setReviewState((prev) => ({
+      ...prev,
+      selectedImages: prev.selectedImages.filter((uri) => uri !== uriToRemove),
+    }));
   };
+
+  useEffect(() => {
+    if (visible) {
+      resetErrors();
+    }
+  }, [visible]);
 
   return (
     <>
@@ -138,7 +199,9 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
                         >
                           <Ionicons
                             name={
-                              rating >= starRating ? "star" : "star-outline"
+                              reviewState.rating >= starRating
+                                ? "star"
+                                : "star-outline"
                             }
                             size={fontSizes["2xl"]}
                             color={staticColors.darkYellow}
@@ -148,6 +211,9 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
                       );
                     })}
                   </View>
+                  {errors.rating && (
+                    <Text style={styles.errorText}>{errors.rating}</Text>
+                  )}
 
                   <View style={styles.cameraRow}>
                     <TouchableOpacity
@@ -171,7 +237,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
                       showsHorizontalScrollIndicator={false}
                       contentContainerStyle={styles.imagePreviewContainer}
                     >
-                      {selectedImages.map((uri) => (
+                      {reviewState.selectedImages.map((uri) => (
                         <View key={uri} style={styles.imageWrapper}>
                           <Image source={{ uri }} style={styles.previewImage} />
                           <TouchableOpacity
@@ -193,23 +259,29 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
                 <TextInput
                   style={styles.commentInput}
                   multiline
-                  placeholder="Say it!"
+                  placeholder="Write your review (minimum 200 characters)"
                   placeholderTextColor={staticColors.black}
-                  value={comment}
-                  onChangeText={setComment}
+                  value={reviewState.comment}
+                  onChangeText={handleCommentChange}
                   textAlignVertical="top"
                   textAlign="left"
                 />
-
+                <Text style={styles.charCount}>
+                  {reviewState.comment.length}/200
+                </Text>
+                {errors.comment && (
+                  <Text style={styles.errorText}>{errors.comment}</Text>
+                )}
                 {error && <Text style={styles.errorText}>{error}</Text>}
 
                 <TouchableOpacity
                   style={[
                     styles.submitButton,
-                    loading && styles.disabledButton,
+                    (loading || errors.rating || errors.comment) &&
+                      styles.disabledButton,
                   ]}
                   onPress={handleSubmit}
-                  disabled={loading}
+                  disabled={loading || !!errors.rating || !!errors.comment}
                 >
                   {loading ? (
                     <ActivityIndicator
@@ -229,14 +301,16 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
       <Modal
         animationType="fade"
         transparent={true}
-        visible={showImagePickerModal}
+        visible={reviewState.showImagePickerModal}
         onRequestClose={handleImagePickerCancel}
       >
         <TouchableWithoutFeedback onPress={handleImagePickerCancel}>
           <View style={styles.imageModal}>
             <TouchableWithoutFeedback>
               <View style={styles.imagePickerModalView}>
-                <Text style={styles.imagePickerModalTitle}>Select Image Source</Text>
+                <Text style={styles.imagePickerModalTitle}>
+                  Select Image Source
+                </Text>
                 <Text style={styles.imagePickerModalSubtitle}>
                   Choose where to pick your image from
                 </Text>
@@ -256,7 +330,12 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
                   style={[styles.imagePickerButton, styles.cancelButton]}
                   onPress={handleImagePickerCancel}
                 >
-                  <Text style={[styles.imagePickerButtonText, styles.cancelButtonText]}>
+                  <Text
+                    style={[
+                      styles.imagePickerButtonText,
+                      styles.cancelButtonText,
+                    ]}
+                  >
                     Cancel
                   </Text>
                 </TouchableOpacity>
@@ -342,12 +421,22 @@ const styles = StyleSheet.create({
     fontFamily: fontFamilies.nunitoSans,
     ...spacingStyles.px10,
   },
+  charCount: {
+    fontSize: fontSizes.sm,
+    fontFamily: fontFamilies.nunitoSans,
+    color: staticColors.black,
+    textAlign: "right",
+    ...spacingStyles.mr25,
+    ...spacingStyles.mb5,
+  },
   errorText: {
     color: staticColors.errorColor,
     fontSize: fontSizes.sm,
     fontWeight: fontWeights.medium,
     fontFamily: fontFamilies.nunitoSans,
-    textAlign: "center",
+    textAlign: "left",
+    ...spacingStyles.mb10,
+    ...spacingStyles.mx20,
   },
   submitButton: {
     backgroundColor: staticColors.primaryBlue,
@@ -416,7 +505,7 @@ const styles = StyleSheet.create({
     width: "100%",
     ...spacingStyles.p20,
     alignItems: "center",
-    borderRadius:borderRadius.r20
+    borderRadius: borderRadius.r20,
   },
   imagePickerModalTitle: {
     fontSize: fontSizes.xl,
@@ -431,7 +520,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.mb20,
     textAlign: "center",
   },
-   imageModal: {
+  imageModal: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
