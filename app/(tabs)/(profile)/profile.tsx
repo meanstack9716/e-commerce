@@ -37,8 +37,6 @@ import { useAppDispatch } from "@/store/hooks";
 import { logoutUser } from "@/store/auth/authSlice";
 import borderRadius from "@/style/borderRadius";
 import { fontFamilies } from "@/style/fontFamilies";
-import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
-import CategoryGrid from "@/components/home/CategoryGrid";
 
 export default function ProfileScreen() {
   const [activeProfileSection, setActiveProfileSection] = useState("Profile");
@@ -75,8 +73,8 @@ export default function ProfileScreen() {
       Profile: (
         <>
           {isAuthenticated ? <UserProfile /> : <ProfileListSection />}
-          {/* <FooterLinks onLinkPress={(link) => setActiveProfileSection(link)} /> */}
-          {/* {isAuthenticated && (
+          {/* <FooterLinks onLinkPress={(link) => setActiveProfileSection(link)} />
+          {isAuthenticated && (
             <TouchableOpacity
               style={styles.logoutButton}
               onPress={handleLogout}
@@ -100,8 +98,28 @@ export default function ProfileScreen() {
   };
 
   return (
-    <SafeAreaViewWrapper >
-    </SafeAreaViewWrapper>
+    <View style={[styles.container]}>
+      {/* <View style={[styles.topBar, { paddingTop: insets.top }]}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => {
+            if (activeProfileSection !== "Profile") {
+              setActiveProfileSection("Profile");
+            } else {
+              router.back();
+            }
+          }}
+        >
+          <AntDesign name="arrowleft" size={18} color="black" />
+        </TouchableOpacity>
+
+        <Text style={styles.headerTitle}>{activeProfileSection}</Text>
+      </View> */}
+
+      <ScrollView style={styles.container}>
+        {getSelectedProfileSectionContent()}
+      </ScrollView>
+    </View>
   );
 }
 
@@ -111,7 +129,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: fontSizes.base,
-    fontWeight: "bold",
+    fontWeight: fontWeights.bold,
     color: colors.primary,
     fontFamily:fontFamilies.arial,
   },
