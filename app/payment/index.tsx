@@ -1,122 +1,36 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
-  StyleSheet,
   TouchableOpacity,
-  ScrollView,
+  StyleSheet,
   TextInput,
-  Alert,
-  ActivityIndicator,
+  ScrollView,
 } from "react-native";
-import Toast from "react-native-toast-message";
 import { Ionicons } from "@expo/vector-icons";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { router, useLocalSearchParams } from "expo-router";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import { placeOrder, clearOrderStatus } from "@/store/order/orderSlice";
 import staticColors from "@/style/staticColors";
+import { fontSizes, fontWeights } from "@/style/typography";
 import spacingStyles from "@/style/spacingStyles";
-import {fontSizes, fontWeights} from "@/style/typography";
-import { commonStyles } from "@/style/commonStyle";
-import { useAppDispatch } from "@/store/hooks";
 import borderRadius from "@/style/borderRadius";
+import { commonStyles } from "@/style/commonStyle";
+import { PaymentMethodProps } from "./payment.types";
 
-const PaymentScreen: React.FC = () => {
-  const [expandedPaymentOption, setExpandedPaymentOption] = useState<
-    string | null
-  >(null);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
-    string | null
-  >(null);
-  const [orderNotes, setOrderNotes] = useState<{ [key: string]: string }>({});
-  const { shippingAddressId } = useLocalSearchParams<{
-    shippingAddressId: string;
-  }>();
-  const dispatch = useAppDispatch();
-  const cartItems = useSelector((state: RootState) => state.cart.cartItems);
-  const { loading, error, orderId } = useSelector(
-    (state: RootState) => state.order
-  );
-  const selectedItems = cartItems.filter((item) => item.isSelected);
-  const totalPrice = selectedItems.reduce(
-    (sum, item) => sum + (item.final_price || 0),
-    0
-  );
-
-  useEffect(() => {
-    if (orderId) {
-      Toast.show({
-        type: "success",
-        text1: "Success",
-        text2: "Order placed successfully!",
-      });
-      dispatch(clearOrderStatus());
-      router.push("/cart");
-    }
-    if (error) {
-      Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: error || "Failed to place order. Please try again.",
-      });
-      dispatch(clearOrderStatus());
-    }
-  }, [orderId, error, dispatch]);
-
-  const paymentOptions = [
-    {
-      label: "Cash On Delivery",
-    },
-  ];
+const PaymentMethod: React.FC<PaymentMethodProps> = ({
+  paymentOptions,
+  selectedPaymentMethod,
+  onSelectPaymentMethod,
+  orderNotes,
+  onOrderNoteChange,
+}) => {
+  const [expandedPaymentOption, setExpandedPaymentOption] = useState<string | null>(null);
 
   const toggleExpand = (label: string) => {
     setExpandedPaymentOption(expandedPaymentOption === label ? null : label);
   };
 
-  const handleSelectOption = (label: string) => {
-    setSelectedPaymentMethod(label);
-  };
-
-  const handleOrderNoteChange = (label: string, text: string) => {
-    setOrderNotes((prev) => ({ ...prev, [label]: text }));
-  };
-
-  const handleBack = () => {
-    router.back();
-  };
-
-  const handlePayNow = async () => {
-    if (!selectedPaymentMethod) {
-      Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: "Please select a payment method.",
-      });
-      return;
-    }
-
-    const payload = {
-      cart_items_ids: selectedItems.map((item) => item.id),
-      shipping_address_id: shippingAddressId,
-      payment_method: selectedPaymentMethod,
-    };
-
-    dispatch(placeOrder(payload));
-  };
-
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={handleBack}>
-          <Ionicons name="arrow-back" size={20} color={staticColors.darkGray} />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>PAYMENT</Text>
-      </View>
-
-      {/* Payment Options */}
+    <View>
+      <Text style={styles.sectionTitle}>PAYMENT METHOD</Text>
       <ScrollView style={styles.sectionContainer}>
         {paymentOptions.map((option, index) => (
           <View key={index}>
@@ -127,13 +41,13 @@ const PaymentScreen: React.FC = () => {
               <View style={styles.optionRow}>
                 <TouchableOpacity
                   style={commonStyles.radioOuter}
-                  onPress={() => handleSelectOption(option.label)}
+                  onPress={() => onSelectPaymentMethod(option.label)}
                 >
                   <View
                     style={[
                       commonStyles.radioInner,
                       selectedPaymentMethod === option.label &&
-                        styles.radioButtonSelected,
+                      styles.radioButtonSelected,
                     ]}
                   />
                 </TouchableOpacity>
@@ -172,16 +86,13 @@ const PaymentScreen: React.FC = () => {
                   </Text>
                 </View>
               )}
-            {/* Order Note Box */}
             <View style={styles.orderNoteContainer}>
               <Text style={styles.orderNoteLabel}>Order Note</Text>
               <TextInput
                 style={styles.orderNoteInput}
                 placeholder="Add a note for your order (optional)"
                 value={orderNotes[option.label] || ""}
-                onChangeText={(text) =>
-                  handleOrderNoteChange(option.label, text)
-                }
+                onChangeText={(text) => onOrderNoteChange(option.label, text)}
                 multiline
                 numberOfLines={4}
               />
@@ -189,49 +100,16 @@ const PaymentScreen: React.FC = () => {
           </View>
         ))}
       </ScrollView>
-
-      {/* Footer */}
-      <View style={styles.footer}>
-        <View>
-          <Text style={styles.totalText}>₹{totalPrice}</Text>
-        </View>
-        <TouchableOpacity
-          style={[styles.payButton, loading && styles.payButtonDisabled]}
-          onPress={handlePayNow}
-          disabled={loading}
-        >
-          {loading ? (
-            <ActivityIndicator size="small" color={staticColors.white} />
-          ) : (
-            <Text style={styles.payButtonText}>PLACEORDER</Text>
-          )}
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: staticColors.bgSecondary,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    ...spacingStyles.p15,
-    backgroundColor: staticColors.white,
-  },
-  headerTitle: {
+  sectionTitle: {
     fontSize: fontSizes.base,
     fontWeight: fontWeights.semiBold,
     color: staticColors.darkGray,
-    ...spacingStyles.pl5,
-  },
-  sectionContainer: {
-    backgroundColor: staticColors.white,
-    ...spacingStyles.px15,
-    ...spacingStyles.my5,
+    ...spacingStyles.mb10,
   },
   optionContainer: {
     flexDirection: "row",
@@ -252,10 +130,6 @@ const styles = StyleSheet.create({
   },
   optionText: {
     fontSize: fontSizes.sm,
-  },
-  chevron: {
-    transitionProperty: "transform",
-    transitionDuration: "0.3s",
   },
   expandedMessage: {
     backgroundColor: staticColors.bgSecondary,
@@ -293,32 +167,6 @@ const styles = StyleSheet.create({
     textAlignVertical: "top",
     backgroundColor: staticColors.white,
   },
-  footer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    ...spacingStyles.p15,
-    backgroundColor: staticColors.white,
-  },
-  totalText: {
-    fontSize: fontSizes.base,
-    fontWeight:fontWeights.semiBold,
-  },
-  payButton: {
-    backgroundColor: staticColors.primary,
-    ...spacingStyles.py10,
-    ...spacingStyles.px25,
-    borderRadius: borderRadius.r8,
-  },
-  payButtonText: {
-    color: staticColors.white,
-    fontSize: fontSizes.sm,
-    fontWeight: fontWeights.semiBold,
-  },
-  payButtonDisabled: {
-    backgroundColor: staticColors.lightGray,
-    opacity: 0.6,
-  },
 });
 
-export default PaymentScreen;
+export default PaymentMethod;
