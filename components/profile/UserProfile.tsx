@@ -21,6 +21,8 @@ import { fontFamilies } from "@/style/fontFamilies";
 import images from "@/constants/images";
 import { Product } from "@/interfaces";
 import ProfileHeaderBar from "./ProfileHeaderBar/ProfileHeaderBar";
+import gapSizes from "@/style/gapSizes";
+import borderRadius from "@/style/borderRadius";
 
 const UserProfile = () => {
   const [likedProductItems, setLikedProductItems] = useState<string[]>([]);
@@ -72,7 +74,7 @@ const UserProfile = () => {
 
   return (
     <SafeAreaViewWrapper style={styles.container}>
-      <ProfileHeaderBar title="category" profileImage={images.genderFemale}/>
+      <ProfileHeaderBar title="My Activity" profileImage={images.genderFemale} containerStyle={styles.profileHeaderContainer} titleStyle={styles.profileHeaderTitle} />
       <CategoriresCard categoryList={categories} />
       <View style={styles.allProductsContainer}>
         <Text style={styles.headingText}>Just For You</Text>
@@ -103,28 +105,38 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    gap: 10
+    gap: gapSizes.sm
+  },
+  profileHeaderContainer: {
+    ...spacingStyles.pb0
+  },
+  profileHeaderTitle:{
+...spacingStyles.py5,
+...spacingStyles.px15,
+backgroundColor:staticColors.primaryBlue,
+color:staticColors.white,
+fontFamily:fontFamilies.ralewayMedium,
+borderRadius:borderRadius.r20,
+fontSize:fontSizes.base,
+textAlign:'center'
   },
   headingText: {
     fontSize: fontSizes.lg,
     fontFamily: fontFamilies.ralewayBold,
-    ...spacingStyles.pb10,
   },
   allProductsContainer: {
     display: 'flex',
     flexDirection: 'column',
   },
   emptyContainer: {
-    padding: 20,
+    ...spacingStyles.p20,
     alignItems: "center",
   },
   emptyText: {
     fontSize: fontSizes.md,
     color: staticColors.textLightGray,
   },
-  flatListContent: {
-    ...spacingStyles.px5,
-  },
+  flatListContent: {},
   columnWrapper: {
     justifyContent: "space-between",
     ...spacingStyles.mb10,

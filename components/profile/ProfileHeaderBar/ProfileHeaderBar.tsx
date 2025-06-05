@@ -13,19 +13,20 @@ import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import { fontSizes } from "@/style/typography";
 import { fontFamilies } from "@/style/fontFamilies";
-import { ProfileHeaderBarProps } from "./ProfileHeaderBar.types";
+import { ProfileHeaderBarProps } from "./ProfileHeaderBar.tyes";
 
 const ProfileHeaderBar: React.FC<ProfileHeaderBarProps> = ({
   title,
   profileImage,
+  containerStyle,
+  titleStyle
 }) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyle]}>
       <View style={styles.leftSection}>
         <Image source={profileImage} style={styles.profileImage} />
-        <Text style={styles.title}>{title}</Text>
+        <Text style={[styles.title, titleStyle]}>{title}</Text>
       </View>
-
       <View style={styles.iconGroup}>
         <TouchableOpacity style={styles.iconWrapper}>
           <Ionicons
@@ -53,12 +54,10 @@ const ProfileHeaderBar: React.FC<ProfileHeaderBarProps> = ({
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
-    ...spacingStyles.px20,
-    ...spacingStyles.pt25,
-    ...spacingStyles.pb5,
+    ...spacingStyles.px5,
+    ...spacingStyles.pt15,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -102,7 +101,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   activeIcon: {
-    backgroundColor: staticColors.blue50,
+    backgroundColor: "#DBEAFE",
   },
   dotIndicator: {
     position: "absolute",
@@ -114,5 +113,4 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.circle,
   },
 });
-
 export default ProfileHeaderBar;

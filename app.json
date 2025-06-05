@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "ecommerce",
-    "slug": "ecommerce",
+    "slug": "e-commerce",
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "myapp",
@@ -52,13 +52,13 @@
         "origin": false
       },
       "eas": {
-        "projectId": "dcb4f645-3bdf-421c-adce-5f1df850d288"
+        "projectId": "c20f239e-fe19-4dcb-a454-3ed6b64de873"
       }
     },
     "runtimeVersion": "1.0.0",
     "updates": {
-      "url": "https://u.expo.dev/dcb4f645-3bdf-421c-adce-5f1df850d288"
+      "url": "https://u.expo.dev/c20f239e-fe19-4dcb-a454-3ed6b64de873"
     },
-    "owner": "kaushaki19"
+    "owner": "kaushaki"
   }
 }

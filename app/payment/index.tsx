@@ -31,7 +31,7 @@ const PaymentMethod: React.FC<PaymentMethodProps> = ({
   return (
     <View>
       <Text style={styles.sectionTitle}>PAYMENT METHOD</Text>
-      <ScrollView style={styles.sectionContainer}>
+      <ScrollView>
         {paymentOptions.map((option, index) => (
           <View key={index}>
             <TouchableOpacity
@@ -41,7 +41,10 @@ const PaymentMethod: React.FC<PaymentMethodProps> = ({
               <View style={styles.optionRow}>
                 <TouchableOpacity
                   style={commonStyles.radioOuter}
-                  onPress={() => onSelectPaymentMethod(option.label)}
+                  onPress={(e) => {
+                    e.stopPropagation(); // Add this line
+                    onSelectPaymentMethod(option.label);
+                  }}
                 >
                   <View
                     style={[

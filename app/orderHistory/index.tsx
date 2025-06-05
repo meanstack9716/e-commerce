@@ -12,7 +12,7 @@ import { useAppDispatch } from "@/store/hooks";
 import { RootState } from "@/store/store";
 import { clearOrderStatus, fetchOrders } from "@/store/order/orderSlice";
 import { textTruncate } from "@/utils/textTruncate";
-import ProfileHeaderBar from "@/components/profile/ProfileHeaderBar/ProfileHeaderBar";
+
 import FullScreenLoader from "@/components/common/FullScreenLoader";
 import images from "@/constants/images";
 import borderRadius from "@/style/borderRadius";
@@ -26,6 +26,7 @@ import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaVi
 import { Order } from "../../interfaces/orderHistory.interface";
 import { SelectedItem } from "./orderHistory.types";
 import OrderItem from "@/components/order/orderItem/OrderItem";
+import ProfileHeaderBar from "@/components/profile/ProfileHeaderBar/ProfileHeaderBar";
 
 const OrderHistoryScreen: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -101,7 +102,7 @@ const OrderHistoryScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
   listContent: {
-    ...spacingStyles.px20,
+    ...spacingStyles.px5,
     ...spacingStyles.py15,
   },
   errorText: {

@@ -30,11 +30,18 @@ interface DeliveryItem {
   estimatedDelivery: string;
 }
 
+const paymentOptions = [
+  {
+    label: "Cash On Delivery",
+  },
+];
+
 const PlaceOrderScreen: React.FC = () => {
   const dispatch = useAppDispatch();
 
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string | null>(null);
-  const [orderNotes, setOrderNotes] = useState<{ [key: string]: string }>({});
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string | null>(
+    paymentOptions[0].label
+  ); const [orderNotes, setOrderNotes] = useState<{ [key: string]: string }>({});
   const [showAddressSelector, setShowAddressSelector] = useState(false);
   const cartItems = useSelector((state: RootState) => state.cart.cartItems);
   const selectedItems = cartItems.filter((item) => item.isSelected);
@@ -72,12 +79,6 @@ const PlaceOrderScreen: React.FC = () => {
     });
   };
 
-  const paymentOptions = [
-    {
-      label: "Cash On Delivery",
-    },
-  ];
-
   const handleOrderNoteChange = (label: string, text: string) => {
     setOrderNotes((prev) => ({ ...prev, [label]: text }));
   };
@@ -105,7 +106,7 @@ const PlaceOrderScreen: React.FC = () => {
     <>
       {showAddressSelector ? (
         <SelectAddress onGoBack={() => setShowAddressSelector(false)} />
-        ) : (
+      ) : (
         <SafeAreaViewWrapper style={styles.container}>
           <View style={styles.mainContainer}>
             {/* Scrollable Content */}
@@ -189,6 +190,7 @@ const PlaceOrderScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: staticColors.white
   },
   mainContainer: {
     flex: 1,
