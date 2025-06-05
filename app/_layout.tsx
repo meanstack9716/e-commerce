@@ -33,7 +33,7 @@ function AppLayout() {
         <Stack.Screen name="/payment" />
         <Stack.Screen name="/placeorder" />
         <Stack.Screen name="/order" />
-        <Stack.Screen name="/review" />
+        <Stack.Screen name="/product-reviews" />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>

@@ -76,7 +76,7 @@ export const commonStyles = StyleSheet.create({
     fontWeight: "bold",
     color: staticColors.textDarkGray,
   },
-  
+
   authButton: {
     width: "100%",
     height: 60,
@@ -98,7 +98,7 @@ export const commonStyles = StyleSheet.create({
     borderRadius: borderRadius.r24,
     ...spacingStyles.px20,
     fontSize: fontSizes.base,
-    color:staticColors.textDarkGray
+    color: staticColors.textDarkGray,
   },
   avatar: {
     width: 100,
@@ -128,10 +128,10 @@ export const commonStyles = StyleSheet.create({
     backgroundColor: staticColors.black,
     borderRadius: borderRadius.r4,
     ...spacingStyles.mt20,
-    alignItems:'center',
-    alignSelf:'center'
+    alignItems: "center",
+    alignSelf: "center",
   },
-    topRightImages: {
+  topRightImages: {
     ...StyleSheet.absoluteFillObject,
     zIndex: 0,
   },
@@ -154,16 +154,16 @@ export const commonStyles = StyleSheet.create({
     opacity: 1,
     resizeMode: "contain",
   },
-    bottomContainer: {
+  bottomContainer: {
     position: "absolute",
     bottom: 0,
     width: "100%",
     alignItems: "center",
     ...spacingStyles.px20,
   },
-  reviewAvtar :{
-    width: 60,
-    height: 60,
+  reviewAvtar: {
+    width: 50,
+    height: 50,
     borderRadius: borderRadius.circle,
     borderColor: staticColors.white,
     backgroundColor: staticColors.white,
@@ -174,17 +174,18 @@ export const commonStyles = StyleSheet.create({
     shadowRadius: 3,
     resizeMode: "contain",
     ...spacingStyles.mr10,
+    alignSelf: "flex-start",
   },
-   starIcon: {
+  starIcon: {
     ...spacingStyles.m2,
   },
-    reviewImageContainer: {
-    ...spacingStyles.mt5
+  reviewImageContainer: {
+    ...spacingStyles.mt5,
   },
   reviewImage: {
     width: 100,
     height: 100,
     borderRadius: borderRadius.r8,
-    ...spacingStyles.mr5
+    ...spacingStyles.mr5,
   },
 });

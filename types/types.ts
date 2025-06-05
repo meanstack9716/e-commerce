@@ -1,26 +1,27 @@
-import { Review } from "@/app/review/review.types";
+import { Review } from "@/app/product-reviews/review.types";
+import { Product } from "@/interfaces";
 
-export interface Product {
-  id: string;
-  title: string;
-  description: string;
-  discount_percent?: number;
-  final_price: number;
-  price:number;
-  stock_quantity?: string;
-  thumbnail_url: string;
-  images: string[];
-  categories: string[];
-  star?: number;
-  details?: string;
-  sku?: string;
-  brand?: Brand;
-  sizes?: Size[];
-  gallery?: GalleryItem[];
-  seller?: Seller;
-  delivery_days?: string;
-  reviews?:Review[]
-}
+// export interface Product {
+//   id: string;
+//   title: string;
+//   description: string;
+//   discount_percent?: number;
+//   final_price: number;
+//   price:number;
+//   stock_quantity?: string;
+//   thumbnail_url: string;
+//   images: string[];
+//   categories: string[];
+//   star?: number;
+//   details?: string;
+//   sku?: string;
+//   brand?: Brand;
+//   sizes?: Size[];
+//   gallery?: GalleryItem[];
+//   seller?: Seller;
+//   delivery_days?: string;
+//   reviews?:Review[]
+// }
 
 export interface GalleryItem {
   id: string;
@@ -100,7 +101,7 @@ export interface PromotionalCard {
 }
 
 export interface ProductData {
-  products: Product[];
+  products:Product[];
 }
 
 export type OtpInputProps = {

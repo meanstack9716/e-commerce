@@ -18,6 +18,7 @@ const images = {
   onBoardingCard3: require("@/assets/images/images/card-03.png"),
   onBoardingCard4: require("@/assets/images/images/card-04.png"),
   welcomeBag: require("@/assets/images/images/welcome-bag.png"),
+  unKnownUser:require("@/assets/images/images/unknownUser.png")
 };
 
 export default images;
