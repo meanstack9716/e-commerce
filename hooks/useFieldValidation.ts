@@ -39,23 +39,24 @@ export const useFieldValidation = () => {
         email: "Email is required",
       }));
     } else if (!validateEmail(email)) {
-      setErrors((prev) => ({ 
-        ...prev, 
-        email: errorMessage 
+      setErrors((prev) => ({
+        ...prev,
+        email: errorMessage,
       }));
-    } else {  
+    } else {
       setErrors((prev) => ({ ...prev, email: "" }));
     }
   };
 
   const validateStrongPassword = (password: string): boolean => {
-    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/;
+    const passwordRegex =
+      /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/;
     return passwordRegex.test(password);
   };
 
   const handlePasswordValidation = (
     password: string,
-    errorMessage: string = "Password must be 8 characters with uppercase, number & symbol",
+    errorMessage: string = "Password must be 8 characters with uppercase, number & symbol"
   ) => {
     if (!password.trim()) {
       setErrors((prev) => ({
@@ -63,16 +64,19 @@ export const useFieldValidation = () => {
         password: "Password is required",
       }));
     } else if (!validateStrongPassword(password)) {
-      setErrors((prev) => ({ 
-        ...prev, 
-        password: errorMessage 
+      setErrors((prev) => ({
+        ...prev,
+        password: errorMessage,
       }));
     } else {
       setErrors((prev) => ({ ...prev, password: "" }));
     }
   };
 
-  const validatePasswordMatch = (password: string, confirmPassword: string): boolean => {
+  const validatePasswordMatch = (
+    password: string,
+    confirmPassword: string
+  ): boolean => {
     return password === confirmPassword;
   };
 
@@ -87,9 +91,9 @@ export const useFieldValidation = () => {
         confirmPassword: "Confirm password is required",
       }));
     } else if (!validatePasswordMatch(password, confirmPassword)) {
-      setErrors((prev) => ({ 
-        ...prev, 
-        confirmPassword: errorMessage 
+      setErrors((prev) => ({
+        ...prev,
+        confirmPassword: errorMessage,
       }));
     } else {
       setErrors((prev) => ({ ...prev, confirmPassword: "" }));
@@ -110,20 +114,49 @@ export const useFieldValidation = () => {
   const resetErrors = () => {
     setErrors({});
   };
-  
+
   const setFieldErrors = (newErrors: { [key: string]: string }) => {
     setErrors(newErrors);
   };
 
-  return { 
-    errors, 
-    handleFieldChange, 
-    handleEmailValidation, 
-    handlePasswordValidation, 
-    handleConfirmPasswordMatch ,
+  const validateAllFields = (fields: {
+    [key: string]: {
+      value: string;
+      validator: (value: string) => boolean;
+      errorMessage: string;
+    };
+  }): boolean => {
+    let hasError = false;
+    const newErrors: Errors = {};
+
+    Object.entries(fields).forEach(
+      ([fieldName, { value, validator, errorMessage }]) => {
+        if (!value.trim()) {
+          newErrors[fieldName] = `${fieldName} is required`;
+          hasError = true;
+        } else if (!validator(value)) {
+          newErrors[fieldName] = errorMessage;
+          hasError = true;
+        } else {
+          newErrors[fieldName] = "";
+        }
+      }
+    );
+
+    setErrors(newErrors);
+    return !hasError;
+  };
+
+  return {
+    errors,
+    handleFieldChange,
+    handleEmailValidation,
+    handlePasswordValidation,
+    handleConfirmPasswordMatch,
     handleLoginPasswordValidation,
     resetErrors,
     validateEmail,
-    setFieldErrors
+    setFieldErrors,
+    validateAllFields,
   };
 };

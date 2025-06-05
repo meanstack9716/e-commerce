@@ -25,7 +25,7 @@ const UserProfile = () => {
 
   const handleOrder = () => {
     router.push({
-      pathname: "/cart",
+      pathname: "/orderHistory",
     });
   };
   const handleAccount = () => {

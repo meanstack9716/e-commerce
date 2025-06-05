@@ -13,14 +13,7 @@ import { fontSizes, fontWeights } from "@/style/typography";
 import spacingStyles from "@/style/spacingStyles";
 import borderRadius from "@/style/borderRadius";
 import { commonStyles } from "@/style/commonStyle";
-
-interface PaymentMethodProps {
-  paymentOptions: { label: string }[];
-  selectedPaymentMethod: string | null;
-  onSelectPaymentMethod: (label: string) => void;
-  orderNotes: { [key: string]: string };
-  onOrderNoteChange: (label: string, text: string) => void;
-}
+import { PaymentMethodProps } from "./payment.types";
 
 const PaymentMethod: React.FC<PaymentMethodProps> = ({
   paymentOptions,
@@ -38,7 +31,7 @@ const PaymentMethod: React.FC<PaymentMethodProps> = ({
   return (
     <View>
       <Text style={styles.sectionTitle}>PAYMENT METHOD</Text>
-      <ScrollView style={styles.sectionContainer}>
+      <ScrollView>
         {paymentOptions.map((option, index) => (
           <View key={index}>
             <TouchableOpacity
@@ -48,7 +41,10 @@ const PaymentMethod: React.FC<PaymentMethodProps> = ({
               <View style={styles.optionRow}>
                 <TouchableOpacity
                   style={commonStyles.radioOuter}
-                  onPress={() => onSelectPaymentMethod(option.label)}
+                  onPress={(e) => {
+                    e.stopPropagation(); // Add this line
+                    onSelectPaymentMethod(option.label);
+                  }}
                 >
                   <View
                     style={[

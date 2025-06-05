@@ -34,6 +34,8 @@ function AppLayout() {
         <Stack.Screen name="/placeorder" />
         <Stack.Screen name="/order" />
         <Stack.Screen name="settings" options={{ title: "Settings" }} />
+        <Stack.Screen name="/orderHistory" />
+        <Stack.Screen name="/product-reviews" />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>

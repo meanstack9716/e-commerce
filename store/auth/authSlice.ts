@@ -6,7 +6,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getApiUrl } from "@/utils/apiUtils";
 import axiosConfig from "@/utils/axiosConfig";
 
-
 interface AuthState {
   loading: boolean;
   loginError:string | null;
@@ -37,7 +36,9 @@ export const loadAuthState = createAsyncThunk(
       const token = await AsyncStorage.getItem("authToken");
       const user = await AsyncStorage.getItem("authUser");
       if (!token || !user) {
-        return rejectWithValue("Authentication data not found. Please log in again.");
+        return rejectWithValue(
+          "Authentication data not found. Please log in again."
+        );
       }
       let parsedUser;
       try {
@@ -100,6 +101,11 @@ export const loginUser = createAsyncThunk(
         return rejectWithValue("Failed to save authentication data");
       }
       dispatch(clearCart());
+      await AsyncStorage.setItem("authToken", response.data.token);
+      await AsyncStorage.setItem(
+        "authUser",
+        JSON.stringify(response.data.user)
+      );
       return response.data;
     } catch (loginError: any) {
       console.error("Login error:", loginError);
