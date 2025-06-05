@@ -94,7 +94,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     ...spacingStyles.pt10,
-    ...spacingStyles.px4,
   },
   headingText: {
     fontSize: fontSizes.lg,

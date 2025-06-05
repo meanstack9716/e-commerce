@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   FlatList,
+  SafeAreaView,
 } from "react-native";
 import { router } from "expo-router";
 import spacingStyles from "@/style/spacingStyles";
@@ -20,7 +21,7 @@ import { fontFamilies } from "@/style/fontFamilies";
 
 import images from "@/constants/images";
 import { Product } from "@/interfaces";
-import ProfileHeaderBar from "./ProfileHeaderBar/ProfileHeaderBar";
+import ProfileHeaderBar from "./profileHeaderBar/ProfileHeaderBar";
 
 const UserProfile = () => {
   const [likedProductItems, setLikedProductItems] = useState<string[]>([]);
@@ -72,10 +73,10 @@ const UserProfile = () => {
 
   return (
     <SafeAreaViewWrapper style={styles.container}>
-      <ProfileHeaderBar title="category" profileImage={images.genderFemale}/>
+      <ProfileHeaderBar title="category" profileImage={images.genderFemale} />
       <CategoriresCard categoryList={categories} />
       <View style={styles.allProductsContainer}>
-        <Text style={styles.headingText}>Just For You</Text>
+        <Text style={styles.headingText}>Just for you</Text>
         <FlatList
           data={products}
           numColumns={2}
@@ -94,7 +95,6 @@ const UserProfile = () => {
           )}
         />
       </View>
-
     </SafeAreaViewWrapper>
   );
 };
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    gap: 10
+    gap: 10,
   },
   headingText: {
     fontSize: fontSizes.lg,
