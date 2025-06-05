@@ -25,8 +25,9 @@ import ReviewModal from "@/modal/ReviewModal/ReviewModal";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import { Order } from "../../interfaces/orderHistory.interface";
 import { SelectedItem } from "./orderHistory.types";
+import OrderItem from "@/components/order/orderItem/OrderItem";
 
-const HistoryScreen: React.FC = () => {
+const OrderHistoryScreen: React.FC = () => {
   const dispatch = useAppDispatch();
   const { orders, loading, error } = useSelector(
     (state: RootState) => state.order
@@ -64,52 +65,9 @@ const HistoryScreen: React.FC = () => {
     setReviewModalVisible(true);
   };
 
-  const renderOrderItem = ({ item }: { item: Order }) => {
-    const firstItem = item.items[0];
-    const product = firstItem?.product;
-
-    if (!product || !product.id) return null;
-
-    const createdDate = new Date(item.created_at).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-    });
-
-    const imageUrl =
-      firstItem?.gallery?.[0]?.img_url || product.thumbnail_url || "";
-
-    return (
-      <View style={styles.card}>
-        {imageUrl ? (
-          <Image source={{ uri: imageUrl }} style={styles.orderImage} />
-        ) : null}
-
-        <View style={styles.cardContent}>
-          <Text style={styles.description}>
-            {textTruncate(product.description, 10, "...")}
-          </Text>
-          <Text style={styles.orderNumber}>Order #{item.id.slice(-6)}</Text>
-
-          <View style={styles.footer}>
-            <View style={styles.button}>
-              <Text style={styles.date}> {createdDate} </Text>
-            </View>
-
-            <View style={styles.button}>
-              <TouchableOpacity
-                style={styles.reviewButton}
-                onPress={() =>
-                  handleReviewPress(item.id, product.id, product.description)
-                }
-              >
-                <Text style={styles.reviewButtonText}>Review</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </View>
-    );
-  };
+  const renderOrderItem = ({ item }: { item: Order }) => (
+    <OrderItem item={item} onReviewPress={handleReviewPress} />
+  );
 
   return (
     <SafeAreaViewWrapper backgroundColor={staticColors.white}>
@@ -146,31 +104,6 @@ const styles = StyleSheet.create({
     ...spacingStyles.px20,
     ...spacingStyles.py15,
   },
-  card: {
-    flexDirection: "row",
-    ...spacingStyles.mb15,
-    alignItems: "center",
-  },
-  cardContent: {
-    flex: 1,
-    ...spacingStyles.ml10,
-    justifyContent: "space-between",
-  },
-  orderImage: {
-    width: 145,
-    height: 120,
-    borderRadius: borderRadius.r14,
-    borderWidth: 3,
-    borderColor: staticColors.white,
-    backgroundColor: staticColors.white,
-    zIndex: 10,
-    elevation: 10,
-    shadowColor: staticColors.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-    resizeMode: "cover",
-  },
   errorText: {
     fontSize: fontSizes.xs,
     color: staticColors.errorColor,
@@ -196,37 +129,6 @@ const styles = StyleSheet.create({
     fontFamily: fontFamilies.ralewayExtraBold,
     ...spacingStyles.my10,
   },
-  footer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: gapSizes.md,
-  },
-  button: {
-    width: "50%",
-  },
-  date: {
-    backgroundColor: staticColors.bgSoftGray,
-    borderRadius: borderRadius.r10,
-    ...spacingStyles.py5,
-    textAlign: "center",
-    fontFamily: fontFamilies.ralewayeMedium,
-    fontSize: fontSizes.base,
-    width: "100%",
-  },
-  reviewButton: {
-    borderWidth: 2,
-    borderColor: staticColors.primaryBlue,
-    borderRadius: borderRadius.r10,
-    ...spacingStyles.py5,
-    alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
-  },
-  reviewButtonText: {
-    color: staticColors.primaryBlue,
-    fontFamily: fontFamilies.ralewayeMedium,
-    fontSize: fontSizes.base,
-  },
 });
 
-export default HistoryScreen;
+export default OrderHistoryScreen;

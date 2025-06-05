@@ -26,8 +26,9 @@ import { resetReviewState, submitReview } from "@/store/review/reviewSlice";
 import { useAppDispatch } from "@/store/hooks";
 import images from "@/constants/images";
 import { ReviewModalProps, ReviewState } from "./ReviewModal.types";
-import ConfirmationModal from "./confirmationModal/ConfirmationModal";
+
 import { useFieldValidation } from "@/hooks/useFieldValidation";
+import ConfirmationModal from "../commonModal/confirmationModal/ConfirmationModal";
 
 const initialReviewState: ReviewState = {
   rating: 0,

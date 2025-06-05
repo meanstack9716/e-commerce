@@ -18,6 +18,7 @@ import borderRadius from "@/style/borderRadius";
 import { fontSizes, fontWeights } from "@/style/typography";
 import { Ionicons } from "@expo/vector-icons";
 import { FilterValues, OrderFilterModalProps } from "./OrderFilterModal.types";
+import { LOCALE_DATE_FORMAT } from "@/constants/constants";
 
 const OrderFilterModal: React.FC<OrderFilterModalProps> = ({
   visible,
@@ -49,13 +50,13 @@ const OrderFilterModal: React.FC<OrderFilterModalProps> = ({
     let startDate = new Date(today);
     if (timeOption === "Last 30 days") {
       startDate.setDate(today.getDate() - 30);
-      return `${startDate.toLocaleDateString("en-IN")} - ${today.toLocaleDateString("en-IN")}`;
+      return `${startDate.toLocaleDateString(LOCALE_DATE_FORMAT)} - ${today.toLocaleDateString(LOCALE_DATE_FORMAT)}`;
     } else if (timeOption === "Last 6 months") {
       startDate.setMonth(today.getMonth() - 6);
-      return `${startDate.toLocaleDateString("en-IN")} - ${today.toLocaleDateString("en-IN")}`;
+      return `${startDate.toLocaleDateString(LOCALE_DATE_FORMAT)} - ${today.toLocaleDateString(LOCALE_DATE_FORMAT)}`;
     } else if (timeOption === "Last year") {
       startDate.setFullYear(today.getFullYear() - 1);
-      return `${startDate.toLocaleDateString("en-IN")} - ${today.toLocaleDateString("en-IN")}`;
+      return `${startDate.toLocaleDateString(LOCALE_DATE_FORMAT)} - ${today.toLocaleDateString(LOCALE_DATE_FORMAT)}`;
     }
     return "All time";
   };
