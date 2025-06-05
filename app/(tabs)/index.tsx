@@ -35,13 +35,13 @@ import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { fontSizes, fontWeights } from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
-import { Product } from "@/types/types";
+
 import images from "@/constants/images";
 import { useAppDispatch } from "@/store/hooks";
 import { fetchCategories } from "@/store/category/categoriesSlice";
 import { fetchProducts } from "@/store/product/productsSlice";
 import borderRadius from "@/style/borderRadius";
-import { CategoryItem, SubCategoryItem } from "@/interfaces";
+import { CategoryItem, Product, SubCategoryItem } from "@/interfaces";
 import { fontFamilies } from "@/style/fontFamilies";
 
 const HomeScreen: React.FC = () => {

@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { Product } from "@/types/types";
 import { handleApiError } from "@/utils/handleApiError";
 import axiosConfig from "@/utils/axiosConfig";
+import { Product } from "@/interfaces";
 
 interface ProductsState {
   data: Product[];
