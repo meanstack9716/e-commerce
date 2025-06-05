@@ -1,4 +1,4 @@
-const spacing = [2, 4, 5, 6, 8, 10, 15, 20, 25];
+const spacing = [2, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30];
 
 const spacingStyles: { [key: string]: object } = {};
 
