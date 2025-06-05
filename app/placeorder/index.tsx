@@ -109,7 +109,7 @@ const PlaceOrderScreen: React.FC = () => {
         <SafeAreaViewWrapper style={styles.container}>
           <View style={styles.mainContainer}>
             {/* Scrollable Content */}
-            <ScrollView contentContainerStyle={styles.scrollContent}>
+            <ScrollView >
               <View style={styles.subContainer}>
                 <View style={styles.header}>
                   <TouchableOpacity onPress={handleBack} style={styles.backButton}>
