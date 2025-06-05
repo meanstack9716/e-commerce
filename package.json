@@ -11,7 +11,8 @@
     "test": "jest --watchAll",
     "lint": "expo lint",
     "apkbuild": "npm run uploadenv && eas build --platform android --profile preview",
-    "uploadenv": "eas secret:push --force --scope project --env-file .env"
+    "uploadenv": "eas secret:push --force --scope project --env-file .env",
+    "apk:build:local": "npm run uploadenv && eas build --platform android --local --profile preview"
   },
   "jest": {
     "preset": "jest-expo"
@@ -78,6 +79,5 @@
       }
     }
   },
-  "apk:build:local": "npm run uploadenv && eas build --platform android --local --profile preview",
   "private": true
 }

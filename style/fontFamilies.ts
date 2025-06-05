@@ -10,5 +10,6 @@ export const fontFamilies = {
   ralewayeBold:'RalewayeBold',
   raleway:'Raleway',
   ralewayeMedium:'RalewayeMedium',
+  ralewayeSemiBold:'RalewayeSemiBold',
   arial: "Arial",
 };
