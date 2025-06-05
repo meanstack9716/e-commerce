@@ -193,7 +193,7 @@ export const commonStyles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    gap: gapSizes.xl,
+    gap: gapSizes.md,
     ...spacingStyles.mb10,
     ...spacingStyles.pt10,
     ...spacingStyles.px4,

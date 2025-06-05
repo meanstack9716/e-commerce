@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { Product } from "@/types/types";
 import { handleApiError } from "@/utils/handleApiError";
 import axiosConfig from "@/utils/axiosConfig";
+import { Product } from "@/interfaces";
 
 interface ProductsState {
   data: Product[];
@@ -23,7 +23,7 @@ const initialState: ProductsState = {
 
 export const fetchProducts = createAsyncThunk<
   Product[],
-  void,
+  { params: any },
   { rejectValue: string }
 >("products/fetchProducts", async (_, { rejectWithValue }) => {
   try {
@@ -50,7 +50,9 @@ export const fetchProductById = createAsyncThunk<
     }
     return rejectWithValue("Invalid product data");
   } catch (error) {
-    return rejectWithValue(handleApiError(error, "Failed to fetch product data"));
+    return rejectWithValue(
+      handleApiError(error, "Failed to fetch product data")
+    );
   }
 });
 

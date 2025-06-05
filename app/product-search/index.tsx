@@ -4,41 +4,172 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  FlatList,
+  Image,
 } from "react-native";
-import React from "react";
-import gapSizes from "@/style/gapSizes";
-import spacingStyles from "@/style/spacingStyles";
-import { fontSizes, fontWeights } from "@/style/typography";
+import React, { useState } from "react";
 import staticColors from "@/style/staticColors";
-import borderRadius from "@/style/borderRadius";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import { commonStyles } from "@/style/commonStyle";
+import spacingStyles from "@/style/spacingStyles";
+import { useDispatch, useSelector } from "react-redux";
 
-export default function index() {
+import { Product } from "@/interfaces";
+import { useAppDispatch } from "@/store/hooks";
+import { fetchProducts } from "@/store/product/productsSlice";
+
+const ProductSearchScreen: React.FC = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isSearchSubmitted, setIsSearchSubmitted] = useState(false); 
+  const dispatch = useAppDispatch();
+  const products = useSelector((state: any) => state.products.data);
+  const loading = useSelector((state: any) => state.products.loading);
+
+
+  const handleSearchSubmit = () => {
+    if (searchTerm.trim()) {
+      setIsSearchSubmitted(true);
+      dispatch(
+        fetchProducts({
+          params: {
+            searchTerm: searchTerm
+          },
+        })
+      );
+    }
+  };
+
+
+  const clearSearch = () => {
+    setSearchTerm("");
+    setIsSearchSubmitted(false); 
+  };
+
+  const renderProductItem = ({ item }: { item: Product }) => (
+    <View style={styles.productCard}>
+      <Image
+        source={{ uri: item.image || "https://via.placeholder.com/150" }} 
+        style={styles.productImage}
+      />
+      <Text style={styles.productName}>{item.title || "Product Name"}</Text>
+      <Text style={styles.productPrice}>${item.price || "0.00"}</Text>
+    </View>
+  );
+
   return (
     <SafeAreaViewWrapper>
-      <View style={commonStyles.searchContainer}>
-        <Text style={commonStyles.searchContainerText}>Shop</Text>
-        <View style={commonStyles.searchInputContainer}>
-          <TextInput
-            placeholder="Search"
-            style={commonStyles.searchInput}
-            placeholderTextColor={staticColors.gray200}
-          />
-          <TouchableOpacity>
-            <Ionicons
-              name="camera-outline"
-              size={20}
-              color={staticColors.blue400}
+      <View style={styles.container}>
+        <View style={commonStyles.searchContainer}>
+          <Text style={commonStyles.searchContainerText}>Shop</Text>
+          <View style={commonStyles.searchInputContainer}>
+            <TextInput
+              placeholder="Search"
+              style={commonStyles.searchInput}
+              placeholderTextColor={staticColors.gray200}
+              value={searchTerm}
+              onChangeText={(text) => setSearchTerm(text)}
+              onSubmitEditing={handleSearchSubmit}
+              returnKeyType="search" 
             />
-          </TouchableOpacity>
+            <TouchableOpacity>
+              <Ionicons
+                name="camera-outline"
+                size={20}
+                color={staticColors.blue400}
+              />
+            </TouchableOpacity>
+            {searchTerm ? (
+              <TouchableOpacity onPress={clearSearch}>
+                <Ionicons
+                  name="close-circle"
+                  size={20}
+                  color={staticColors.darkGray}
+                  style={styles.clearIcon}
+                />
+              </TouchableOpacity>
+            ) : null}
+          </View>
         </View>
+
+        {isSearchSubmitted ? (
+          loading ? (
+            <Text style={styles.loadingText}>Loading...</Text>
+          ) : products.length > 0 ? (
+            <FlatList
+              data={products}
+              renderItem={renderProductItem}
+              keyExtractor={(item) => item.id.toString()}
+              numColumns={2} 
+              columnWrapperStyle={styles.row}
+              contentContainerStyle={styles.productList}
+            />
+          ) : (
+            <Text style={styles.noResultsText}>No products found</Text>
+          )
+        ) : null}
       </View>
     </SafeAreaViewWrapper>
   );
-}
+};
+
+export default ProductSearchScreen;
 
 const styles = StyleSheet.create({
-
+  container: {
+    ...spacingStyles.px20,
+    flex: 1,
+  },
+  productList: {
+    paddingVertical: 10,
+  },
+  row: {
+    justifyContent: "space-between",
+    marginBottom: 10,
+  },
+  productCard: {
+    flex: 1,
+    margin: 5,
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 10,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+  },
+  productImage: {
+    width: 120,
+    height: 120,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  productName: {
+    fontSize: 14,
+    color: staticColors.darkGray,
+    textAlign: "center",
+    marginBottom: 5,
+  },
+  productPrice: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: staticColors.black,
+  },
+  loadingText: {
+    textAlign: "center",
+    marginTop: 20,
+    fontSize: 16,
+    color: staticColors.darkGray,
+  },
+  noResultsText: {
+    textAlign: "center",
+    marginTop: 20,
+    fontSize: 16,
+    color: staticColors.darkGray,
+  },
+  clearIcon: {
+    marginLeft: 10,
+  },
 });
