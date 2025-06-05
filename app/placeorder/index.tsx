@@ -358,7 +358,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
   },
   itemPrice: {
-    fontSize: 16,
+    fontSize: fontSizes.base,
     fontWeight: fontWeights.semiBold,
   },
 });
