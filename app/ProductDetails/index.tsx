@@ -23,7 +23,7 @@ import { useAppSelector } from "@/store/hooks";
 import colors from "@/style/staticColors";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
-import {fontSizes, fontWeights} from "@/style/typography";
+import { fontSizes, fontWeights } from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
 import MegaDealBadge from "@/components/productDetails/MegaDealBadge";
 import SizeSelector from "@/components/productDetails/SizeSelector";
@@ -34,9 +34,14 @@ import DeliveryCheck from "@/components/productDetails/DeliveryCheck";
 import ProductActionButtons from "@/components/productDetails/ProductActionButtons";
 import FullScreenLoader from "@/components/common/FullScreenLoader";
 import ReturnPolicy from "./ReturnPolicy";
-import { Product } from "../../types/types";
 import ViewSimilarModal from "@/modal/ViewSimilarModal";
 import borderRadius from "@/style/borderRadius";
+import { LinearGradient } from "expo-linear-gradient";
+import { fontFamilies } from "@/style/fontFamilies";
+import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
+import RatingReview from "@/components/productDetails/RatingReview/RatingReview";
+import { commonStyles } from "@/style/commonStyle";
+import { renderStars } from "@/utils/starUtils";
 
 const { width: screenWidth } = Dimensions.get("window");
 const screenHeight = Dimensions.get("window").height;
@@ -110,10 +115,6 @@ const ProductDetailsScreen: React.FC = () => {
     setIsProductLiked((prev) => !prev);
   };
 
-  const handleGoBack = () => {
-    router.back();
-  };
-
   // const handleViewSimilar = () => {
   //   setViewSimilarModalVisible(true);
   // };
@@ -157,52 +158,43 @@ const ProductDetailsScreen: React.FC = () => {
             selectedColor,
           })
         ).unwrap();
-      } 
+      }
       router.push("/cart");
     }
   };
 
   if (loading || error) {
     return (
-      <SafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
+      <SafeAreaViewWrapper>
         <FullScreenLoader visible={loading} />
-        <View style={styles.header}>
-          <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
-            <Ionicons name="arrow-back" size={24} color={colors.primary} />
-          </TouchableOpacity>
-        </View>
         <View style={styles.loadingContainer}>
           <Text style={styles.loadingText}>{error}</Text>
         </View>
-      </SafeAreaView>
+      </SafeAreaViewWrapper>
     );
   }
 
   if (!product) {
     return (
-      <SafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
-            <Ionicons name="arrow-back" size={24} color={colors.primary} />
-          </TouchableOpacity>
-        </View>
+      <SafeAreaViewWrapper>
         <View style={styles.loadingContainer}>
           <Text style={styles.loadingText}>Product not found</Text>
         </View>
-      </SafeAreaView>
+      </SafeAreaViewWrapper>
     );
   }
+
+  const handleViewAllReview = () => {
+    router.navigate({
+      pathname: "/product-reviews",
+      params: { productId: product.id },
+    });
+  };
 
   const dummyData = [{ key: "dummy" }];
 
   return (
-    <SafeAreaView
-      style={[
-        styles.container,
-        { paddingTop: insets.top },
-        { paddingBottom: insets.bottom },
-      ]}
-    >
+    <SafeAreaViewWrapper>
       <FlatList
         ref={flatListRef}
         data={dummyData}
@@ -213,35 +205,6 @@ const ProductDetailsScreen: React.FC = () => {
         scrollEventThrottle={16}
         ListHeaderComponent={
           <>
-            {/* Header */}
-            <View style={styles.header}>
-              <TouchableOpacity
-                onPress={handleGoBack}
-                style={styles.backButton}
-              >
-                <Ionicons name="arrow-back" size={20} color={colors.primary} />
-              </TouchableOpacity>
-              <View style={styles.headerRight}>
-                <TouchableOpacity style={styles.iconButton}>
-                  <Ionicons
-                    name="bag-handle-outline"
-                    size={20}
-                    color={colors.primary}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={handleLikePress}
-                  style={styles.iconButton}
-                >
-                  <FontAwesome
-                    name={isProductLiked ? "heart" : "heart-o"}
-                    size={20}
-                    color={isProductLiked ? colors.DarkRed : colors.primary}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-
             {/* Image Carousel */}
             <FlatList
               ref={imageCarouselRef}
@@ -267,20 +230,23 @@ const ProductDetailsScreen: React.FC = () => {
                 {(displayImages.length > 0
                   ? displayImages
                   : product?.images || []
-                ).map((_, index) => (
-                  <View
-                    key={index}
-                    style={[
-                      styles.dot,
-                      {
-                        backgroundColor:
-                          activeIndex === index
-                            ? staticColors.darkGray
-                            : staticColors.borderLight,
-                      },
-                    ]}
-                  />
-                ))}
+                ).map((_: string, index: number) => {
+                  const isActive = activeIndex === index;
+                  return (
+                    <View
+                      key={index}
+                      style={[
+                        styles.dot,
+                        isActive && styles.activeDot,
+                        {
+                          backgroundColor: isActive
+                            ? staticColors.primaryBlue
+                            : staticColors.RoyalBlue,
+                        },
+                      ]}
+                    />
+                  );
+                })}
               </View>
             )}
 
@@ -307,24 +273,71 @@ const ProductDetailsScreen: React.FC = () => {
 
             {/* Title & Price */}
             <View style={styles.detailsContainer}>
-              <Text style={styles.title}>{product.title}</Text>
-              <Text>{product.description}</Text>
               <View style={styles.priceContainer}>
-                <Text style={styles.discountedPrice}>
-                  ₹{product.final_price}
-                </Text>
-                <Text style={styles.price}>₹{product.price}</Text>
-                <Text style={styles.discount}>
-                  ({product.discount_percent}% OFF)
-                </Text>
+                <View>
+                  <Text style={styles.discountedPrice}>
+                    ₹{product.final_price}
+                  </Text>
+                </View>
+                <View style={styles.row}>
+                  <Text style={styles.price}>₹{product.price}</Text>
+                  <LinearGradient
+                    colors={[staticColors.BoldPink, staticColors.HotRed]}
+                    start={{ x: 1, y: 0 }}
+                    end={{ x: 0, y: 0 }}
+                    style={styles.discountWrapper}
+                  >
+                    <Text style={styles.discountText}>
+                      ({product.discount_percent})%
+                    </Text>
+                  </LinearGradient>
+                </View>
               </View>
+              <Text style={styles.title}>{product.title}</Text>
+              <Text style={styles.description}>{product.description}</Text>
             </View>
             {/* <MegaDealBadge /> */}
             <SizeSelector
               product={product}
               onColorSelect={handleColorSelect}
               onSizeSelect={setSelectedSize}
+              price={product.final_price}
             />
+            {product.reviews && product.reviews.length > 0 && (
+              <View style={styles.reviewSection}>
+                {/* Title + Stars + Rating */}
+                <Text style={styles.reviewTitle}>Rating & Reviews</Text>
+                <View style={styles.reveiwHeader}>
+                  <View style={styles.starsContainer}>
+                    {renderStars(product.total_rating, 22)}
+                  </View>
+                  <View style={styles.ratingBox}>
+                    <Text style={styles.ratingBoxText}>
+                      {product.total_rating}/5
+                    </Text>
+                  </View>
+                </View>
+
+                {/* First Review Card */}
+                <RatingReview
+                  productId={product.id}
+                  review={product.reviews[0]}
+                />
+
+                {/* View All Button (if more than 1 review) */}
+                {product.reviews.length > 1 && (
+                  <TouchableOpacity
+                    onPress={handleViewAllReview}
+                    style={styles.reviewButton}
+                  >
+                    <Text style={styles.reviewButtonText}>
+                      View All Reviews
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            )}
+
             {/* <DeliveryCheck />
             <ReturnPolicy /> */}
 
@@ -357,16 +370,11 @@ const ProductDetailsScreen: React.FC = () => {
         onClose={() => setViewSimilarModalVisible(false)}
         currentProduct={product}
       /> */}
-    </SafeAreaView>
+    </SafeAreaViewWrapper>
   );
 };
 
-// Styles remain the same
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: staticColors.bgMuted,
-  },
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
@@ -375,15 +383,6 @@ const styles = StyleSheet.create({
   loadingText: {
     fontSize: fontSizes.base,
     color: colors.primary,
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    ...spacingStyles.p10,
-  },
-  backButton: {
-    ...spacingStyles.p2,
   },
   headerRight: {
     flexDirection: "row",
@@ -394,21 +393,22 @@ const styles = StyleSheet.create({
   },
   image: {
     width: screenWidth,
-    height: 450,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
+    height: 430,
   },
   dotContainer: {
     flexDirection: "row",
     justifyContent: "center",
-    ...spacingStyles.mt10,
+    top: -15,
     gap: gapSizes.xs,
   },
   dot: {
-    width: 8,
-    height: 8,
-    borderRadius: borderRadius.r4,
+    width: 10,
+    height: 10,
+    borderRadius: borderRadius.r5,
     ...spacingStyles.mx2,
+  },
+  activeDot: {
+    width: 40,
   },
   actionRow: {
     flexDirection: "row",
@@ -457,33 +457,54 @@ const styles = StyleSheet.create({
   detailsContainer: {
     ...spacingStyles.px15,
     ...spacingStyles.ml5,
-    ...spacingStyles.pt15,
+    ...spacingStyles.pt5,
     ...spacingStyles.pb10,
+  },
+  row: {
+    flexDirection: "row",
+    gap: gapSizes.md,
+    ...spacingStyles.mb10,
   },
   title: {
     fontSize: fontSizes.md,
-    fontWeight: fontWeights.semiBold,
+    fontFamily: fontFamilies.ralewayeBold,
+    ...spacingStyles.pb2,
+  },
+  description: {
+    fontFamily: fontFamilies.nunitoSans,
+    fontWeight: fontWeights.normal,
+    fontSize: fontSizes.sm,
+    color: staticColors.black,
   },
   priceContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: gapSizes.md,
+    flexDirection: "column",
   },
   discountedPrice: {
-    fontSize: fontSizes.md,
-    fontWeight: fontWeights.semiBold,
+    fontSize: fontSizes["2xl"],
+    fontFamily: fontFamilies.raleway,
+    fontWeight: fontWeights.extraBold,
     color: colors.primary,
   },
   price: {
     fontSize: fontSizes.sm,
-    fontWeight: fontWeights.semiBold,
-    color: colors.textMuted,
+    fontFamily: fontFamilies.raleway,
+    fontWeight: fontWeights.extraBold,
+    color: colors.PastelRose,
     textDecorationLine: "line-through",
   },
-  discount: {
-    fontSize: fontSizes.sm,
-    color: colors.brightRed,
-    fontWeight: fontWeights.semiBold,
+  discountWrapper: {
+    paddingHorizontal: 7,
+    paddingTop: 4,
+    ...spacingStyles.pb2,
+    borderRadius: borderRadius.r5,
+    alignSelf: "flex-start",
+  },
+
+  discountText: {
+    fontSize: fontSizes.xs,
+    fontFamily: fontFamilies.raleway,
+    fontWeight: fontWeights.bold,
+    color: staticColors.white,
   },
   heading: {
     fontSize: fontSizes.md,
@@ -508,6 +529,44 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.base,
     fontWeight: fontWeights.semiBold,
     ...spacingStyles.ml5,
+  },
+  reviewSection: { ...spacingStyles.mx15 },
+  reviewTitle: {
+    fontSize: fontSizes.lg,
+    fontFamily: "RalewayeExtraBold",
+    color: staticColors.black,
+    ...spacingStyles.mr10,
+  },
+  reveiwHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    ...spacingStyles.my10,
+  },
+  ratingBox: {
+    backgroundColor: staticColors.blue200,
+    ...spacingStyles.px10,
+    ...spacingStyles.py2,
+    borderRadius: borderRadius.r2,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  ratingBoxText: {
+    fontSize: fontSizes.sm,
+    fontWeight: fontWeights.bold,
+    color: staticColors.black,
+  },
+  reviewButton: {
+    height: 50,
+    backgroundColor: staticColors.primaryBlue,
+    borderRadius: borderRadius.r14,
+    justifyContent: "center",
+    alignItems: "center",
+    ...spacingStyles.my10,
+  },
+  reviewButtonText: {
+    color: staticColors.white,
+    fontSize: fontSizes.md,
+    fontFamily: fontFamilies.nunitoSans,
   },
 });
 
