@@ -192,7 +192,7 @@ export const commonStyles = StyleSheet.create({
     borderRadius: borderRadius.r8,
     ...spacingStyles.mr5,
   },
-    searchContainer: {
+  searchContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -221,4 +221,34 @@ export const commonStyles = StyleSheet.create({
     color: staticColors.darkGray,
     fontWeight: fontWeights.medium,
   },
+
+  itemCountHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: gapSizes.md,
+    ...spacingStyles.py10,
+  },
+  itemCountTitle: {
+    fontSize: fontSizes.xl,
+    fontFamily: fontFamilies.ralewayBold,
+  },
+  itemCountWrap: {
+    borderRadius: borderRadius.circle,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: staticColors.iceBlue,
+    ...spacingStyles.px12,
+    ...spacingStyles.pb6,
+  },
+  itemCount: {
+    fontSize: fontSizes.lg,
+    textAlign: "center",
+    fontFamily: fontFamilies.ralewayBold,
+  },
+  justifyBetwwen: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end'
+  }
 });
