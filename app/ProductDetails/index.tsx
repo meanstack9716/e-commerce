@@ -202,10 +202,10 @@ const ProductDetailsScreen: React.FC = () => {
             selectedColor,
           })
         ).unwrap();
+        router.push("/cart");
       } else {
         handleOpenLoginModal()
       }
-      router.push("/cart");
     }
   };
 

@@ -154,7 +154,9 @@ const ShoppingBagScreen: React.FC = () => {
   };
 
   const handlePlaceOrder = () => {
-    const selectedCartItems = cartItems.filter((item) => selectedItems.includes(item.id));
+    const selectedCartItems = cartItems.filter((item) =>
+      selectedItems.includes(item.id)
+    );
     if (selectedCartItems.length === 0) {
       Toast.show({
         type: "error",
@@ -173,14 +175,14 @@ const ShoppingBagScreen: React.FC = () => {
 
   if (isLoading) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaViewWrapper style={styles.container}>
         <FullScreenLoader visible={isLoading} />
-      </SafeAreaView>
+      </SafeAreaViewWrapper>
     );
   }
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaViewWrapper>
       <View style={styles.mainContainer}>
         <ScrollView
           style={styles.container}
@@ -190,10 +192,12 @@ const ShoppingBagScreen: React.FC = () => {
           <View style={styles.header}>
             <Text style={styles.headerTitle}>Cart</Text>
             <View style={styles.itemCountWrap}>
-              <Text style={styles.itemCount}>{cartItems.length}</Text>
+              <Text style={styles.itemCount}>
+                {cartItems.length ? cartItems.length : 0}
+              </Text>
             </View>
           </View>
-          {isAuthenticated && (
+          {isAuthenticated && token && (
             <ContactCard
               title="Shipping Address"
               information={[getFormattedAddress(addresses)]}
@@ -215,7 +219,7 @@ const ShoppingBagScreen: React.FC = () => {
             <EmptyCart />
           )}
         </ScrollView>
-        {cartItems.length && (
+        {cartItems.length ? (
           <View style={styles.totalPriceContainer}>
             <Text style={styles.totalPrice}>
               Total ₹ {calculateTotalPrice()}
@@ -231,6 +235,8 @@ const ShoppingBagScreen: React.FC = () => {
               <Text style={styles.checkoutButtonText}>Checkout</Text>
             </TouchableOpacity>
           </View>
+        ) : (
+          <></>
         )}
       </View>
 
@@ -245,7 +251,7 @@ const ShoppingBagScreen: React.FC = () => {
         onClose={handleCloseModal}
         isLoading={loading}
       />
-    </SafeAreaView>
+    </SafeAreaViewWrapper>
   );
 };
 
@@ -285,7 +291,7 @@ const styles = StyleSheet.create({
     fontFamily: fontFamilies.ralewayBold,
   },
   backButton: {
-    ...spacingStyles.mr12
+    ...spacingStyles.mr12,
   },
   itemsWrapper: {
     ...spacingStyles.py15,
