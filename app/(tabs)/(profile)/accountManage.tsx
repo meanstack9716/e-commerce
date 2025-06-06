@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -82,9 +82,11 @@ const AccountScreen: React.FC = () => {
     console.log("Deleting account");
   };
 
-  const handleBack = () => {
-    router.back();
-  };
+  const handleBack = useCallback(() => {
+      router.back();
+      return true;
+    }, []);
+  
 
   return (
     <View style={styles.safeArea}>

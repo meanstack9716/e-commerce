@@ -1,5 +1,4 @@
-import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from "react-native";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
@@ -8,6 +7,7 @@ import { router } from "expo-router";
 import { useDispatch } from "react-redux";
 import { logoutUser } from "@/store/auth/authSlice";
 import { useCallback } from "react";
+import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 
 export default function SettingPage() {
   const dispatch = useDispatch();
@@ -35,7 +35,7 @@ export default function SettingPage() {
       title: "Shop",
       items: [
         { label: "Order", route: "/orderHistory" },
-        { label: "Faq", route: "/faqs" },
+        { label: "Faq", route: null },
         { label: "About Us", route: null },
         { label: "Terms and Use", route: null },
         { label: "Privacy Policy", route: null },
@@ -63,7 +63,7 @@ export default function SettingPage() {
   );
 
   return (
-    <SafeAreaViewWrapper>
+    <SafeAreaView style={{flex: 1}}>
       <View style={styles.container}>
         <View style={styles.headerContain}>
           <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
@@ -85,14 +85,14 @@ export default function SettingPage() {
           </View>
         ))}
       </View>
-    </SafeAreaViewWrapper>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    ...spacingStyles.px5,
+    ...spacingStyles.px12,
     backgroundColor: staticColors.white,
   },
   headerContain: {

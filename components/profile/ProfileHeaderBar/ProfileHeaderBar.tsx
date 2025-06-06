@@ -29,25 +29,16 @@ const ProfileHeaderBar: React.FC<ProfileHeaderBarProps> = ({
         <Text style={[styles.title, titleStyle]}>{title}</Text>
       </View>
       <View style={styles.iconGroup}>
-        <TouchableOpacity style={styles.iconWrapper}>
+        <TouchableOpacity style={[styles.iconWrapper]} onPress={()=> router.push('/wishlist')}>
           <Ionicons
-            name="chatbox-ellipses-outline"
-            size={20}
-            color={staticColors.primaryBlue}
+            name="heart-outline"
+            size={24}
           />
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.iconWrapper, styles.activeIcon]}>
-          <Ionicons
-            name="reorder-three-outline"
-            size={20}
-            color={staticColors.primaryBlue}
-          />
-          <View style={styles.dotIndicator} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.iconWrapper} onPress={() => router.navigate('/settings')}>
           <Ionicons
             name="settings-outline"
-            size={20}
+            size={24}
             color={staticColors.primaryBlue}
           />
         </TouchableOpacity>
@@ -94,23 +85,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   iconWrapper: {
-    backgroundColor: staticColors.iceBlue,
-    borderRadius: borderRadius.circle,
-    ...spacingStyles.p10,
+    ...spacingStyles.p5,
     ...spacingStyles.ml10,
     position: "relative",
-  },
-  activeIcon: {
-    backgroundColor: "#DBEAFE",
-  },
-  dotIndicator: {
-    position: "absolute",
-    top: 4,
-    right: 0,
-    width: 8,
-    height: 8,
-    backgroundColor: staticColors.primaryBlue,
-    borderRadius: borderRadius.circle,
   },
 });
 export default ProfileHeaderBar;

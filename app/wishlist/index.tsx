@@ -147,9 +147,8 @@ const WishlistScreen: React.FC = () => {
           <Image source={{ uri: item.image }} style={styles.image} />
           <TouchableOpacity
             style={styles.removeButtonOverlay}
-            onPress={() => handleRemoveItem(item.id)}
           >
-            <Ionicons name="trash" size={20} color="red" />
+            <Ionicons name="trash-outline" size={22} color={staticColors.brightRed} />
           </TouchableOpacity>
         </View>
 
@@ -236,7 +235,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: fontSizes.lg,
     fontFamily: fontFamilies.ralewayBold,
-    ...spacingStyles.ml10,
+    ...spacingStyles.ml20,
   },
   flatList: {
     ...spacingStyles.py5,
