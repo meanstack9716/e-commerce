@@ -175,14 +175,14 @@ const ShoppingBagScreen: React.FC = () => {
 
   if (isLoading) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaViewWrapper style={styles.container}>
         <FullScreenLoader visible={isLoading} />
-      </SafeAreaView>
+      </SafeAreaViewWrapper>
     );
   }
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaViewWrapper>
       <View style={styles.mainContainer}>
         <ScrollView
           style={styles.container}
@@ -251,7 +251,7 @@ const ShoppingBagScreen: React.FC = () => {
         onClose={handleCloseModal}
         isLoading={loading}
       />
-    </SafeAreaView>
+    </SafeAreaViewWrapper>
   );
 };
 
