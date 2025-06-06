@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "../store";
-import { Order } from "@/types/types";
 import { getAuthHeaders } from "@/utils/apiHeader";
 import axiosConfig from "@/utils/axiosConfig";
+import { Order } from "@/interfaces";
+import Toast from "react-native-toast-message";
 
 interface OrderPayload {
-  cart_items_ids: (string | number)[];
+  cart_items_ids: String[];
   shipping_address_id: string;
   payment_method: string;
 }
@@ -74,7 +75,7 @@ export const placeOrder = createAsyncThunk<
       return response.data;
     } catch (error: any) {
       const errorMessage =
-        error.response?.data?.message || "Failed to place order.";
+        error.response?.data?.message || error || "Failed to place order.";
       return rejectWithValue(errorMessage);
     }
   }
@@ -152,6 +153,11 @@ const orderSlice = createSlice({
         state.error = null;
       })
       .addCase(placeOrder.rejected, (state, action) => {
+        Toast.show({
+          type: "error",
+          text1: action.payload as string,
+          position: "top",
+        });
         state.loading = false;
         state.error = action.payload as string;
         state.orderId = null;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -9,26 +9,22 @@ import {
   ScrollView,
 } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import SelectAddress from "@/components/address/SelectAddress";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
-import { fontSizes, fontWeights } from "@/style/typography";
+import { fontSizes } from "@/style/typography";
 import borderRadius from "@/style/borderRadius";
-import { ESTIMATED_DELIVERY } from "@/constants/constants";
 import { placeOrder } from "@/store/order/orderSlice";
 import { useAppDispatch } from "@/store/hooks";
 import Toast from "react-native-toast-message";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
-import PaymentMethod from "../payment";
 import CartItemsList from "@/components/cartItemList/CardItemList";
-
-interface DeliveryItem {
-  imageUri: string;
-  estimatedDelivery: string;
-}
+import ContactCard from "@/components/contactCard/ContactCard";
+import { getFormattedAddress } from "@/utils/formatAddress";
+import { fontFamilies } from "@/style/fontFamilies";
+import { commonStyles } from "@/style/commonStyle";
 
 const paymentOptions = [
   {
@@ -38,52 +34,43 @@ const paymentOptions = [
 
 const PlaceOrderScreen: React.FC = () => {
   const dispatch = useAppDispatch();
+  const { selectedItems } = useLocalSearchParams<{ selectedItems: string }>();
+  const selectedCartItemsId: String[] = selectedItems
+    ? selectedItems.split(",")
+    : [];
 
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string | null>(
-    paymentOptions[0].label
-  ); const [orderNotes, setOrderNotes] = useState<{ [key: string]: string }>({});
-  const [showAddressSelector, setShowAddressSelector] = useState(false);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
+    string | null
+  >(paymentOptions[0].label);
   const cartItems = useSelector((state: RootState) => state.cart.cartItems);
-  const selectedItems = cartItems.filter((item) => item.isSelected);
+  const selectedCartItems = cartItems.filter((item) =>
+    selectedCartItemsId.includes(item.id)
+  );
+
   const addresses = useSelector((state: RootState) => state.address.addresses);
-  const selectedAddressId = useSelector((state: RootState) => state.address.selectedAddressId);
+  const selectedAddressId = useSelector(
+    (state: RootState) => state.address.selectedAddressId
+  );
 
-  const selectedAddress = addresses.find((addr) => addr.id === selectedAddressId);
-  const primaryAddress = addresses.find((addr) => addr.is_primary);
-  const displayAddress = selectedAddress || primaryAddress;
-  const deliveryData: DeliveryItem[] = selectedItems.map((item) => ({
-    imageUri: item.images?.[0],
-    estimatedDelivery: item.delivery_days || ESTIMATED_DELIVERY,
-  }));
-  const { shippingAddressId } = useLocalSearchParams<{ shippingAddressId: string }>();
+  const [shippingAddressId, setShippingAddressId] = useState<string | null>(
+    null
+  );
 
-  const { loading, error, orderId } = useSelector((state: RootState) => state.order);
-
-  const totalPrice = selectedItems.reduce((sum, item) => sum + (item.final_price || 0), 0);
-
-  const renderDeliveryItem = ({ item }: { item: DeliveryItem }) => (
-    <View style={styles.deliveryItem}>
-      <Image source={{ uri: item.imageUri }} style={styles.itemImage} />
-      <Text style={styles.deliveryText}>Estimated delivery in {item.estimatedDelivery} days</Text>
-    </View>
+  const { loading, error, orderId } = useSelector(
+    (state: RootState) => state.order
   );
 
   const handleBack = () => {
     router.back();
   };
 
-  const handleConfirm = () => {
-    router.push({
-      pathname: "/payment",
-      params: { shippingAddressId: displayAddress?.id || "" },
-    });
-  };
+  useEffect(() => {
+    if (selectedAddressId) {
+      setShippingAddressId(selectedAddressId);
+    }
+  }, [selectedAddressId]);
 
-  const handleOrderNoteChange = (label: string, text: string) => {
-    setOrderNotes((prev) => ({ ...prev, [label]: text }));
-  };
-
-  const handlePayNow = async () => {
+  const handlePlaceOrder = async () => {
     if (!selectedPaymentMethod) {
       Toast.show({
         type: "error",
@@ -92,203 +79,180 @@ const PlaceOrderScreen: React.FC = () => {
       });
       return;
     }
+    if (!shippingAddressId) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Please select aa address or create new address",
+      });
+      return;
+    }
 
     const payload = {
-      cart_items_ids: selectedItems.map((item) => item.id),
+      cart_items_ids: selectedCartItemsId,
       shipping_address_id: shippingAddressId,
       payment_method: selectedPaymentMethod,
     };
 
-    dispatch(placeOrder(payload));
+    const result = await dispatch(placeOrder(payload)).unwrap();
+    if (result) {
+      Toast.show({
+        type: "success",
+        text1: "Order Placed",
+        text2: "Your order has been placed successfully",
+      });
+      router.navigate("/orderHistory");
+    }
   };
 
+  const calculateTotalPrice = () => {
+    return selectedCartItems.reduce((total, item) => {
+      return total + item.product.final_price * item.quantity;
+    }, 0);
+  };
+
+  if (!selectedCartItems || selectedCartItems.length === 0) {
+    handleBack();
+    return (
+      <SafeAreaViewWrapper>
+        <Text>No items found in cart.</Text>
+      </SafeAreaViewWrapper>
+    );
+  }
+
   return (
-    <>
-      {showAddressSelector ? (
-        <SelectAddress onGoBack={() => setShowAddressSelector(false)} />
-      ) : (
-        <SafeAreaViewWrapper style={styles.container}>
-          <View style={styles.mainContainer}>
-            {/* Scrollable Content */}
-            <ScrollView >
-              <View style={styles.subContainer}>
-                <View style={styles.header}>
-                  <TouchableOpacity onPress={handleBack} style={styles.backButton}>
-                    <Ionicons name="arrow-back" size={20} color={staticColors.black} />
-                  </TouchableOpacity>
-                  <Text style={styles.headerTitle}>ADDRESS</Text>
-                </View>
-                {/* Address Section */}
-                {displayAddress ? (
-                  <View style={styles.addressContainer}>
-                    <View style={styles.addressHeader}>
-                      <Text style={styles.addressName}>
-                        {displayAddress.contact_name || "No Name"}
-                        {displayAddress.is_primary && "(Default)"}
-                      </Text>
-                      <Text style={styles.addressType}>{displayAddress.type}</Text>
-                      <TouchableOpacity onPress={() => setShowAddressSelector(true)}>
-                        <Text style={styles.changeText}>CHANGE</Text>
-                      </TouchableOpacity>
-                    </View>
-                    <Text style={styles.addressDetails}>{displayAddress.line1}</Text>
-                    {displayAddress.line2 && (
-                      <Text style={styles.addressDetails}>{displayAddress.line2}</Text>
-                    )}
-                    <Text style={styles.addressDetails}>{displayAddress.city}</Text>
-                    <Text style={styles.addressDetails}>
-                      {displayAddress.state}, {displayAddress.postal_code}
-                    </Text>
-                    {displayAddress.contact_number && (
-                      <Text style={styles.addressDetails}>
-                        Mobile: {displayAddress.contact_number}
-                      </Text>
-                    )}
-                  </View>
-                ) : (
-                  <View style={styles.addressContainer}>
-                    <Text style={styles.addressDetails}>No address selected</Text>
-                  </View>
-                )}
+    <SafeAreaViewWrapper>
+      <View style={styles.mainContainer}>
+        <ScrollView style={styles.container}>
+          <View style={styles.header}>
+            <TouchableOpacity onPress={handleBack} style={styles.backButton}>
+              <Ionicons
+                name="arrow-back"
+                size={24}
+                color={staticColors.black}
+              />
+            </TouchableOpacity>
+            <Text style={styles.pageHeading}>Payment</Text>
+          </View>
+          <ContactCard
+            title="Shipping Address"
+            information={[getFormattedAddress(addresses, shippingAddressId)]}
+          />
+          <CartItemsList cartItems={selectedCartItems} />
 
-                <CartItemsList cartItems={cartItems} />
-
-                <PaymentMethod
-                  paymentOptions={paymentOptions}
-                  selectedPaymentMethod={selectedPaymentMethod}
-                  onSelectPaymentMethod={setSelectedPaymentMethod}
-                  orderNotes={orderNotes}
-                  onOrderNoteChange={handleOrderNoteChange}
-                />
-              </View>
-            </ScrollView>
-
-            {/* Fixed Footer */}
-            <View style={styles.footer}>
-              <View>
-                <Text style={styles.totalText}>Total ₹{totalPrice}</Text>
-              </View>
-              <TouchableOpacity
-                style={[styles.payButton, loading && styles.payButtonDisabled]}
-                onPress={handlePayNow}
-                disabled={loading}
-              >
-                {loading ? (
-                  <ActivityIndicator size="small" color={staticColors.white} />
-                ) : (
-                  <Text style={styles.payButtonText}>Pay</Text>
-                )}
-              </TouchableOpacity>
+          <View style={[commonStyles.justifyBetwwen, { ...spacingStyles.mt5 }]}>
+            <Text style={commonStyles.itemCountTitle}>Payment Method</Text>
+            {/* <TouchableOpacity style={styles.editIconWrapper}>
+              <FontAwesome5 name="pen" size={16} color={staticColors.white} />
+            </TouchableOpacity> */}
+          </View>
+          <View style={styles.paymentMethodsWrapper}>
+            <View style={styles.selectedPaymentWrap}>
+              <Text style={styles.paymentType}>{selectedPaymentMethod}</Text>
             </View>
           </View>
-        </SafeAreaViewWrapper>
-      )}
-    </>
+        </ScrollView>
+        <View style={styles.totalPriceContainer}>
+          <Text style={styles.totalPrice}>Total ₹ {calculateTotalPrice()}</Text>
+          <TouchableOpacity
+            style={[
+              styles.checkoutButton,
+              calculateTotalPrice() === 0 && styles.disableButton,
+            ]}
+            onPress={handlePlaceOrder}
+            disabled={calculateTotalPrice() === 0}
+          >
+            {loading ? (
+              <ActivityIndicator size="small" color={staticColors.white} />
+            ) : (
+              <Text style={styles.checkoutButtonText}>Place Order</Text>
+            )}
+          </TouchableOpacity>
+        </View>
+      </View>
+    </SafeAreaViewWrapper>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: staticColors.white
-  },
   mainContainer: {
     flex: 1,
     flexDirection: "column",
     justifyContent: "space-between",
   },
-
-  subContainer: {
-    flexDirection: "column",
-    gap: 15,
+  container: {
+    flex: 1,
+    ...spacingStyles.px15,
+  },
+  pageHeading: {
+    fontSize: fontSizes["2xl"],
+    fontFamily: fontFamilies.ralewayeBold,
+    ...spacingStyles.mb5,
+  },
+  totalPriceContainer: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: staticColors.bgSecondary,
+    ...spacingStyles.px25,
+    ...spacingStyles.py15,
+    ...spacingStyles.mt5,
+  },
+  totalPrice: {
+    fontSize: fontSizes.md,
+    fontFamily: fontFamilies.ralewayBold,
+  },
+  checkoutButton: {
+    width: 140,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: staticColors.darkSlate,
+    ...spacingStyles.py10,
+    borderRadius: borderRadius.r12,
+  },
+  checkoutButtonText: {
+    fontSize: fontSizes.md,
+    color: staticColors.white,
+    fontFamily: fontFamilies.nunitoSans,
+  },
+  disableButton: {
+    backgroundColor: staticColors.lightGray,
+    opacity: 0.6,
+  },
+  editIconWrapper: {
+    backgroundColor: staticColors.blue500,
+    flexShrink: 0,
+    borderRadius: borderRadius.circle,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 40,
+    height: 40,
+  },
+  paymentMethodsWrapper: {
+    flexDirection: "row",
+    ...spacingStyles.py12,
+    flexWrap: "wrap",
+  },
+  selectedPaymentWrap: {
+    borderRadius: borderRadius.r14,
+    backgroundColor: staticColors.blue100,
+    ...spacingStyles.py6,
+    ...spacingStyles.px25,
+  },
+  paymentType: {
+    fontSize: fontSizes.sm,
+    color: staticColors.blue500,
+    fontFamily: fontFamilies.ralewayBold,
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
   },
-  headerTitle: {
-    fontSize: fontSizes.base,
-    fontWeight: fontWeights.semiBold,
-    color: staticColors.darkGray,
-  },
-  addressContainer: {
-    backgroundColor: staticColors.white,
-    ...spacingStyles.p15,
-    borderRadius: borderRadius.r8,
-  },
-  addressHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    ...spacingStyles.mb5,
-  },
-  addressName: {
-    fontSize: fontSizes.sm,
-    fontWeight: fontWeights.semiBold,
-    color: staticColors.darkGray,
-  },
-  addressType: {
-    fontSize: fontSizes.s,
-    color: staticColors.textLightGray,
-    borderWidth: 1,
-    borderColor: staticColors.lightGray,
-    ...spacingStyles.px5,
-    ...spacingStyles.py2,
-    borderRadius: borderRadius.r4,
-  },
-  changeText: {
-    fontSize: fontSizes.sm,
-    color: staticColors.primary,
-    fontWeight: fontWeights.semiBold,
-  },
-  addressDetails: {
-    fontSize: fontSizes.sm,
-    color: staticColors.textSecondary,
-    ...spacingStyles.mb5,
-  },
-
-  deliveryItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: staticColors.white,
-    ...spacingStyles.p10,
-    borderRadius: borderRadius.r8,
-  },
-  deliveryText: {
-    fontSize: fontSizes.sm,
-    color: staticColors.darkGray,
-  },
   backButton: {
     ...spacingStyles.p5,
   },
-  footer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    ...spacingStyles.pt10
-  },
-  totalText: {
-    fontSize: fontSizes.base,
-    fontWeight: fontWeights.semiBold,
-  },
-  payButton: {
-    backgroundColor: staticColors.primary,
-    ...spacingStyles.py10,
-    ...spacingStyles.px25,
-    borderRadius: borderRadius.r8,
-  },
-  payButtonText: {
-    color: staticColors.white,
-    fontSize: fontSizes.sm,
-    fontWeight: fontWeights.semiBold,
-    ...spacingStyles.px20,
-    ...spacingStyles.py2,
-  },
-  payButtonDisabled: {
-    backgroundColor: staticColors.lightGray,
-    opacity: 0.6,
-  },
-
 });
 
 export default PlaceOrderScreen;
