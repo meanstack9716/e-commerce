@@ -440,35 +440,35 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.circle,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: staticColors.white, // White background for unselected buttons
+    backgroundColor: staticColors.white, 
     marginHorizontal: 5,
     position: "relative",
     zIndex: 1,
   },
   selectedSizeButton: {
-    width: 45, // Larger size for selected button
+    width: 45,
     height: 45,
     backgroundColor: staticColors.white,
     shadowColor: staticColors.black,
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3, // Slightly stronger shadow for better elevation
+    shadowOpacity: 0.3,
     shadowRadius: 6,
     elevation: 10,
     borderWidth: 0,
-    position: "absolute", // Position it absolutely to overlap the container
-    top: -10, // Move it slightly above the container
-    zIndex: 3, // Ensure it stays on top
+    position: "absolute",
+    top: -10, 
+    zIndex: 3, 
     alignSelf: "center",
   },
   sizeContainer: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 5, // Reduced padding to make the container shorter
+    paddingVertical: 5, 
     paddingHorizontal: 5,
-    backgroundColor: staticColors.skyBlue50, // Light blue background
+    backgroundColor: staticColors.skyBlue50,
     borderRadius: borderRadius.r10,
-    overflow: "visible", // Allow the larger selected button to overflow
-    height: 45, // Explicitly set a smaller height for the container
+    overflow: "visible", 
+    height: 45, 
   },
   sizeText: {
     fontSize: fontSizes.sm,
