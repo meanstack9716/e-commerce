@@ -24,6 +24,6 @@ export const SafeAreaViewWrapper: React.FC<SafeAreaViewProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    ...spacingStyles.px10,
+    // ...spacingStyles.px10,
   },
 });

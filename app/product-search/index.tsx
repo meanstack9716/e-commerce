@@ -8,27 +8,25 @@ import {
   Image,
 } from "react-native";
 import React, { useState } from "react";
-import staticColors from "@/style/staticColors";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
-import { commonStyles } from "@/style/commonStyle";
-import spacingStyles from "@/style/spacingStyles";
 import { useDispatch, useSelector } from "react-redux";
-
 import { Product } from "@/interfaces";
 import { useAppDispatch } from "@/store/hooks";
 import { fetchProducts } from "@/store/product/productsSlice";
+import staticColors from "@/style/staticColors";
 import borderRadius from "@/style/borderRadius";
 import { fontSizes, fontWeights } from "@/style/typography";
 import { fontFamilies } from "@/style/fontFamilies";
+import { commonStyles } from "@/style/commonStyle";
+import spacingStyles from "@/style/spacingStyles";
 
 const ProductSearchScreen: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [isSearchSubmitted, setIsSearchSubmitted] = useState(false); 
+  const [isSearchSubmitted, setIsSearchSubmitted] = useState(false);
   const dispatch = useAppDispatch();
   const products = useSelector((state: any) => state.products.data);
   const loading = useSelector((state: any) => state.products.loading);
-
 
   const handleSearchSubmit = () => {
     if (searchTerm.trim()) {
@@ -36,23 +34,22 @@ const ProductSearchScreen: React.FC = () => {
       dispatch(
         fetchProducts({
           params: {
-            searchTerm: searchTerm
+            searchTerm: searchTerm,
           },
         })
       );
     }
   };
 
-
   const clearSearch = () => {
     setSearchTerm("");
-    setIsSearchSubmitted(false); 
+    setIsSearchSubmitted(false);
   };
 
   const renderProductItem = ({ item }: { item: Product }) => (
     <View style={styles.productCard}>
       <Image
-        source={{uri: item.images?.[0]}} 
+        source={{ uri: item.gallery?.[0]?.img_url }}
         style={styles.productImage}
       />
       <Text style={styles.productName}>{item.title}</Text>
@@ -73,7 +70,7 @@ const ProductSearchScreen: React.FC = () => {
               value={searchTerm}
               onChangeText={(text) => setSearchTerm(text)}
               onSubmitEditing={handleSearchSubmit}
-              returnKeyType="search" 
+              returnKeyType="search"
             />
             <TouchableOpacity>
               <Ionicons
@@ -103,7 +100,7 @@ const ProductSearchScreen: React.FC = () => {
               data={products}
               renderItem={renderProductItem}
               keyExtractor={(item) => item.id.toString()}
-              numColumns={2} 
+              numColumns={2}
               columnWrapperStyle={styles.row}
               contentContainerStyle={styles.productList}
             />
@@ -121,17 +118,18 @@ export default ProductSearchScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    ...spacingStyles.px5,
   },
   productList: {
-   ...spacingStyles.py2
+    ...spacingStyles.py2,
   },
   row: {
     justifyContent: "space-between",
-    marginBottom: 10,
+    ...spacingStyles.mb10,
   },
   productCard: {
     flex: 1,
-   ...spacingStyles.mx5,
+    ...spacingStyles.mx5,
     backgroundColor: staticColors.white,
     borderRadius: borderRadius.r5,
     ...spacingStyles.p10,
@@ -149,10 +147,10 @@ const styles = StyleSheet.create({
   },
   productName: {
     fontSize: fontSizes.xs,
-    fontFamily:fontFamilies.nunitoSans,
-    fontWeight:fontWeights.medium,
+    fontFamily: fontFamilies.nunitoSans,
+    fontWeight: fontWeights.medium,
     color: staticColors.black,
-    ...spacingStyles.mb5
+    ...spacingStyles.mb5,
   },
   productPrice: {
     fontSize: 16,
@@ -161,7 +159,7 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     textAlign: "center",
-    
+
     fontSize: 16,
     color: staticColors.darkGray,
   },

@@ -25,9 +25,11 @@ export const fetchProducts = createAsyncThunk<
   Product[],
   { params?: any },
   { rejectValue: string }
->("products/fetchProducts", async (_, { rejectWithValue }) => {
+>("products/fetchProducts", async ({ params }, { rejectWithValue }) => {
   try {
-    const response = await axiosConfig.get(`/products/list`);
+    const response = await axiosConfig.get("/products/list", {
+      params,
+    });
     if (response.data?.data) {
       return response.data.data;
     }
