@@ -30,14 +30,15 @@ import ProductActionButtons from "@/components/productDetails/ProductActionButto
 import FullScreenLoader from "@/components/common/FullScreenLoader";
 import borderRadius from "@/style/borderRadius";
 import { addToWishlist } from "@/store/wishlist/wishlistSlice";
-import LoginModal from "../(auth)/loginModal";
-import SignUpModal from "../(auth)/signUpModal";
+import Toast from "react-native-toast-message";
 import { LinearGradient } from "expo-linear-gradient";
 import { fontFamilies } from "@/style/fontFamilies";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import RatingReview from "@/components/productDetails/RatingReview/RatingReview";
 import { commonStyles } from "@/style/commonStyle";
 import { renderStars } from "@/utils/starUtils";
+import LoginModal from "../(auth)/loginModal";
+import SignUpModal from "../(auth)/signUpModal";
 
 const { width: screenWidth } = Dimensions.get("window");
 const ProductDetailsScreen: React.FC = () => {
@@ -67,12 +68,12 @@ const ProductDetailsScreen: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [displayImages, setDisplayImages] = useState<string[]>([]);
-  const [isLoginModalVisible, setLoginModalVisible] = useState(false);
-  const [isSignupModalVisible, setSignupModalVisible] = useState(false);
   const insets = useSafeAreaInsets();
   const flatListRef = useRef<FlatList>(null);
   const imageCarouselRef = useRef<FlatList>(null);
   const screenHeight = Dimensions.get("window").height;
+  const [isLoginModalVisible, setLoginModalVisible] = useState(false);
+  const [isSignupModalVisible, setSignupModalVisible] = useState(false);
 
   const isAuthenticatedUser = useAppSelector(
     (state) => state.auth.isAuthenticated
@@ -162,7 +163,7 @@ const ProductDetailsScreen: React.FC = () => {
         })
       ).unwrap();
       setIsProductLiked(true);
-      router.push("/wishlist");
+      router.navigate("/wishlist");
     } catch (error) {
       console.log(error);
     }
@@ -235,7 +236,6 @@ const ProductDetailsScreen: React.FC = () => {
       params: { productId: product.id },
     });
   };
-
 
   const dummyData = [{ key: "dummy" }];
 

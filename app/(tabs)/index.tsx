@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -16,7 +16,7 @@ import {
 } from "react-native";
 import { Ionicons, MaterialIcons, FontAwesome6 } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ProductCard from "@/components/home/ProductCard";
 import FullScreenLoader from "@/components/common/FullScreenLoader";
@@ -25,12 +25,15 @@ import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { fontSizes, fontWeights } from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
+import images from "@/constants/images";
 
 import { useAppDispatch } from "@/store/hooks";
 import { fetchCategories } from "@/store/category/categoriesSlice";
 import { fetchProducts } from "@/store/product/productsSlice";
 import borderRadius from "@/style/borderRadius";
-import { Product } from "@/interfaces";
+import { CategoryItem, Product, SubCategoryItem } from "@/interfaces";
+import { fontFamilies } from "@/style/fontFamilies";
+import { commonStyles } from "@/style/commonStyle";
 import { CategoriresCard } from "@/components/categoriesCard";
 
 const HomeScreen: React.FC = () => {
@@ -53,10 +56,12 @@ const HomeScreen: React.FC = () => {
     error: productsError,
   } = useSelector((state: any) => state.products);
 
-  useEffect(() => {
+ useFocusEffect(
+  useCallback(() => {
     dispatch(fetchCategories());
-    dispatch(fetchProducts());
-  }, [dispatch]);
+    dispatch(fetchProducts({}));
+  }, [dispatch])
+);
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
@@ -91,7 +96,7 @@ const HomeScreen: React.FC = () => {
             text: "Retry",
             onPress: () => {
               dispatch(fetchCategories());
-              dispatch(fetchProducts());
+          dispatch(fetchProducts({}));
             },
           },
           {
@@ -191,15 +196,16 @@ const HomeScreen: React.FC = () => {
           translucent
           backgroundColor="transparent"
         />
-        <View style={styles.searchContainer}>
-          <Text style={styles.searchContainerText}>Shop</Text>
-          <View style={styles.searchInputContainer}>
+        <View style={commonStyles.searchContainer}>
+          <Text style={commonStyles.searchContainerText}>Shop</Text>
+          <View style={commonStyles.searchInputContainer}>
             <TextInput
               placeholder="Search"
-              style={styles.searchInput}
+              style={commonStyles.searchInput}
               placeholderTextColor={staticColors.gray200}
               value={productSearchQuery}
               onChangeText={setProductSearchQuery}
+              onFocus={() => router.navigate("/product-search")}
             />
             <TouchableOpacity>
               <Ionicons
@@ -250,58 +256,32 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     gap: 20
   },
-  searchContainer: {
+  headingWrap: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    ...spacingStyles.pt10,
+    ...spacingStyles.px4,
     gap: gapSizes.xl,
   },
-  searchContainerText: {
-    fontSize: fontSizes.xl,
-    fontWeight: fontWeights.semiBold,
+  headingText: {
+    fontSize: fontSizes.lg,
+    fontFamily: fontFamilies.ralewayBold,
   },
-  searchInputContainer: {
-    flex: 1,
+  seeAllContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: staticColors.gray100,
-    borderRadius: borderRadius.r20,
-    ...spacingStyles.px15,
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
+    gap: gapSizes.sm,
   },
-  searchInput: {
-    flex: 1,
-    height: 40,
+  seeAllText: {
     fontSize: fontSizes.sm,
-    color: staticColors.darkGray,
-    fontWeight: fontWeights.medium,
-  },
-  addressContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    ...spacingStyles.px10,
-    ...spacingStyles.mb10,
-  },
-  addressTextContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: gapSizes.md,
-  },
-  addressText: {
-    fontSize: fontSizes.sm,
-    fontWeight: fontWeights.medium,
-    color: colors.primary,
-    ...spacingStyles.mx5,
-  },
-  logo: {
-    width: 20,
-    height: 20,
-    resizeMode: "contain",
-    ...spacingStyles.mr10,
+    fontFamily: fontFamilies.ralewayBold,
   },
 
-  iconButton: {
-    ...spacingStyles.ml15,
+  categoryCountText: {
+    fontSize: fontSizes.xs,
+    fontFamily: fontFamilies.ralewayExtraBold,
   },
   columnWrapper: {
     justifyContent: "space-between",
@@ -313,7 +293,7 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.md,
   },
   emptyContainer: {
-    padding: 20,
+    ...spacingStyles.p20,
     alignItems: "center",
   },
   emptyText: {
