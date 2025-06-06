@@ -18,6 +18,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { Product } from "@/interfaces";
 import { useAppDispatch } from "@/store/hooks";
 import { fetchProducts } from "@/store/product/productsSlice";
+import borderRadius from "@/style/borderRadius";
+import { fontSizes, fontWeights } from "@/style/typography";
+import { fontFamilies } from "@/style/fontFamilies";
 
 const ProductSearchScreen: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -49,11 +52,11 @@ const ProductSearchScreen: React.FC = () => {
   const renderProductItem = ({ item }: { item: Product }) => (
     <View style={styles.productCard}>
       <Image
-        source={{ uri: item.image || "https://via.placeholder.com/150" }} 
+        source={{uri: item.images?.[0]}} 
         style={styles.productImage}
       />
-      <Text style={styles.productName}>{item.title || "Product Name"}</Text>
-      <Text style={styles.productPrice}>${item.price || "0.00"}</Text>
+      <Text style={styles.productName}>{item.title}</Text>
+      <Text style={styles.productPrice}>${item.price}</Text>
     </View>
   );
 
@@ -117,11 +120,10 @@ export default ProductSearchScreen;
 
 const styles = StyleSheet.create({
   container: {
-    ...spacingStyles.px20,
     flex: 1,
   },
   productList: {
-    paddingVertical: 10,
+   ...spacingStyles.py2
   },
   row: {
     justifyContent: "space-between",
@@ -129,11 +131,10 @@ const styles = StyleSheet.create({
   },
   productCard: {
     flex: 1,
-    margin: 5,
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    padding: 10,
-    alignItems: "center",
+   ...spacingStyles.mx5,
+    backgroundColor: staticColors.white,
+    borderRadius: borderRadius.r5,
+    ...spacingStyles.p10,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -147,10 +148,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   productName: {
-    fontSize: 14,
-    color: staticColors.darkGray,
-    textAlign: "center",
-    marginBottom: 5,
+    fontSize: fontSizes.xs,
+    fontFamily:fontFamilies.nunitoSans,
+    fontWeight:fontWeights.medium,
+    color: staticColors.black,
+    ...spacingStyles.mb5
   },
   productPrice: {
     fontSize: 16,
@@ -159,7 +161,7 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     textAlign: "center",
-    marginTop: 20,
+    
     fontSize: 16,
     color: staticColors.darkGray,
   },

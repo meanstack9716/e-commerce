@@ -309,7 +309,7 @@ const ProductDetailsScreen: React.FC = () => {
                 <Text style={styles.reviewTitle}>Rating & Reviews</Text>
                 <View style={styles.reveiwHeader}>
                   <View style={styles.starsContainer}>
-                    {renderStars(product.total_rating, 22)}
+                    {renderStars(product.total_rating.toString(), 22)}
                   </View>
                   <View style={styles.ratingBox}>
                     <Text style={styles.ratingBoxText}>

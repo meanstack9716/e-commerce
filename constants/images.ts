@@ -4,6 +4,7 @@ const images = {
   genderFemale: require("@/assets/images/images/gender-female.png"),
   genderMale: require("@/assets/images/images/gender-male.png"),
   emptyBagImage: require("@/assets/images/EMPTYBAGIMAGE.png"),
+  noOrderImage:require('@/assets/images/NOORDER.png'),
   loginPasswordShape: require("@/assets/images/images/shape-1.png"),
   createLoginPwdShape: require("@/assets/images/images/shape-2.png"),
   loginShape: require("@/assets/images/images/shape-3.png"),
@@ -18,6 +19,7 @@ const images = {
   onBoardingCard3: require("@/assets/images/images/card-03.png"),
   onBoardingCard4: require("@/assets/images/images/card-04.png"),
   welcomeBag: require("@/assets/images/images/welcome-bag.png"),
+  tickImage:require("@/assets/images/images/tickImage.png"),
   unKnownUser:require("@/assets/images/images/unknownUser.png")
 };
 

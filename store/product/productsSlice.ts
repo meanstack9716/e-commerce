@@ -23,7 +23,7 @@ const initialState: ProductsState = {
 
 export const fetchProducts = createAsyncThunk<
   Product[],
-  { params: any },
+  { params?: any },
   { rejectValue: string }
 >("products/fetchProducts", async (_, { rejectWithValue }) => {
   try {

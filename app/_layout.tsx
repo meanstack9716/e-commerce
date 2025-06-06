@@ -32,7 +32,7 @@ function AppLayout() {
         <Stack.Screen name="/addNewAddress" />
         <Stack.Screen name="/payment" />
         <Stack.Screen name="/placeorder" />
-        <Stack.Screen name="/order" />
+        <Stack.Screen name="/orderHistory" />
         <Stack.Screen name="/product-reviews" />
          <Stack.Screen name="/product-search" />
       </Stack>

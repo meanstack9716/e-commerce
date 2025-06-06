@@ -35,12 +35,13 @@ import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { fontSizes, fontWeights } from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
+
 import images from "@/constants/images";
 import { useAppDispatch } from "@/store/hooks";
 import { fetchCategories } from "@/store/category/categoriesSlice";
 import { fetchProducts } from "@/store/product/productsSlice";
 import borderRadius from "@/style/borderRadius";
-import { CategoryItem, SubCategoryItem } from "@/interfaces";
+import { CategoryItem, Product, SubCategoryItem } from "@/interfaces";
 import { fontFamilies } from "@/style/fontFamilies";
 import { commonStyles } from "@/style/commonStyle";
 
@@ -66,7 +67,7 @@ const HomeScreen: React.FC = () => {
 
   useEffect(() => {
     dispatch(fetchCategories());
-    dispatch(fetchProducts());
+    dispatch(fetchProducts({}));
   }, [dispatch]);
 
   useEffect(() => {
@@ -102,7 +103,7 @@ const HomeScreen: React.FC = () => {
             text: "Retry",
             onPress: () => {
               dispatch(fetchCategories());
-              dispatch(fetchProducts());
+          dispatch(fetchProducts({}));
             },
           },
           {
