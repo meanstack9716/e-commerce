@@ -33,6 +33,11 @@ const UserProfile = () => {
       pathname: "/accountManage",
     });
   };
+  const handleWishList = () => {
+    router.push({
+      pathname: "/wishlist",
+    });
+  };
 
   const {
     data: categories,

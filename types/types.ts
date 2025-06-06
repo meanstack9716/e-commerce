@@ -1,3 +1,52 @@
+export interface Product {
+  id: string;
+  title: string;
+  description: string;
+  discount_percent?: number;
+  final_price: number;
+  price:number;
+  stock_quantity?: string;
+  thumbnail_url: string;
+  images: string[];
+  categories: string[];
+  star?: number;
+  details?: string;
+  sku?: string;
+  brand?: Brand;
+  sizes?: Size[];
+  gallery?: GalleryItem[];
+  seller?: Seller;
+  delivery_days?: string;
+  reviews?: Review[];
+}
+
+export interface GalleryItem {
+  id: string;
+  color: string;
+  img_url: string;
+}
+
+export interface ColorVariant {
+  id: string;
+  value: string;
+  name: string;
+  stock_quantity: string;
+}
+
+export interface Size {
+  id: string;
+  product_id: string;
+  value: string;
+  size_type: string;
+  variants: ColorVariant[];
+}
+
+export interface Brand {
+  id: string;
+  name: string;
+  description: string;
+  img_url: string;
+}
 import { GalleryItem, Product } from "@/interfaces";
 
 export interface SubSubCategory {
@@ -84,6 +133,28 @@ export interface AddressFormData {
   country: string;
 }
 
+export interface Review {
+  id: string;
+  product_id: string;
+  order_id: string;
+  rating: string;
+  review: string;
+  by: {
+    email: string;
+    id: string;
+    profile_url: string | null;
+    role: string | null;
+  };
+}
+
+export interface WishlistItem {
+  id: string;
+  selected_size: string;
+  selected_color: string;
+  selected_color_name: string;
+  quantity: string;
+  product: Product;
+}
 export type UserProfile = {
   first_name: string;
   last_name: string;
