@@ -7,7 +7,6 @@ import spacingStyles from "@/style/spacingStyles";
 import { CartItemsListProps } from "./cardItem.types";
 import { commonStyles } from "@/style/commonStyle";
 import { CartItem } from "@/interfaces";
-import CardItemCard from "../cart-items/cartItemCard";
 import { fontFamilies } from "@/style/fontFamilies";
 
 const CartItemsList: React.FC<CartItemsListProps> = ({ cartItems }) => {
@@ -68,25 +67,6 @@ const CartItemsList: React.FC<CartItemsListProps> = ({ cartItems }) => {
         removeClippedSubviews={true}
         initialNumToRender={10}
       />
-      {/* {cartItems.map((item, index) => (
-        <View key={item.id} style={styles.itemContainer}>
-          <View style={styles.leftSection}>
-            <View style={styles.imageShadowWrapper}>
-              <View style={styles.imageWrapper}>
-                <Image
-                  source={{ uri: item.images[0] }}
-                  style={styles.itemImage}
-                  resizeMode="cover"
-                />
-              </View>
-            </View>
-            <Text style={styles.itemTitle}>{item.title}</Text>
-          </View>
-          <View style={styles.rightSection}>
-            <Text style={styles.itemPrice}>₹{item.final_price}</Text>
-          </View>
-        </View>
-      ))} */}
     </View>
   );
 };
