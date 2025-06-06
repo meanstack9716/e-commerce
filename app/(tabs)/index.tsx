@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
   contentWrapper: {
     flex: 1,
     flexDirection: 'column',
-    gap: 20
+    gap: gapSizes.lg
   },
   headingWrap: {
     flexDirection: "row",

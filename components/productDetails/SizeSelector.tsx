@@ -17,21 +17,7 @@ import borderRadius from "@/style/borderRadius";
 import gapSizes from "@/style/gapSizes";
 import ProductVarientModal from "@/modal/productVariants/ProductVarientModal";
 import { Product } from "@/interfaces";
-
-const standardSizes = ["XS", "S", "M", "L", "XL", "XXL"];
-const numericSizes = [
-  "30",
-  "32",
-  "34",
-  "36",
-  "38",
-  "40",
-  "42",
-  "44",
-  "46",
-  "48",
-  "50",
-];
+import { numericSizes, standardSizes } from "@/constants/constants";
 
 interface SizeSelectorProps {
   product: Product | null;
