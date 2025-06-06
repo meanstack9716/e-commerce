@@ -9,17 +9,18 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Product } from "@/interfaces";
 import { useAppDispatch } from "@/store/hooks";
 import { fetchProducts } from "@/store/product/productsSlice";
+import ProductCard from "@/components/home/ProductCard";
+import images from "@/constants/images";
 import staticColors from "@/style/staticColors";
-import borderRadius from "@/style/borderRadius";
-import { fontSizes, fontWeights } from "@/style/typography";
-import { fontFamilies } from "@/style/fontFamilies";
 import { commonStyles } from "@/style/commonStyle";
 import spacingStyles from "@/style/spacingStyles";
+import { fontSizes } from "@/style/typography";
 
 const ProductSearchScreen: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -47,14 +48,15 @@ const ProductSearchScreen: React.FC = () => {
   };
 
   const renderProductItem = ({ item }: { item: Product }) => (
-    <View style={styles.productCard}>
-      <Image
-        source={{ uri: item.gallery?.[0]?.img_url }}
-        style={styles.productImage}
-      />
-      <Text style={styles.productName}>{item.title}</Text>
-      <Text style={styles.productPrice}>${item.price}</Text>
-    </View>
+    <ProductCard
+      {...item}
+      onPress={() =>
+        router.navigate({
+          pathname: "/ProductDetails",
+          params: { id: item.id },
+        })
+      }
+    />
   );
 
   return (
@@ -63,33 +65,48 @@ const ProductSearchScreen: React.FC = () => {
         <View style={commonStyles.searchContainer}>
           <Text style={commonStyles.searchContainerText}>Shop</Text>
           <View style={commonStyles.searchInputContainer}>
-            <TextInput
-              placeholder="Search"
-              style={commonStyles.searchInput}
-              placeholderTextColor={staticColors.gray200}
-              value={searchTerm}
-              onChangeText={(text) => setSearchTerm(text)}
-              onSubmitEditing={handleSearchSubmit}
-              returnKeyType="search"
-            />
+            <View style={styles.inputWrapper}>
+              <TextInput
+                placeholder="Search"
+                placeholderTextColor={staticColors.gray200}
+                value={searchTerm}
+                onChangeText={(text) => setSearchTerm(text)}
+                onSubmitEditing={handleSearchSubmit}
+                returnKeyType="search"
+                style={[
+                  styles.searchInput,
+                  searchTerm ? styles.searchInputWithText : null,
+                ]}
+              />
+              {searchTerm ? (
+                <TouchableOpacity
+                  onPress={clearSearch}
+                  style={styles.clearIcon}
+                >
+                  <Ionicons
+                    name="close-circle"
+                    size={20}
+                    color={staticColors.darkGray}
+                  />
+                </TouchableOpacity>
+              ) : null}
+            </View>
+
             <TouchableOpacity>
               <Ionicons
                 name="camera-outline"
-                size={20}
+                size={22}
                 color={staticColors.blue400}
               />
             </TouchableOpacity>
-            {searchTerm ? (
-              <TouchableOpacity onPress={clearSearch}>
-                <Ionicons
-                  name="close-circle"
-                  size={20}
-                  color={staticColors.darkGray}
-                  style={styles.clearIcon}
-                />
-              </TouchableOpacity>
-            ) : null}
           </View>
+          <TouchableOpacity>
+            <Ionicons
+              name="options-outline"
+              size={22}
+              color={staticColors.darkGray}
+            />
+          </TouchableOpacity>
         </View>
 
         {isSearchSubmitted ? (
@@ -105,7 +122,13 @@ const ProductSearchScreen: React.FC = () => {
               contentContainerStyle={styles.productList}
             />
           ) : (
-            <Text style={styles.noResultsText}>No products found</Text>
+            <View style={styles.noResultsContainer}>
+              <Image
+                source={images.noProductFound}
+                style={styles.noResultsImage}
+                resizeMode="contain"
+              />
+            </View>
           )
         ) : null}
       </View>
@@ -114,11 +137,28 @@ const ProductSearchScreen: React.FC = () => {
 };
 
 export default ProductSearchScreen;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    ...spacingStyles.px5,
+    ...spacingStyles.px10,
+  },
+  inputWrapper: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  searchInput: {
+    flex: 1,
+    height: 40,
+    fontSize: fontSizes.sm,
+    color: staticColors.darkGray,
+    fontWeight: "500",
+  },
+  searchInputWithText: {
+    color: staticColors.blue300,
+  },
+  clearIcon: {
+    ...spacingStyles.mx5,
   },
   productList: {
     ...spacingStyles.py2,
@@ -127,49 +167,18 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     ...spacingStyles.mb10,
   },
-  productCard: {
-    flex: 1,
-    ...spacingStyles.mx5,
-    backgroundColor: staticColors.white,
-    borderRadius: borderRadius.r5,
-    ...spacingStyles.p10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 3,
-  },
-  productImage: {
-    width: 120,
-    height: 120,
-    borderRadius: 10,
-    marginBottom: 10,
-  },
-  productName: {
-    fontSize: fontSizes.xs,
-    fontFamily: fontFamilies.nunitoSans,
-    fontWeight: fontWeights.medium,
-    color: staticColors.black,
-    ...spacingStyles.mb5,
-  },
-  productPrice: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: staticColors.black,
-  },
   loadingText: {
     textAlign: "center",
-
-    fontSize: 16,
+    fontSize: fontSizes.base,
     color: staticColors.darkGray,
   },
-  noResultsText: {
-    textAlign: "center",
-    marginTop: 20,
-    fontSize: 16,
-    color: staticColors.darkGray,
+  noResultsContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  clearIcon: {
-    marginLeft: 10,
+  noResultsImage: {
+    width: 200,
+    height: 200,
   },
 });
