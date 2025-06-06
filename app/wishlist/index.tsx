@@ -134,25 +134,13 @@ const WishlistScreen: React.FC = () => {
         reviews: item.product.reviews || [],
       };
     });
-  console.log(clothingItems, ">>>>>>")
+
   const renderWishlistItem = ({
     item,
   }: {
     item: (typeof clothingItems)[0] & { reviews?: { rating: string }[] };
   }) => {
     if (!item.id) return null;
-
-    const reviews = item.reviews || [];
-    const averageRating =
-      reviews.length > 0
-        ? (
-          reviews.reduce(
-            (sum, review) => sum + parseFloat(review.rating),
-            0
-          ) / reviews.length
-        ).toFixed(1)
-        : "N/A";
-
     return (
       <View style={styles.itemContainer}>
         <View style={styles.imageContainer}>
@@ -167,11 +155,15 @@ const WishlistScreen: React.FC = () => {
 
         <View style={styles.itemDetailsNew}>
           <Text style={styles.itemTitle}>{item.brand}</Text>
-          <Text style={styles.itemPrice}>${item.price}</Text>
-
+          <View style={styles.priceContainer}>
+            <Text style={styles.itemPrice}>${item.price}</Text>
+            {item.originalPrice > item.price && (
+              <Text style={styles.originalPrice}>${item.originalPrice}</Text>
+            )}
+          </View>
           <View style={styles.optionRow}>
-            <Text style={styles.optionButton}>Pink</Text>
-            <Text style={styles.optionButton}>M</Text>
+            <Text style={styles.optionButton}>{item.color}</Text>
+            <Text style={styles.optionButton}>{item.size}</Text>
             <TouchableOpacity
               style={styles.cartIconWrapper}
               onPress={() => handleMoveToBag(item.id)}
@@ -181,7 +173,6 @@ const WishlistScreen: React.FC = () => {
           </View>
         </View>
       </View>
-
     );
   };
 
@@ -224,7 +215,6 @@ const WishlistScreen: React.FC = () => {
           data={clothingItems}
           renderItem={renderWishlistItem}
           keyExtractor={(item) => item.id || `fallback-${Math.random()}`}
-          numColumns={2}
           contentContainerStyle={styles.flatList}
         />
       )}
@@ -233,16 +223,11 @@ const WishlistScreen: React.FC = () => {
   );
 };
 
-const { width } = Dimensions.get("window");
-const itemWidth = width / 2 - 10;
-const itemImageHeight = itemWidth * 1.5;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: staticColors.bgSecondary,
+    backgroundColor: staticColors.white,
   },
-
   header: {
     flexDirection: "row",
     alignItems: "center",
@@ -253,114 +238,110 @@ const styles = StyleSheet.create({
     fontFamily: fontFamilies.ralewayBold,
     ...spacingStyles.ml10,
   },
-  headerSubtitle: {
-    fontSize: fontSizes.xs,
-    color: staticColors.textMuted,
-  },
-  headerIcons: {
-    flexDirection: "row",
-    marginLeft: "auto",
-  },
-
   flatList: {
     ...spacingStyles.py5,
+    paddingHorizontal: 10,
   },
-
-  // Final cleaned-up itemContainer (horizontal card layout)
   itemContainer: {
     flexDirection: "row",
     borderRadius: borderRadius.r5,
-    padding: 10,
     marginVertical: 6,
-
     alignItems: "center",
-    width: "100%"
+    width: "100%",
+    backgroundColor: staticColors.white,
+    marginBottom: 10,
   },
-
   imageContainer: {
     backgroundColor: staticColors.white,
-    shadowColor: staticColors.black,
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
-    elevation: 2,
+    borderRadius: borderRadius.r10,
+    ...spacingStyles.mr15,
+    padding: 5,
     position: "relative",
-    ...spacingStyles.mr15
+    shadowColor: staticColors.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 5,
   },
-
   image: {
-    width: 120,
-    height: 110,
-    borderRadius: 10,
+    width: 130,
+    height: 125,
+    borderRadius: borderRadius.r10,
   },
-
   removeButtonOverlay: {
     position: "absolute",
-    bottom: 8,
-    left: 8,
+    bottom: 10,
+    left: 10,
     width: 28,
     height: 28,
-    borderRadius: 14,
+    borderRadius: borderRadius.r14,
     backgroundColor: staticColors.white,
     justifyContent: "center",
     alignItems: "center",
-    borderWidth: 1,
-    borderColor: "red",
+     shadowColor: staticColors.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 5,
   },
-
   itemDetailsNew: {
     flex: 1,
+    gap: 8,
   },
-
   itemTitle: {
-    fontSize: 13,
+    fontSize: fontSizes.sm,
     color: staticColors.darkGray,
-    marginBottom: 4,
+    ...spacingStyles.mb4,
+    fontFamily: fontFamilies.ralewayBold
   },
-
   itemPrice: {
-    fontSize: 16,
+    fontSize: fontSizes.base,
     fontWeight: fontWeights.bold,
-    marginBottom: 8,
+    ...spacingStyles.mb8
   },
-
+  priceContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10
+  },
+  originalPrice: {
+    fontSize: fontSizes.sm,
+    color: staticColors.textLightGray,
+    textDecorationLine: 'line-through',
+    ...spacingStyles.mb4,
+  },
   optionRow: {
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
   },
-
   optionButton: {
     ...spacingStyles.py6,
     ...spacingStyles.px15,
-    borderRadius: 2,
+    borderRadius: borderRadius.r5,
     backgroundColor: "#f0f0ff",
-    fontSize: fontSizes.base,
+    fontSize: fontSizes.sm,
     color: "#333",
   },
-
   cartIconWrapper: {
     marginLeft: "auto",
-    padding: 6,
-    borderRadius: 8,
+    ...spacingStyles.p6,
+    borderRadius: borderRadius.r8,
     borderWidth: 1.5,
-    borderColor: "#2A52BE",
-    backgroundColor: "#fff",
+    backgroundColor: staticColors.white,
   },
-
   emptyWishlistContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     ...spacingStyles.p20,
   },
-
   emptyWishlistTitle: {
     fontSize: fontSizes.xl,
     fontWeight: fontWeights.semiBold,
     color: staticColors.darkGray,
     ...spacingStyles.mb10,
   },
-
   emptyWishlistSubtitle: {
     fontSize: fontSizes.md,
     color: staticColors.textLightGray,
@@ -368,8 +349,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     ...spacingStyles.mb25,
   },
-
-
   shopNowButton: {
     backgroundColor: staticColors.white,
     ...spacingStyles.px25,
@@ -379,13 +358,21 @@ const styles = StyleSheet.create({
     borderColor: staticColors.primary,
     alignItems: "center",
   },
-
   shopNowText: {
     fontSize: fontSizes.sm,
     color: staticColors.primary,
     fontWeight: fontWeights.semiBold,
   },
+  loader: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  errorText: {
+    color: staticColors.DarkRed,
+    textAlign: "center",
+    ...spacingStyles.p10,
+  },
 });
-
 
 export default WishlistScreen;
