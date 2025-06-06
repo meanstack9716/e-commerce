@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { useSelector } from "react-redux";
 import { CategoryItem } from "@/types/types";
-import {fontSizes, fontWeights} from "@/style/typography";
+import { fontSizes, fontWeights } from "@/style/typography";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
@@ -33,14 +33,14 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({
   const activeCategories =
     activeTab.toLowerCase() === "all"
       ? categories
-          .flatMap((category: CategoryItem) => category.sub_categories)
-          .slice(0, 8)
+        .flatMap((category: CategoryItem) => category.sub_categories)
+        .slice(0, 8)
       : (
-          categories.filter(
-            (category: CategoryItem) =>
-              category.name.toLowerCase() === activeTab.toLowerCase()
-          )[0]?.sub_categories || []
-        ).slice(0, 8);
+        categories.filter(
+          (category: CategoryItem) =>
+            category.name.toLowerCase() === activeTab.toLowerCase()
+        )[0]?.sub_categories || []
+      ).slice(0, 8);
 
   useEffect(() => {
     if (prevTabRef.current !== activeTab) {
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   },
   activeTitle: {
     color: colors.primary,
-    fontWeight:fontWeights.bold,
+    fontWeight: fontWeights.bold,
   },
 });
 

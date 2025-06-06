@@ -6,6 +6,7 @@ import {
   FlatList,
   ScrollView,
   TouchableOpacity,
+  SafeAreaView,
 } from "react-native";
 import { router } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
@@ -172,14 +173,14 @@ const ShoppingBagScreen: React.FC = () => {
 
   if (isLoading) {
     return (
-      <SafeAreaViewWrapper style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <FullScreenLoader visible={isLoading} />
-      </SafeAreaViewWrapper>
+      </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaViewWrapper>
+    <SafeAreaView style={{flex: 1}}>
       <View style={styles.mainContainer}>
         <ScrollView
           style={styles.container}
@@ -244,7 +245,7 @@ const ShoppingBagScreen: React.FC = () => {
         onClose={handleCloseModal}
         isLoading={loading}
       />
-    </SafeAreaViewWrapper>
+    </SafeAreaView>
   );
 };
 
@@ -257,7 +258,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: staticColors.white,
-    ...spacingStyles.px25,
+    ...spacingStyles.px12,
   },
   header: {
     flexDirection: "row",

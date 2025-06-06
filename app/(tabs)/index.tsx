@@ -223,7 +223,7 @@ const HomeScreen: React.FC = () => {
             renderItem={renderProductItem}
             scrollEnabled={false}
             showsVerticalScrollIndicator={false}
-            columnWrapperStyle={{ justifyContent: "space-between", ...spacingStyles.mb30 }}
+            columnWrapperStyle={{ justifyContent: "space-between", ...spacingStyles.my20 }}
             ListEmptyComponent={() => (
               <View style={styles.emptyContainer}>
                 <Text style={styles.emptyText}>

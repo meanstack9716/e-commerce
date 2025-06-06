@@ -25,19 +25,11 @@ import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import { fontSizes, fontWeights } from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
-import MegaDealBadge from "@/components/productDetails/MegaDealBadge";
 import SizeSelector from "@/components/productDetails/SizeSelector";
-import SimilarProducts from "@/components/productDetails/SimilarProducts";
-import ProductList from "@/components/productDetails/ProductList";
-import BrandRating from "@/components/productDetails/BrandRating";
-import DeliveryCheck from "@/components/productDetails/DeliveryCheck";
 import ProductActionButtons from "@/components/productDetails/ProductActionButtons";
 import FullScreenLoader from "@/components/common/FullScreenLoader";
-import ReturnPolicy from "./ReturnPolicy";
-import ViewSimilarModal from "@/modal/ViewSimilarModal";
 import borderRadius from "@/style/borderRadius";
 import { addToWishlist } from "@/store/wishlist/wishlistSlice";
-import Toast from "react-native-toast-message";
 import LoginModal from "../(auth)/loginModal";
 import SignUpModal from "../(auth)/signUpModal";
 import { LinearGradient } from "expo-linear-gradient";
@@ -48,7 +40,6 @@ import { commonStyles } from "@/style/commonStyle";
 import { renderStars } from "@/utils/starUtils";
 
 const { width: screenWidth } = Dimensions.get("window");
-const screenHeight = Dimensions.get("window").height;
 const ProductDetailsScreen: React.FC = () => {
   const params = useLocalSearchParams();
   const { id } = params;

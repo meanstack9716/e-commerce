@@ -87,7 +87,7 @@ const AccountScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <View style={styles.safeArea}>
       <View style={styles.container}>
         <View style={styles.header}>
           <TouchableOpacity onPress={handleBack}>
@@ -150,7 +150,7 @@ const AccountScreen: React.FC = () => {
           <Text style={styles.deleteText}>DELETE ACCOUNT</Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
