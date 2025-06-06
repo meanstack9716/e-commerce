@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
     fontFamily: fontFamilies.ralewayBold,
   },
   backButton: {
-    ...spacingStyles.p5,
+    ...spacingStyles.mr12
   },
   itemsWrapper: {
     ...spacingStyles.py15,

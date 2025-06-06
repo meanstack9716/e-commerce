@@ -58,11 +58,9 @@ const ProfileHeaderBar: React.FC<ProfileHeaderBarProps> = ({
 const styles = StyleSheet.create({
   container: {
     ...spacingStyles.px5,
-    ...spacingStyles.pt15,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: staticColors.white,
   },
   leftSection: {
     flexDirection: "row",

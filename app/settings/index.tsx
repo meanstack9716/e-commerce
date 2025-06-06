@@ -35,7 +35,7 @@ export default function SettingPage() {
       title: "Shop",
       items: [
         { label: "Order", route: "/orderHistory" },
-        { label: "Faq", route: null },
+        { label: "Faq", route: "/faqs" },
         { label: "About Us", route: null },
         { label: "Terms and Use", route: null },
         { label: "Privacy Policy", route: null },

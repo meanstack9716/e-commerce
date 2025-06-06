@@ -419,18 +419,6 @@ const ProductDetailsScreen: React.FC = () => {
           onWishlist={handleLikePress}
         />
       )}
-
-      <LoginModal
-        visible={isLoginModalVisible}
-        onClose={handleCloseLoginModal}
-        onSignupPress={handleOpenSignupModal}
-      />
-
-      <SignUpModal
-        visible={isSignupModalVisible}
-        onClose={handleCloseSignupModal}
-        onLoginPress={handleOpenLoginModal}
-      />
       {/* <ViewSimilarModal
         visible={isViewSimilarModalVisible}
         onClose={() => setViewSimilarModalVisible(false)}

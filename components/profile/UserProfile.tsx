@@ -72,7 +72,7 @@ const UserProfile = () => {
   const isLoading = productsLoading;
 
   return (
-    <SafeAreaViewWrapper style={styles.container}>
+    <View style={styles.container}>
       <ProfileHeaderBar title="category" profileImage={images.genderFemale} titleStyle={styles.profileHeaderTitle}/>
       <CategoriresCard categoryList={categories} />
       <View style={styles.allProductsContainer}>
@@ -95,7 +95,7 @@ const UserProfile = () => {
           )}
         />
       </View>
-    </SafeAreaViewWrapper>
+    </View>
   );
 };
 
@@ -103,7 +103,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    gap: gapSizes.sm
+    gap: gapSizes.sm,
+    ...spacingStyles.p12,
+    backgroundColor: '#fff'
   },
   profileHeaderContainer: {
     ...spacingStyles.pb0
@@ -125,6 +127,7 @@ const styles = StyleSheet.create({
   allProductsContainer: {
     display: 'flex',
     flexDirection: 'column',
+    gap: gapSizes.lg
   },
   emptyContainer: {
     ...spacingStyles.p20,

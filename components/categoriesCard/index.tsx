@@ -115,7 +115,6 @@ const styles = StyleSheet.create({
     rowGap: gapSizes.md,
     justifyContent: "space-between",
     ...spacingStyles.py10,
-    ...spacingStyles.px4,
   },
   cardItem: {
     width: "48.5%",

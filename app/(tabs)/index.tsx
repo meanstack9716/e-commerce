@@ -19,16 +19,6 @@ import { useSelector } from "react-redux";
 import { router, useFocusEffect } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ProductCard from "@/components/home/ProductCard";
-import bannerData from "../../assets/data/banner.json";
-import promotionalData from "../../assets/data/promotionalData.json";
-import Navbar from "@/components/home/Navbar";
-import CategoryGrid from "@/components/home/CategoryGrid";
-import ImageSlider from "@/components/home/ImageSlider";
-import PromotionalCards from "@/components/home/PromotionalCards";
-import OfferCardCarousel from "@/components/home/OfferCardCarousel";
-import BrandCard from "@/components/home/BrandCard";
-import OfferPriceCard from "@/components/home/OfferPriceCard";
-import PocketFriendlyBargain from "@/components/home/PocketFriendlyCategory";
 import FullScreenLoader from "@/components/common/FullScreenLoader";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
@@ -36,6 +26,7 @@ import staticColors from "@/style/staticColors";
 import { fontSizes, fontWeights } from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
 import images from "@/constants/images";
+
 import { useAppDispatch } from "@/store/hooks";
 import { fetchCategories } from "@/store/category/categoriesSlice";
 import { fetchProducts } from "@/store/product/productsSlice";
@@ -98,8 +89,8 @@ const HomeScreen: React.FC = () => {
       Alert.alert(
         "Error",
         categoriesError ||
-          productsError ||
-          "Failed to fetch data. Please try again.",
+        productsError ||
+        "Failed to fetch data. Please try again.",
         [
           {
             text: "Retry",
@@ -168,10 +159,6 @@ const HomeScreen: React.FC = () => {
     return filtered;
   };
 
-  const handleUserIconPress = () => {
-    router.navigate("/profile");
-  };
-
   const toggleProductLike = (id: string) => {
     setLikedProductItems((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
@@ -183,6 +170,7 @@ const HomeScreen: React.FC = () => {
       {...item}
       liked={likedProductItems.includes(item.id)}
       onLikePress={() => toggleProductLike(item.id)}
+
       onPress={() =>
         router.navigate({
           pathname: "/ProductDetails",
@@ -199,10 +187,7 @@ const HomeScreen: React.FC = () => {
     <View style={styles.container}>
       <SafeAreaView
         style={[
-          styles.contentWrapper,
-          {
-            paddingTop: insets.top,
-          },
+          styles.contentWrapper
         ]}
       >
         <FullScreenLoader visible={isLoading} />
@@ -234,20 +219,6 @@ const HomeScreen: React.FC = () => {
 
         <ScrollView showsVerticalScrollIndicator={false}>
           <CategoriresCard categoryList={categories} />
-          {/* <View style={styles.headingWrap}>
-            <Text style={styles.headingText}>Categories</Text>
-            <View style={styles.seeAllContainer}>
-              <Text style={styles.seeAllText}>See All</Text>
-              <TouchableOpacity onPress={() => router.navigate("/categories")}>
-                <Ionicons
-                  name="arrow-forward-circle"
-                  size={30}
-                  color={staticColors.blue300}
-                />
-              </TouchableOpacity>
-            </View>
-          </View> */}
-
 
           {hasError && <Text style={styles.errorText}>Error: {hasError}</Text>}
 
@@ -257,10 +228,8 @@ const HomeScreen: React.FC = () => {
             keyExtractor={(item) => item.id}
             renderItem={renderProductItem}
             scrollEnabled={false}
-            // ListHeaderComponent={ListHeader}
-            contentContainerStyle={styles.flatListContent}
-            columnWrapperStyle={styles.columnWrapper}
             showsVerticalScrollIndicator={false}
+            columnWrapperStyle={{ justifyContent: "space-between", ...spacingStyles.mb30 }}
             ListEmptyComponent={() => (
               <View style={styles.emptyContainer}>
                 <Text style={styles.emptyText}>
@@ -269,6 +238,7 @@ const HomeScreen: React.FC = () => {
               </View>
             )}
           />
+
         </ScrollView>
       </SafeAreaView>
     </View>
@@ -279,10 +249,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: staticColors.white,
+    ...spacingStyles.p12
   },
   contentWrapper: {
     flex: 1,
-    ...spacingStyles.px15,
+    flexDirection: 'column',
+    gap: 20
   },
   headingWrap: {
     flexDirection: "row",
@@ -290,6 +262,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     ...spacingStyles.pt10,
     ...spacingStyles.px4,
+    gap: gapSizes.xl,
   },
   headingText: {
     fontSize: fontSizes.lg,
@@ -310,12 +283,8 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.xs,
     fontFamily: fontFamilies.ralewayExtraBold,
   },
-  flatListContent: {
-    ...spacingStyles.px5,
-  },
   columnWrapper: {
     justifyContent: "space-between",
-    ...spacingStyles.mb10,
   },
   errorText: {
     color: staticColors.discountText,
@@ -324,7 +293,7 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.md,
   },
   emptyContainer: {
-    padding: 20,
+    ...spacingStyles.p20,
     alignItems: "center",
   },
   emptyText: {
