@@ -36,6 +36,10 @@ import FullScreenLoader from "@/components/common/FullScreenLoader";
 import ReturnPolicy from "./ReturnPolicy";
 import ViewSimilarModal from "@/modal/ViewSimilarModal";
 import borderRadius from "@/style/borderRadius";
+import { addToWishlist } from "@/store/wishlist/wishlistSlice";
+import Toast from "react-native-toast-message";
+import LoginModal from "../(auth)/loginModal";
+import SignUpModal from "../(auth)/signUpModal";
 import { LinearGradient } from "expo-linear-gradient";
 import { fontFamilies } from "@/style/fontFamilies";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
@@ -56,6 +60,9 @@ const ProductDetailsScreen: React.FC = () => {
     selectedProductLoading: loading,
     selectedProductError: error,
   } = useSelector((state: RootState) => state.products);
+  const { items: wishlistItems } = useSelector(
+    (state: RootState) => state.wishlist
+  );
   const [selectedSize, setSelectedSize] = useState<string | undefined>(
     undefined
   );
@@ -71,6 +78,8 @@ const ProductDetailsScreen: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [displayImages, setDisplayImages] = useState<string[]>([]);
+  const [isLoginModalVisible, setLoginModalVisible] = useState(false);
+  const [isSignupModalVisible, setSignupModalVisible] = useState(false);
   const insets = useSafeAreaInsets();
   const flatListRef = useRef<FlatList>(null);
   const imageCarouselRef = useRef<FlatList>(null);
@@ -106,6 +115,24 @@ const ProductDetailsScreen: React.FC = () => {
   //   );
   // };
 
+  const handleCloseLoginModal = () => {
+    setLoginModalVisible(false);
+  };
+
+  const handleCloseSignupModal = () => {
+    setSignupModalVisible(false);
+  };
+
+  const handleOpenSignupModal = () => {
+    setLoginModalVisible(false);
+    setSignupModalVisible(true);
+  };
+
+  const handleOpenLoginModal = () => {
+    setSignupModalVisible(false);
+    setLoginModalVisible(true);
+  };
+
   const handleScroll = (event: any) => {
     const index = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
     setActiveIndex(index);
@@ -116,8 +143,43 @@ const ProductDetailsScreen: React.FC = () => {
     setShowBackToTop(offsetY > screenHeight * 1.5);
   };
 
-  const handleLikePress = () => {
-    setIsProductLiked((prev) => !prev);
+  // const handleLikePress = () => {
+  //   setIsProductLiked((prev) => !prev);
+  // };
+
+  useEffect(() => {
+    // Check if product is in wishlist
+    if (product && wishlistItems) {
+      const isLiked = wishlistItems.some(
+        (item) =>
+          item.product.id === product.id &&
+          item.selected_size === selectedSize &&
+          item.selected_color === selectedColor
+      );
+      setIsProductLiked(isLiked);
+    }
+  }, [product, wishlistItems, selectedSize, selectedColor]);
+
+  const handleLikePress = async () => {
+    if (!product) return;
+    if (!isAuthenticatedUser) {
+      setLoginModalVisible(true);
+      return;
+    }
+    try {
+      await dispatch(
+        addToWishlist({
+          productId: product.id,
+          selectedSize,
+          selectedColor,
+          quantity: "1",
+        })
+      ).unwrap();
+      setIsProductLiked(true);
+      router.push("/wishlist");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // const handleViewSimilar = () => {
@@ -398,6 +460,20 @@ const ProductDetailsScreen: React.FC = () => {
         onClose={() => setViewSimilarModalVisible(false)}
         currentProduct={product}
       /> */}
+
+      {/* Login Modal */}
+      <LoginModal
+        visible={isLoginModalVisible}
+        onClose={handleCloseLoginModal}
+        onSignupPress={handleOpenSignupModal}
+      />
+
+      {/* Signup Modal */}
+      <SignUpModal
+        visible={isSignupModalVisible}
+        onClose={handleCloseSignupModal}
+        onLoginPress={handleOpenLoginModal}
+      />
     </SafeAreaViewWrapper>
   );
 };

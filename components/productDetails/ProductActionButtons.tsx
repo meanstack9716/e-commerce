@@ -17,18 +17,20 @@ import borderRadius from "@/style/borderRadius";
 interface BottomActionsProps {
   onAddToCart?: () => void;
   onWishlist?: () => void;
+  isWishlisted?: boolean;
   containerStyle?: object;
 }
 
 const ProductActionButtons: React.FC<BottomActionsProps> = ({
   onAddToCart = () => {},
   onWishlist = () => {},
+  isWishlisted = false,
   containerStyle = {},
 }) => {
   return (
     <View style={[styles.bottomContainer, containerStyle]}>
       <TouchableOpacity style={styles.wishlistButton} onPress={onWishlist}>
-        <FontAwesome name="heart-o" size={16} color={colors.primary} />
+        <FontAwesome name={isWishlisted ? "heart" : "heart-o"} size={16} color={colors.primary} />
         <Text style={styles.wishlist}>Wishlist</Text>
       </TouchableOpacity>
 

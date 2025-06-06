@@ -31,7 +31,7 @@ export default function TabLayout() {
             if (route.name === "cart")
               iconName = focused ? "cart" : "cart-outline";
             if (route.name === "(profile)")
-              iconName = focused ? "settings" : "settings-outline";
+              iconName = focused ? "person-outline" : "person-outline";
 
             return <Ionicons name={iconName} size={size} color={color} />;
           },
@@ -40,9 +40,8 @@ export default function TabLayout() {
           tabBarStyle: {
             backgroundColor: colors.white,
             borderTopWidth: 0,
-
-            height: Platform.OS === "ios" ? 60 + insets.bottom : 60,
-            paddingBottom: Platform.OS === "ios" ? insets.bottom : 0,
+            height: Platform.OS === "ios" ? 23 + insets.bottom : 60,
+            paddingBottom: Platform.OS === "ios" ? 0 : 0,
           },
           contentStyle: { backgroundColor: colors.white },
           tabBarLabel: ({ focused, color }) => (
@@ -57,7 +56,7 @@ export default function TabLayout() {
                 ? "Home"
                 : route.name === "cart"
                 ? "Cart"
-                : "Setting"}
+                : "Profile"}
             </Text>
           ),
           headerShown: false,

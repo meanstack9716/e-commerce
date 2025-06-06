@@ -30,8 +30,11 @@ function AppLayout() {
         <Stack.Screen name="/addNewAddress" />
         <Stack.Screen name="/payment" />
         <Stack.Screen name="/placeorder" />
+        <Stack.Screen name="/order" />
+        <Stack.Screen name="/wishlist" />
         <Stack.Screen name="/orderHistory" />
         <Stack.Screen name="/product-reviews" />
+        <Stack.Screen name="/settings" />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>
@@ -48,12 +51,11 @@ export default function RootLayout() {
     helveticaRoundedBold: require("../assets/fonts/Helvetica/helvetica-rounded-bold.otf"),
     AbriFatfaceRegular: require("../assets/fonts/AbrilFatface-Regular.otf"),
     RalewayeRegular:  require('../assets/fonts/Raleway/static/Raleway-Regular.ttf'),
-    // RalewayeMedium:  require('../assets/fonts/Raleway/static/Raleway-Medium.ttf'),
     RalewayeExtraBold:  require('../assets/fonts/Raleway/static/Raleway-ExtraBold.ttf'),
     RalewayeBold: require('../assets/fonts/Raleway/static/Raleway-Bold.ttf'),
     RalewayeMedium: require('../assets/fonts/Raleway/static/Raleway-Medium.ttf'),
     RalewayeSemiBold: require('../assets/fonts/Raleway/static/Raleway-SemiBold.ttf'),
-    NunitoSans:require('../assets/fonts/Nunito_Sans/NunitoSans-VariableFont_YTLC,opsz,wdth,wght.ttf')
+    NunitoSans: require('../assets/fonts/Nunito_Sans/NunitoSans-VariableFont_YTLC,opsz,wdth,wght.ttf')
   });
 
   useEffect(() => {
