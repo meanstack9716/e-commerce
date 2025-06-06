@@ -13,17 +13,20 @@ import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import { fontSizes } from "@/style/typography";
 import { fontFamilies } from "@/style/fontFamilies";
+import { router } from "expo-router";
 import { ProfileHeaderBarProps } from "./ProfileHeaderBar.tyes";
 
 const ProfileHeaderBar: React.FC<ProfileHeaderBarProps> = ({
   title,
   profileImage,
+  containerStyle,
+  titleStyle
 }) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyle]}>
       <View style={styles.leftSection}>
         <Image source={profileImage} style={styles.profileImage} />
-        <Text style={styles.title}>{title}</Text>
+        <Text style={[styles.title, titleStyle]}>{title}</Text>
       </View>
       <View style={styles.iconGroup}>
         <TouchableOpacity style={styles.iconWrapper}>
@@ -41,7 +44,7 @@ const ProfileHeaderBar: React.FC<ProfileHeaderBarProps> = ({
           />
           <View style={styles.dotIndicator} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.iconWrapper}>
+        <TouchableOpacity style={styles.iconWrapper} onPress={() => router.navigate('/settings')}>
           <Ionicons
             name="settings-outline"
             size={20}
@@ -54,8 +57,8 @@ const ProfileHeaderBar: React.FC<ProfileHeaderBarProps> = ({
 };
 const styles = StyleSheet.create({
   container: {
-    ...spacingStyles.px15,
-    ...spacingStyles.py15,
+    ...spacingStyles.px5,
+    ...spacingStyles.pt15,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -68,6 +71,7 @@ const styles = StyleSheet.create({
   profileImage: {
     width: 44,
     height: 44,
+    marginLeft: -7,
     borderRadius: borderRadius.circle,
     borderWidth: 2,
     borderColor: staticColors.white,

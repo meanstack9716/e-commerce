@@ -102,7 +102,7 @@ const OrderHistoryScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
   listContent: {
-    ...spacingStyles.px20,
+    ...spacingStyles.px5,
     ...spacingStyles.py15,
   },
   errorText: {
