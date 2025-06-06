@@ -28,6 +28,8 @@ import spacingStyles from "@/style/spacingStyles";
 import { fontSizes, fontWeights } from "@/style/typography";
 import borderRadius from "@/style/borderRadius";
 import gapSizes from "@/style/gapSizes";
+import { fontFamilies } from "@/style/fontFamilies";
+import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 
 const WishlistScreen: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -132,7 +134,7 @@ const WishlistScreen: React.FC = () => {
         reviews: item.product.reviews || [],
       };
     });
-
+  console.log(clothingItems, ">>>>>>")
   const renderWishlistItem = ({
     item,
   }: {
@@ -144,65 +146,52 @@ const WishlistScreen: React.FC = () => {
     const averageRating =
       reviews.length > 0
         ? (
-            reviews.reduce(
-              (sum, review) => sum + parseFloat(review.rating),
-              0
-            ) / reviews.length
-          ).toFixed(1)
+          reviews.reduce(
+            (sum, review) => sum + parseFloat(review.rating),
+            0
+          ) / reviews.length
+        ).toFixed(1)
         : "N/A";
 
     return (
       <View style={styles.itemContainer}>
         <View style={styles.imageContainer}>
           <Image source={{ uri: item.image }} style={styles.image} />
-          {reviews.length > 0 && (
-            <View style={styles.ratingContainer}>
-              <Text style={styles.ratingText}>{averageRating}</Text>
-              <Ionicons name="star" size={10} color={staticColors.darkGreen} />
-            </View>
-          )}
           <TouchableOpacity
-            style={styles.removeButton}
+            style={styles.removeButtonOverlay}
             onPress={() => handleRemoveItem(item.id)}
           >
-            <Ionicons name="close" size={16} color={staticColors.textMuted} />
+            <Ionicons name="trash" size={20} color="red" />
           </TouchableOpacity>
         </View>
-        <View style={styles.itemDetails}>
-          <Text style={styles.brand}>{item.brand}</Text>
-          <View style={styles.priceContainer}>
-            <Text style={styles.price}>₹{item.price}</Text>
-            <Text style={styles.originalPrice}>₹{item.originalPrice}</Text>
-            <Text style={styles.discount}>({item.discount})</Text>
+
+        <View style={styles.itemDetailsNew}>
+          <Text style={styles.itemTitle}>{item.brand}</Text>
+          <Text style={styles.itemPrice}>${item.price}</Text>
+
+          <View style={styles.optionRow}>
+            <Text style={styles.optionButton}>Pink</Text>
+            <Text style={styles.optionButton}>M</Text>
+            <TouchableOpacity
+              style={styles.cartIconWrapper}
+              onPress={() => handleMoveToBag(item.id)}
+            >
+              <Ionicons name="add-outline" size={20} color="#2A52BE" />
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity
-            style={styles.moveToBagButton}
-            onPress={() => handleMoveToBag(item.id)}
-          >
-            <Text style={styles.moveToBagText}>MOVE TO BAG</Text>
-          </TouchableOpacity>
         </View>
       </View>
+
     );
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaViewWrapper style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={handleBack}>
           <Ionicons name="arrow-back" size={20} color={staticColors.darkGray} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Wishlist</Text>
-        <Text style={styles.headerSubtitle}>{items.length} Items</Text>
-        <View style={styles.headerIcons}>
-          <TouchableOpacity>
-            <Ionicons
-              name="bag-outline"
-              size={20}
-              color={staticColors.darkGray}
-            />
-          </TouchableOpacity>
-        </View>
       </View>
 
       {loading && (
@@ -240,7 +229,7 @@ const WishlistScreen: React.FC = () => {
         />
       )}
       <Toast />
-    </SafeAreaView>
+    </SafeAreaViewWrapper>
   );
 };
 
@@ -253,17 +242,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: staticColors.bgSecondary,
   },
+
   header: {
     flexDirection: "row",
     alignItems: "center",
     ...spacingStyles.p10,
-    borderBottomWidth: 1,
-    borderBottomColor: staticColors.borderLight,
   },
   headerTitle: {
-    fontSize: fontSizes.sm,
-    fontWeight: fontWeights.semiBold,
-    ...spacingStyles.mx10,
+    fontSize: fontSizes.lg,
+    fontFamily: fontFamilies.ralewayBold,
+    ...spacingStyles.ml10,
   },
   headerSubtitle: {
     fontSize: fontSizes.xs,
@@ -273,102 +261,106 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginLeft: "auto",
   },
+
   flatList: {
     ...spacingStyles.py5,
   },
+
+  // Final cleaned-up itemContainer (horizontal card layout)
   itemContainer: {
-    flex: 0,
-    width: itemWidth,
-    ...spacingStyles.m5,
+    flexDirection: "row",
     borderRadius: borderRadius.r5,
-    borderWidth: 1,
-    borderColor: staticColors.borderLight,
-    overflow: "hidden",
+    padding: 10,
+    marginVertical: 6,
+
+    alignItems: "center",
+    width: "100%"
   },
+
   imageContainer: {
+    backgroundColor: staticColors.white,
+    shadowColor: staticColors.black,
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    elevation: 2,
     position: "relative",
+    ...spacingStyles.mr15
   },
+
   image: {
-    height: itemImageHeight,
-    resizeMode: "cover",
+    width: 120,
+    height: 110,
+    borderRadius: 10,
   },
-  removeButton: {
+
+  removeButtonOverlay: {
     position: "absolute",
-    top: 8,
-    right: 8,
+    bottom: 8,
+    left: 8,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: staticColors.white,
+    justifyContent: "center",
+    alignItems: "center",
     borderWidth: 1,
-    backgroundColor: staticColors.lightGray,
-    borderColor: staticColors.borderLight,
-    borderRadius: borderRadius.circle,
-    ...spacingStyles.p2,
+    borderColor: "red",
   },
-  itemDetails: {
-    ...spacingStyles.pt2,
+
+  itemDetailsNew: {
+    flex: 1,
   },
-  brand: {
-    ...spacingStyles.px10,
-    fontSize: fontSizes.sm,
+
+  itemTitle: {
+    fontSize: 13,
     color: staticColors.darkGray,
-    fontWeight: fontWeights.medium,
-    ...spacingStyles.my2,
+    marginBottom: 4,
   },
-  priceContainer: {
-    ...spacingStyles.px10,
-    ...spacingStyles.pb10,
+
+  itemPrice: {
+    fontSize: 16,
+    fontWeight: fontWeights.bold,
+    marginBottom: 8,
+  },
+
+  optionRow: {
     flexDirection: "row",
     alignItems: "center",
+    gap: 8,
   },
-  price: {
-    fontSize: fontSizes.xs,
-    fontWeight: fontWeights.semiBold,
-    ...spacingStyles.mr5,
-  },
-  originalPrice: {
-    fontSize: fontSizes.xs,
-    color: staticColors.textMuted,
-    textDecorationLine: "line-through",
-    ...spacingStyles.mr5,
-  },
-  discount: {
-    fontSize: fontSizes.s,
-    color: staticColors.discountText,
-  },
-  moveToBagButton: {
-    ...spacingStyles.mt10,
-    ...spacingStyles.p5,
-    borderTopWidth: 1,
-    borderTopColor: staticColors.borderLight,
-    alignItems: "center",
-  },
-  moveToBagText: {
-    fontSize: fontSizes.xs,
-    fontWeight: fontWeights.black,
-    color: staticColors.primary,
-    ...spacingStyles.py5,
-  },
-  loader: {
-    height: "100%",
-    justifyContent: "center",
-    alignContent: "center",
-  },
-  errorText: {
-    color: staticColors.errorColor,
-    textAlign: "center",
-    ...spacingStyles.mt25,
+
+  optionButton: {
+    ...spacingStyles.py6,
+    ...spacingStyles.px15,
+    borderRadius: 2,
+    backgroundColor: "#f0f0ff",
     fontSize: fontSizes.base,
+    color: "#333",
   },
+
+  cartIconWrapper: {
+    marginLeft: "auto",
+    padding: 6,
+    borderRadius: 8,
+    borderWidth: 1.5,
+    borderColor: "#2A52BE",
+    backgroundColor: "#fff",
+  },
+
   emptyWishlistContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     ...spacingStyles.p20,
   },
+
   emptyWishlistTitle: {
     fontSize: fontSizes.xl,
     fontWeight: fontWeights.semiBold,
     color: staticColors.darkGray,
     ...spacingStyles.mb10,
   },
+
   emptyWishlistSubtitle: {
     fontSize: fontSizes.md,
     color: staticColors.textLightGray,
@@ -376,6 +368,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
     ...spacingStyles.mb25,
   },
+
+
   shopNowButton: {
     backgroundColor: staticColors.white,
     ...spacingStyles.px25,
@@ -385,28 +379,13 @@ const styles = StyleSheet.create({
     borderColor: staticColors.primary,
     alignItems: "center",
   },
+
   shopNowText: {
     fontSize: fontSizes.sm,
     color: staticColors.primary,
     fontWeight: fontWeights.semiBold,
   },
-  ratingContainer: {
-    position: "absolute",
-    bottom: 8,
-    left: 8,
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: staticColors.lightGray,
-    ...spacingStyles.py2,
-    ...spacingStyles.px10,
-    borderRadius: borderRadius.r10,
-    gap: gapSizes.sm,
-  },
-  ratingText: {
-    fontSize: fontSizes.sm,
-    color: staticColors.primary,
-    fontWeight: fontWeights.semiBold,
-  },
 });
+
 
 export default WishlistScreen;
