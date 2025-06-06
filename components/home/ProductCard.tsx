@@ -23,8 +23,8 @@ export interface ProductCardProps {
   thumbnail_url: string;
   images?: string[];
   star?: number;
-  liked: boolean;
-  onLikePress: () => void;
+  liked?: boolean;
+  onLikePress?: () => void;
   onPress: () => void;
   cardWidth?: number;
 }
@@ -80,7 +80,7 @@ export default ProductCard;
 
 const styles = StyleSheet.create({
   card: {
-    
+    padding: 2,
   },
   cardItemContainer: {
     flexDirection: 'column',
@@ -88,10 +88,9 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.r8
   },
   imageShadowContainer: {
-
     backgroundColor: staticColors.white,
     ...spacingStyles.p8,
-    borderRadius: borderRadius.r8,
+    borderRadius: borderRadius.r12,
     shadowColor: staticColors.black,
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.1,
@@ -100,7 +99,7 @@ const styles = StyleSheet.create({
   },
   imageWrapper: {
     overflow: "hidden",
-    borderRadius: borderRadius.r8,
+    borderRadius: borderRadius.r12,
   },
   cardImage: {
     width: "100%",

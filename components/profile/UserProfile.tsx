@@ -9,21 +9,19 @@ import {
   SafeAreaView,
 } from "react-native";
 import { router } from "expo-router";
-import spacingStyles from "@/style/spacingStyles";
-import staticColors from "@/style/staticColors";
-import { fontSizes, fontWeights } from "@/style/typography";
 import { CategoriresCard } from "../categoriesCard";
 import { useSelector } from "react-redux";
 import { SafeAreaViewWrapper } from "../common/SafeAreaView/SafeAreaViewWrapper";
 import ProductCard from "../home/ProductCard";
-
-import { fontFamilies } from "@/style/fontFamilies";
-
 import images from "@/constants/images";
 import { Product } from "@/interfaces";
 import ProfileHeaderBar from "./ProfileHeaderBar/ProfileHeaderBar";
 import gapSizes from "@/style/gapSizes";
 import borderRadius from "@/style/borderRadius";
+import { fontFamilies } from "@/style/fontFamilies";
+import spacingStyles from "@/style/spacingStyles";
+import staticColors from "@/style/staticColors";
+import { fontSizes, fontWeights } from "@/style/typography";
 
 const UserProfile = () => {
   const [likedProductItems, setLikedProductItems] = useState<string[]>([]);
@@ -108,6 +106,7 @@ const styles = StyleSheet.create({
     gap: gapSizes.sm,
     ...spacingStyles.p12,
     backgroundColor: '#fff'
+    
   },
   profileHeaderContainer: {
     ...spacingStyles.pb0
@@ -129,7 +128,7 @@ const styles = StyleSheet.create({
   allProductsContainer: {
     display: 'flex',
     flexDirection: 'column',
-    gap: gapSizes.lg
+    gap: gapSizes.lg,
   },
   emptyContainer: {
     ...spacingStyles.p20,
@@ -139,7 +138,9 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.md,
     color: staticColors.textLightGray,
   },
-  flatListContent: {},
+  flatListContent: {
+    padding: 1,
+  },
   columnWrapper: {
     justifyContent: "space-between",
     ...spacingStyles.mb10,
