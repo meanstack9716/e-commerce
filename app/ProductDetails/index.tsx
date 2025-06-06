@@ -18,7 +18,7 @@ import {
   clearSelectedProduct,
   fetchProductById,
 } from "@/store/product/productsSlice";
-import { addToCartApi, addToCartLocally } from "@/store/cart/cartSlice";
+import { addToCartApi } from "@/store/cart/cartSlice";
 import { useAppSelector } from "@/store/hooks";
 import colors from "@/style/staticColors";
 import staticColors from "@/style/staticColors";
@@ -201,25 +201,17 @@ const ProductDetailsScreen: React.FC = () => {
   };
 
   const handleAddToCart = () => {
-    if (product) {
-      dispatch(
-        addToCartLocally({
-          product,
-          selectedSize,
-          selectedColor,
-          colorName: selectedColorName,
-          isAuthenticated: isAuthenticatedUser,
-        })
-      );
-
+    if (product && selectedColor && selectedSize) {
       if (isAuthenticatedUser) {
         dispatch(
           addToCartApi({
-            product,
+            productId: product.id,
             selectedSize,
             selectedColor,
           })
         ).unwrap();
+      } else {
+        handleOpenLoginModal()
       }
       router.push("/cart");
     }
@@ -252,6 +244,7 @@ const ProductDetailsScreen: React.FC = () => {
       params: { productId: product.id },
     });
   };
+
 
   const dummyData = [{ key: "dummy" }];
 

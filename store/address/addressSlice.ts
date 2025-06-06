@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { RootState } from "@/store/store";
 import { handleApiError } from "@/utils/handleApiError";
-import { Address, AddressFormData } from "@/types/types";
+import { Address, AddressFormData } from "@/interfaces";
 import Constants from "expo-constants";
 import { getAuthHeaders } from "@/utils/apiHeader";
 import axiosConfig from "@/utils/axiosConfig";
