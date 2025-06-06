@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -16,33 +16,25 @@ import {
 } from "react-native";
 import { Ionicons, MaterialIcons, FontAwesome6 } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ProductCard from "@/components/home/ProductCard";
-import bannerData from "../../assets/data/banner.json";
-import promotionalData from "../../assets/data/promotionalData.json";
-import Navbar from "@/components/home/Navbar";
-import CategoryGrid from "@/components/home/CategoryGrid";
-import ImageSlider from "@/components/home/ImageSlider";
-import PromotionalCards from "@/components/home/PromotionalCards";
-import OfferCardCarousel from "@/components/home/OfferCardCarousel";
-import BrandCard from "@/components/home/BrandCard";
-import OfferPriceCard from "@/components/home/OfferPriceCard";
-import PocketFriendlyBargain from "@/components/home/PocketFriendlyCategory";
 import FullScreenLoader from "@/components/common/FullScreenLoader";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { fontSizes, fontWeights } from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
-
 import images from "@/constants/images";
+
 import { useAppDispatch } from "@/store/hooks";
 import { fetchCategories } from "@/store/category/categoriesSlice";
 import { fetchProducts } from "@/store/product/productsSlice";
 import borderRadius from "@/style/borderRadius";
 import { CategoryItem, Product, SubCategoryItem } from "@/interfaces";
 import { fontFamilies } from "@/style/fontFamilies";
+import { commonStyles } from "@/style/commonStyle";
+import { CategoriresCard } from "@/components/categoriesCard";
 
 const HomeScreen: React.FC = () => {
   const [likedProductItems, setLikedProductItems] = useState<string[]>([]);
@@ -64,10 +56,12 @@ const HomeScreen: React.FC = () => {
     error: productsError,
   } = useSelector((state: any) => state.products);
 
-  useEffect(() => {
+ useFocusEffect(
+  useCallback(() => {
     dispatch(fetchCategories());
-    dispatch(fetchProducts());
-  }, [dispatch]);
+    dispatch(fetchProducts({}));
+  }, [dispatch])
+);
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
@@ -95,14 +89,14 @@ const HomeScreen: React.FC = () => {
       Alert.alert(
         "Error",
         categoriesError ||
-          productsError ||
-          "Failed to fetch data. Please try again.",
+        productsError ||
+        "Failed to fetch data. Please try again.",
         [
           {
             text: "Retry",
             onPress: () => {
               dispatch(fetchCategories());
-              dispatch(fetchProducts());
+          dispatch(fetchProducts({}));
             },
           },
           {
@@ -165,10 +159,6 @@ const HomeScreen: React.FC = () => {
     return filtered;
   };
 
-  const handleUserIconPress = () => {
-    router.navigate("/profile");
-  };
-
   const toggleProductLike = (id: string) => {
     setLikedProductItems((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
@@ -180,6 +170,7 @@ const HomeScreen: React.FC = () => {
       {...item}
       liked={likedProductItems.includes(item.id)}
       onLikePress={() => toggleProductLike(item.id)}
+
       onPress={() =>
         router.navigate({
           pathname: "/ProductDetails",
@@ -196,10 +187,7 @@ const HomeScreen: React.FC = () => {
     <View style={styles.container}>
       <SafeAreaView
         style={[
-          styles.contentWrapper,
-          {
-            paddingTop: insets.top,
-          },
+          styles.contentWrapper
         ]}
       >
         <FullScreenLoader visible={isLoading} />
@@ -208,15 +196,16 @@ const HomeScreen: React.FC = () => {
           translucent
           backgroundColor="transparent"
         />
-        <View style={styles.searchContainer}>
-          <Text style={styles.searchContainerText}>Shop</Text>
-          <View style={styles.searchInputContainer}>
+        <View style={commonStyles.searchContainer}>
+          <Text style={commonStyles.searchContainerText}>Shop</Text>
+          <View style={commonStyles.searchInputContainer}>
             <TextInput
               placeholder="Search"
-              style={styles.searchInput}
+              style={commonStyles.searchInput}
               placeholderTextColor={staticColors.gray200}
               value={productSearchQuery}
               onChangeText={setProductSearchQuery}
+              onFocus={() => router.navigate("/product-search")}
             />
             <TouchableOpacity>
               <Ionicons
@@ -229,63 +218,7 @@ const HomeScreen: React.FC = () => {
         </View>
 
         <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={styles.headingWrap}>
-            <Text style={styles.headingText}>Categories</Text>
-            <View style={styles.seeAllContainer}>
-              <Text style={styles.seeAllText}>See All</Text>
-              <TouchableOpacity onPress={() => router.navigate("/categories")}>
-                <Ionicons
-                  name="arrow-forward-circle"
-                  size={30}
-                  color={staticColors.blue300}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          <View style={styles.cardContainer}>
-            {categories.map((option: CategoryItem, index: number) => {
-              if (
-                index <= 5 &&
-                option.sub_categories &&
-                option.sub_categories.length
-              ) {
-                return (
-                  <View style={styles.cardItem} key={option.id}>
-                    <View style={styles.subCardContainer}>
-                      {option.sub_categories.map(
-                        (subOption: SubCategoryItem, subIndex: number) => {
-                          if (subIndex <= 3) {
-                            return (
-                              <View
-                                style={styles.categoryImgContainer}
-                                key={subOption.id}
-                              >
-                                <Image
-                                  style={styles.categoryImage}
-                                  source={{ uri: subOption.img_url }}
-                                />
-                              </View>
-                            );
-                          }
-                          return null;
-                        }
-                      )}
-                    </View>
-                    <View style={styles.cardDetails}>
-                      <Text style={styles.categoryName}>{option.name}</Text>
-                      <View style={styles.categoryCountWrap}>
-                        <Text style={styles.categoryCountText}>
-                          {option.sub_sub_category_count}
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                );
-              }
-              return null;
-            })}
-          </View>
+          <CategoriresCard categoryList={categories} />
 
           {hasError && <Text style={styles.errorText}>Error: {hasError}</Text>}
 
@@ -295,10 +228,8 @@ const HomeScreen: React.FC = () => {
             keyExtractor={(item) => item.id}
             renderItem={renderProductItem}
             scrollEnabled={false}
-            // ListHeaderComponent={ListHeader}
-            contentContainerStyle={styles.flatListContent}
-            columnWrapperStyle={styles.columnWrapper}
             showsVerticalScrollIndicator={false}
+            columnWrapperStyle={{ justifyContent: "space-between", ...spacingStyles.my20 }}
             ListEmptyComponent={() => (
               <View style={styles.emptyContainer}>
                 <Text style={styles.emptyText}>
@@ -307,6 +238,7 @@ const HomeScreen: React.FC = () => {
               </View>
             )}
           />
+
         </ScrollView>
       </SafeAreaView>
     </View>
@@ -317,39 +249,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: staticColors.white,
+    ...spacingStyles.p12
   },
   contentWrapper: {
     flex: 1,
-    ...spacingStyles.px15,
-  },
-  searchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: gapSizes.xl,
-    ...spacingStyles.mb10,
-    ...spacingStyles.pt10,
-    ...spacingStyles.px4,
-  },
-  searchContainerText: {
-    fontSize: fontSizes.xl,
-    fontWeight: fontWeights.semiBold,
-  },
-  searchInputContainer: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: staticColors.gray100,
-    borderRadius: borderRadius.r20,
-    ...spacingStyles.px15,
-    justifyContent: "space-between",
-  },
-  searchInput: {
-    flex: 1,
-    height: 40,
-    fontSize: fontSizes.sm,
-    color: staticColors.darkGray,
-    fontWeight: fontWeights.medium,
+    flexDirection: 'column',
+    gap: 20
   },
   headingWrap: {
     flexDirection: "row",
@@ -357,6 +262,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     ...spacingStyles.pt10,
     ...spacingStyles.px4,
+    gap: gapSizes.xl,
   },
   headingText: {
     fontSize: fontSizes.lg,
@@ -372,98 +278,13 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.sm,
     fontFamily: fontFamilies.ralewayBold,
   },
-  cardContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    rowGap: gapSizes.md,
-    justifyContent: "space-between",
-    ...spacingStyles.py10,
-    ...spacingStyles.px4,
-  },
-  cardItem: {
-    width: "48.5%",
-    backgroundColor: staticColors.white,
-    borderRadius: borderRadius.r12,
-    shadowColor: staticColors.black,
-    shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 4,
-    overflow: "hidden",
-    ...spacingStyles.py6,
-    ...spacingStyles.px6,
-  },
-  subCardContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    width: "100%",
-    rowGap: gapSizes.sm,
-  },
-  categoryImgContainer: {
-    width: "48.5%",
-    aspectRatio: 1,
-    overflow: "hidden",
-    borderRadius: borderRadius.r10,
-  },
-  categoryImage: {
-    width: "100%",
-    height: "100%",
-  },
-  cardDetails: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    ...spacingStyles.mt8,
-  },
-  categoryName: {
-    fontSize: fontSizes.sm,
-    fontFamily: fontFamilies.ralewayExtraBold,
-  },
-  categoryCountWrap: {
-    backgroundColor: "#DFE9FF",
-    borderRadius: borderRadius.r6,
-    ...spacingStyles.px15,
-    ...spacingStyles.py4,
-  },
+
   categoryCountText: {
     fontSize: fontSizes.xs,
     fontFamily: fontFamilies.ralewayExtraBold,
   },
-
-  addressContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    ...spacingStyles.px10,
-    ...spacingStyles.mb10,
-  },
-  addressTextContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: gapSizes.md,
-  },
-  addressText: {
-    fontSize: fontSizes.sm,
-    fontWeight: fontWeights.medium,
-    color: colors.primary,
-    ...spacingStyles.mx5,
-  },
-  logo: {
-    width: 20,
-    height: 20,
-    resizeMode: "contain",
-    ...spacingStyles.mr10,
-  },
-
-  iconButton: {
-    ...spacingStyles.ml15,
-  },
-  flatListContent: {
-    ...spacingStyles.px5,
-  },
   columnWrapper: {
     justifyContent: "space-between",
-    ...spacingStyles.mb10,
   },
   errorText: {
     color: staticColors.discountText,
@@ -472,7 +293,7 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.md,
   },
   emptyContainer: {
-    padding: 20,
+    ...spacingStyles.p20,
     alignItems: "center",
   },
   emptyText: {

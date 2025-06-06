@@ -11,6 +11,10 @@ export default function AuthLayout() {
         name="userInformation"
         options={{ title: "UserInformation", headerShown: false }}
       />
+       <Stack.Screen
+        name="accountManage"
+        options={{ title: "AccountManage", headerShown: false }}
+      />
     </Stack>
   );
 }

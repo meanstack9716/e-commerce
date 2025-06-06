@@ -26,7 +26,6 @@ import PrivacyPolicy from "@/components/profile/PrivacyPolicy";
 import Grievance from "@/components/profile/Grievance";
 import ProfileHeader from "@/components/profile/ProfileHeader";
 import FooterLinks from "@/components/profile/FooterLinks";
-import UserProfile from "@/components/profile/UserProfile";
 import ProfileListSection from "@/components/profile/ProfileListSection";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
@@ -37,6 +36,7 @@ import { useAppDispatch } from "@/store/hooks";
 import { logoutUser } from "@/store/auth/authSlice";
 import borderRadius from "@/style/borderRadius";
 import { fontFamilies } from "@/style/fontFamilies";
+import UserProfile from "@/components/profile/UserProfile";
 
 export default function ProfileScreen() {
   const [activeProfileSection, setActiveProfileSection] = useState("Profile");
@@ -73,7 +73,7 @@ export default function ProfileScreen() {
       Profile: (
         <>
           {isAuthenticated ? <UserProfile /> : <ProfileListSection />}
-          <FooterLinks onLinkPress={(link) => setActiveProfileSection(link)} />
+          {/* <FooterLinks onLinkPress={(link) => setActiveProfileSection(link)} />
           {isAuthenticated && (
             <TouchableOpacity
               style={styles.logoutButton}
@@ -81,10 +81,10 @@ export default function ProfileScreen() {
             >
               <Text style={styles.logoutText}>Logout</Text>
             </TouchableOpacity>
-          )}
-          <View style={styles.optionsContainer}>
+          )} */}
+          {/* <View style={styles.optionsContainer}>
             <Text style={styles.versionText}>APP VERSION {APP_VERSION}</Text>
-          </View>
+          </View> */}
         </>
       ),
       FAQs: <FAQs />,
@@ -99,7 +99,7 @@ export default function ProfileScreen() {
 
   return (
     <View style={[styles.container]}>
-      <View style={[styles.topBar, { paddingTop: insets.top }]}>
+      {/* <View style={[styles.topBar, { paddingTop: insets.top }]}>
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => {
@@ -114,7 +114,7 @@ export default function ProfileScreen() {
         </TouchableOpacity>
 
         <Text style={styles.headerTitle}>{activeProfileSection}</Text>
-      </View>
+      </View> */}
 
       <ScrollView style={styles.container}>
         {getSelectedProfileSectionContent()}
@@ -129,13 +129,12 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: fontSizes.base,
-    fontWeight: "bold",
+    fontWeight: fontWeights.bold,
     color: colors.primary,
     fontFamily:fontFamilies.arial,
   },
   container: {
     flex: 1,
-    backgroundColor: colors.white,
   },
   optionsContainer: {
     backgroundColor: colors.bgSecondary,

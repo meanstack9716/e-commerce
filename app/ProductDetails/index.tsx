@@ -18,33 +18,29 @@ import {
   clearSelectedProduct,
   fetchProductById,
 } from "@/store/product/productsSlice";
-import { addToCartApi, addToCartLocally } from "@/store/cart/cartSlice";
+import { addToCartApi } from "@/store/cart/cartSlice";
 import { useAppSelector } from "@/store/hooks";
 import colors from "@/style/staticColors";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import { fontSizes, fontWeights } from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
-import MegaDealBadge from "@/components/productDetails/MegaDealBadge";
 import SizeSelector from "@/components/productDetails/SizeSelector";
-import SimilarProducts from "@/components/productDetails/SimilarProducts";
-import ProductList from "@/components/productDetails/ProductList";
-import BrandRating from "@/components/productDetails/BrandRating";
-import DeliveryCheck from "@/components/productDetails/DeliveryCheck";
 import ProductActionButtons from "@/components/productDetails/ProductActionButtons";
 import FullScreenLoader from "@/components/common/FullScreenLoader";
-import ReturnPolicy from "./ReturnPolicy";
-import ViewSimilarModal from "@/modal/ViewSimilarModal";
 import borderRadius from "@/style/borderRadius";
+import { addToWishlist } from "@/store/wishlist/wishlistSlice";
+import Toast from "react-native-toast-message";
 import { LinearGradient } from "expo-linear-gradient";
 import { fontFamilies } from "@/style/fontFamilies";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import RatingReview from "@/components/productDetails/RatingReview/RatingReview";
 import { commonStyles } from "@/style/commonStyle";
 import { renderStars } from "@/utils/starUtils";
+import LoginModal from "../(auth)/loginModal";
+import SignUpModal from "../(auth)/signUpModal";
 
 const { width: screenWidth } = Dimensions.get("window");
-const screenHeight = Dimensions.get("window").height;
 const ProductDetailsScreen: React.FC = () => {
   const params = useLocalSearchParams();
   const { id } = params;
@@ -54,6 +50,9 @@ const ProductDetailsScreen: React.FC = () => {
     selectedProductLoading: loading,
     selectedProductError: error,
   } = useSelector((state: RootState) => state.products);
+  const { items: wishlistItems } = useSelector(
+    (state: RootState) => state.wishlist
+  );
   const [selectedSize, setSelectedSize] = useState<string | undefined>(
     undefined
   );
@@ -73,6 +72,8 @@ const ProductDetailsScreen: React.FC = () => {
   const flatListRef = useRef<FlatList>(null);
   const imageCarouselRef = useRef<FlatList>(null);
   const screenHeight = Dimensions.get("window").height;
+  const [isLoginModalVisible, setLoginModalVisible] = useState(false);
+  const [isSignupModalVisible, setSignupModalVisible] = useState(false);
 
   const isAuthenticatedUser = useAppSelector(
     (state) => state.auth.isAuthenticated
@@ -101,6 +102,24 @@ const ProductDetailsScreen: React.FC = () => {
   //   );
   // };
 
+  const handleCloseLoginModal = () => {
+    setLoginModalVisible(false);
+  };
+
+  const handleCloseSignupModal = () => {
+    setSignupModalVisible(false);
+  };
+
+  const handleOpenSignupModal = () => {
+    setLoginModalVisible(false);
+    setSignupModalVisible(true);
+  };
+
+  const handleOpenLoginModal = () => {
+    setSignupModalVisible(false);
+    setLoginModalVisible(true);
+  };
+
   const handleScroll = (event: any) => {
     const index = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
     setActiveIndex(index);
@@ -111,8 +130,43 @@ const ProductDetailsScreen: React.FC = () => {
     setShowBackToTop(offsetY > screenHeight * 1.5);
   };
 
-  const handleLikePress = () => {
-    setIsProductLiked((prev) => !prev);
+  // const handleLikePress = () => {
+  //   setIsProductLiked((prev) => !prev);
+  // };
+
+  useEffect(() => {
+    // Check if product is in wishlist
+    if (product && wishlistItems) {
+      const isLiked = wishlistItems.some(
+        (item) =>
+          item.product.id === product.id &&
+          item.selected_size === selectedSize &&
+          item.selected_color === selectedColor
+      );
+      setIsProductLiked(isLiked);
+    }
+  }, [product, wishlistItems, selectedSize, selectedColor]);
+
+  const handleLikePress = async () => {
+    if (!product) return;
+    if (!isAuthenticatedUser) {
+      setLoginModalVisible(true);
+      return;
+    }
+    try {
+      await dispatch(
+        addToWishlist({
+          productId: product.id,
+          selectedSize,
+          selectedColor,
+          quantity: "1",
+        })
+      ).unwrap();
+      setIsProductLiked(true);
+      router.navigate("/wishlist");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // const handleViewSimilar = () => {
@@ -139,25 +193,17 @@ const ProductDetailsScreen: React.FC = () => {
   };
 
   const handleAddToCart = () => {
-    if (product) {
-      dispatch(
-        addToCartLocally({
-          product,
-          selectedSize,
-          selectedColor,
-          colorName: selectedColorName,
-          isAuthenticated: isAuthenticatedUser,
-        })
-      );
-
+    if (product && selectedColor && selectedSize) {
       if (isAuthenticatedUser) {
         dispatch(
           addToCartApi({
-            product,
+            productId: product.id,
             selectedSize,
             selectedColor,
           })
         ).unwrap();
+      } else {
+        handleOpenLoginModal()
       }
       router.push("/cart");
     }
@@ -309,7 +355,7 @@ const ProductDetailsScreen: React.FC = () => {
                 <Text style={styles.reviewTitle}>Rating & Reviews</Text>
                 <View style={styles.reveiwHeader}>
                   <View style={styles.starsContainer}>
-                    {renderStars(product.total_rating, 22)}
+                    {renderStars(product.total_rating.toString(), 22)}
                   </View>
                   <View style={styles.ratingBox}>
                     <Text style={styles.ratingBoxText}>
@@ -370,6 +416,20 @@ const ProductDetailsScreen: React.FC = () => {
         onClose={() => setViewSimilarModalVisible(false)}
         currentProduct={product}
       /> */}
+
+      {/* Login Modal */}
+      <LoginModal
+        visible={isLoginModalVisible}
+        onClose={handleCloseLoginModal}
+        onSignupPress={handleOpenSignupModal}
+      />
+
+      {/* Signup Modal */}
+      <SignUpModal
+        visible={isSignupModalVisible}
+        onClose={handleCloseSignupModal}
+        onLoginPress={handleOpenLoginModal}
+      />
     </SafeAreaViewWrapper>
   );
 };

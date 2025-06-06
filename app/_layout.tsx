@@ -11,19 +11,26 @@ import { useEffect } from "react";
 import { Provider } from "react-redux";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { store } from "@/store/store";
-import { useCartStorage } from "@/hooks/useCartStorage";
 import { AuthStateInitializer } from "@/components/auth/AuthStateInitializer";
 import Toast from "react-native-toast-message";
+import FAQs from "@/components/profile/FAQs";
+import { View } from "react-native";
 
 SplashScreen.preventAutoHideAsync();
 
 function AppLayout() {
   const colorScheme = useColorScheme();
-  useCartStorage();
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack screenOptions={{ headerShown: false }}>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: {
+            backgroundColor: "#FFFFFF",
+          },
+        }}
+      >
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="(auth)" />
         <Stack.Screen name="+not-found" />
@@ -32,9 +39,16 @@ function AppLayout() {
         <Stack.Screen name="/addNewAddress" />
         <Stack.Screen name="/payment" />
         <Stack.Screen name="/placeorder" />
+        <Stack.Screen name="/order" />
+        <Stack.Screen name="/wishlist" />
         <Stack.Screen name="/orderHistory" />
         <Stack.Screen name="/product-reviews" />
+         <Stack.Screen name="/product-search" />
+        <Stack.Screen name="/settings" />
+        <Stack.Screen name="/faqs" />
+
       </Stack>
+
       <StatusBar style="auto" />
     </ThemeProvider>
   );
@@ -50,10 +64,11 @@ export default function RootLayout() {
     helveticaRoundedBold: require("../assets/fonts/Helvetica/helvetica-rounded-bold.otf"),
     AbriFatfaceRegular: require("../assets/fonts/AbrilFatface-Regular.otf"),
     RalewayeRegular:  require('../assets/fonts/Raleway/static/Raleway-Regular.ttf'),
-    RalewayeMedium:  require('../assets/fonts/Raleway/static/Raleway-Medium.ttf'),
     RalewayeExtraBold:  require('../assets/fonts/Raleway/static/Raleway-ExtraBold.ttf'),
     RalewayeBold: require('../assets/fonts/Raleway/static/Raleway-Bold.ttf'),
-    NunitoSans:require('../assets/fonts/Nunito_Sans/NunitoSans-VariableFont_YTLC,opsz,wdth,wght.ttf')
+    RalewayeMedium: require('../assets/fonts/Raleway/static/Raleway-Medium.ttf'),
+    RalewayeSemiBold: require('../assets/fonts/Raleway/static/Raleway-SemiBold.ttf'),
+    NunitoSans: require('../assets/fonts/Nunito_Sans/NunitoSans-VariableFont_YTLC,opsz,wdth,wght.ttf')
   });
 
   useEffect(() => {

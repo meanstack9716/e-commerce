@@ -14,7 +14,6 @@ export const SafeAreaViewWrapper: React.FC<SafeAreaViewProps> = ({
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor }, style]}
-      edges={edges}
     >
       {children}
     </SafeAreaView>
@@ -24,6 +23,6 @@ export const SafeAreaViewWrapper: React.FC<SafeAreaViewProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    ...spacingStyles.px10,
+    // ...spacingStyles.px10,
   },
 });
