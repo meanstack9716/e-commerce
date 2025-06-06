@@ -42,21 +42,24 @@ const ProductCard: React.FC<ProductCardProps> = ({
   onPress,
   cardWidth,
 }) => {
-  const width = cardWidth || Dimensions.get("window").width / 2 - 10;
+  const width = cardWidth || Dimensions.get("window").width / 2 - 19;
 
   return (
     <View style={[styles.card, { width }]}>
       <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
         <View style={styles.cardItemContainer}>
           <View style={styles.imageShadowContainer}>
-            <Image
-              source={{
-                uri:
-                  thumbnail_url ||
-                  (images && images.length > 0 ? images[0] : undefined),
-              }}
-              style={styles.cardImage}
-            />
+            <View style={styles.imageWrapper}>
+              <Image
+                source={{
+                  uri:
+                    thumbnail_url ||
+                    (images && images.length > 0 ? images[0] : undefined),
+                }}
+                style={styles.cardImage}
+              />
+            </View>
+
           </View>
           <Text style={styles.cardTitle} numberOfLines={2}>
             {textTruncate(title, 10)}
@@ -77,30 +80,32 @@ export default ProductCard;
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: staticColors.white,
-    borderRadius: 12,
-    overflow: "hidden",
+    
   },
   cardItemContainer: {
     flexDirection: 'column',
-    gap: 8,
-    ...spacingStyles.p8
+    gap: 4,
+    borderRadius: borderRadius.r8
   },
   imageShadowContainer: {
+
     backgroundColor: staticColors.white,
+    ...spacingStyles.p8,
     borderRadius: borderRadius.r8,
     shadowColor: staticColors.black,
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
-    ...spacingStyles.p8
+    elevation: 5,
+  },
+  imageWrapper: {
+    overflow: "hidden",
+    borderRadius: borderRadius.r8,
   },
   cardImage: {
     width: "100%",
     aspectRatio: 1,
     resizeMode: "cover",
-    borderRadius: borderRadius.r4
   },
   cardTitle: {
     fontSize: fontSizes.xs,
@@ -108,7 +113,7 @@ const styles = StyleSheet.create({
     fontFamily: fontFamilies.nunitoSans,
     fontWeight: fontWeights.extraBold,
     ...spacingStyles.px4,
-    height: 40,
+    height: 35,
   },
   priceContainer: {
     flexDirection: "row",
@@ -123,11 +128,11 @@ const styles = StyleSheet.create({
   },
   discountText: {
     color: "#D32F2F",
-    fontSize: 12,
+    fontSize: fontSizes.xs,
     fontWeight: "600",
     backgroundColor: "#FFEBEE",
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
+    ...spacingStyles.px6,
+    ...spacingStyles.py2,
+    borderRadius: borderRadius.r4,
   },
 });

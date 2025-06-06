@@ -98,7 +98,7 @@ const ShoppingBagScreen: React.FC = () => {
 
   if (isLoading) {
     return (
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         <View style={styles.header}>
           <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
             <Ionicons
@@ -109,12 +109,12 @@ const ShoppingBagScreen: React.FC = () => {
           </TouchableOpacity>
         </View>
         <FullScreenLoader visible={isLoading} />
-      </SafeAreaView>
+      </View>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerContain}>
@@ -160,23 +160,23 @@ const ShoppingBagScreen: React.FC = () => {
         onClose={handleCloseSignupModal}
         onLoginPress={handleOpenLoginModal}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: staticColors.bgSecondary,
+    gap: 20,
+    backgroundColor: staticColors.white,
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
-    ...spacingStyles.px15,
-    ...spacingStyles.py10,
+    ...spacingStyles.px12
   },
   backButton: {
-    ...spacingStyles.p5,
+    ...spacingStyles.mr12
   },
   headerContain: {
     flexDirection: "row",
@@ -192,7 +192,6 @@ const styles = StyleSheet.create({
   },
   PlaceButton: {
     backgroundColor: staticColors.primary,
-    ...spacingStyles.p15,
     borderRadius: borderRadius.r0,
     marginBottom: 0,
     position: "absolute",

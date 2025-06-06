@@ -467,7 +467,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: staticColors.bgSecondary,
-    ...spacingStyles.mt15,
   },
   header: {
     flexDirection: "row",
@@ -516,14 +515,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: staticColors.white,
     borderRadius: borderRadius.r8,
-    ...spacingStyles.p10,
+    ...spacingStyles.p8,
     ...spacingStyles.m10,
   },
   imageContainer: {
     position: "relative",
   },
   cartItemImage: {
-    width: 100,
+    width: 115,
     height: 140,
     borderRadius: borderRadius.r8,
   },
@@ -550,6 +549,7 @@ const styles = StyleSheet.create({
   cartItemDetails: {
     flex: 1,
     ...spacingStyles.ml10,
+    gap: 2
   },
   cartItemTitle: {
     fontSize: fontSizes.sm,

@@ -14,6 +14,8 @@ import { store } from "@/store/store";
 import { useCartStorage } from "@/hooks/useCartStorage";
 import { AuthStateInitializer } from "@/components/auth/AuthStateInitializer";
 import Toast from "react-native-toast-message";
+import FAQs from "@/components/profile/FAQs";
+import { View } from "react-native";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -23,7 +25,14 @@ function AppLayout() {
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack screenOptions={{ headerShown: false }}>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: {
+            backgroundColor: "#FFFFFF",
+          },
+        }}
+      >
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="(auth)" />
         <Stack.Screen name="+not-found" />
@@ -37,7 +46,10 @@ function AppLayout() {
         <Stack.Screen name="/orderHistory" />
         <Stack.Screen name="/product-reviews" />
         <Stack.Screen name="/settings" />
+        <Stack.Screen name="/faqs" />
+
       </Stack>
+
       <StatusBar style="auto" />
     </ThemeProvider>
   );
