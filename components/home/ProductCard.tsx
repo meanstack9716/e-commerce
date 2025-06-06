@@ -23,8 +23,8 @@ export interface ProductCardProps {
   thumbnail_url: string;
   images?: string[];
   star?: number;
-  liked: boolean;
-  onLikePress: () => void;
+  liked?: boolean;
+  onLikePress?: () => void;
   onPress: () => void;
   cardWidth?: number;
 }

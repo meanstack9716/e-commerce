@@ -23,11 +23,13 @@ const initialState: ProductsState = {
 
 export const fetchProducts = createAsyncThunk<
   Product[],
-  void,
+  { params?: any },
   { rejectValue: string }
->("products/fetchProducts", async (_, { rejectWithValue }) => {
+>("products/fetchProducts", async ({ params }, { rejectWithValue }) => {
   try {
-    const response = await axiosConfig.get(`/products/list`);
+    const response = await axiosConfig.get("/products/list", {
+      params,
+    });
     if (response.data?.data) {
       return response.data.data;
     }
@@ -50,7 +52,9 @@ export const fetchProductById = createAsyncThunk<
     }
     return rejectWithValue("Invalid product data");
   } catch (error) {
-    return rejectWithValue(handleApiError(error, "Failed to fetch product data"));
+    return rejectWithValue(
+      handleApiError(error, "Failed to fetch product data")
+    );
   }
 });
 

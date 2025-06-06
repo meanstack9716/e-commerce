@@ -43,6 +43,7 @@ function AppLayout() {
         <Stack.Screen name="/wishlist" />
         <Stack.Screen name="/orderHistory" />
         <Stack.Screen name="/product-reviews" />
+         <Stack.Screen name="/product-search" />
         <Stack.Screen name="/settings" />
         <Stack.Screen name="/faqs" />
 
