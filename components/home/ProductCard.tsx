@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   },
   imageShadowContainer: {
     backgroundColor: staticColors.white,
-    ...spacingStyles.p8,
+    ...spacingStyles.p5,
     borderRadius: borderRadius.r12,
     shadowColor: staticColors.black,
     shadowOffset: { width: 0, height: 0 },
