@@ -155,3 +155,9 @@ export interface WishlistItem {
   quantity: string;
   product: Product;
 }
+export type UserProfile = {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: string;
+};
