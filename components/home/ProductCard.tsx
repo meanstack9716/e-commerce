@@ -42,10 +42,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
   onPress,
   cardWidth,
 }) => {
-  const width = cardWidth || Dimensions.get("window").width / 2 - 19;
-
   return (
-    <View style={[styles.card, { width }]}>
+    <View style={[styles.card]}>
       <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
         <View style={styles.cardItemContainer}>
           <View style={styles.imageShadowContainer}>
@@ -80,16 +78,17 @@ export default ProductCard;
 
 const styles = StyleSheet.create({
   card: {
-    padding: 2,
+    width: "48%",
+    padding: 1,
   },
   cardItemContainer: {
     flexDirection: 'column',
-    gap: 4,
+    gap: 5,
     borderRadius: borderRadius.r8
   },
   imageShadowContainer: {
     backgroundColor: staticColors.white,
-    ...spacingStyles.p8,
+    ...spacingStyles.p5,
     borderRadius: borderRadius.r12,
     shadowColor: staticColors.black,
     shadowOffset: { width: 0, height: 0 },
