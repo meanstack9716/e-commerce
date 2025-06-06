@@ -18,7 +18,7 @@ import {
   clearSelectedProduct,
   fetchProductById,
 } from "@/store/product/productsSlice";
-import { addToCartApi, addToCartLocally } from "@/store/cart/cartSlice";
+import { addToCartApi } from "@/store/cart/cartSlice";
 import { useAppSelector } from "@/store/hooks";
 import colors from "@/style/staticColors";
 import staticColors from "@/style/staticColors";
@@ -46,6 +46,8 @@ import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaVi
 import RatingReview from "@/components/productDetails/RatingReview/RatingReview";
 import { commonStyles } from "@/style/commonStyle";
 import { renderStars } from "@/utils/starUtils";
+import LoginModal from "../(auth)/loginModal";
+import SignUpModal from "../(auth)/signUpModal";
 
 const { width: screenWidth } = Dimensions.get("window");
 const screenHeight = Dimensions.get("window").height;
@@ -82,6 +84,9 @@ const ProductDetailsScreen: React.FC = () => {
   const flatListRef = useRef<FlatList>(null);
   const imageCarouselRef = useRef<FlatList>(null);
   const screenHeight = Dimensions.get("window").height;
+
+  const [isLoginModalVisible, setLoginModalVisible] = useState(false);
+  const [isSignupModalVisible, setSignupModalVisible] = useState(false);
 
   const isAuthenticatedUser = useAppSelector(
     (state) => state.auth.isAuthenticated
@@ -201,25 +206,17 @@ const ProductDetailsScreen: React.FC = () => {
   };
 
   const handleAddToCart = () => {
-    if (product) {
-      dispatch(
-        addToCartLocally({
-          product,
-          selectedSize,
-          selectedColor,
-          colorName: selectedColorName,
-          isAuthenticated: isAuthenticatedUser,
-        })
-      );
-
+    if (product && selectedColor && selectedSize) {
       if (isAuthenticatedUser) {
         dispatch(
           addToCartApi({
-            product,
+            productId: product.id,
             selectedSize,
             selectedColor,
           })
         ).unwrap();
+      } else {
+        handleOpenLoginModal()
       }
       router.push("/cart");
     }
@@ -252,6 +249,25 @@ const ProductDetailsScreen: React.FC = () => {
       params: { productId: product.id },
     });
   };
+
+  const handleCloseLoginModal = () => {
+    setLoginModalVisible(false);
+  };
+
+  const handleCloseSignupModal = () => {
+    setSignupModalVisible(false);
+  };
+
+  const handleOpenSignupModal = () => {
+    setLoginModalVisible(false);
+    setSignupModalVisible(true);
+  };
+
+  const handleOpenLoginModal = () => {
+    setSignupModalVisible(false);
+    setLoginModalVisible(true);
+  };
+
 
   const dummyData = [{ key: "dummy" }];
 
@@ -427,6 +443,18 @@ const ProductDetailsScreen: React.FC = () => {
           onWishlist={handleLikePress}
         />
       )}
+
+      <LoginModal
+        visible={isLoginModalVisible}
+        onClose={handleCloseLoginModal}
+        onSignupPress={handleOpenSignupModal}
+      />
+
+      <SignUpModal
+        visible={isSignupModalVisible}
+        onClose={handleCloseSignupModal}
+        onLoginPress={handleOpenLoginModal}
+      />
       {/* <ViewSimilarModal
         visible={isViewSimilarModalVisible}
         onClose={() => setViewSimilarModalVisible(false)}

@@ -1,7 +1,5 @@
-import { clearCartFromStorage } from "@/utils/cartStorage";
 import { handleApiError } from "@/utils/handleApiError";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { clearCart } from "../cart/cartSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getApiUrl } from "@/utils/apiUtils";
 import axiosConfig from "@/utils/axiosConfig";
@@ -100,7 +98,6 @@ export const loginUser = createAsyncThunk(
       } catch (storageError) {
         return rejectWithValue("Failed to save authentication data");
       }
-      dispatch(clearCart());
       await AsyncStorage.setItem("authToken", response.data.token);
       await AsyncStorage.setItem(
         "authUser",
@@ -211,15 +208,11 @@ export const logoutUser = createAsyncThunk(
       );
       await AsyncStorage.removeItem("authToken");
       await AsyncStorage.removeItem("authUser");
-      await clearCartFromStorage();
-      dispatch(clearCart());
       return true;
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
         await AsyncStorage.removeItem("authToken");
         await AsyncStorage.removeItem("authUser");
-        await clearCartFromStorage();
-        dispatch(clearCart());
         return true;
       }
       return rejectWithValue(handleApiError(error, "Logout failed"));

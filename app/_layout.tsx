@@ -11,7 +11,6 @@ import { useEffect } from "react";
 import { Provider } from "react-redux";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { store } from "@/store/store";
-import { useCartStorage } from "@/hooks/useCartStorage";
 import { AuthStateInitializer } from "@/components/auth/AuthStateInitializer";
 import Toast from "react-native-toast-message";
 
@@ -19,7 +18,6 @@ SplashScreen.preventAutoHideAsync();
 
 function AppLayout() {
   const colorScheme = useColorScheme();
-  useCartStorage();
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
@@ -52,10 +50,11 @@ export default function RootLayout() {
     helveticaOblique: require("../assets/fonts/Helvetica/Helvetica-Oblique.ttf"),
     helveticaRoundedBold: require("../assets/fonts/Helvetica/helvetica-rounded-bold.otf"),
     AbriFatfaceRegular: require("../assets/fonts/AbrilFatface-Regular.otf"),
-    RalewayeRegular: require('../assets/fonts/Raleway/static/Raleway-Regular.ttf'),
-    RalewayeMedium: require('../assets/fonts/Raleway/static/Raleway-Medium.ttf'),
-    RalewayeExtraBold: require('../assets/fonts/Raleway/static/Raleway-ExtraBold.ttf'),
+    RalewayeRegular:  require('../assets/fonts/Raleway/static/Raleway-Regular.ttf'),
+    RalewayeExtraBold:  require('../assets/fonts/Raleway/static/Raleway-ExtraBold.ttf'),
     RalewayeBold: require('../assets/fonts/Raleway/static/Raleway-Bold.ttf'),
+    RalewayeMedium: require('../assets/fonts/Raleway/static/Raleway-Medium.ttf'),
+    RalewayeSemiBold: require('../assets/fonts/Raleway/static/Raleway-SemiBold.ttf'),
     NunitoSans: require('../assets/fonts/Nunito_Sans/NunitoSans-VariableFont_YTLC,opsz,wdth,wght.ttf')
   });
 
