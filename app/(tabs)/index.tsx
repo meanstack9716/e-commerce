@@ -56,12 +56,12 @@ const HomeScreen: React.FC = () => {
     error: productsError,
   } = useSelector((state: any) => state.products);
 
- useFocusEffect(
-  useCallback(() => {
-    dispatch(fetchCategories());
-    dispatch(fetchProducts({}));
-  }, [dispatch])
-);
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(fetchCategories());
+      dispatch(fetchProducts({}));
+    }, [dispatch])
+  );
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
@@ -96,7 +96,7 @@ const HomeScreen: React.FC = () => {
             text: "Retry",
             onPress: () => {
               dispatch(fetchCategories());
-          dispatch(fetchProducts({}));
+              dispatch(fetchProducts({}));
             },
           },
           {
@@ -249,7 +249,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: staticColors.white,
-    ...spacingStyles.p12
+    ...spacingStyles.py10,
+    ...spacingStyles.px12,
   },
   contentWrapper: {
     flex: 1,

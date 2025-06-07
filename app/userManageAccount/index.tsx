@@ -178,7 +178,8 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        ...spacingStyles.p12,
+        ...spacingStyles.py10,
+        ...spacingStyles.px15,
     },
     header: {
         flexDirection: "row",

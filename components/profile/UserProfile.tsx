@@ -73,7 +73,7 @@ const UserProfile = () => {
 
   return (
     <View style={styles.container}>
-      <ProfileHeaderBar title="category" profileImage={images.genderFemale} titleStyle={styles.profileHeaderTitle}/>
+      <ProfileHeaderBar title="category" profileImage={images.genderFemale} titleStyle={styles.profileHeaderTitle} />
       <CategoriresCard categoryList={categories} />
       <View style={styles.allProductsContainer}>
         <Text style={styles.headingText}>Just for you</Text>
@@ -104,12 +104,9 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     gap: gapSizes.sm,
-    ...spacingStyles.p12,
-    backgroundColor: '#fff'
-    
-  },
-  profileHeaderContainer: {
-    ...spacingStyles.pb0
+    ...spacingStyles.py10,
+    ...spacingStyles.px12,
+    backgroundColor: staticColors.white
   },
   profileHeaderTitle: {
     ...spacingStyles.pb5,
