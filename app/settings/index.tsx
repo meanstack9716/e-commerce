@@ -68,7 +68,7 @@ export default function SettingPage() {
           <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
             <Ionicons
               name="arrow-back"
-              size={20}
+              size={22}
               color={staticColors.darkGray}
             />
           </TouchableOpacity>

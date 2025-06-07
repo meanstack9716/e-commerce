@@ -6,7 +6,7 @@ import { fontFamilies } from "@/style/fontFamilies";
 import gapSizes from "@/style/gapSizes";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import { fontSizes } from "@/style/typography";
+import { fontSizes, fontWeights } from "@/style/typography";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -108,7 +108,7 @@ export default function UserManageAccount() {
             <View style={styles.container}>
                 <View style={styles.header}>
                     <TouchableOpacity onPress={handleBack}>
-                        <Ionicons name="arrow-back" size={24} color={staticColors.darkGray} />
+                        <Ionicons name="arrow-back" size={22} color={staticColors.darkGray} />
                     </TouchableOpacity>
                     <Text style={styles.heading}>Your Profile</Text>
                 </View>
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        ...spacingStyles.p15,
+        ...spacingStyles.p12,
     },
     header: {
         flexDirection: "row",
@@ -191,7 +191,8 @@ const styles = StyleSheet.create({
     },
     heading: {
         fontSize: fontSizes.xl,
-        fontFamily: fontFamilies.ralewayBold,
+        fontWeight: fontWeights.bold,
+        color: staticColors.black,
     },
     outerCircle: {
         width: 110,
