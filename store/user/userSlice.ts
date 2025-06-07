@@ -51,10 +51,34 @@ export const fetchUserProfile = createAsyncThunk<
       `${apiUrl}/user/me`,
       getAuthHeaders(state)
     );
-    console.log(response.data, ">>>>")
     return response.data.data;
   } catch (error) {
     const errorMessage = handleApiError(error, "Failed to fetch user profile");
+    return rejectWithValue(errorMessage);
+  }
+});
+
+export const updateProfilePicture = createAsyncThunk<
+  UserProfile,
+  FormData,
+  { state: RootState; rejectValue: string }
+>("user/updateProfilePicture", async (formData, { getState, rejectWithValue }) => {
+  try {
+    const state = getState();
+    const response = await axios.post(
+      `${apiUrl}/user/update-profile-pic`,
+      formData,
+      {
+        ...getAuthHeaders(state),
+        headers: {
+          ...getAuthHeaders(state).headers,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response.data.data;
+  } catch (error) {
+    const errorMessage = handleApiError(error, "Failed to update profile picture");
     return rejectWithValue(errorMessage);
   }
 });
@@ -96,8 +120,21 @@ const userSlice = createSlice({
       .addCase(fetchUserProfile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+      })
+      .addCase(updateProfilePicture.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(updateProfilePicture.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.user = action.payload;
+      })
+      .addCase(updateProfilePicture.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       });
-      
   },
 });
 

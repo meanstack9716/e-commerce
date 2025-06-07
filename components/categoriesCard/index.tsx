@@ -93,7 +93,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    ...spacingStyles.pt10,
   },
   headingText: {
     fontSize: fontSizes.lg,

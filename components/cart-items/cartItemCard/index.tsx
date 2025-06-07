@@ -48,11 +48,17 @@ const CardItemCard: React.FC<CartItemCardProps> = ({
           onPress={() => onToggleSelect && onToggleSelect(cartItem.id)}
           style={styles.checkBoxContainer}
         >
-          <View style={[styles.checkbox]}>
+          <View
+            style={[
+              styles.checkbox,
+              selectedItems &&
+                selectedItems.includes(cartItem.id) &&
+                styles.selectedCheckbox,
+            ]}
+          >
             {selectedItems && selectedItems.includes(cartItem.id) && (
               <Text style={styles.checkmark}>✔</Text>
             )}
-            {/* {rememberMe && <Text style={styles.checkmark}>✔</Text>} */}
           </View>
         </TouchableOpacity>
       </View>
@@ -171,9 +177,13 @@ const styles = StyleSheet.create({
     color: staticColors.white,
     fontSize: fontSizes.xs,
   },
+
+  selectedCheckbox: {
+    backgroundColor: staticColors.primaryBlue,
+  },
   checkboxChecked: {
     backgroundColor: staticColors.blue500,
-    borderColor: staticColors.blue500
+    borderColor: staticColors.blue500,
   },
   productDetailsContainer: {
     width: "60%",

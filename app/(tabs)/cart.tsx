@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from "react-native";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 import useBackHandler from "@/utils/useBackHandler";
 import spacingStyles from "@/style/spacingStyles";
@@ -33,6 +33,7 @@ import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaVi
 import CardItemCard from "@/components/cart-items/cartItemCard";
 import ProductDeleteConfirmationModal from "@/modal/ProductDeleteConfirmationModal";
 import Toast from "react-native-toast-message";
+import { commonStyles } from "@/style/commonStyle";
 
 const ShoppingBagScreen: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -64,22 +65,23 @@ const ShoppingBagScreen: React.FC = () => {
 
   useBackHandler(handleGoBack);
 
-  useEffect(() => {
-    const loadCartData = async () => {
-      try {
-        if (isAuthenticated && token) {
-          await dispatch(fetchCartItemsApi()).unwrap();
-          await dispatch(fetchAddresses()).unwrap();
+  useFocusEffect(
+    useCallback(() => {
+      const loadCartData = async () => {
+        try {
+          if (isAuthenticated && token) {
+            await dispatch(fetchCartItemsApi()).unwrap();
+            await dispatch(fetchAddresses()).unwrap();
+          }
+        } catch (error) {
+          console.error("Failed to fetch cart items:", error);
+        } finally {
+          setIsLoading(false);
         }
-      } catch (error) {
-        console.error("Failed to fetch cart items:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadCartData();
-  }, [dispatch, isAuthenticated, token]);
+      };
+          loadCartData();
+    }, [isAuthenticated, token])
+  );
 
   useEffect(() => {
     if (!selectedItems.length && cartItems.length) {
@@ -166,10 +168,10 @@ const ShoppingBagScreen: React.FC = () => {
       return;
     }
 
-    const path = addresses.length ? "/placeorder" : "/addNewAddress";
+    const path = "/placeorder";
     router.navigate({
       pathname: path,
-      params: { selectedItems: JSON.stringify(selectedCartItems) },
+      params: { selectedItems: selectedItems },
     });
   };
 
@@ -182,17 +184,17 @@ const ShoppingBagScreen: React.FC = () => {
   }
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaViewWrapper>
       <View style={styles.mainContainer}>
         <ScrollView
           style={styles.container}
           nestedScrollEnabled={true}
           showsVerticalScrollIndicator={false}
         >
-          <View style={styles.header}>
-            <Text style={styles.headerTitle}>Cart</Text>
-            <View style={styles.itemCountWrap}>
-              <Text style={styles.itemCount}>
+          <View style={commonStyles.itemCountHeader}>
+            <Text style={commonStyles.itemCountTitle}>Cart</Text>
+            <View style={commonStyles.itemCountWrap}>
+              <Text style={commonStyles.itemCount}>
                 {cartItems.length ? cartItems.length : 0}
               </Text>
             </View>
@@ -251,7 +253,7 @@ const ShoppingBagScreen: React.FC = () => {
         onClose={handleCloseModal}
         isLoading={loading}
       />
-    </SafeAreaView>
+    </SafeAreaViewWrapper>
   );
 };
 
@@ -265,30 +267,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: staticColors.white,
     ...spacingStyles.px12,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: gapSizes.md,
-    ...spacingStyles.py10,
-  },
-  headerTitle: {
-    fontSize: fontSizes.xl,
-    fontFamily: fontFamilies.ralewayBold,
-  },
-  itemCountWrap: {
-    borderRadius: borderRadius.circle,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: staticColors.iceBlue,
-    ...spacingStyles.px10,
-    ...spacingStyles.pb6,
-  },
-  itemCount: {
-    fontSize: fontSizes.lg,
-    textAlign: "center",
-    fontFamily: fontFamilies.ralewayBold,
   },
   backButton: {
     ...spacingStyles.mr12,
