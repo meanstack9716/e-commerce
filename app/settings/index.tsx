@@ -7,7 +7,6 @@ import { router } from "expo-router";
 import { useDispatch } from "react-redux";
 import { logoutUser } from "@/store/auth/authSlice";
 import { useCallback } from "react";
-import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 
 export default function SettingPage() {
   const dispatch = useDispatch();
@@ -26,7 +25,7 @@ export default function SettingPage() {
     {
       title: "Personal",
       items: [
-        { label: "Profile", route: "/accountManage" },
+        { label: "Profile", route: "userManageAccount" },
         { label: "Shipping Address", route: null },
         { label: "Payment methods", route: null },
       ],

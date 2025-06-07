@@ -40,6 +40,25 @@ export const updateProfile = createAsyncThunk<
   }
 });
 
+export const fetchUserProfile = createAsyncThunk<
+  UserProfile,
+  void,
+  { state: RootState; rejectValue: string }
+>("user/fetchUserProfile", async (_, { getState, rejectWithValue }) => {
+  try {
+    const state = getState();
+    const response = await axios.get(
+      `${apiUrl}/user/me`,
+      getAuthHeaders(state)
+    );
+    console.log(response.data, ">>>>")
+    return response.data.data;
+  } catch (error) {
+    const errorMessage = handleApiError(error, "Failed to fetch user profile");
+    return rejectWithValue(errorMessage);
+  }
+});
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -65,7 +84,20 @@ const userSlice = createSlice({
       .addCase(updateProfile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+      })
+      .addCase(fetchUserProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchUserProfile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+      })
+      .addCase(fetchUserProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       });
+      
   },
 });
 
