@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { handleApiError } from "@/utils/handleApiError";
 import axiosConfig from "@/utils/axiosConfig";
-import { Product } from "@/interfaces";
+import { Product, Color } from "@/interfaces";
 
 interface ProductsState {
   data: Product[];
@@ -10,6 +10,9 @@ interface ProductsState {
   error: string | null;
   selectedProductLoading: boolean;
   selectedProductError: string | null;
+  colors: Color[];
+  colorsLoading: boolean;
+  colorsError: string | null;
 }
 
 const initialState: ProductsState = {
@@ -19,7 +22,32 @@ const initialState: ProductsState = {
   error: null,
   selectedProductLoading: false,
   selectedProductError: null,
+  colors: [],
+  colorsLoading: false,
+  colorsError: null,
 };
+
+export const fetchColors = createAsyncThunk<
+  Color[],
+  void,
+  { rejectValue: string }
+>("products/fetchColors", async (_, { rejectWithValue }) => {
+  try {
+    const response = await axiosConfig.get("/products/colors-list");
+    if (response.data?.success && response.data?.data) {
+      // Convert object with numeric keys to array
+      const colorsArray = Object.values(response.data.data).map((item: any) => ({
+        id: item.id,
+        name: item.name,
+        color: item.value, // Map 'value' to 'color' to match Color interface
+      }));
+      return colorsArray;
+    }
+    return rejectWithValue("Invalid response format from colors API");
+  } catch (error) {
+    return rejectWithValue(handleApiError(error, "Failed to fetch colors"));
+  }
+});
 
 export const fetchProducts = createAsyncThunk<
   Product[],
@@ -97,8 +125,21 @@ const productsSlice = createSlice({
         state.selectedProductError =
           action.payload || "Failed to fetch product details";
       });
+    builder
+      .addCase(fetchColors.pending, (state) => {
+        state.colorsLoading = true;
+        state.colorsError = null;
+      })
+      .addCase(fetchColors.fulfilled, (state, action) => {
+        state.colorsLoading = false;
+        state.colors = action.payload;
+      })
+      .addCase(fetchColors.rejected, (state, action) => {
+        state.colorsLoading = false;
+        state.colorsError = action.payload as string;
+      });
   },
 });
 
 export const { clearSelectedProduct } = productsSlice.actions;
-export default productsSlice.reducer;
+export default productsSlice.reducer; 

@@ -67,3 +67,8 @@ export interface Seller {
   business_mobile: string;
   id: string;
 }
+
+export interface Color {
+  name: string;
+  color: string;
+}
