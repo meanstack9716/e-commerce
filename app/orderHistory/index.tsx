@@ -72,7 +72,11 @@ const OrderHistoryScreen: React.FC = () => {
 
   return (
     <SafeAreaViewWrapper backgroundColor={staticColors.white}>
-      <ProfileHeaderBar title="History" profileImage={images.unKnownUser} />
+      <ProfileHeaderBar
+        title="History"
+        profileImage={images.unKnownUser}
+        containerStyle={styles.profileHeaderContainer}
+      />
       {error ? (
         <Text style={styles.errorText}>{error}</Text>
       ) : filteredOrders.length === 0 ? (
@@ -102,8 +106,11 @@ const OrderHistoryScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
   listContent: {
-    ...spacingStyles.px5,
+    ...spacingStyles.px12,
     ...spacingStyles.py15,
+  },
+    profileHeaderContainer: {
+    ...spacingStyles.pl10,
   },
   errorText: {
     fontSize: fontSizes.xs,
