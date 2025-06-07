@@ -43,10 +43,10 @@ function AppLayout() {
         <Stack.Screen name="/wishlist" />
         <Stack.Screen name="/orderHistory" />
         <Stack.Screen name="/product-reviews" />
-         <Stack.Screen name="/product-search" />
+        <Stack.Screen name="/product-search" />
         <Stack.Screen name="/settings" />
         <Stack.Screen name="/faqs" />
-
+        <Stack.Screen name="/product-filter" />
       </Stack>
 
       <StatusBar style="auto" />
@@ -63,12 +63,12 @@ export default function RootLayout() {
     helveticaOblique: require("../assets/fonts/Helvetica/Helvetica-Oblique.ttf"),
     helveticaRoundedBold: require("../assets/fonts/Helvetica/helvetica-rounded-bold.otf"),
     AbriFatfaceRegular: require("../assets/fonts/AbrilFatface-Regular.otf"),
-    RalewayeRegular:  require('../assets/fonts/Raleway/static/Raleway-Regular.ttf'),
-    RalewayeExtraBold:  require('../assets/fonts/Raleway/static/Raleway-ExtraBold.ttf'),
-    RalewayeBold: require('../assets/fonts/Raleway/static/Raleway-Bold.ttf'),
-    RalewayeMedium: require('../assets/fonts/Raleway/static/Raleway-Medium.ttf'),
-    RalewayeSemiBold: require('../assets/fonts/Raleway/static/Raleway-SemiBold.ttf'),
-    NunitoSans: require('../assets/fonts/Nunito_Sans/NunitoSans-VariableFont_YTLC,opsz,wdth,wght.ttf')
+    RalewayeRegular: require("../assets/fonts/Raleway/static/Raleway-Regular.ttf"),
+    RalewayeExtraBold: require("../assets/fonts/Raleway/static/Raleway-ExtraBold.ttf"),
+    RalewayeBold: require("../assets/fonts/Raleway/static/Raleway-Bold.ttf"),
+    RalewayeMedium: require("../assets/fonts/Raleway/static/Raleway-Medium.ttf"),
+    RalewayeSemiBold: require("../assets/fonts/Raleway/static/Raleway-SemiBold.ttf"),
+    NunitoSans: require("../assets/fonts/Nunito_Sans/NunitoSans-VariableFont_YTLC,opsz,wdth,wght.ttf"),
   });
 
   useEffect(() => {

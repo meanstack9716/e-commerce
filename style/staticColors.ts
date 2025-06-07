@@ -90,11 +90,12 @@ export default {
   gray100: "#F8F8F8",
   gray200: "#C7C7C7",
   gray300: "#F9F9F9",
-  blue50: "#dbeafe",
+  blue50: "#dbeafe",  
   blue100: "#E5EBFC",
   blue300: "#004CFF",
   blue400: "#0042E0",
   blue500: "#004BFE",
   pink100: "#FFEBEB",
   blue200: "#E8ECFF",
+  skyBlue50:'#F4F6FE'
 };

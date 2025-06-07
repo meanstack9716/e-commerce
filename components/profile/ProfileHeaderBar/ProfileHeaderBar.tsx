@@ -48,7 +48,6 @@ const ProfileHeaderBar: React.FC<ProfileHeaderBarProps> = ({
 };
 const styles = StyleSheet.create({
   container: {
-    ...spacingStyles.px5,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -58,8 +57,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   profileImage: {
-    width: 44,
-    height: 44,
+    width: 40,
+    height: 40,
     marginLeft: -7,
     borderRadius: borderRadius.circle,
     borderWidth: 2,

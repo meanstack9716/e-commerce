@@ -1,12 +1,21 @@
 import { Address } from "@/interfaces";
 
-export const getFormattedAddress = (addresses: Address[]) => {
+export const getFormattedAddress = (
+  addresses: Address[],
+  addressId?: string | null
+) => {
   if (!Array.isArray(addresses) || addresses.length === 0) {
     return "Please add an address.";
   }
 
-  const address = addresses[0];
+  const address =
+    (addressId && addresses.find((addr) => addr.id === addressId)) ||
+    addresses.find((addr) => addr.is_primary) ||
+    addresses[0];
 
+  if (!address) {
+    return "Address not found.";
+  }
   const {
     contact_name,
     contact_number,
