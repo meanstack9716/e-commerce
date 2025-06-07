@@ -160,4 +160,5 @@ export type UserProfile = {
   last_name: string;
   email: string;
   phone_number: string;
+  profile_url: string;
 };

@@ -7,6 +7,7 @@ import {
   Image,
   StyleSheet,
   FlatList,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import staticColors from "@/style/staticColors";
@@ -60,112 +61,116 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
       visible={visible}
       onRequestClose={onClose}
     >
-      <BlurView intensity={50} tint="light" style={styles.centeredView}>
-        <View style={styles.modalView}>
-          <View style={styles.content}>
-            <View style={styles.header}>
-              <Image source={{ uri: mainImage }} style={styles.avatar} />
-              <View>
-                <Text style={styles.priceTag}>₹{price}</Text>
+      <TouchableWithoutFeedback onPress={onClose}>
+        <BlurView intensity={50} tint="light" style={styles.centeredView}>
+          <TouchableWithoutFeedback>
+            <View style={styles.modalView}>
+              <View style={styles.content}>
+                <View style={styles.header}>
+                  <Image source={{ uri: mainImage }} style={styles.avatar} />
+                  <View>
+                    <Text style={styles.priceTag}>₹{price}</Text>
 
-                <View style={styles.colorSizeRow}>
-                  <Text style={styles.colorTag}>
-                    {selectedColor || "No color"}
-                  </Text>
-                  <Text style={styles.sizeTag}>
-                    {selectedSize || "No size"}
-                  </Text>
+                    <View style={styles.colorSizeRow}>
+                      <Text style={styles.colorTag}>
+                        {selectedColor || "No color"}
+                      </Text>
+                      <Text style={styles.sizeTag}>
+                        {selectedSize || "No size"}
+                      </Text>
+                    </View>
+                  </View>
                 </View>
-              </View>
-            </View>
-            <View style={styles.imageSizeContent}>
-              <Text style={styles.sectionTitle}>Color Options</Text>
-              <FlatList
-                horizontal
-                data={availableColors}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (
-                  <TouchableOpacity
-                    onPress={() => handleColorSelect(item)}
-                    style={[
-                      styles.colorOption,
-                      selectedColor === item.color && styles.selectedColor,
-                    ]}
-                  >
-                    <Image
-                      source={{ uri: item.img_url }}
-                      style={styles.colorImage}
-                    />
-                  </TouchableOpacity>
-                )}
-              />
-
-              <Text style={styles.sectionTitle}>Size</Text>
-              <View style={styles.sizeContainer}>
-                {allSizes.map((size) => (
-                  <TouchableOpacity
-                    key={size.label}
-                    onPress={() => handleSizeSelect(size)}
-                    style={[
-                      styles.sizeButton,
-                      selectedSize === size.label && styles.selectedSize,
-                      size.left === 0 && styles.disabledSize,
-                    ]}
-                    disabled={size.left === 0}
-                  >
-                    <Text style={styles.sizeText}>{size.label}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-
-              <View style={styles.quantityContainer}>
-                <Text style={styles.sectionTitle}>Quantity</Text>
-                <View style={styles.quantityControl}>
-                  <TouchableOpacity
-                    onPress={() => setQuantity(Math.max(1, quantity - 1))}
-                    style={styles.quantityButton}
-                  >
-                    <Ionicons
-                      name="remove"
-                      size={fontSizes["xl"]}
-                      color={staticColors.primaryBlue}
-                    />
-                  </TouchableOpacity>
-
-                  <Text style={styles.quantity}>{quantity}</Text>
-
-                  <TouchableOpacity
-                    onPress={() => setQuantity(quantity + 1)}
-                    style={styles.quantityButton}
-                  >
-                    <Ionicons
-                      name="add"
-                      size={fontSizes["xl"]}
-                      color={staticColors.primaryBlue}
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.favoriteButton}>
-                  <Ionicons
-                    name="heart-outline"
-                    size={26}
-                    color={staticColors.darkSlate}
+                <View style={styles.imageSizeContent}>
+                  <Text style={styles.sectionTitle}>Color Options</Text>
+                  <FlatList
+                    horizontal
+                    data={availableColors}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({ item }) => (
+                      <TouchableOpacity
+                        onPress={() => handleColorSelect(item)}
+                        style={[
+                          styles.colorOption,
+                          selectedColor === item.color && styles.selectedColor,
+                        ]}
+                      >
+                        <Image
+                          source={{ uri: item.img_url }}
+                          style={styles.colorImage}
+                        />
+                      </TouchableOpacity>
+                    )}
                   />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.addToCartButton}>
-                  <Text style={styles.buttonText}>Add to cart</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.buyNowButton}>
-                  <Text style={styles.buttonText}>Buy now</Text>
-                </TouchableOpacity>
+
+                  <Text style={styles.sectionTitle}>Size</Text>
+                  <View style={styles.sizeContainer}>
+                    {allSizes.map((size) => (
+                      <TouchableOpacity
+                        key={size.label}
+                        onPress={() => handleSizeSelect(size)}
+                        style={[
+                          styles.sizeButton,
+                          selectedSize === size.label && styles.selectedSize,
+                          size.left === 0 && styles.disabledSize,
+                        ]}
+                        disabled={size.left === 0}
+                      >
+                        <Text style={styles.sizeText}>{size.label}</Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+
+                  <View style={styles.quantityContainer}>
+                    <Text style={styles.sectionTitle}>Quantity</Text>
+                    <View style={styles.quantityControl}>
+                      <TouchableOpacity
+                        onPress={() => setQuantity(Math.max(1, quantity - 1))}
+                        style={styles.quantityButton}
+                      >
+                        <Ionicons
+                          name="remove"
+                          size={fontSizes["xl"]}
+                          color={staticColors.primaryBlue}
+                        />
+                      </TouchableOpacity>
+
+                      <Text style={styles.quantity}>{quantity}</Text>
+
+                      <TouchableOpacity
+                        onPress={() => setQuantity(quantity + 1)}
+                        style={styles.quantityButton}
+                      >
+                        <Ionicons
+                          name="add"
+                          size={fontSizes["xl"]}
+                          color={staticColors.primaryBlue}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+
+                  <View style={styles.buttonContainer}>
+                    <TouchableOpacity style={styles.favoriteButton}>
+                      <Ionicons
+                        name="heart-outline"
+                        size={26}
+                        color={staticColors.darkSlate}
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.addToCartButton}>
+                      <Text style={styles.buttonText}>Add to cart</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.buyNowButton}>
+                      <Text style={styles.buttonText}>Buy now</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
               </View>
             </View>
-          </View>
-        </View>
-      </BlurView>
+          </TouchableWithoutFeedback>
+        </BlurView>
+      </TouchableWithoutFeedback>
     </Modal>
   );
 };
@@ -319,7 +324,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    ...spacingStyles.my10
+    ...spacingStyles.my10,
   },
   favoriteButton: {
     backgroundColor: staticColors.bgSoftGray,

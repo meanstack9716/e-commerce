@@ -26,5 +26,6 @@ export interface ProductModalProps {
     colorName: string;
     images: string[];
   }) => void;
-  price:number
+  price:number;
+  productId?:string
 }

@@ -37,6 +37,7 @@ import { logoutUser } from "@/store/auth/authSlice";
 import borderRadius from "@/style/borderRadius";
 import { fontFamilies } from "@/style/fontFamilies";
 import UserProfile from "@/components/profile/UserProfile";
+import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 
 export default function ProfileScreen() {
   const [activeProfileSection, setActiveProfileSection] = useState("Profile");
@@ -98,7 +99,7 @@ export default function ProfileScreen() {
   };
 
   return (
-    <View style={[styles.container]}>
+    <SafeAreaViewWrapper>
       {/* <View style={[styles.topBar, { paddingTop: insets.top }]}>
         <TouchableOpacity
           style={styles.backButton}
@@ -119,7 +120,7 @@ export default function ProfileScreen() {
       <ScrollView style={styles.container}>
         {getSelectedProfileSectionContent()}
       </ScrollView>
-    </View>
+    </SafeAreaViewWrapper>
   );
 }
 

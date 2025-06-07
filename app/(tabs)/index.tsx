@@ -26,7 +26,6 @@ import staticColors from "@/style/staticColors";
 import { fontSizes, fontWeights } from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
 import images from "@/constants/images";
-
 import { useAppDispatch } from "@/store/hooks";
 import { fetchCategories } from "@/store/category/categoriesSlice";
 import { fetchProducts } from "@/store/product/productsSlice";
@@ -35,6 +34,9 @@ import { CategoryItem, Product, SubCategoryItem } from "@/interfaces";
 import { fontFamilies } from "@/style/fontFamilies";
 import { commonStyles } from "@/style/commonStyle";
 import { CategoriresCard } from "@/components/categoriesCard";
+import ImageSlider from "@/components/home/ImageSlider";
+import bannerData from "../../assets/data/banner.json";
+import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 
 const HomeScreen: React.FC = () => {
   const [likedProductItems, setLikedProductItems] = useState<string[]>([]);
@@ -56,12 +58,12 @@ const HomeScreen: React.FC = () => {
     error: productsError,
   } = useSelector((state: any) => state.products);
 
- useFocusEffect(
-  useCallback(() => {
-    dispatch(fetchCategories());
-    dispatch(fetchProducts({}));
-  }, [dispatch])
-);
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(fetchCategories());
+      dispatch(fetchProducts({}));
+    }, [dispatch])
+  );
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
@@ -89,14 +91,14 @@ const HomeScreen: React.FC = () => {
       Alert.alert(
         "Error",
         categoriesError ||
-        productsError ||
-        "Failed to fetch data. Please try again.",
+          productsError ||
+          "Failed to fetch data. Please try again.",
         [
           {
             text: "Retry",
             onPress: () => {
               dispatch(fetchCategories());
-          dispatch(fetchProducts({}));
+              dispatch(fetchProducts({}));
             },
           },
           {
@@ -170,7 +172,6 @@ const HomeScreen: React.FC = () => {
       {...item}
       liked={likedProductItems.includes(item.id)}
       onLikePress={() => toggleProductLike(item.id)}
-
       onPress={() =>
         router.navigate({
           pathname: "/ProductDetails",
@@ -185,11 +186,7 @@ const HomeScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <SafeAreaView
-        style={[
-          styles.contentWrapper
-        ]}
-      >
+      <SafeAreaViewWrapper>
         <FullScreenLoader visible={isLoading} />
         <StatusBar
           barStyle="dark-content"
@@ -218,6 +215,7 @@ const HomeScreen: React.FC = () => {
         </View>
 
         <ScrollView showsVerticalScrollIndicator={false}>
+          <ImageSlider slides={bannerData} />
           <CategoriresCard categoryList={categories} />
 
           {hasError && <Text style={styles.errorText}>Error: {hasError}</Text>}
@@ -229,7 +227,10 @@ const HomeScreen: React.FC = () => {
             renderItem={renderProductItem}
             scrollEnabled={false}
             showsVerticalScrollIndicator={false}
-            columnWrapperStyle={{ justifyContent: "space-between", ...spacingStyles.my20 }}
+            columnWrapperStyle={{
+              justifyContent: "space-between",
+              ...spacingStyles.my20,
+            }}
             ListEmptyComponent={() => (
               <View style={styles.emptyContainer}>
                 <Text style={styles.emptyText}>
@@ -238,9 +239,8 @@ const HomeScreen: React.FC = () => {
               </View>
             )}
           />
-
         </ScrollView>
-      </SafeAreaView>
+      </SafeAreaViewWrapper>
     </View>
   );
 };
@@ -249,12 +249,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: staticColors.white,
-    ...spacingStyles.p12
+    ...spacingStyles.px12
   },
   contentWrapper: {
     flex: 1,
-    flexDirection: 'column',
-    gap: 20
+    flexDirection: "column",
+    gap: gapSizes.lg,
   },
   headingWrap: {
     flexDirection: "row",

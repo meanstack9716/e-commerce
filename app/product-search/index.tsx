@@ -47,6 +47,10 @@ const ProductSearchScreen: React.FC = () => {
     setIsSearchSubmitted(false);
   };
 
+  const handleProductFilter = () => {
+    // router.push("/product-filter")
+  }
+
   const renderProductItem = ({ item }: { item: Product }) => (
     <ProductCard
       {...item}
@@ -100,7 +104,7 @@ const ProductSearchScreen: React.FC = () => {
               />
             </TouchableOpacity>
           </View>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleProductFilter}>
             <Ionicons
               name="options-outline"
               size={22}

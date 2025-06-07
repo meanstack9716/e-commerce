@@ -8,9 +8,10 @@ import { useDispatch } from "react-redux";
 import { logoutUser } from "@/store/auth/authSlice";
 import { useCallback } from "react";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
+import { useAppDispatch } from "@/store/hooks";
 
 export default function SettingPage() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const handleLogout = useCallback(() => {
     dispatch(logoutUser());
@@ -26,7 +27,7 @@ export default function SettingPage() {
     {
       title: "Personal",
       items: [
-        { label: "Profile", route: "/accountManage" },
+        { label: "Profile", route: "userManageAccount" },
         { label: "Shipping Address", route: null },
         { label: "Payment methods", route: null },
       ],
@@ -63,13 +64,13 @@ export default function SettingPage() {
   );
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaViewWrapper style={{flex: 1}}>
       <View style={styles.container}>
         <View style={styles.headerContain}>
           <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
             <Ionicons
               name="arrow-back"
-              size={20}
+              size={22}
               color={staticColors.darkGray}
             />
           </TouchableOpacity>
@@ -85,14 +86,15 @@ export default function SettingPage() {
           </View>
         ))}
       </View>
-    </SafeAreaView>
+    </SafeAreaViewWrapper>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    ...spacingStyles.px12,
+    ...spacingStyles.py10,
+    ...spacingStyles.px15,
     backgroundColor: staticColors.white,
   },
   headerContain: {
