@@ -1,3 +1,4 @@
+import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import { useAppDispatch } from "@/store/hooks";
 import { RootState } from "@/store/store";
 import { fetchUserProfile, resetState, updateProfile } from "@/store/user/userSlice";
@@ -104,7 +105,7 @@ export default function UserManageAccount() {
         router.back();
     };
     return (
-        <SafeAreaView style={styles.safeArea}>
+        <SafeAreaViewWrapper style={styles.safeArea}>
             <View style={styles.container}>
                 <View style={styles.header}>
                     <TouchableOpacity onPress={handleBack}>
@@ -166,7 +167,7 @@ export default function UserManageAccount() {
                     </Text>
                 </TouchableOpacity>
             </View>
-        </SafeAreaView>
+        </SafeAreaViewWrapper>
     );
 }
 

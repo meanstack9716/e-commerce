@@ -7,6 +7,7 @@ import { router } from "expo-router";
 import { useDispatch } from "react-redux";
 import { logoutUser } from "@/store/auth/authSlice";
 import { useCallback } from "react";
+import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 
 export default function SettingPage() {
   const dispatch = useDispatch();
@@ -62,7 +63,7 @@ export default function SettingPage() {
   );
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaViewWrapper style={{flex: 1}}>
       <View style={styles.container}>
         <View style={styles.headerContain}>
           <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
@@ -84,7 +85,7 @@ export default function SettingPage() {
           </View>
         ))}
       </View>
-    </SafeAreaView>
+    </SafeAreaViewWrapper>
   );
 }
 
