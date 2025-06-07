@@ -26,7 +26,6 @@ import staticColors from "@/style/staticColors";
 import { fontSizes, fontWeights } from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
 import images from "@/constants/images";
-
 import { useAppDispatch } from "@/store/hooks";
 import { fetchCategories } from "@/store/category/categoriesSlice";
 import { fetchProducts } from "@/store/product/productsSlice";
@@ -35,6 +34,8 @@ import { CategoryItem, Product, SubCategoryItem } from "@/interfaces";
 import { fontFamilies } from "@/style/fontFamilies";
 import { commonStyles } from "@/style/commonStyle";
 import { CategoriresCard } from "@/components/categoriesCard";
+import ImageSlider from "@/components/home/ImageSlider";
+import bannerData from "../../assets/data/banner.json";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 
 const HomeScreen: React.FC = () => {
@@ -214,6 +215,7 @@ const HomeScreen: React.FC = () => {
         </View>
 
         <ScrollView showsVerticalScrollIndicator={false}>
+          <ImageSlider slides={bannerData} />
           <CategoriresCard categoryList={categories} />
 
           {hasError && <Text style={styles.errorText}>Error: {hasError}</Text>}
