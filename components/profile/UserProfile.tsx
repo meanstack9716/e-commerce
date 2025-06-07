@@ -63,7 +63,6 @@ const UserProfile = () => {
     />
   );
 
-
   const toggleProductLike = (id: string) => {
     setLikedProductItems((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
@@ -73,7 +72,12 @@ const UserProfile = () => {
 
   return (
     <View style={styles.container}>
-      <ProfileHeaderBar title="category" profileImage={images.genderFemale} titleStyle={styles.profileHeaderTitle}/>
+      <ProfileHeaderBar
+        title="category"
+        profileImage={images.genderFemale}
+        titleStyle={styles.profileHeaderTitle}
+        containerStyle={styles.profileHeaderContainer}
+      />
       <CategoriresCard categoryList={categories} />
       <View style={styles.allProductsContainer}>
         <Text style={styles.headingText}>Just for you</Text>
@@ -102,14 +106,13 @@ const UserProfile = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
+    flexDirection: "column",
     gap: gapSizes.sm,
     ...spacingStyles.p12,
-    backgroundColor: '#fff'
-    
+    backgroundColor: staticColors.white,
   },
   profileHeaderContainer: {
-    ...spacingStyles.pb0
+    ...spacingStyles.pl10,
   },
   profileHeaderTitle: {
     ...spacingStyles.pb5,
@@ -119,15 +122,15 @@ const styles = StyleSheet.create({
     fontFamily: fontFamilies.ralewayMedium,
     borderRadius: borderRadius.r16,
     fontSize: fontSizes.base,
-    textAlign: 'center'
+    textAlign: "center",
   },
   headingText: {
     fontSize: fontSizes.lg,
     fontFamily: fontFamilies.ralewayBold,
   },
   allProductsContainer: {
-    display: 'flex',
-    flexDirection: 'column',
+    display: "flex",
+    flexDirection: "column",
     gap: gapSizes.lg,
   },
   emptyContainer: {

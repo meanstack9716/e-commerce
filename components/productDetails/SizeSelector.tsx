@@ -246,6 +246,7 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
         allSizes={allSizes}
         availableColors={availableColors}
         price={price}
+        productId={product?.id}
         onSizeSelect={(size) => {
           const sizeData = allSizes.find((s) => s.label === size);
           if (sizeData) {
