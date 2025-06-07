@@ -97,4 +97,5 @@ export default {
   blue500: "#004BFE",
   pink100: "#FFEBEB",
   blue200: "#E8ECFF",
+  inputBg: "#F1F4FE"
 };
