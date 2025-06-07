@@ -27,7 +27,7 @@ export default function SettingPage() {
     {
       title: "Personal",
       items: [
-        { label: "Profile", route: "/accountManage" },
+        { label: "Profile", route: "userManageAccount" },
         { label: "Shipping Address", route: null },
         { label: "Payment methods", route: null },
       ],
@@ -70,7 +70,7 @@ export default function SettingPage() {
           <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
             <Ionicons
               name="arrow-back"
-              size={20}
+              size={22}
               color={staticColors.darkGray}
             />
           </TouchableOpacity>
@@ -93,7 +93,8 @@ export default function SettingPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    ...spacingStyles.px12,
+    ...spacingStyles.py10,
+    ...spacingStyles.px15,
     backgroundColor: staticColors.white,
   },
   headerContain: {

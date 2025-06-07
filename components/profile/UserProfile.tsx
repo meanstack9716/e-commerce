@@ -71,13 +71,8 @@ const UserProfile = () => {
   const isLoading = productsLoading;
 
   return (
-    <View style={styles.container}>
-      <ProfileHeaderBar
-        title="category"
-        profileImage={images.genderFemale}
-        titleStyle={styles.profileHeaderTitle}
-        containerStyle={styles.profileHeaderContainer}
-      />
+    <SafeAreaViewWrapper style={styles.container}>
+      <ProfileHeaderBar title="category" profileImage={images.genderFemale} titleStyle={styles.profileHeaderTitle} />
       <CategoriresCard categoryList={categories} />
       <View style={styles.allProductsContainer}>
         <Text style={styles.headingText}>Just for you</Text>
@@ -99,7 +94,7 @@ const UserProfile = () => {
           )}
         />
       </View>
-    </View>
+    </SafeAreaViewWrapper>
   );
 };
 
@@ -108,11 +103,9 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     gap: gapSizes.sm,
-    ...spacingStyles.p12,
-    backgroundColor: staticColors.white,
-  },
-  profileHeaderContainer: {
-    ...spacingStyles.pl10,
+    ...spacingStyles.py10,
+    ...spacingStyles.px12,
+    backgroundColor: staticColors.white
   },
   profileHeaderTitle: {
     ...spacingStyles.pb5,

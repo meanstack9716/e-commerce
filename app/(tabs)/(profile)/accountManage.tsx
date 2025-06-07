@@ -82,12 +82,10 @@ const AccountScreen: React.FC = () => {
     console.log("Deleting account");
   };
 
-  const handleBack = useCallback(() => {
-      router.back();
-      return true;
-    }, []);
-  
-
+   const handleBack = () => {
+     router.back();
+   };
+ 
   return (
     <View style={styles.safeArea}>
       <View style={styles.container}>
