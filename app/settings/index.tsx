@@ -93,7 +93,8 @@ export default function SettingPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    ...spacingStyles.px12,
+    ...spacingStyles.py10,
+    ...spacingStyles.px15,
     backgroundColor: staticColors.white,
   },
   headerContain: {

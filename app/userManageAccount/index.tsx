@@ -1,4 +1,4 @@
-import { router } from "expo-router";
+
 import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "@/store/hooks";
 import { RootState } from "@/store/store";
@@ -15,6 +15,7 @@ import {
 } from "react-native";
 import Toast from "react-native-toast-message";
 import { useSelector } from "react-redux";
+import { router } from "expo-router";
 import {
   fetchUserProfile,
   resetState,
