@@ -35,11 +35,10 @@ export const fetchColors = createAsyncThunk<
   try {
     const response = await axiosConfig.get("/products/colors-list");
     if (response.data?.success && response.data?.data) {
-      // Convert object with numeric keys to array
       const colorsArray = Object.values(response.data.data).map((item: any) => ({
         id: item.id,
         name: item.name,
-        color: item.value, // Map 'value' to 'color' to match Color interface
+        color: item.value,
       }));
       return colorsArray;
     }
@@ -90,6 +89,11 @@ const productsSlice = createSlice({
   name: "products",
   initialState,
   reducers: {
+    resetProducts: (state) => {
+      state.data = [];
+      state.loading = false;
+      state.error = null;
+    },
     clearSelectedProduct: (state) => {
       state.selectedProduct = null;
       state.selectedProductLoading = false;
@@ -141,5 +145,5 @@ const productsSlice = createSlice({
   },
 });
 
-export const { clearSelectedProduct } = productsSlice.actions;
+export const { resetProducts , clearSelectedProduct } = productsSlice.actions;
 export default productsSlice.reducer; 

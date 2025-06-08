@@ -7,14 +7,14 @@ import {
   FlatList,
   Image,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react"; 
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import { useSelector } from "react-redux";
 import { Product } from "@/interfaces";
 import { useAppDispatch } from "@/store/hooks";
-import { fetchProducts } from "@/store/product/productsSlice";
+import { fetchProducts, resetProducts } from "@/store/product/productsSlice";
 import ProductCard from "@/components/home/ProductCard";
 import images from "@/constants/images";
 import staticColors from "@/style/staticColors";
@@ -28,14 +28,72 @@ const ProductSearchScreen: React.FC = () => {
   const dispatch = useAppDispatch();
   const products = useSelector((state: any) => state.products.data);
   const loading = useSelector((state: any) => state.products.loading);
+  const error = useSelector((state: any) => state.products.error); 
+  const params = useLocalSearchParams();
+
+  const parsedParams = useMemo(
+    () => ({
+      subCategories: params.subCategories
+        ? JSON.parse(params.subCategories as string)
+        : [],
+      sizes: params.sizes ? JSON.parse(params.sizes as string) : [],
+      colors: params.colors ? JSON.parse(params.colors as string) : [],
+      priceMin: params.priceMin
+        ? parseInt(params.priceMin as string)
+        : undefined,
+      priceMax: params.priceMax
+        ? parseInt(params.priceMax as string)
+        : undefined,
+    }),
+    [
+      params.subCategories,
+      params.sizes,
+      params.colors,
+      params.priceMin,
+      params.priceMax,
+    ]
+  );
+
+  const { subCategories, sizes, colors, priceMin, priceMax } = parsedParams;
+
+  useEffect(() => {
+    const hasFilters =
+      subCategories.length > 0 ||
+      sizes.length > 0 ||
+      colors.length > 0 ||
+      priceMin ||
+      priceMax;
+
+    if (hasFilters) {
+      setIsSearchSubmitted(true);
+      dispatch(resetProducts());
+      dispatch(
+        fetchProducts({
+          params: {
+            subCategoryIds: subCategories,
+            sizes,
+            colors,
+            minPrice: priceMin,
+            maxPrice: priceMax,
+          },
+        })
+      );
+    }
+  }, [dispatch, subCategories, sizes, colors, priceMin, priceMax]);
 
   const handleSearchSubmit = () => {
     if (searchTerm.trim()) {
       setIsSearchSubmitted(true);
+      dispatch(resetProducts());
       dispatch(
         fetchProducts({
           params: {
             searchTerm: searchTerm,
+            subCategoryIds: subCategories,
+            sizes,
+            colors,
+            minPrice: priceMin,
+            maxPrice: priceMax,
           },
         })
       );
@@ -45,11 +103,19 @@ const ProductSearchScreen: React.FC = () => {
   const clearSearch = () => {
     setSearchTerm("");
     setIsSearchSubmitted(false);
+    dispatch(resetProducts());
+    router.setParams({
+      subCategories: JSON.stringify([]),
+      sizes: JSON.stringify([]),
+      colors: JSON.stringify([]),
+      priceMin: undefined,
+      priceMax: undefined,
+    });
   };
 
   const handleProductFilter = () => {
-    router.push("/product-filter")
-  }
+    router.push("/product-filter");
+  };
 
   const renderProductItem = ({ item }: { item: Product }) => (
     <ProductCard
@@ -116,6 +182,8 @@ const ProductSearchScreen: React.FC = () => {
         {isSearchSubmitted ? (
           loading ? (
             <Text style={styles.loadingText}>Loading...</Text>
+          ) : error ? ( 
+            <Text style={styles.errorText}>Error: {error}</Text>
           ) : products.length > 0 ? (
             <FlatList
               data={products}
@@ -141,6 +209,7 @@ const ProductSearchScreen: React.FC = () => {
 };
 
 export default ProductSearchScreen;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -175,6 +244,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: fontSizes.base,
     color: staticColors.darkGray,
+  },
+  errorText: {
+    textAlign: "center",
+    fontSize: fontSizes.base,
+    color: staticColors.errorColor || "red",
   },
   noResultsContainer: {
     flex: 1,
