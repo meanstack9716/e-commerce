@@ -267,50 +267,27 @@ const ProductFilterScreen: React.FC = () => {
                   styles.sliderRange,
                   {
                     left: `${((priceRange.min - 100) / (30000 - 100)) * 100}%`,
-                    width: `${
-                      ((priceRange.max - priceRange.min) / (30000 - 100)) * 100
-                    }%`,
+                    width: `${((priceRange.max - priceRange.min) / (30000 - 100)) * 100}%`,
                   },
                 ]}
               />
-
               <View
                 style={[
                   styles.sliderThumb,
-                  styles.minThumb,
                   {
                     left: `${((priceRange.min - 100) / (30000 - 100)) * 100}%`,
                   },
                 ]}
               />
-
               <View
                 style={[
                   styles.sliderThumb,
-                  styles.maxThumb,
                   {
                     left: `${((priceRange.max - 100) / (30000 - 100)) * 100}%`,
                   },
                 ]}
               />
             </View>
-
-            <Slider
-              style={styles.invisibleSlider}
-              minimumValue={100}
-              maximumValue={30000}
-              minimumTrackTintColor="transparent"
-              maximumTrackTintColor="transparent"
-              thumbTintColor="transparent"
-              value={priceRange.min}
-              onValueChange={(value) => {
-                const newMin = Math.round(value);
-                if (newMin < priceRange.max - 1000) {
-                  setPriceRange((prev) => ({ ...prev, min: newMin }));
-                }
-              }}
-            />
-
             <Slider
               style={styles.invisibleSlider}
               minimumValue={100}
@@ -320,9 +297,18 @@ const ProductFilterScreen: React.FC = () => {
               thumbTintColor="transparent"
               value={priceRange.max}
               onValueChange={(value) => {
-                const newMax = Math.round(value);
-                if (newMax > priceRange.min + 1000) {
-                  setPriceRange((prev) => ({ ...prev, max: newMax }));
+                const newValue = Math.round(value);
+                const minDist = Math.abs(newValue - priceRange.min);
+                const maxDist = Math.abs(newValue - priceRange.max);
+
+                if (minDist < maxDist) {
+                  if (newValue < priceRange.max - 1000) {
+                    setPriceRange((prev) => ({ ...prev, min: newValue }));
+                  }
+                } else {
+                  if (newValue > priceRange.min + 1000) {
+                    setPriceRange((prev) => ({ ...prev, max: newValue }));
+                  }
                 }
               }}
             />
@@ -348,7 +334,6 @@ const ProductFilterScreen: React.FC = () => {
   );
 };
 
-// Styles remain unchanged
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -378,7 +363,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    ...spacingStyles.mb10,
+    ...spacingStyles.mb15,
   },
   toggleContainer: {
     flexDirection: "row",
@@ -506,72 +491,67 @@ const styles = StyleSheet.create({
   },
   priceRangeText: {
     fontSize: fontSizes.md,
-    color: staticColors.black,
+    color: staticColors.primaryBlue,
     ...spacingStyles.mb10,
-    textAlign: "center",
     fontFamily: fontFamilies.ralewayBold,
   },
   rangeSliderContainer: {
-    height: 50,
+    height: 30,
     justifyContent: "center",
-    ...spacingStyles.mt15,
-    ...spacingStyles.mb10,
-    ...spacingStyles.mx10,
+    ...spacingStyles.ml10,
+    ...spacingStyles.mr25,
   },
   sliderTrack: {
-    height: 4,
-    backgroundColor: staticColors.gray200,
+    height: 5,
+    backgroundColor: staticColors.skyBlue100,
     borderRadius: borderRadius.r2,
     position: "relative",
   },
   sliderRange: {
-    height: 4,
+    height: 5,
     backgroundColor: staticColors.blue400,
     borderRadius: borderRadius.r2,
     position: "absolute",
     top: 0,
   },
+
+  invisibleSlider: {
+    position: "absolute",
+    width: "100%",
+    height: 50,
+    opacity: 0,
+    zIndex: 2,
+  },
   sliderThumb: {
-    width: 20,
-    height: 20,
-    borderRadius: borderRadius.r10,
+    width: 32,
+    height: 32,
+    borderRadius: borderRadius.circle,
     backgroundColor: staticColors.white,
     borderWidth: 2,
-    borderColor: staticColors.blue400,
+    borderColor: staticColors.skyBlue100,
     position: "absolute",
-    top: -8,
+    top: -16,
     marginLeft: -10,
     shadowColor: staticColors.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 5,
-  },
-  minThumb: {
-    zIndex: 2,
-  },
-  maxThumb: {
-    zIndex: 2,
-  },
-  invisibleSlider: {
-    position: "absolute",
-    width: "100%",
-    height: 40,
-    opacity: 0,
+    zIndex: 3,
   },
   footer: {
     flexDirection: "row",
-    ...spacingStyles.mt15,
-    ...spacingStyles.mb15,
+    ...spacingStyles.mb10,
+    justifyContent: "space-between", 
+    gap:gapSizes.md
   },
   clearButton: {
-    flex: 1,
+    flex: 0.3,
     ...spacingStyles.py10,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: staticColors.primaryBlue,
-    borderRadius: borderRadius.r10,
+    borderRadius: borderRadius.r12,
     alignItems: "center",
-    marginRight: 10,
   },
   clearButtonText: {
     fontSize: fontSizes.lg,
@@ -579,10 +559,10 @@ const styles = StyleSheet.create({
     fontFamily: fontFamilies.nunitoSans,
   },
   applyButton: {
-    flex: 1,
+    flex: 0.7, 
     ...spacingStyles.py10,
     backgroundColor: staticColors.primaryBlue,
-    borderRadius: borderRadius.r5,
+    borderRadius: borderRadius.r10,
     alignItems: "center",
   },
   applyButtonText: {
