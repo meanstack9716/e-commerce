@@ -30,6 +30,7 @@ import {
   resetError,
   setAddressType,
 } from "@/store/address/addressSlice";
+import TextFieldWithLabel from "@/components/common/textFieldWithLabel";
 
 const AddEditAddressModal: React.FC<AddEditAddressModalProps> = ({
   visible,
@@ -63,7 +64,7 @@ const AddEditAddressModal: React.FC<AddEditAddressModalProps> = ({
     addressTypes.length ? addressTypes[0] : "Home"
   );
 
-  const handleInputChange = (field: keyof AddressFormData, value: string) => {
+  const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     handleFieldChange(field, value, notEmptyValidator, `${field} is required`);
   };
@@ -161,49 +162,29 @@ const AddEditAddressModal: React.FC<AddEditAddressModalProps> = ({
                 <View style={styles.formContainer}>
                   <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Contact Details</Text>
-                    <View style={styles.inputContainer}>
-                      <Text style={styles.inputLabel}>Name</Text>
-                      <TextInput
-                        style={[
-                          styles.input,
-                          errors.contact_name && styles.inputError,
-                        ]}
-                        placeholder="Enter contact name"
-                        placeholderTextColor={staticColors.textSecondary}
-                        value={formData.contact_name}
-                        onChangeText={(text) =>
-                          handleInputChange("contact_name", text)
-                        }
-                      />
-                      {errors.contact_name && (
-                        <Text style={styles.errorText}>
-                          {errors.contact_name}
-                        </Text>
-                      )}
-                    </View>
+                    <TextFieldWithLabel
+                      label="Name"
+                      value={formData.contact_name}
+                      field="contact_name"
+                      placeholder="Enter contact name"
+                      onChangeText={(field, text) =>
+                        handleInputChange(field, text)
+                      }
+                      errorMessage={errors.contact_name}
+                    />
 
-                    <View style={styles.inputContainer}>
-                      <Text style={styles.inputLabel}>Mobile Number</Text>
-                      <TextInput
-                        style={[
-                          styles.input,
-                          errors.contact_number && styles.inputError,
-                        ]}
-                        placeholder="Enter contact number"
-                        placeholderTextColor={staticColors.textSecondary}
-                        value={formData.contact_number}
-                        onChangeText={(text) =>
-                          handleInputChange("contact_number", text)
-                        }
-                        maxLength={10}
-                        keyboardType="numeric"
-                      />
-                      {errors.contact_number && (
-                        <Text style={styles.errorText}>
-                          {errors.contact_number}
-                        </Text>
-                      )}
-                    </View>
+                    <TextFieldWithLabel
+                      label="Mobile Number"
+                      value={formData.contact_name}
+                      field="contact_number"
+                      placeholder="Enter contact number"
+                      onChangeText={(field, text) =>
+                        handleInputChange(field, text)
+                      }
+                      errorMessage={errors.contact_number}
+                      isNumeric={true}
+                      maxLength={10}
+                    />
                   </View>
 
                   <View style={styles.section}>
@@ -229,126 +210,90 @@ const AddEditAddressModal: React.FC<AddEditAddressModalProps> = ({
                   <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Addres Details</Text>
 
-                    <View style={styles.inputContainer}>
-                      <Text style={styles.inputLabel}>
-                        Address Street Line 1
-                      </Text>
-                      <TextInput
-                        style={[
-                          styles.input,
-                          errors.line1 && styles.inputError,
-                        ]}
-                        placeholder="Enter House No., Building, Street, Area"
-                        placeholderTextColor={staticColors.textSecondary}
-                        value={formData.line1}
-                        onChangeText={(text) =>
-                          handleInputChange("line1", text)
-                        }
-                      />
-                      {errors.line1 && (
-                        <Text style={styles.errorText}>{errors.line1}</Text>
-                      )}
-                    </View>
+                    <TextFieldWithLabel
+                      label="Address Street Line 1"
+                      value={formData.line1}
+                      field="line1"
+                      placeholder="Enter House No., Building, Street, Area"
+                      onChangeText={(field, text) =>
+                        handleInputChange(field, text)
+                      }
+                      errorMessage={errors.line1}
+                    />
 
-                    <View style={styles.inputContainer}>
-                      <Text style={styles.inputLabel}>
-                        Address Street Line 2
-                      </Text>
-                      <TextInput
-                        style={[
-                          styles.input,
-                          errors.line2 && styles.inputError,
-                        ]}
-                        placeholder="Enter locality/ town"
-                        placeholderTextColor={staticColors.textSecondary}
-                        value={formData.line2 ?? ""}
-                        onChangeText={(text) =>
-                          handleInputChange("line2", text)
-                        }
-                      />
-                      {errors.line2 && (
-                        <Text style={styles.errorText}>{errors.line2}</Text>
-                      )}
-                    </View>
+                    <TextFieldWithLabel
+                      label="Address Street Line 2"
+                      value={formData.line2 ?? ""}
+                      field="line2"
+                      placeholder="Enter locality/ town"
+                      onChangeText={(field, text) =>
+                        handleInputChange(field, text)
+                      }
+                      errorMessage={errors.line2}
+                    />
+
+                    <TextFieldWithLabel
+                      label="City"
+                      value={formData.city}
+                      field="city"
+                      placeholder="Enter city/district"
+                      onChangeText={(field, text) =>
+                        handleInputChange(field, text)
+                      }
+                      errorMessage={errors.city}
+                    />
 
                     <View style={styles.row}>
                       <View style={styles.halfInputContainer}>
-                        <Text style={styles.inputLabel}>City</Text>
-                        <TextInput
-                          style={[
-                            styles.input,
-                            errors.city && styles.inputError,
-                          ]}
-                          placeholder="Enter city/district"
-                          placeholderTextColor={staticColors.textSecondary}
+                        <TextFieldWithLabel
+                          label="City"
                           value={formData.city}
-                          onChangeText={(text) =>
-                            handleInputChange("city", text)
+                          field="city"
+                          placeholder="Enter city/district"
+                          onChangeText={(field, text) =>
+                            handleInputChange(field, text)
                           }
+                          errorMessage={errors.city}
                         />
-                        {errors.city && (
-                          <Text style={styles.errorText}>{errors.city}</Text>
-                        )}
                       </View>
 
                       <View style={styles.halfInputContainer}>
-                        <Text style={styles.inputLabel}>Pin code</Text>
-                        <TextInput
-                          style={[
-                            styles.input,
-                            errors.postal_code && styles.inputError,
-                          ]}
-                          placeholder="Enter pin code"
-                          placeholderTextColor={staticColors.textSecondary}
+                        <TextFieldWithLabel
+                          label="Pin code"
                           value={formData.postal_code}
-                          onChangeText={(text) =>
-                            handleInputChange("postal_code", text)
+                          field="postal_code"
+                          placeholder="Enter pin code"
+                          onChangeText={(field, text) =>
+                            handleInputChange(field, text)
                           }
+                          errorMessage={errors.postal_code}
+                          isNumeric={true}
                           maxLength={6}
-                          keyboardType="numeric"
                         />
-                        {errors.postal_code && (
-                          <Text style={styles.errorText}>
-                            {errors.postal_code}
-                          </Text>
-                        )}
                       </View>
                     </View>
 
-                    <View style={styles.inputContainer}>
-                      <Text style={styles.inputLabel}>State</Text>
-                      <TextInput
-                        style={[
-                          styles.input,
-                          errors.state && styles.inputError,
-                        ]}
-                        placeholder="Enter state"
-                        placeholderTextColor={staticColors.textSecondary}
-                        value={formData.state ?? ""}
-                        onChangeText={(text) =>
-                          handleInputChange("state", text)
-                        }
-                      />
-                      {errors.state && (
-                        <Text style={styles.errorText}>{errors.state}</Text>
-                      )}
-                    </View>
+                    <TextFieldWithLabel
+                      label="State"
+                      value={formData.state}
+                      field="state"
+                      placeholder="Enter state"
+                      onChangeText={(field, text) =>
+                        handleInputChange(field, text)
+                      }
+                      errorMessage={errors.state}
+                    />
 
-                    <View style={styles.inputContainer}>
-                      <Text style={styles.inputLabel}>Country</Text>
-                      <TextInput
-                        style={[styles.disableInput]}
-                        placeholderTextColor={staticColors.textSecondary}
-                        value={formData.country}
-                        onChangeText={(text) =>
-                          handleInputChange("country", text)
-                        }
-                        editable={false}
-                      />
-                      {errors.contact_name && (
-                        <Text style={styles.errorText}>{errors.country}</Text>
-                      )}
-                    </View>
+                    <TextFieldWithLabel
+                      label="Country"
+                      value={formData.country}
+                      field="country"
+                      onChangeText={(field, text) =>
+                        handleInputChange(field, text)
+                      }
+                      errorMessage={errors.country}
+                      isEditable={false}
+                    />
 
                     <View style={styles.checkBoxSection}>
                       <TouchableOpacity onPress={() => handleDefaultChange()}>
@@ -444,34 +389,10 @@ const styles = StyleSheet.create({
     fontFamily: fontFamilies.ralewayBold,
     ...spacingStyles.mb10,
   },
-  inputContainer: {
-    ...spacingStyles.pt10,
-  },
   inputLabel: {
     fontSize: fontSizes.sm,
     fontWeight: fontWeights.semiBold,
     ...spacingStyles.mb8,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: staticColors.inputBg,
-    borderRadius: borderRadius.r8,
-    backgroundColor: staticColors.inputBg,
-    ...spacingStyles.pt10,
-    ...spacingStyles.px10,
-  },
-  disableInput: {
-    backgroundColor: staticColors.white,
-    color: staticColors.textDarkGray,
-  },
-  inputError: {
-    borderColor: staticColors.errorColor,
-  },
-  errorText: {
-    color: staticColors.errorColor,
-    fontSize: fontSizes.xs,
-    ...spacingStyles.mt5,
-    ...spacingStyles.mb10,
   },
   row: {
     flexDirection: "row",

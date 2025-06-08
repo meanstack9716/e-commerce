@@ -16,10 +16,10 @@ import spacingStyles from "@/style/spacingStyles";
 import { AddressListModalProps } from "./AddressListModal.types";
 import { fontSizes } from "@/style/typography";
 import { fontFamilies } from "@/style/fontFamilies";
-import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { Address } from "@/interfaces";
-import { commonStyles } from "@/style/commonStyle";
 import gapSizes from "@/style/gapSizes";
+import AddressItem from "../addressItem";
 
 const AddressListModal: React.FC<AddressListModalProps> = ({
   visible,
@@ -42,42 +42,12 @@ const AddressListModal: React.FC<AddressListModalProps> = ({
 
   const renderAddressItem = ({ item }: { item: Address }) => {
     return (
-      <View
-        style={[
-          styles.addressItem,
-          selectedId === item.id && styles.selectedAddress,
-        ]}
-      >
-        <TouchableOpacity
-          style={styles.radioContainer}
-          onPress={() => setSelectedId(item.id)}
-        >
-          <View
-            style={[
-              styles.radio,
-              selectedId === item.id && styles.radioSelected,
-            ]}
-          >
-            {selectedId === item.id && <View style={styles.radioInner} />}
-          </View>
-        </TouchableOpacity>
-        <View style={styles.addressDetails}>
-          <Text style={styles.addressName}>{item.contact_name}</Text>
-          <Text style={styles.addressText}>{item.contact_number}</Text>
-          <Text style={styles.addressText}>
-            {item.line1} {item.line2}
-          </Text>
-          <Text style={styles.addressText}>
-            {item.city}, {item.state} - {item.postal_code}, {item.country}
-          </Text>
-        </View>
-        <TouchableOpacity
-          style={styles.editIconWrapper}
-          onPress={() => onEditAddress && onEditAddress(item)}
-        >
-          <FontAwesome5 name="pen" size={16} color={staticColors.white} />
-        </TouchableOpacity>
-      </View>
+      <AddressItem
+        address={item}
+        onEditAddress={onEditAddress}
+        selectedId={selectedId}
+        setSelectedId={setSelectedId}
+      />
     );
   };
   return (
@@ -214,51 +184,6 @@ const styles = StyleSheet.create({
     ...spacingStyles.px15,
     ...spacingStyles.py20,
   },
-  addressItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    ...spacingStyles.mb10,
-    ...spacingStyles.px10,
-    ...spacingStyles.py15,
-  },
-  selectedAddress: {
-    backgroundColor: staticColors.blue100,
-    borderRadius: borderRadius.r10,
-  },
-  radioContainer: {
-    ...spacingStyles.mr10,
-  },
-  radio: {
-    width: 20,
-    height: 20,
-    borderRadius: borderRadius.circle,
-    borderWidth: 2,
-    borderColor: staticColors.primary,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  radioSelected: {
-    borderColor: staticColors.blue500,
-  },
-  radioInner: {
-    width: 12,
-    height: 12,
-    borderRadius: borderRadius.circle,
-    backgroundColor: staticColors.blue500,
-  },
-  addressDetails: {
-    flex: 1,
-  },
-  addressName: {
-    fontSize: fontSizes.md,
-    fontFamily: fontFamilies.ralewayBold,
-    color: staticColors.black,
-  },
-  addressText: {
-    fontSize: fontSizes.sm,
-    fontFamily: fontFamilies.ralewayRegular,
-    color: staticColors.darkGray,
-  },
   setAddressButton: {
     backgroundColor: staticColors.blue500,
     borderRadius: borderRadius.r10,
@@ -275,16 +200,6 @@ const styles = StyleSheet.create({
   disabledButton: {
     backgroundColor: staticColors.gray200,
     opacity: 0.6,
-  },
-  editIconWrapper: {
-    backgroundColor: staticColors.blue500,
-    flexShrink: 0,
-    borderRadius: borderRadius.circle,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    width: 40,
-    height: 40,
   },
   emptyContainer: {
     flex: 1,
