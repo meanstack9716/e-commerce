@@ -7,7 +7,7 @@ import {
   FlatList,
   Image,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState } from "react"; 
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
@@ -28,6 +28,7 @@ const ProductSearchScreen: React.FC = () => {
   const dispatch = useAppDispatch();
   const products = useSelector((state: any) => state.products.data);
   const loading = useSelector((state: any) => state.products.loading);
+  const error = useSelector((state: any) => state.products.error); 
 
   const handleSearchSubmit = () => {
     if (searchTerm.trim()) {
@@ -48,8 +49,8 @@ const ProductSearchScreen: React.FC = () => {
   };
 
   const handleProductFilter = () => {
-    router.push("/product-filter")
-  }
+    // router.push("/product-filter");
+  };
 
   const renderProductItem = ({ item }: { item: Product }) => (
     <ProductCard
@@ -116,6 +117,8 @@ const ProductSearchScreen: React.FC = () => {
         {isSearchSubmitted ? (
           loading ? (
             <Text style={styles.loadingText}>Loading...</Text>
+          ) : error ? ( 
+            <Text style={styles.errorText}>Error: {error}</Text>
           ) : products.length > 0 ? (
             <FlatList
               data={products}
@@ -141,6 +144,7 @@ const ProductSearchScreen: React.FC = () => {
 };
 
 export default ProductSearchScreen;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -175,6 +179,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: fontSizes.base,
     color: staticColors.darkGray,
+  },
+  errorText: {
+    textAlign: "center",
+    fontSize: fontSizes.base,
+    color: staticColors.errorColor,
   },
   noResultsContainer: {
     flex: 1,

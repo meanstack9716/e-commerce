@@ -8,9 +8,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import {
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import { router, useLocalSearchParams } from "expo-router";
@@ -65,6 +63,11 @@ export default function PasswordScreen() {
     resetErrors();
   };
 
+  useEffect(() => {
+  console.log("PasswordScreen re-rendered");
+}, []);
+
+
   const handleForgetPassword = () => {
     router.navigate({
       pathname: "/PasswordRecoveryScreen",
@@ -75,85 +78,85 @@ export default function PasswordScreen() {
   };
 
   return (
-      <KeyboardAvoidingViewWrapper style={styles.keyboardAvoidingView}>
-        <ScrollView
-          contentContainerStyle={styles.scrollContent}
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
-        >
-          <Image source={images.loginPasswordShape} style={styles.shape1} />
-          <Image source={images.createLoginPwdShape} style={styles.shape2} />
+    <KeyboardAvoidingViewWrapper style={styles.keyboardAvoidingView}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        bounces={false}
+        
+      >
+        <Image source={images.loginPasswordShape} style={styles.shape1} />
+        <Image source={images.createLoginPwdShape} style={styles.shape2} />
 
-          <View style={[commonStyles.contentContainer, styles.contentWrapper]}>
-            <Image
-              source={images.avatar}
-              style={[commonStyles.avatar, styles.avatar]}
+        <View style={[commonStyles.contentContainer, styles.contentWrapper]}>
+          <Image
+            source={images.avatar}
+            style={[commonStyles.avatar, styles.avatar]}
+          />
+          <Text style={styles.greeting}>Hello User !!</Text>
+
+          <Text style={styles.label}>Type your password</Text>
+          <View style={styles.passwordContainer}>
+            <PasswordTextField
+              placeholder="Confirm Password"
+              value={password}
+              onChangeText={(text) => {
+                setPassword(text);
+                handleLoginPasswordValidation(text);
+              }}
+              error={errors.password}
             />
-            <Text style={styles.greeting}>Hello User !!</Text>
-
-            <Text style={styles.label}>Type your password</Text>
-            <View style={styles.passwordContainer}>
-              <PasswordTextField
-                placeholder="Confirm Password"
-                value={password}
-                onChangeText={(text) => {
-                  setPassword(text);
-                  handleLoginPasswordValidation(text);
-                }}
-                error={errors.password}
-              />
-              {loginError && <Text style={styles.errorText}>{loginError}</Text>}
-              {errors.apiError && (
-                <Text style={styles.errorText}>{errors.apiError}</Text>
-              )}
-            </View>
-
-            <Button
-              title="SUBMIT"
-              onPress={handleSubmit}
-              loading={loading}
-              style={commonStyles.authButton}
-              textStyle={commonStyles.authButtonText}
-            />
-
-            <TouchableOpacity onPress={handleForgetPassword}>
-              <Text style={styles.forgetPasswordText}>
-                Forget your password?
-              </Text>
-            </TouchableOpacity>
-
-            {/* Bottom "Not you?" button */}
-            <View
-              style={[
-                styles.bottomButtonContainer,
-                { paddingBottom: insets.bottom + 20 },
-              ]}
-            >
-              <TouchableOpacity
-                style={styles.bottomButton}
-                onPress={handleNotYouButton}
-              >
-                <Text style={styles.buttonText}>Not you?</Text>
-                <Ionicons
-                  name="arrow-forward"
-                  size={fontSizes.base}
-                  color={staticColors.white}
-                  style={styles.icon}
-                />
-              </TouchableOpacity>
-            </View>
+            {loginError && <Text style={styles.errorText}>{loginError}</Text>}
+            {errors.apiError && (
+              <Text style={styles.errorText}>{errors.apiError}</Text>
+            )}
           </View>
-          <StatusBar style="dark" />
-        </ScrollView>
-      </KeyboardAvoidingViewWrapper>
-  
+
+          <Button
+            title="SUBMIT"
+            onPress={handleSubmit}
+            loading={loading}
+            style={commonStyles.authButton}
+            textStyle={commonStyles.authButtonText}
+          />
+
+          <TouchableOpacity onPress={handleForgetPassword}>
+            <Text style={styles.forgetPasswordText}>Forget your password?</Text>
+          </TouchableOpacity>
+
+          {/* Bottom "Not you?" button */}
+          <View
+            style={[
+              styles.bottomButtonContainer,
+              { paddingBottom: insets.bottom },
+            ]}
+          >
+            <TouchableOpacity
+              style={styles.bottomButton}
+              onPress={handleNotYouButton}
+            >
+              <Text style={styles.buttonText}>Not you?</Text>
+              <Ionicons
+                name="arrow-forward"
+                size={fontSizes.base}
+                color={staticColors.white}
+                style={styles.icon}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+        <StatusBar style="dark" />
+      </ScrollView>
+    </KeyboardAvoidingViewWrapper>
   );
 }
 
 const styles = StyleSheet.create({
   scrollContent: {
-       flexGrow: 1,
-    minHeight: "10%",
+    flexGrow: 1,
+    minHeight: "20%",
+   
   },
   contentWrapper: {
     justifyContent: "center",
@@ -191,7 +194,7 @@ const styles = StyleSheet.create({
     fontSize: fontSizes["2xl"],
     fontFamily: "RalewayeExtraBold",
     color: staticColors.darkSlate,
-    ...spacingStyles.mt25,
+    ...spacingStyles.mt20,
     textAlign: "center",
   },
   label: {
@@ -201,7 +204,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.my15,
     textAlign: "center",
   },
-  passwordContainer: { ...spacingStyles.mb20 },
+  passwordContainer: { ...spacingStyles.mb10 },
   errorText: {
     color: staticColors.errorColor,
     fontSize: fontSizes.sm,
@@ -222,11 +225,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: gapSizes.sm,
+    
   },
   buttonText: {
     color: staticColors.darkSlate,
     fontSize: fontSizes.base,
-    fontFamily: "NunitoSans",
+    fontFamily: "NunitoSans"
   },
   icon: {
     ...spacingStyles.p5,
