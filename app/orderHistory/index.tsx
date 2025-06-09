@@ -40,6 +40,8 @@ const OrderHistoryScreen: React.FC = () => {
     productDescription: "",
   });
   const [isReviewModalVisible, setReviewModalVisible] = useState(false);
+  const [isOrderHistoryModalVisible, setOrderHistoryModalVisible] = useState(false);
+
 
   useEffect(() => {
     dispatch(fetchOrders());

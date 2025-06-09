@@ -42,9 +42,9 @@ function AppLayout() {
         <Stack.Screen name="/product-reviews" />
         <Stack.Screen name="/product-search" />
         <Stack.Screen name="/settings" />
-        <Stack.Screen name="/faqs" />
         <Stack.Screen name="/userManageAccount" />
         <Stack.Screen name="/product-filter" />
+        <Stack.Screen name="/faq" />
       </Stack>
 
       <StatusBar style="auto" />
