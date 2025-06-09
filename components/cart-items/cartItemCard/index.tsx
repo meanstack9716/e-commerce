@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { CartItemCardProps } from "./CartItemCard.types";
 import gapSizes from "@/style/gapSizes";
+import { router } from "expo-router";
 
 const CardItemCard: React.FC<CartItemCardProps> = ({
   cartItem,
@@ -22,7 +23,14 @@ const CardItemCard: React.FC<CartItemCardProps> = ({
   );
   const product = cartItem.product;
   return (
-    <View style={styles.cardContainer}>
+    <TouchableOpacity style={styles.cardContainer}  
+          onPress={() =>
+            router.navigate({
+              pathname: "/ProductDetails",
+              params: { id: product.id },
+            })
+          }
+    >
       <View style={styles.imageContainer}>
         <Image
           src={
@@ -114,7 +122,7 @@ const CardItemCard: React.FC<CartItemCardProps> = ({
           )}
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

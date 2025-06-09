@@ -13,9 +13,6 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import { store } from "@/store/store";
 import { AuthStateInitializer } from "@/components/auth/AuthStateInitializer";
 import Toast from "react-native-toast-message";
-import FAQs from "@/components/profile/FAQs";
-import { View } from "react-native";
-
 SplashScreen.preventAutoHideAsync();
 
 function AppLayout() {
@@ -45,8 +42,9 @@ function AppLayout() {
         <Stack.Screen name="/product-reviews" />
         <Stack.Screen name="/product-search" />
         <Stack.Screen name="/settings" />
-        <Stack.Screen name="/faqs" />
+        <Stack.Screen name="/userManageAccount" />
         <Stack.Screen name="/product-filter" />
+        <Stack.Screen name="/faq" />
       </Stack>
 
       <StatusBar style="auto" />

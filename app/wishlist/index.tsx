@@ -147,6 +147,7 @@ const WishlistScreen: React.FC = () => {
           <Image source={{ uri: item.image }} style={styles.image} />
           <TouchableOpacity
             style={styles.removeButtonOverlay}
+            onPress={() => handleRemoveItem(item.id)}
           >
             <Ionicons name="trash-outline" size={22} color={staticColors.brightRed} />
           </TouchableOpacity>

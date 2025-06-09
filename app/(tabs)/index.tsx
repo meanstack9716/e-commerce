@@ -34,6 +34,8 @@ import { CategoryItem, Product, SubCategoryItem } from "@/interfaces";
 import { fontFamilies } from "@/style/fontFamilies";
 import { commonStyles } from "@/style/commonStyle";
 import { CategoriresCard } from "@/components/categoriesCard";
+import ImageSlider from "@/components/home/ImageSlider";
+import bannerData from "../../assets/data/banner.json";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 
 const HomeScreen: React.FC = () => {
@@ -213,6 +215,7 @@ const HomeScreen: React.FC = () => {
         </View>
 
         <ScrollView showsVerticalScrollIndicator={false}>
+          <ImageSlider slides={bannerData} />
           <CategoriresCard categoryList={categories} />
 
           {hasError && <Text style={styles.errorText}>Error: {hasError}</Text>}

@@ -49,8 +49,8 @@ const ProductSearchScreen: React.FC = () => {
   };
 
   const handleProductFilter = () => {
-    // router.push("/product-filter");
-  };
+    // router.push("/product-filter")
+  }
 
   const renderProductItem = ({ item }: { item: Product }) => (
     <ProductCard

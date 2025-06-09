@@ -54,8 +54,8 @@ const ShoppingBagScreen: React.FC = () => {
     onSecondaryAction: () => void;
   }>({
     message: "",
-    onPrimaryAction: () => {},
-    onSecondaryAction: () => {},
+    onPrimaryAction: () => { },
+    onSecondaryAction: () => { },
   });
 
   const handleGoBack = () => {
@@ -79,7 +79,7 @@ const ShoppingBagScreen: React.FC = () => {
           setIsLoading(false);
         }
       };
-          loadCartData();
+      loadCartData();
     }, [isAuthenticated, token])
   );
 
@@ -93,8 +93,8 @@ const ShoppingBagScreen: React.FC = () => {
     setIsConfirmationModalVisible(false);
     setConfirmationModalDetails({
       message: "",
-      onPrimaryAction: () => {},
-      onSecondaryAction: () => {},
+      onPrimaryAction: () => { },
+      onSecondaryAction: () => { },
     });
   };
 
@@ -193,11 +193,14 @@ const ShoppingBagScreen: React.FC = () => {
         >
           <View style={commonStyles.itemCountHeader}>
             <Text style={commonStyles.itemCountTitle}>Cart</Text>
-            <View style={commonStyles.itemCountWrap}>
-              <Text style={commonStyles.itemCount}>
-                {cartItems.length ? cartItems.length : 0}
-              </Text>
-            </View>
+            {isAuthenticated && token && (
+              <View style={commonStyles.itemCountWrap}>
+                <Text style={commonStyles.itemCount}>
+                  {cartItems.length ? cartItems.length : 0}
+                </Text>
+              </View>
+            )}
+
           </View>
           {isAuthenticated && token && (
             <ContactCard
@@ -205,7 +208,7 @@ const ShoppingBagScreen: React.FC = () => {
               information={[getFormattedAddress(addresses)]}
             />
           )}
-          {cartItems.length ? (
+          {isAuthenticated && token && cartItems.length ? (
             <View style={styles.itemsWrapper}>
               <FlatList
                 data={cartItems}
@@ -221,7 +224,7 @@ const ShoppingBagScreen: React.FC = () => {
             <EmptyCart />
           )}
         </ScrollView>
-        {cartItems.length ? (
+        {isAuthenticated && token && cartItems.length ? (
           <View style={styles.totalPriceContainer}>
             <Text style={styles.totalPrice}>
               Total ₹ {calculateTotalPrice()}
