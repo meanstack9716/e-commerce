@@ -29,7 +29,10 @@ const ProductSearchScreen: React.FC = () => {
   const products = useSelector((state: any) => state.products.data);
   const loading = useSelector((state: any) => state.products.loading);
   const error = useSelector((state: any) => state.products.error); 
-
+const allProducts = useSelector((state: any) => state.products.data);
+const filteredProducts = allProducts.filter((product: Product) =>
+  product.title.toLowerCase().includes(searchTerm.toLowerCase())
+);
   const handleSearchSubmit = () => {
     if (searchTerm.trim()) {
       setIsSearchSubmitted(true);
@@ -121,7 +124,7 @@ const ProductSearchScreen: React.FC = () => {
             <Text style={styles.errorText}>Error: {error}</Text>
           ) : products.length > 0 ? (
             <FlatList
-              data={products}
+              data={filteredProducts}
               renderItem={renderProductItem}
               keyExtractor={(item) => item.id.toString()}
               numColumns={2}

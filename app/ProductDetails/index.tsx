@@ -163,7 +163,6 @@ const ProductDetailsScreen: React.FC = () => {
         })
       ).unwrap();
       setIsProductLiked(true);
-      router.navigate("/wishlist");
     } catch (error) {
       console.log(error);
     }

@@ -58,12 +58,17 @@ const HomeScreen: React.FC = () => {
     error: productsError,
   } = useSelector((state: any) => state.products);
 
-  useFocusEffect(
-    useCallback(() => {
-      dispatch(fetchCategories());
-      dispatch(fetchProducts({}));
-    }, [dispatch])
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     dispatch(fetchCategories());
+  //     dispatch(fetchProducts({}));
+  //   }, [dispatch])
+  // );
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+    dispatch(fetchProducts({}));
+  }, [dispatch]);
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
@@ -249,7 +254,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: staticColors.white,
-    ...spacingStyles.px12
+    ...spacingStyles.px12,
   },
   contentWrapper: {
     flex: 1,
