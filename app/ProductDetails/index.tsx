@@ -135,7 +135,6 @@ const ProductDetailsScreen: React.FC = () => {
   // };
 
   useEffect(() => {
-    // Check if product is in wishlist
     if (product && wishlistItems) {
       const isLiked = wishlistItems.some(
         (item) =>
@@ -231,8 +230,8 @@ const ProductDetailsScreen: React.FC = () => {
   }
 
   const handleViewAllReview = () => {
-    router.navigate({
-      pathname: "/product-reviews",
+    router.push({
+      pathname: "/home/product-reviews",
       params: { productId: product.id },
     });
   };

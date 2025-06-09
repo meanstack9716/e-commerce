@@ -14,7 +14,7 @@ export default function TabLayout() {
       <Tabs
         screenOptions={({ route }) => ({
           tabBarIcon: ({ color, size, focused }) => {
-            if (route.name === "index") {
+            if (route.name === "home") {
               return (
                 <Image
                   source={require("@/assets/images/favicon.png")}
@@ -49,7 +49,7 @@ export default function TabLayout() {
           contentStyle: { backgroundColor: colors.white },
           tabBarLabel: ({ focused, color }) => {
             let label = "";
-            if (route.name === "index") label = "Home";
+            if (route.name === "home") label = "Home";
             else if (route.name === "cart") label = "Cart";
             else if (route.name === "wishlist") label = "Wishlist";
             else if (route.name === "(profile)") label = "Profile";
@@ -69,7 +69,7 @@ export default function TabLayout() {
           headerShown: false,
         })}
       >
-        <Tabs.Screen name="index" />
+        <Tabs.Screen name="home" />
         <Tabs.Screen name="wishlist" />
         <Tabs.Screen name="cart" />
         <Tabs.Screen name="(profile)" />

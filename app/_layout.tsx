@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { Provider } from "react-redux";
 import {
   DarkTheme,
   DefaultTheme,
@@ -7,8 +9,6 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
-import { Provider } from "react-redux";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { store } from "@/store/store";
 import { AuthStateInitializer } from "@/components/auth/AuthStateInitializer";
@@ -38,12 +38,7 @@ function AppLayout() {
         <Stack.Screen name="/placeorder" />
         <Stack.Screen name="/order" />
         <Stack.Screen name="/wishlist" />
-        <Stack.Screen name="/orderHistory" />
-        <Stack.Screen name="/product-reviews" />
-        <Stack.Screen name="/product-search" />
-        <Stack.Screen name="/settings" />
         <Stack.Screen name="/faqs" />
-        <Stack.Screen name="/userManageAccount" />
         <Stack.Screen name="/product-filter" />
       </Stack>
 
