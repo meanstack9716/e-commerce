@@ -7,12 +7,85 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ContactCardProps } from "./ContactCard.types";
+import AddressListModal from "../address/addressListModal";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store/store";
+import { fetchAddresses, saveAddress, setSelectedAddressId, updateAddress } from "@/store/address/addressSlice";
+import AddEditAddressModal from "../address/addEditAddressModal";
+import { Address, AddressFormData } from "@/interfaces";
 
 const ContactCard: React.FC<ContactCardProps> = ({
-    title,
-    information,
-    onEditPress
+  title,
+  information,
+  onEditPress,
 }) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const [isAddressListModalOpen, setIsAddressListModalOpen] = useState<boolean>(false);
+  const [isAddEditAddressModalOpen, setIsAddEditAddressModalOpen] = useState<boolean>(false);
+  const [addressToEdit, setAddressToEdit] = useState<Address | null>(null);
+  const addresses = useSelector((state: RootState) => state.address.addresses);
+  const selectedAddressId = useSelector(
+    (state: RootState) => state.address.selectedAddressId
+  );
+
+  const onChangeAddress = (id: string) => {
+    dispatch(setSelectedAddressId(id))
+    setIsAddressListModalOpen(false)
+  }
+
+  const onAddAddress = () => {
+    setAddressToEdit(null)
+    setIsAddressListModalOpen(false)
+    setIsAddEditAddressModalOpen(true)
+  }
+
+  const onEditAddress = (address: Address) => {
+    setAddressToEdit(address)
+    setIsAddressListModalOpen(false)
+    setIsAddEditAddressModalOpen(true)
+  }
+
+  const openAddressListModal = () => {
+    setAddressToEdit(null)
+    setIsAddEditAddressModalOpen(false)
+    setIsAddressListModalOpen(true)
+  }
+
+  const onSubmitNewAddress = (address: AddressFormData, addressType: string) => {
+    dispatch(saveAddress({
+      formData: address,
+      addressType: addressType,
+    }))
+      .unwrap()
+      .then(() => {
+        dispatch(fetchAddresses());
+        openAddressListModal()
+      })
+      .catch((error) => {
+        console.error(
+          error
+        );
+      });
+  }
+
+  const onUpdateAddress = (address: AddressFormData, addressType: string, addressId: string) => {
+    dispatch(updateAddress({
+      formData: address,
+      addressType: addressType,
+      addressId: addressId,
+    }))
+      .unwrap()
+      .then(() => {
+        dispatch(fetchAddresses());
+        openAddressListModal()
+      })
+      .catch((error) => {
+        console.error(
+          error
+        );
+      });
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.cardTitle}>{title}</Text>
@@ -22,10 +95,27 @@ const ContactCard: React.FC<ContactCardProps> = ({
             <Text key={index} style={styles.infoText}>{item}</Text>
           ))}
         </View>
-        <TouchableOpacity style={styles.editIconWrapper}>
-            <FontAwesome5 name="pen" size={16} color={staticColors.white} />
+        <TouchableOpacity style={styles.editIconWrapper} onPress={openAddressListModal}>
+          <FontAwesome5 name="pen" size={16} color={staticColors.white} />
         </TouchableOpacity>
       </View>
+      <AddressListModal
+        visible={isAddressListModalOpen}
+        onClose={() => setIsAddressListModalOpen(false)}
+        addresses={addresses}
+        onAddAddress={onAddAddress}
+        onEditAddress={onEditAddress}
+        selectedAddressId={selectedAddressId}
+        onConfirmAddress={onChangeAddress}
+      />
+      <AddEditAddressModal
+        visible={isAddEditAddressModalOpen}
+        onClose={openAddressListModal}
+        editAddress={addressToEdit}
+        onEditAddress={onUpdateAddress}
+        isEdit={addressToEdit ? true : false}
+        onAddAddress={onSubmitNewAddress}
+      />
     </View>
   );
 };
