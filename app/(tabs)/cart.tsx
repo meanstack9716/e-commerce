@@ -40,6 +40,9 @@ const ShoppingBagScreen: React.FC = () => {
   const { cartItems, loading } = useSelector((state: RootState) => state.cart);
   const token = useSelector((state: RootState) => state.auth.token);
   const addresses = useSelector((state: RootState) => state.address.addresses);
+  const selectedAddressId = useSelector(
+    (state: RootState) => state.address.selectedAddressId
+  );
   const [isLoading, setIsLoading] = useState(true);
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
@@ -54,8 +57,8 @@ const ShoppingBagScreen: React.FC = () => {
     onSecondaryAction: () => void;
   }>({
     message: "",
-    onPrimaryAction: () => {},
-    onSecondaryAction: () => {},
+    onPrimaryAction: () => { },
+    onSecondaryAction: () => { },
   });
 
   const handleGoBack = () => {
@@ -79,7 +82,7 @@ const ShoppingBagScreen: React.FC = () => {
           setIsLoading(false);
         }
       };
-          loadCartData();
+      loadCartData();
     }, [isAuthenticated, token])
   );
 
@@ -93,8 +96,8 @@ const ShoppingBagScreen: React.FC = () => {
     setIsConfirmationModalVisible(false);
     setConfirmationModalDetails({
       message: "",
-      onPrimaryAction: () => {},
-      onSecondaryAction: () => {},
+      onPrimaryAction: () => { },
+      onSecondaryAction: () => { },
     });
   };
 
@@ -202,7 +205,7 @@ const ShoppingBagScreen: React.FC = () => {
           {isAuthenticated && token && (
             <ContactCard
               title="Shipping Address"
-              information={[getFormattedAddress(addresses)]}
+              information={[getFormattedAddress(addresses, selectedAddressId)]}
             />
           )}
           {cartItems.length ? (
