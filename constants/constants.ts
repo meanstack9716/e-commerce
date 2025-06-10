@@ -13,8 +13,8 @@ export const APP_VERSION = "4.2503.21";
 export const ESTIMATED_DELIVERY ="15 days"
 export const EXCHANGE_DAY = "7 days"
 export const LOCALE_DATE_FORMAT = "en-IN";
-export const standardSizes = ["XS", "S", "M", "L", "XL", "XXL"];
-export const numericSizes = [
+export const STANDARD_SiZES = ["XS", "S", "M", "L", "XL", "XXL"];
+export const NUMERIC_SIZES = [
   "30",
   "32",
   "34",
@@ -27,5 +27,6 @@ export const numericSizes = [
   "48",
   "50",
 ];
-export const MIN_PRICE = 10;
-export const MAX_PRICE = 30000;
+export const PRODUCT_RANGE_MIN_PRICE = 10;
+export const PRODUCT_RANGE_MAX_PRICE = 30000;
+export const PRODUCT_LIMIT = 10

@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { handleApiError } from "@/utils/handleApiError";
 import axiosConfig from "@/utils/axiosConfig";
 import { Product, Color } from "@/interfaces";
+import { PRODUCT_LIMIT } from "@/constants/constants";
 
 interface ProductsState {
   data: Product[];
@@ -13,6 +14,13 @@ interface ProductsState {
   colors: Color[];
   colorsLoading: boolean;
   colorsError: string | null;
+  pagination: {
+    currentPage: number;
+    totalPages: number;
+    totalItems: number;
+    limit: number;
+    hasMore: boolean;
+  };
 }
 
 const initialState: ProductsState = {
@@ -25,6 +33,13 @@ const initialState: ProductsState = {
   colors: [],
   colorsLoading: false,
   colorsError: null,
+  pagination: {
+    currentPage: 1,
+    totalPages: 1,
+    totalItems: 0,
+    limit: PRODUCT_LIMIT,
+    hasMore: true,
+  },
 };
 
 export const fetchColors = createAsyncThunk<
@@ -35,11 +50,13 @@ export const fetchColors = createAsyncThunk<
   try {
     const response = await axiosConfig.get("/products/colors-list");
     if (response.data?.success && response.data?.data) {
-      const colorsArray = Object.values(response.data.data).map((item: any) => ({
-        id: item.id,
-        name: item.name,
-        color: item.value,
-      }));
+      const colorsArray = Object.values(response.data.data).map(
+        (item: any) => ({
+          id: item.id,
+          name: item.name,
+          color: item.value,
+        })
+      );
       return colorsArray;
     }
     return rejectWithValue("Invalid response format from colors API");
@@ -49,22 +66,38 @@ export const fetchColors = createAsyncThunk<
 });
 
 export const fetchProducts = createAsyncThunk<
-  Product[],
-  { params?: any },
+  { products: Product[]; pagination: any },
+  { params?: any; page?: number; limit?: number },
   { rejectValue: string }
->("products/fetchProducts", async ({ params }, { rejectWithValue }) => {
-  try {
-    const response = await axiosConfig.get("/products/list", {
-      params,
-    });
-    if (response.data?.data) {
-      return response.data.data;
+>(
+  "products/fetchProducts",
+  async ({ params = {}, page = 1, limit = 10 }, { rejectWithValue }) => {
+    try {
+      const response = await axiosConfig.get("/products/list", {
+        params: {
+          ...params,
+          page,
+          limit,
+        },
+      });
+      if (response.data?.data) {
+        return {
+          products: response.data.data,
+          pagination: response.data.pagination || {
+            currentPage: page,
+            totalPages: response.data.data.length < limit ? page : page + 1,
+            totalItems: response.data.data.length,
+            limit,
+            hasMore: response.data.data.length === limit,
+          },
+        };
+      }
+      return rejectWithValue("Invalid response format from API");
+    } catch (error) {
+      return rejectWithValue(handleApiError(error, "Failed to fetch products"));
     }
-    return rejectWithValue("Invalid response format from API");
-  } catch (error) {
-    return rejectWithValue(handleApiError(error, "Failed to fetch products"));
   }
-});
+);
 
 export const fetchProductById = createAsyncThunk<
   Product,
@@ -108,7 +141,19 @@ const productsSlice = createSlice({
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = action.payload;
+        state.data =
+          action.payload.pagination.currentPage === 1
+            ? action.payload.products
+            : [...state.data, ...action.payload.products];
+        state.pagination = {
+          currentPage: action.payload.pagination.currentPage,
+          totalPages: action.payload.pagination.totalPages,
+          totalItems: action.payload.pagination.totalItems,
+          limit: action.payload.pagination.limit,
+          hasMore:
+            action.payload.pagination.currentPage <
+            action.payload.pagination.totalPages,
+        };
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.loading = false;
@@ -145,5 +190,5 @@ const productsSlice = createSlice({
   },
 });
 
-export const { resetProducts , clearSelectedProduct } = productsSlice.actions;
-export default productsSlice.reducer; 
+export const { resetProducts, clearSelectedProduct } = productsSlice.actions;
+export default productsSlice.reducer;

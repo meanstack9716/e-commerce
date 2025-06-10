@@ -4,14 +4,12 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  FlatList,
-  Image,
   ScrollView,
+  Image,
   Dimensions,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
-import { router, useLocalSearchParams } from "expo-router";
 import Slider from "@react-native-community/slider";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
@@ -19,47 +17,44 @@ import { fontSizes } from "@/style/typography";
 import { fontFamilies } from "@/style/fontFamilies";
 import borderRadius from "@/style/borderRadius";
 import { SubCategoryItem, Color } from "@/interfaces";
-import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import { textTruncate } from "@/utils/textTruncate";
 import gapSizes from "@/style/gapSizes";
 import {
-  MAX_PRICE,
-  MIN_PRICE,
-  numericSizes,
-  standardSizes,
+  PRODUCT_RANGE_MAX_PRICE,
+  PRODUCT_RANGE_MIN_PRICE,
+  NUMERIC_SIZES,
+  STANDARD_SiZES,
 } from "@/constants/constants";
 import { useAppDispatch } from "@/store/hooks";
 import { fetchColors } from "@/store/product/productsSlice";
+import { ProductFilterProps } from "./ProductFilter.types";
 
 const { width } = Dimensions.get("window");
 
-const ProductFilterScreen: React.FC = () => {
+const ProductFilter: React.FC<ProductFilterProps> = ({
+  subCategories: initialSubCategories,
+  sizes: initialSizes,
+  colors: initialColors,
+  priceMin: initialPriceMin,
+  priceMax: initialPriceMax,
+  onApplyFilters,
+  onClearFilters,
+  onClose,
+}) => {
   const dispatch = useAppDispatch();
-  const params = useLocalSearchParams();
-  const initialSubCategories = params.subCategories
-    ? JSON.parse(params.subCategories as string)
-    : [];
-  const initialSizes = params.sizes ? JSON.parse(params.sizes as string) : [];
-  const initialColors = params.colors
-    ? JSON.parse(params.colors as string)
-    : [];
-  const initialPriceMin = params.priceMin
-    ? parseInt(params.priceMin as string)
-    : MIN_PRICE;
-  const initialPriceMax = params.priceMax
-    ? parseInt(params.priceMax as string)
-    : MAX_PRICE;
   const categories = useSelector((state: any) => state.categories.data);
-  const { colors, colorsLoading, colorsError } = useSelector(
-    (state: any) => state.products
-  );
+  const {
+    colors: availableColors,
+    colorsLoading,
+    colorsError,
+  } = useSelector((state: any) => state.products);
   const [selectedSubCategories, setSelectedSubCategories] =
     useState<string[]>(initialSubCategories);
   const [selectedSizes, setSelectedSizes] = useState<string[]>(initialSizes);
   const [selectedColors, setSelectedColors] = useState<string[]>(initialColors);
   const [priceRange, setPriceRange] = useState({
     min: initialPriceMin,
-    max: initialPriceMax,
+    max: initialPriceMax ?? PRODUCT_RANGE_MAX_PRICE,
   });
   const [sizeType, setSizeType] = useState<"standard" | "numeric">("standard");
 
@@ -71,9 +66,9 @@ const ProductFilterScreen: React.FC = () => {
     (category: any) => category.sub_categories || []
   );
 
-  const sizes = sizeType === "standard" ? standardSizes : numericSizes;
+  const sizes = sizeType === "standard" ? STANDARD_SiZES : NUMERIC_SIZES;
 
-  const handleSelectedCategoryIds  = (id: string) => {
+  const handleSelectedCategoryIds = (id: string) => {
     setSelectedSubCategories((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
@@ -95,32 +90,34 @@ const ProductFilterScreen: React.FC = () => {
     );
   };
 
-  const handleApplyFilters = () => {
-    router.navigate({
-      pathname: "/product-search",
-      params: {
-        subCategories: JSON.stringify(selectedSubCategories),
-        sizes: JSON.stringify(selectedSizes),
-        colors: JSON.stringify(selectedColors),
-        priceMin: priceRange.min.toString(),
-        priceMax:
-          priceRange.max >= MAX_PRICE ? null : priceRange.max.toString(),
-      },
+  const handleApply = () => {
+    onApplyFilters({
+      subCategories: selectedSubCategories,
+      sizes: selectedSizes,
+      colors: selectedColors,
+      priceMin: priceRange.min,
+      priceMax:
+        priceRange.max >= PRODUCT_RANGE_MAX_PRICE ? null : priceRange.max,
     });
+    onClose();
   };
 
-  const handleClearFilters = () => {
+  const handleClear = () => {
     setSelectedSubCategories([]);
     setSelectedSizes([]);
     setSelectedColors([]);
-    setPriceRange({ min: MIN_PRICE, max: MAX_PRICE });
+    setPriceRange({
+      min: PRODUCT_RANGE_MIN_PRICE,
+      max: PRODUCT_RANGE_MAX_PRICE,
+    });
+    onClearFilters();
   };
 
   return (
-    <SafeAreaViewWrapper style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Filter</Text>
-        <TouchableOpacity onPress={() => router.back()}>
+        <TouchableOpacity onPress={onClose}>
           <Ionicons name="close" size={22} color={staticColors.black} />
         </TouchableOpacity>
       </View>
@@ -292,13 +289,13 @@ const ProductFilterScreen: React.FC = () => {
             <Text style={{ color: staticColors.errorColor }}>
               Error: {colorsError}
             </Text>
-          ) : Array.isArray(colors) && colors.length > 0 ? (
+          ) : Array.isArray(availableColors) && availableColors.length > 0 ? (
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={styles.colorContainer}
             >
-              {colors.map((color: Color) => (
+              {availableColors.map((color: Color) => (
                 <TouchableOpacity
                   key={color.id}
                   style={[
@@ -331,8 +328,8 @@ const ProductFilterScreen: React.FC = () => {
             <Text style={styles.sectionTitle}>Price</Text>
             <Text style={styles.priceRangeText}>
               ₹{priceRange.min.toLocaleString()} — ₹
-              {priceRange.max >= MAX_PRICE
-                ? `${MAX_PRICE}+`
+              {priceRange.max >= PRODUCT_RANGE_MAX_PRICE
+                ? `${PRODUCT_RANGE_MAX_PRICE}+`
                 : priceRange.max.toLocaleString()}
             </Text>
           </View>
@@ -343,8 +340,8 @@ const ProductFilterScreen: React.FC = () => {
                 style={[
                   styles.sliderRange,
                   {
-                    left: `${((priceRange.min - MIN_PRICE) / (MAX_PRICE - MIN_PRICE)) * 100}%`,
-                    width: `${((priceRange.max - priceRange.min) / (MAX_PRICE - MIN_PRICE)) * 100}%`,
+                    left: `${((priceRange.min - PRODUCT_RANGE_MIN_PRICE) / (PRODUCT_RANGE_MAX_PRICE - PRODUCT_RANGE_MIN_PRICE)) * 100}%`,
+                    width: `${((priceRange.max - priceRange.min) / (PRODUCT_RANGE_MAX_PRICE - PRODUCT_RANGE_MIN_PRICE)) * 100}%`,
                   },
                 ]}
               />
@@ -352,7 +349,7 @@ const ProductFilterScreen: React.FC = () => {
                 style={[
                   styles.sliderThumb,
                   {
-                    left: `${((priceRange.min - MIN_PRICE) / (MAX_PRICE - MIN_PRICE)) * 100}%`,
+                    left: `${((priceRange.min - PRODUCT_RANGE_MIN_PRICE) / (PRODUCT_RANGE_MAX_PRICE - PRODUCT_RANGE_MIN_PRICE)) * 100}%`,
                   },
                 ]}
               />
@@ -360,15 +357,15 @@ const ProductFilterScreen: React.FC = () => {
                 style={[
                   styles.sliderThumb,
                   {
-                    left: `${((priceRange.max - MIN_PRICE) / (MAX_PRICE - MIN_PRICE)) * 100}%`,
+                    left: `${((priceRange.max - PRODUCT_RANGE_MIN_PRICE) / (PRODUCT_RANGE_MAX_PRICE - PRODUCT_RANGE_MIN_PRICE)) * 100}%`,
                   },
                 ]}
               />
             </View>
             <Slider
               style={styles.invisibleSlider}
-              minimumValue={MIN_PRICE}
-              maximumValue={MAX_PRICE}
+              minimumValue={PRODUCT_RANGE_MIN_PRICE}
+              maximumValue={PRODUCT_RANGE_MAX_PRICE}
               step={100}
               minimumTrackTintColor="transparent"
               maximumTrackTintColor="transparent"
@@ -384,7 +381,7 @@ const ProductFilterScreen: React.FC = () => {
                     setPriceRange((prev) => ({ ...prev, min: newValue }));
                   }
                 } else {
-                  if (newValue > priceRange.min + 1000) {
+                  if (newValue > priceRange.min + 100) {
                     setPriceRange((prev) => ({ ...prev, max: newValue }));
                   }
                 }
@@ -395,24 +392,19 @@ const ProductFilterScreen: React.FC = () => {
       </ScrollView>
 
       <View style={styles.footer}>
-        <TouchableOpacity
-          style={styles.clearButton}
-          onPress={handleClearFilters}
-        >
+        <TouchableOpacity style={styles.clearButton} onPress={handleClear}>
           <Text style={styles.clearButtonText}>Clear</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.applyButton}
-          onPress={handleApplyFilters}
-        >
+        <TouchableOpacity style={styles.applyButton} onPress={handleApply}>
           <Text style={styles.applyButtonText}>Apply</Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaViewWrapper>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  // Same styles as in the original ProductFilterScreen
   container: {
     flex: 1,
     backgroundColor: staticColors.white,
@@ -563,7 +555,6 @@ const styles = StyleSheet.create({
   selectedSizeText: {
     color: staticColors.primaryBlue,
   },
-
   colorContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -614,7 +605,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
   },
-
   invisibleSlider: {
     position: "absolute",
     width: "100%",
@@ -672,4 +662,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProductFilterScreen;
+export default ProductFilter;
