@@ -21,6 +21,7 @@ import staticColors from "@/style/staticColors";
 import { commonStyles } from "@/style/commonStyle";
 import spacingStyles from "@/style/spacingStyles";
 import { fontSizes } from "@/style/typography";
+import { MAX_PRICE, MIN_PRICE } from "@/constants/constants";
 
 const ProductSearchScreen: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -113,9 +114,18 @@ const ProductSearchScreen: React.FC = () => {
     });
   };
 
-  const handleProductFilter = () => {
-    router.push("/product-filter");
-  };
+ const handleProductFilter = () => {
+  router.push({
+    pathname: "/product-filter",
+    params: {
+      subCategories: params.subCategories || JSON.stringify([]),
+      sizes: params.sizes || JSON.stringify([]),
+      colors: params.colors || JSON.stringify([]),
+      priceMin: params.priceMin || MIN_PRICE,
+      priceMax: params.priceMax || MAX_PRICE,
+    },
+  });
+};
 
   const renderProductItem = ({ item }: { item: Product }) => (
     <ProductCard

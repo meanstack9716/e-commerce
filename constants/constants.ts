@@ -27,3 +27,5 @@ export const numericSizes = [
   "48",
   "50",
 ];
+export const MIN_PRICE = 10;
+export const MAX_PRICE = 30000;

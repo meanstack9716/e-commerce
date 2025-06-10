@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import Slider from "@react-native-community/slider";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
@@ -22,7 +22,12 @@ import { SubCategoryItem, Color } from "@/interfaces";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import { textTruncate } from "@/utils/textTruncate";
 import gapSizes from "@/style/gapSizes";
-import { numericSizes, standardSizes } from "@/constants/constants";
+import {
+  MAX_PRICE,
+  MIN_PRICE,
+  numericSizes,
+  standardSizes,
+} from "@/constants/constants";
 import { useAppDispatch } from "@/store/hooks";
 import { fetchColors } from "@/store/product/productsSlice";
 
@@ -30,16 +35,32 @@ const { width } = Dimensions.get("window");
 
 const ProductFilterScreen: React.FC = () => {
   const dispatch = useAppDispatch();
+  const params = useLocalSearchParams();
+  const initialSubCategories = params.subCategories
+    ? JSON.parse(params.subCategories as string)
+    : [];
+  const initialSizes = params.sizes ? JSON.parse(params.sizes as string) : [];
+  const initialColors = params.colors
+    ? JSON.parse(params.colors as string)
+    : [];
+  const initialPriceMin = params.priceMin
+    ? parseInt(params.priceMin as string)
+    : MIN_PRICE;
+  const initialPriceMax = params.priceMax
+    ? parseInt(params.priceMax as string)
+    : MAX_PRICE;
   const categories = useSelector((state: any) => state.categories.data);
   const { colors, colorsLoading, colorsError } = useSelector(
     (state: any) => state.products
   );
-  const [selectedSubCategories, setSelectedSubCategories] = useState<string[]>(
-    []
-  );
-  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
-  const [selectedColors, setSelectedColors] = useState<string[]>([]);
-  const [priceRange, setPriceRange] = useState({ min: 100, max: 30000 });
+  const [selectedSubCategories, setSelectedSubCategories] =
+    useState<string[]>(initialSubCategories);
+  const [selectedSizes, setSelectedSizes] = useState<string[]>(initialSizes);
+  const [selectedColors, setSelectedColors] = useState<string[]>(initialColors);
+  const [priceRange, setPriceRange] = useState({
+    min: initialPriceMin,
+    max: initialPriceMax,
+  });
   const [sizeType, setSizeType] = useState<"standard" | "numeric">("standard");
 
   useEffect(() => {
@@ -52,7 +73,7 @@ const ProductFilterScreen: React.FC = () => {
 
   const sizes = sizeType === "standard" ? standardSizes : numericSizes;
 
-  const toggleSubCategory = (id: string) => {
+  const handleSelectedCategoryIds  = (id: string) => {
     setSelectedSubCategories((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
@@ -82,7 +103,8 @@ const ProductFilterScreen: React.FC = () => {
         sizes: JSON.stringify(selectedSizes),
         colors: JSON.stringify(selectedColors),
         priceMin: priceRange.min.toString(),
-        priceMax: priceRange.max.toString(),
+        priceMax:
+          priceRange.max >= MAX_PRICE ? null : priceRange.max.toString(),
       },
     });
   };
@@ -91,25 +113,8 @@ const ProductFilterScreen: React.FC = () => {
     setSelectedSubCategories([]);
     setSelectedSizes([]);
     setSelectedColors([]);
-    setPriceRange({ min: 100, max: 30000 });
+    setPriceRange({ min: MIN_PRICE, max: MAX_PRICE });
   };
-
-  const renderSubCategoryItem = ({ item }: { item: SubCategoryItem }) => (
-    <TouchableOpacity
-      style={styles.categoryCircle}
-      onPress={() => toggleSubCategory(item.id)}
-    >
-      <View style={styles.shadowWrapper}>
-        <Image source={{ uri: item.img_url }} style={styles.categoryImage} />
-        {selectedSubCategories.includes(item.id) && (
-          <View style={styles.checkOverlay}>
-            <Ionicons name="checkmark" size={12} color={staticColors.white} />
-          </View>
-        )}
-      </View>
-      <Text style={styles.categoryText}>{textTruncate(item.name, 1, "")}</Text>
-    </TouchableOpacity>
-  );
 
   return (
     <SafeAreaViewWrapper style={styles.container}>
@@ -121,15 +126,83 @@ const ProductFilterScreen: React.FC = () => {
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}>
-        <FlatList
-          data={subCategories}
-          renderItem={renderSubCategoryItem}
-          keyExtractor={(item) => item.id}
-          numColumns={5}
-          contentContainerStyle={styles.categoryList}
-          scrollEnabled={false}
-        />
+        <View style={styles.section}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.categoriesScrollContainer}
+          >
+            <View>
+              <View style={styles.categoryRow}>
+                {subCategories.map((item, index) => {
+                  if (index % 2 === 0) {
+                    return (
+                      <TouchableOpacity
+                        key={item.id}
+                        style={styles.categoryCircle}
+                        onPress={() => handleSelectedCategoryIds(item.id)}
+                      >
+                        <View style={styles.shadowWrapper}>
+                          <Image
+                            source={{ uri: item.img_url }}
+                            style={styles.categoryImage}
+                          />
+                          {selectedSubCategories.includes(item.id) && (
+                            <View style={styles.checkOverlay}>
+                              <Ionicons
+                                name="checkmark"
+                                size={12}
+                                color={staticColors.white}
+                              />
+                            </View>
+                          )}
+                        </View>
+                        <Text style={styles.categoryText}>
+                          {textTruncate(item.name, 1, "")}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  }
+                  return null;
+                })}
+              </View>
 
+              <View style={styles.categoryRow}>
+                {subCategories.map((item, index) => {
+                  if (index % 2 !== 0) {
+                    return (
+                      <TouchableOpacity
+                        key={item.id}
+                        style={styles.categoryCircle}
+                        onPress={() => handleSelectedCategoryIds(item.id)}
+                      >
+                        <View style={styles.shadowWrapper}>
+                          <Image
+                            source={{ uri: item.img_url }}
+                            style={styles.categoryImage}
+                          />
+                          {selectedSubCategories.includes(item.id) && (
+                            <View style={styles.checkOverlay}>
+                              <Ionicons
+                                name="checkmark"
+                                size={12}
+                                color={staticColors.white}
+                              />
+                            </View>
+                          )}
+                        </View>
+                        <Text style={styles.categoryText}>
+                          {textTruncate(item.name, 1, "")}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  }
+                  return null;
+                })}
+              </View>
+            </View>
+          </ScrollView>
+        </View>
         <View style={styles.section}>
           <View style={styles.sizeHeader}>
             <Text style={styles.sectionTitle}>Size</Text>
@@ -137,7 +210,7 @@ const ProductFilterScreen: React.FC = () => {
               <TouchableOpacity
                 style={[
                   styles.toggleButton,
-                  sizeType === "standard" && styles.selectedToggleButton,
+                  sizeType === "standard" && styles.selectedButton,
                 ]}
                 onPress={() => {
                   setSizeType("standard");
@@ -156,7 +229,7 @@ const ProductFilterScreen: React.FC = () => {
               <TouchableOpacity
                 style={[
                   styles.toggleButton,
-                  sizeType === "numeric" && styles.selectedToggleButton,
+                  sizeType === "numeric" && styles.selectedButton,
                 ]}
                 onPress={() => {
                   setSizeType("numeric");
@@ -174,42 +247,43 @@ const ProductFilterScreen: React.FC = () => {
               </TouchableOpacity>
             </View>
           </View>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.sizeContainer}
-          >
-            {sizes.map((size) => (
-              <View
-                key={size}
-                style={{
-                  width: selectedSizes.includes(size) ? 45 : 35,
-                  height: 35,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <TouchableOpacity
-                  style={[
-                    styles.sizeButton,
-                    selectedSizes.includes(size) && styles.selectedSizeButton,
-                  ]}
-                  onPress={() => toggleSize(size)}
+          <View style={styles.sizeContainer}>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.sizeScrollContent}
+            >
+              {sizes.map((size) => (
+                <View
+                  key={size}
+                  style={{
+                    width: selectedSizes.includes(size) ? 45 : 35,
+                    height: 35,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
                 >
-                  <Text
+                  <TouchableOpacity
                     style={[
-                      styles.sizeText,
-                      selectedSizes.includes(size) && styles.selectedSizeText,
+                      styles.sizeButton,
+                      selectedSizes.includes(size) && styles.selectedSizeButton,
                     ]}
+                    onPress={() => toggleSize(size)}
                   >
-                    {size}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            ))}
-          </ScrollView>
+                    <Text
+                      style={[
+                        styles.sizeText,
+                        selectedSizes.includes(size) && styles.selectedSizeText,
+                      ]}
+                    >
+                      {size}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </ScrollView>
+          </View>
         </View>
-
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Color</Text>
           {colorsLoading ? (
@@ -231,12 +305,12 @@ const ProductFilterScreen: React.FC = () => {
                     styles.colorCircle,
                     styles.shadowWrapper,
                     { backgroundColor: color.color },
-                    selectedColors.includes(color.name) &&
+                    selectedColors.includes(color.color) &&
                       styles.selectedColorCircle,
                   ]}
-                  onPress={() => toggleColor(color.name)}
+                  onPress={() => toggleColor(color.color)}
                 >
-                  {selectedColors.includes(color.name) && (
+                  {selectedColors.includes(color.color) && (
                     <View style={styles.checkOverlay}>
                       <Ionicons
                         name="checkmark"
@@ -252,13 +326,16 @@ const ProductFilterScreen: React.FC = () => {
             <Text>No colors available</Text>
           )}
         </View>
-
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Price</Text>
-          <Text style={styles.priceRangeText}>
-            ₹{priceRange.min.toLocaleString()} — ₹
-            {priceRange.max.toLocaleString()}
-          </Text>
+          <View style={styles.priceContainer}>
+            <Text style={styles.sectionTitle}>Price</Text>
+            <Text style={styles.priceRangeText}>
+              ₹{priceRange.min.toLocaleString()} — ₹
+              {priceRange.max >= MAX_PRICE
+                ? `${MAX_PRICE}+`
+                : priceRange.max.toLocaleString()}
+            </Text>
+          </View>
 
           <View style={styles.rangeSliderContainer}>
             <View style={styles.sliderTrack}>
@@ -266,8 +343,8 @@ const ProductFilterScreen: React.FC = () => {
                 style={[
                   styles.sliderRange,
                   {
-                    left: `${((priceRange.min - 100) / (30000 - 100)) * 100}%`,
-                    width: `${((priceRange.max - priceRange.min) / (30000 - 100)) * 100}%`,
+                    left: `${((priceRange.min - MIN_PRICE) / (MAX_PRICE - MIN_PRICE)) * 100}%`,
+                    width: `${((priceRange.max - priceRange.min) / (MAX_PRICE - MIN_PRICE)) * 100}%`,
                   },
                 ]}
               />
@@ -275,7 +352,7 @@ const ProductFilterScreen: React.FC = () => {
                 style={[
                   styles.sliderThumb,
                   {
-                    left: `${((priceRange.min - 100) / (30000 - 100)) * 100}%`,
+                    left: `${((priceRange.min - MIN_PRICE) / (MAX_PRICE - MIN_PRICE)) * 100}%`,
                   },
                 ]}
               />
@@ -283,19 +360,20 @@ const ProductFilterScreen: React.FC = () => {
                 style={[
                   styles.sliderThumb,
                   {
-                    left: `${((priceRange.max - 100) / (30000 - 100)) * 100}%`,
+                    left: `${((priceRange.max - MIN_PRICE) / (MAX_PRICE - MIN_PRICE)) * 100}%`,
                   },
                 ]}
               />
             </View>
             <Slider
               style={styles.invisibleSlider}
-              minimumValue={100}
-              maximumValue={30000}
+              minimumValue={MIN_PRICE}
+              maximumValue={MAX_PRICE}
+              step={100}
               minimumTrackTintColor="transparent"
               maximumTrackTintColor="transparent"
               thumbTintColor="transparent"
-              value={priceRange.max}
+              value={priceRange.min}
               onValueChange={(value) => {
                 const newValue = Math.round(value);
                 const minDist = Math.abs(newValue - priceRange.min);
@@ -355,8 +433,8 @@ const styles = StyleSheet.create({
     ...spacingStyles.mb20,
   },
   sectionTitle: {
-    fontSize: fontSizes.md,
-    fontFamily: fontFamilies.ralewayBold,
+    fontSize: fontSizes.lg,
+    fontFamily: fontFamilies.ralewayExtraBold,
     color: staticColors.black,
   },
   sizeHeader: {
@@ -365,38 +443,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     ...spacingStyles.mb15,
   },
-  toggleContainer: {
-    flexDirection: "row",
-    borderWidth: 1,
-    borderColor: staticColors.blue400,
-    borderRadius: borderRadius.r5,
-    overflow: "hidden",
-  },
-  toggleButton: {
-    ...spacingStyles.px15,
-    ...spacingStyles.py5,
-    backgroundColor: staticColors.white,
-  },
-  selectedToggleButton: {
-    backgroundColor: staticColors.blue400,
-  },
-  toggleText: {
-    fontSize: fontSizes.sm,
-    color: staticColors.blue400,
-    fontFamily: fontFamilies.nunitoSans,
-  },
-  selectedToggleText: {
-    color: staticColors.white,
-  },
-  categoryList: {
-    ...spacingStyles.my15,
-  },
   categoryCircle: {
     alignItems: "center",
     justifyContent: "center",
     width: (width - 50) / 5,
     ...spacingStyles.mb10,
     ...spacingStyles.mx2,
+  },
+  categoriesScrollContainer: {
+    flexDirection: "column",
+  },
+  categoryRow: {
+    flexDirection: "row",
+    ...spacingStyles.mt10,
   },
   shadowWrapper: {
     shadowColor: staticColors.black,
@@ -411,26 +470,69 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: borderRadius.circle,
-    borderWidth: borderRadius.r4,
+    borderWidth: borderRadius.r5,
     borderColor: staticColors.white,
   },
   categoryText: {
-    fontSize: fontSizes.xs,
+    fontSize: fontSizes.s,
     color: staticColors.black,
     textAlign: "center",
-    fontFamily: fontFamilies.nunitoSans,
+    fontFamily: fontFamilies.ralewayMedium,
+    ...spacingStyles.pt5,
   },
   checkOverlay: {
     position: "absolute",
-    top: -5,
+    top: 0,
     right: -5,
-    width: 20,
-    height: 20,
+    width: 22,
+    height: 22,
     borderRadius: borderRadius.circle,
     backgroundColor: staticColors.primaryBlue,
     justifyContent: "center",
     alignItems: "center",
     zIndex: 10,
+    borderWidth: 2,
+    borderColor: staticColors.white,
+  },
+  toggleContainer: {
+    flexDirection: "row",
+    gap: gapSizes.md,
+    ...spacingStyles.mt10,
+    ...spacingStyles.mr5,
+  },
+  toggleButton: {
+    ...spacingStyles.px20,
+    ...spacingStyles.py5,
+    borderRadius: borderRadius.r5,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: staticColors.pink100,
+  },
+  selectedButton: {
+    borderWidth: 1,
+    borderColor: staticColors.primaryBlue,
+    backgroundColor: staticColors.blue200,
+  },
+  toggleText: {
+    fontSize: fontSizes.sm,
+    color: staticColors.black,
+    fontFamily: fontFamilies.ralewayMedium,
+  },
+  selectedToggleText: {
+    color: staticColors.primaryBlue,
+    fontFamily: fontFamilies.ralewayBold,
+  },
+  sizeContainer: {
+    backgroundColor: staticColors.skyBlue50,
+    borderRadius: borderRadius.r16,
+    overflow: "visible",
+    width: width - 30,
+  },
+  sizeScrollContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    minWidth: width - 30,
   },
   sizeButton: {
     borderRadius: borderRadius.circle,
@@ -453,15 +555,6 @@ const styles = StyleSheet.create({
     zIndex: 3,
     alignSelf: "center",
   },
-  sizeContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    ...spacingStyles.px5,
-    backgroundColor: staticColors.skyBlue50,
-    borderRadius: borderRadius.r10,
-    overflow: "visible",
-    width: width * 1.3,
-  },
   sizeText: {
     fontSize: fontSizes.xs,
     color: staticColors.skyBlue100,
@@ -470,6 +563,7 @@ const styles = StyleSheet.create({
   selectedSizeText: {
     color: staticColors.primaryBlue,
   },
+
   colorContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -489,11 +583,17 @@ const styles = StyleSheet.create({
     borderColor: staticColors.primaryBlue,
     borderWidth: 1,
   },
+  priceContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    ...spacingStyles.mx5,
+    ...spacingStyles.mb20,
+  },
   priceRangeText: {
     fontSize: fontSizes.md,
-    color: staticColors.primaryBlue,
-    ...spacingStyles.mb10,
-    fontFamily: fontFamilies.ralewayBold,
+    color: staticColors.black,
+    fontFamily: fontFamilies.ralewayMedium,
   },
   rangeSliderContainer: {
     height: 30,
@@ -542,8 +642,8 @@ const styles = StyleSheet.create({
   footer: {
     flexDirection: "row",
     ...spacingStyles.mb10,
-    justifyContent: "space-between", 
-    gap:gapSizes.md
+    justifyContent: "space-between",
+    gap: gapSizes.md,
   },
   clearButton: {
     flex: 0.3,
@@ -559,7 +659,7 @@ const styles = StyleSheet.create({
     fontFamily: fontFamilies.nunitoSans,
   },
   applyButton: {
-    flex: 0.7, 
+    flex: 0.7,
     ...spacingStyles.py10,
     backgroundColor: staticColors.primaryBlue,
     borderRadius: borderRadius.r10,
