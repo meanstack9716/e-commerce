@@ -50,6 +50,34 @@ export const submitReview = createAsyncThunk<
   }
 );
 
+export const updateReview = createAsyncThunk<
+  any,
+  ReviewPayload,
+  { state: RootState }
+>(
+  "review/updateReview",
+  async (payload: ReviewPayload, { getState, rejectWithValue }) => {
+    const state = getState() as RootState;
+    const token = state.auth.token;
+    if (!token) {
+      return rejectWithValue("No authentication token found.");
+    }
+
+    try {
+      const response = await axios.post(
+        `${apiUrl}/products/update-review`,
+        payload,
+        getAuthHeaders(state)
+      );
+      return response.data;
+    } catch (error: any) {
+      console.error("Update review error:", error.response?.data || error.message);
+
+      return rejectWithValue(handleApiError(error, "Review not updated"));
+    }
+  }
+);
+
 const reviewSlice = createSlice({
   name: "review",
   initialState,
@@ -73,6 +101,21 @@ const reviewSlice = createSlice({
         state.error = null;
       })
       .addCase(submitReview.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+        state.success = false;
+      })
+      .addCase(updateReview.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(updateReview.fulfilled, (state) => {
+        state.loading = false;
+        state.success = true;
+        state.error = null;
+      })
+      .addCase(updateReview.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
         state.success = false;
