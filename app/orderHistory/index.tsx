@@ -1,36 +1,27 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, FlatList, Image, StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "@/store/hooks";
 import { RootState } from "@/store/store";
 import { clearOrderStatus, fetchOrders } from "@/store/order/orderSlice";
-import { textTruncate } from "@/utils/textTruncate";
-
-import FullScreenLoader from "@/components/common/FullScreenLoader";
 import images from "@/constants/images";
 import borderRadius from "@/style/borderRadius";
 import spacingStyles from "@/style/spacingStyles";
 import { fontFamilies } from "@/style/fontFamilies";
-import { fontSizes, fontWeights } from "@/style/typography";
+import { fontSizes } from "@/style/typography";
 import staticColors from "@/style/staticColors";
-import gapSizes from "@/style/gapSizes";
 import ReviewModal from "@/modal/ReviewModal/ReviewModal";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import { Order } from "../../interfaces/orderHistory.interface";
 import { SelectedItem } from "./orderHistory.types";
 import OrderItem from "@/components/order/orderItem/OrderItem";
 import ProfileHeaderBar from "@/components/profile/ProfileHeaderBar/ProfileHeaderBar";
+import OrderItemSkeleton from "@/components/common/OrderItemSkeleton";
+import { ORDER_LIST_LIMIT } from "@/constants/constants";
 
 const OrderHistoryScreen: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { orders, loading, error } = useSelector(
+  const { orders, loading, error, currentPage, hasMore } = useSelector(
     (state: RootState) => state.order
   );
   const [filteredOrders, setFilteredOrders] = useState<Order[]>(orders);
@@ -42,8 +33,7 @@ const OrderHistoryScreen: React.FC = () => {
   const [isReviewModalVisible, setReviewModalVisible] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchOrders());
-
+    dispatch(fetchOrders({ page: 1, limit: ORDER_LIST_LIMIT }));
     return () => {
       dispatch(clearOrderStatus());
     };
@@ -52,6 +42,12 @@ const OrderHistoryScreen: React.FC = () => {
   useEffect(() => {
     setFilteredOrders(orders);
   }, [orders]);
+
+  const handleLoadMore = () => {
+    if (!loading && hasMore) {
+      dispatch(fetchOrders({ page: currentPage, limit: ORDER_LIST_LIMIT }));
+    }
+  };
 
   const handleReviewPress = (
     orderId: string,
@@ -70,6 +66,19 @@ const OrderHistoryScreen: React.FC = () => {
     <OrderItem item={item} onReviewPress={handleReviewPress} />
   );
 
+  const renderSkeletonItems = () => {
+    return Array(5)
+      .fill(0)
+      .map((_, index) => <OrderItemSkeleton key={`skeleton-${index}`} />);
+  };
+
+  const renderFooter = () => {
+    if (!loading || !hasMore) return null;
+    return (
+      <View style={styles.skeletonContainer}>{renderSkeletonItems()}</View>
+    );
+  };
+
   return (
     <SafeAreaViewWrapper backgroundColor={staticColors.white}>
       <ProfileHeaderBar
@@ -79,7 +88,7 @@ const OrderHistoryScreen: React.FC = () => {
       />
       {error ? (
         <Text style={styles.errorText}>{error}</Text>
-      ) : filteredOrders.length === 0 ? (
+      ) : filteredOrders.length === 0 && !loading ? (
         <View style={styles.noOrdersContainer}>
           <Image source={images.noOrderImage} style={styles.noOrderImage} />
         </View>
@@ -89,10 +98,11 @@ const OrderHistoryScreen: React.FC = () => {
           renderItem={renderOrderItem}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.listContent}
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={renderFooter}
         />
       )}
-
-      <FullScreenLoader visible={loading} />
       <ReviewModal
         visible={isReviewModalVisible}
         onClose={() => setReviewModalVisible(false)}
@@ -109,7 +119,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.px12,
     ...spacingStyles.py15,
   },
-    profileHeaderContainer: {
+  profileHeaderContainer: {
     ...spacingStyles.pl10,
   },
   errorText: {
@@ -126,16 +136,9 @@ const styles = StyleSheet.create({
     width: "50%",
     height: "50%",
   },
-  description: {
-    fontSize: fontSizes.xs,
-    color: staticColors.black,
-    fontFamily: fontFamilies.nunitoSans,
-    ...spacingStyles.mt2,
-  },
-  orderNumber: {
-    fontSize: fontSizes.sm,
-    fontFamily: fontFamilies.ralewayExtraBold,
-    ...spacingStyles.my10,
+  skeletonContainer: {
+    ...spacingStyles.px12,
+    ...spacingStyles.py15,
   },
 });
 

@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { getAuthHeaders } from "@/utils/apiHeader";
 import { RootState } from "@/store/store";
 import { handleApiError } from "@/utils/handleApiError";
+import { getAuthFormDataHeaders } from "@/utils/apiHeader";
+import { buildFormData } from "@/utils/buildFormData";
 
 const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
@@ -18,10 +19,13 @@ const initialState: ReviewState = {
   success: false,
 };
 
-interface ReviewPayload {
+export interface ReviewPayload {
   product_id: string;
   rating: string;
   review: string;
+  images?: string[];
+  review_id?: string;
+  remove_img_indexes?: number[];
 }
 
 export const submitReview = createAsyncThunk<
@@ -38,10 +42,11 @@ export const submitReview = createAsyncThunk<
     }
 
     try {
+      const formData = buildFormData(payload);
       const response = await axios.post(
         `${apiUrl}/products/review`,
-        payload,
-        getAuthHeaders(state)
+        formData,
+        getAuthFormDataHeaders(state)
       );
       return response.data;
     } catch (error: any) {
@@ -52,11 +57,14 @@ export const submitReview = createAsyncThunk<
 
 export const updateReview = createAsyncThunk<
   any,
-  ReviewPayload,
+  ReviewPayload & { remove_img_indexes?: number[] },
   { state: RootState }
 >(
   "review/updateReview",
-  async (payload: ReviewPayload, { getState, rejectWithValue }) => {
+  async (
+    payload: ReviewPayload & { remove_img_indexes?: number[] },
+    { getState, rejectWithValue }
+  ) => {
     const state = getState() as RootState;
     const token = state.auth.token;
     if (!token) {
@@ -64,15 +72,18 @@ export const updateReview = createAsyncThunk<
     }
 
     try {
+      const formData = buildFormData(payload);
+      if (payload.review_id) {
+        formData.append("review_id", payload.review_id);
+      }
+
       const response = await axios.post(
         `${apiUrl}/products/update-review`,
-        payload,
-        getAuthHeaders(state)
+        formData,
+        getAuthFormDataHeaders(state)
       );
       return response.data;
     } catch (error: any) {
-      console.error("Update review error:", error.response?.data || error.message);
-
       return rejectWithValue(handleApiError(error, "Review not updated"));
     }
   }
@@ -95,10 +106,11 @@ const reviewSlice = createSlice({
         state.error = null;
         state.success = false;
       })
-      .addCase(submitReview.fulfilled, (state) => {
+      .addCase(submitReview.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
         state.error = null;
+        console.log("Submit review fulfilled:", action.payload);
       })
       .addCase(submitReview.rejected, (state, action) => {
         state.loading = false;
@@ -110,10 +122,11 @@ const reviewSlice = createSlice({
         state.error = null;
         state.success = false;
       })
-      .addCase(updateReview.fulfilled, (state) => {
+      .addCase(updateReview.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
         state.error = null;
+        console.log("Update review fulfilled:", action.payload);
       })
       .addCase(updateReview.rejected, (state, action) => {
         state.loading = false;

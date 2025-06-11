@@ -27,3 +27,4 @@ export const numericSizes = [
   "48",
   "50",
 ];
+export const ORDER_LIST_LIMIT=10
