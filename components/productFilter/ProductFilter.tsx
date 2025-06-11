@@ -23,7 +23,7 @@ import {
   PRODUCT_RANGE_MAX_PRICE,
   PRODUCT_RANGE_MIN_PRICE,
   NUMERIC_SIZES,
-  STANDARD_SiZES,
+  STANDARD_SIZES,
 } from "@/constants/constants";
 import { useAppDispatch } from "@/store/hooks";
 import { fetchColors } from "@/store/product/productsSlice";
@@ -66,7 +66,7 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
     (category: any) => category.sub_categories || []
   );
 
-  const sizes = sizeType === "standard" ? STANDARD_SiZES : NUMERIC_SIZES;
+  const sizes = sizeType === "standard" ? STANDARD_SIZES : NUMERIC_SIZES;
 
   const handleSelectedCategoryIds = (id: string) => {
     setSelectedSubCategories((prev) =>
@@ -404,7 +404,6 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
 };
 
 const styles = StyleSheet.create({
-  // Same styles as in the original ProductFilterScreen
   container: {
     flex: 1,
     backgroundColor: staticColors.white,

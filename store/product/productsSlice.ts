@@ -16,8 +16,6 @@ interface ProductsState {
   colorsError: string | null;
   pagination: {
     currentPage: number;
-    totalPages: number;
-    totalItems: number;
     limit: number;
     hasMore: boolean;
   };
@@ -35,8 +33,6 @@ const initialState: ProductsState = {
   colorsError: null,
   pagination: {
     currentPage: 1,
-    totalPages: 1,
-    totalItems: 0,
     limit: PRODUCT_LIMIT,
     hasMore: true,
   },
@@ -83,10 +79,8 @@ export const fetchProducts = createAsyncThunk<
       if (response.data?.data) {
         return {
           products: response.data.data,
-          pagination: response.data.pagination || {
+          pagination:{
             currentPage: page,
-            totalPages: response.data.data.length < limit ? page : page + 1,
-            totalItems: response.data.data.length,
             limit,
             hasMore: response.data.data.length === limit,
           },
@@ -147,8 +141,6 @@ const productsSlice = createSlice({
             : [...state.data, ...action.payload.products];
         state.pagination = {
           currentPage: action.payload.pagination.currentPage,
-          totalPages: action.payload.pagination.totalPages,
-          totalItems: action.payload.pagination.totalItems,
           limit: action.payload.pagination.limit,
           hasMore:
             action.payload.pagination.currentPage <

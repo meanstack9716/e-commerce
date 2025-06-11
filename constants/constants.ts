@@ -13,7 +13,7 @@ export const APP_VERSION = "4.2503.21";
 export const ESTIMATED_DELIVERY ="15 days"
 export const EXCHANGE_DAY = "7 days"
 export const LOCALE_DATE_FORMAT = "en-IN";
-export const STANDARD_SiZES = ["XS", "S", "M", "L", "XL", "XXL"];
+export const STANDARD_SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
 export const NUMERIC_SIZES = [
   "30",
   "32",

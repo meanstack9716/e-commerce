@@ -17,7 +17,7 @@ import borderRadius from "@/style/borderRadius";
 import gapSizes from "@/style/gapSizes";
 import ProductVarientModal from "@/modal/productVariants/ProductVarientModal";
 import { Product } from "@/interfaces";
-import { NUMERIC_SIZES, STANDARD_SiZES } from "@/constants/constants";
+import { NUMERIC_SIZES, STANDARD_SIZES } from "@/constants/constants";
 
 interface SizeSelectorProps {
   product: Product | null;
@@ -67,7 +67,7 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
       return [];
     }
     const sizeType = product.sizes[0]?.size_type || "standard";
-    return sizeType === "numeric" ? NUMERIC_SIZES : STANDARD_SiZES;
+    return sizeType === "numeric" ? NUMERIC_SIZES : STANDARD_SIZES;
   }, [product]);
 
   const allSizes = useMemo((): AvailableSize[] => {
