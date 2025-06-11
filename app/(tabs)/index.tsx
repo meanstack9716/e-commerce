@@ -37,15 +37,20 @@ import { CategoriresCard } from "@/components/categoriesCard";
 import ImageSlider from "@/components/home/ImageSlider";
 import bannerData from "../../assets/data/banner.json";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
+import ProductCardSkeleton from "@/components/common/ProductCardSkeleton";
+import { PRODUCT_LIMIT } from "@/constants/constants";
 
 const HomeScreen: React.FC = () => {
   const [likedProductItems, setLikedProductItems] = useState<string[]>([]);
   const [activeProductTab, setActiveProductTab] = useState<string>("All");
   const [productSearchQuery, setProductSearchQuery] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const productsPagination = useSelector(
+    (state: any) => state.products.pagination
+  );
   const insets = useSafeAreaInsets();
   const dispatch = useAppDispatch();
-
+  const limit = PRODUCT_LIMIT;
   const {
     data: categories,
     loading: categoriesLoading,
@@ -61,7 +66,7 @@ const HomeScreen: React.FC = () => {
   useFocusEffect(
     useCallback(() => {
       dispatch(fetchCategories());
-      dispatch(fetchProducts({}));
+      dispatch(fetchProducts({ page: 1, limit }));
     }, [dispatch])
   );
 
@@ -98,7 +103,7 @@ const HomeScreen: React.FC = () => {
             text: "Retry",
             onPress: () => {
               dispatch(fetchCategories());
-              dispatch(fetchProducts({}));
+              dispatch(fetchProducts({ page: 1, limit }));
             },
           },
           {
@@ -167,6 +172,12 @@ const HomeScreen: React.FC = () => {
     );
   };
 
+  const handleLoadMore = () => {
+    if (products.length && !productsLoading && productsPagination.hasMore) {
+      dispatch(fetchProducts({ page: productsPagination.currentPage, limit }));
+    }
+  };
+
   const renderProductItem = ({ item }: { item: Product }) => (
     <ProductCard
       {...item}
@@ -180,6 +191,8 @@ const HomeScreen: React.FC = () => {
       }
     />
   );
+
+  const renderSkeletonItem = () => <ProductCardSkeleton />;
 
   const isLoading = categoriesLoading || productsLoading;
   const hasError = categoriesError || productsError;
@@ -221,23 +234,44 @@ const HomeScreen: React.FC = () => {
           {hasError && <Text style={styles.errorText}>Error: {hasError}</Text>}
 
           <FlatList
-            data={getFilteredProducts()}
+            data={
+              productsLoading && products.length === 0
+                ? Array(4).fill({})
+                : getFilteredProducts()
+            }
             numColumns={2}
-            keyExtractor={(item) => item.id}
-            renderItem={renderProductItem}
+            keyExtractor={(item, index) =>
+              productsLoading && products.length === 0
+                ? `skeleton-${index}`
+                : item.id
+            }
+            renderItem={
+              productsLoading && products.length === 0
+                ? renderSkeletonItem
+                : renderProductItem
+            }
+            onEndReached={handleLoadMore}
+            onEndReachedThreshold={0.7} 
             scrollEnabled={false}
             showsVerticalScrollIndicator={false}
             columnWrapperStyle={{
               justifyContent: "space-between",
               ...spacingStyles.my20,
             }}
-            ListEmptyComponent={() => (
-              <View style={styles.emptyContainer}>
-                <Text style={styles.emptyText}>
-                  {isLoading ? "Loading products..." : "No products Available"}
-                </Text>
-              </View>
-            )}
+            ListFooterComponent={() =>
+              productsLoading && products.length > 0 ? (
+                <View style={{ paddingVertical: 20 }}>
+                  <ProductCardSkeleton />
+                </View>
+              ) : null
+            }
+            ListEmptyComponent={() =>
+              !productsLoading ? (
+                <View style={styles.emptyContainer}>
+                  <Text style={styles.emptyText}>No products Available</Text>
+                </View>
+              ) : null
+            }
           />
         </ScrollView>
       </SafeAreaViewWrapper>
@@ -249,7 +283,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: staticColors.white,
-    ...spacingStyles.px12
+    ...spacingStyles.px12,
   },
   contentWrapper: {
     flex: 1,
