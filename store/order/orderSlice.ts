@@ -4,7 +4,7 @@ import { getAuthHeaders } from "@/utils/apiHeader";
 import axiosConfig from "@/utils/axiosConfig";
 import { Order } from "@/interfaces";
 import Toast from "react-native-toast-message";
-import { ORDER_LIST_LIMIT } from "@/constants/constants";
+import { LIST_LIMIT } from "@/constants/constants";
 
 interface OrderPayload {
   cart_items_ids: String[];
@@ -40,7 +40,7 @@ export const fetchOrders = createAsyncThunk<
   { state: RootState }
 >(
   "order/fetchOrders",
-  async ({ page, limit = ORDER_LIST_LIMIT }, { getState, rejectWithValue }) => {
+  async ({ page, limit = LIST_LIMIT }, { getState, rejectWithValue }) => {
     try {
       const state = getState();
       const token = state.auth.token;

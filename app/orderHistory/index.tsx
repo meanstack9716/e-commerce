@@ -17,7 +17,7 @@ import { SelectedItem } from "./orderHistory.types";
 import OrderItem from "@/components/order/orderItem/OrderItem";
 import ProfileHeaderBar from "@/components/profile/ProfileHeaderBar/ProfileHeaderBar";
 import OrderItemSkeleton from "@/components/common/OrderItemSkeleton";
-import { ORDER_LIST_LIMIT } from "@/constants/constants";
+import { LIST_LIMIT } from "@/constants/constants";
 
 const OrderHistoryScreen: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -33,7 +33,7 @@ const OrderHistoryScreen: React.FC = () => {
   const [isReviewModalVisible, setReviewModalVisible] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchOrders({ page: 1, limit: ORDER_LIST_LIMIT }));
+    dispatch(fetchOrders({ page: 1, limit: LIST_LIMIT }));
     return () => {
       dispatch(clearOrderStatus());
     };
@@ -45,7 +45,7 @@ const OrderHistoryScreen: React.FC = () => {
 
   const handleLoadMore = () => {
     if (!loading && hasMore) {
-      dispatch(fetchOrders({ page: currentPage, limit: ORDER_LIST_LIMIT }));
+      dispatch(fetchOrders({ page: currentPage, limit: LIST_LIMIT }));
     }
   };
 

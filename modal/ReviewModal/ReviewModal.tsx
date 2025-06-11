@@ -34,7 +34,7 @@ import { useFieldValidation } from "@/hooks/useFieldValidation";
 import ConfirmationModal from "@/modal/commonModal/confirmationModal/ConfirmationModal";
 import { Review } from "@/interfaces";
 import { clearOrderStatus, fetchOrders } from "@/store/order/orderSlice";
-import { ORDER_LIST_LIMIT } from "@/constants/constants";
+import { LIST_LIMIT } from "@/constants/constants";
 
 const initialReviewState: ReviewState = {
   rating: 0,
@@ -165,7 +165,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
           });
           setExistingReview(updatedReview);
           dispatch(clearOrderStatus());
-          dispatch(fetchOrders({ page: 1, limit: ORDER_LIST_LIMIT }));
+          dispatch(fetchOrders({ page: 1, limit: LIST_LIMIT }));
           setRemovedImageIndices([]);
         })
         .catch((error) => {
@@ -176,7 +176,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
         .unwrap()
         .then(() => {
           dispatch(clearOrderStatus());
-          dispatch(fetchOrders({ page: 1, limit: ORDER_LIST_LIMIT }));
+          dispatch(fetchOrders({ page: 1, limit: LIST_LIMIT }));
         })
         .catch((error) => {
           console.error("Submit failed:", error);
