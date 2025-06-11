@@ -3,9 +3,7 @@ export const handleApiError = (
   error: unknown,
   defaultMessage = "Something went wrong"
 ): string => {
-  console.log("Raw Error:", error);
   if (error instanceof AxiosError) {
-    console.error("API error:", error);
     if (error.response) {
       const { data } = error.response;
       if (data) {
