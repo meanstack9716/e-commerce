@@ -137,6 +137,7 @@ const handleSubmit = () => {
     product_id: productId,
     rating: reviewState.rating.toString(),
     review: reviewState.comment.trim(),
+      images: reviewState.selectedImages, 
     ...(hasExistingReview && existingReview?.id && { review_id: existingReview.id }),
   };
 
@@ -157,10 +158,9 @@ const handleSubmit = () => {
       });
   } else {
     dispatch(submitReview(reviewData));
+    console.log(reviewData)
   }
 };
-
-
 
   const handleClose = () => {
     if (loading) return;
@@ -197,6 +197,7 @@ const handleSubmit = () => {
 
   const handleGalleryPick = async () => {
     const uris = await pickImages(setImagePickerModal, "gallery");
+    console.log(uris)
     if (uris.length > 0) {
       setReviewState((prev) => ({
         ...prev,
