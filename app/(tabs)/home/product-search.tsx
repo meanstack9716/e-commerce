@@ -28,11 +28,18 @@ import ProductFilter from "@/components/productFilter/ProductFilter";
 import ProductCard from "@/components/home/ProductCard";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import ProductCardSkeleton from "@/components/common/ProductCardSkeleton";
+import SearchHistory from "@/components/search/searchHistory/SearchHistory";
+import {
+  clearSearchHistory,
+  getSearchHistory,
+  saveSearchQuery,
+} from "@/utils/searchStorage";
 
 const ProductSearchScreen: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isSearchSubmitted, setIsSearchSubmitted] = useState(false);
   const [setFilter, setSetFilter] = useState(false);
+  const [searchHistory, setSearchHistory] = useState<string[]>([]);
   const [productFilters, setProductFilters] = useState({
     subCategories: [] as string[],
     sizes: [] as string[],
@@ -54,6 +61,14 @@ const filteredProducts = allProducts.filter((product: Product) =>
     (state: any) => state.products.pagination.hasMore
   );
   const limit = LIST_LIMIT;
+
+  useEffect(() => {
+    const loadSearchHistory = async () => {
+      const history = await getSearchHistory();
+      setSearchHistory(history);
+    };
+    loadSearchHistory();
+  }, []);
 
   useEffect(() => {
     const hasFilters =
@@ -83,8 +98,11 @@ const filteredProducts = allProducts.filter((product: Product) =>
     }
   }, [dispatch, subCategories, sizes, colors, priceMin, priceMax]);
 
-  const handleSearchSubmit = () => {
+  const handleSearchSubmit = async () => {
     if (searchTerm.trim()) {
+      await saveSearchQuery(searchTerm);
+      const updatedHistory = await getSearchHistory();
+      setSearchHistory(updatedHistory);
       setIsSearchSubmitted(true);
       setPage(1);
       dispatch(resetProducts());
@@ -103,6 +121,32 @@ const filteredProducts = allProducts.filter((product: Product) =>
         })
       );
     }
+  };
+
+  const handleHistoryItemPress = async (query: string) => {
+    setSearchTerm(query);
+    setIsSearchSubmitted(true);
+    setPage(1);
+    dispatch(resetProducts());
+    dispatch(
+      fetchProducts({
+        params: {
+          searchTerm: query,
+          subCategoryIds: subCategories,
+          sizes,
+          colors,
+          minPrice: priceMin,
+          maxPrice: priceMax,
+        },
+        page: 1,
+        limit,
+      })
+    );
+  };
+
+  const handleClearSearchHistory = async () => {
+    await clearSearchHistory();
+    setSearchHistory([]);
   };
 
   const clearSearch = () => {
@@ -258,6 +302,13 @@ const filteredProducts = allProducts.filter((product: Product) =>
             />
           </TouchableOpacity>
         </View>
+        {!isSearchSubmitted && (
+          <SearchHistory
+            history={searchHistory}
+            onItemPress={handleHistoryItemPress}
+            onClearHistory={handleClearSearchHistory}
+          />
+        )}
 
         {isSearchSubmitted ? (
           loading && page === 1 ? (
