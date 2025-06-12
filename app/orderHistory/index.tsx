@@ -12,7 +12,6 @@ import { useAppDispatch } from "@/store/hooks";
 import { RootState } from "@/store/store";
 import { clearOrderStatus, fetchOrders } from "@/store/order/orderSlice";
 import { textTruncate } from "@/utils/textTruncate";
-
 import FullScreenLoader from "@/components/common/FullScreenLoader";
 import images from "@/constants/images";
 import borderRadius from "@/style/borderRadius";
@@ -40,6 +39,8 @@ const OrderHistoryScreen: React.FC = () => {
     productDescription: "",
   });
   const [isReviewModalVisible, setReviewModalVisible] = useState(false);
+  const [isOrderHistoryModalVisible, setOrderHistoryModalVisible] = useState(false);
+
 
   useEffect(() => {
     dispatch(fetchOrders());
@@ -110,7 +111,8 @@ const styles = StyleSheet.create({
     ...spacingStyles.py15,
   },
     profileHeaderContainer: {
-    ...spacingStyles.pl10,
+    ...spacingStyles.px15,
+    ...spacingStyles.py5
   },
   errorText: {
     fontSize: fontSizes.xs,

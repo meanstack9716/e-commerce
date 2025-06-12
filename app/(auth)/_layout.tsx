@@ -13,7 +13,7 @@ export default function AuthLayout() {
       />
       <Stack.Screen
         name="PasswordScreen"
-        options={{ title: "PasswordScreen", headerShown: false }}
+        options={{ title: "PasswordScreen", headerShown: false , animation: "none",}}
       />
       <Stack.Screen
         name="forgetPassword"
