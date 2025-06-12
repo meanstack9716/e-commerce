@@ -12,7 +12,6 @@ import { useAppDispatch } from "@/store/hooks";
 import { RootState } from "@/store/store";
 import { clearOrderStatus, fetchOrders } from "@/store/order/orderSlice";
 import { textTruncate } from "@/utils/textTruncate";
-
 import FullScreenLoader from "@/components/common/FullScreenLoader";
 import images from "@/constants/images";
 import borderRadius from "@/style/borderRadius";
@@ -23,10 +22,11 @@ import staticColors from "@/style/staticColors";
 import gapSizes from "@/style/gapSizes";
 import ReviewModal from "@/modal/ReviewModal/ReviewModal";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
-import { Order } from "../../interfaces/orderHistory.interface";
+
 import { SelectedItem } from "./orderHistory.types";
 import OrderItem from "@/components/order/orderItem/OrderItem";
 import ProfileHeaderBar from "@/components/profile/ProfileHeaderBar/ProfileHeaderBar";
+import { Order } from "@/interfaces";
 
 const OrderHistoryScreen: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -40,6 +40,8 @@ const OrderHistoryScreen: React.FC = () => {
     productDescription: "",
   });
   const [isReviewModalVisible, setReviewModalVisible] = useState(false);
+  const [isOrderHistoryModalVisible, setOrderHistoryModalVisible] = useState(false);
+
 
   useEffect(() => {
     dispatch(fetchOrders());
@@ -110,7 +112,8 @@ const styles = StyleSheet.create({
     ...spacingStyles.py15,
   },
     profileHeaderContainer: {
-    ...spacingStyles.pl10,
+    ...spacingStyles.px15,
+    ...spacingStyles.py5
   },
   errorText: {
     fontSize: fontSizes.xs,

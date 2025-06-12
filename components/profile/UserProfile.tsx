@@ -25,18 +25,7 @@ import { fontSizes, fontWeights } from "@/style/typography";
 
 const UserProfile = () => {
   const [likedProductItems, setLikedProductItems] = useState<string[]>([]);
-
-  const handleAccount = () => {
-    router.push({
-      pathname: "/accountManage",
-    });
-  };
-  const handleWishList = () => {
-    router.push({
-      pathname: "/wishlist",
-    });
-  };
-
+  
   const {
     data: categories,
     loading: categoriesLoading,
@@ -103,7 +92,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     gap: gapSizes.sm,
-    ...spacingStyles.py10,
     ...spacingStyles.px12,
     backgroundColor: staticColors.white
   },

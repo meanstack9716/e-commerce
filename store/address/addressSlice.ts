@@ -99,7 +99,7 @@ export const saveAddress = createAsyncThunk<
         return rejectWithValue(mappedErrors);
       }
       return rejectWithValue({
-        general: error.response?.data?.message || "Failed to save address",
+        general: error.response?.data || "Failed to save address",
       });
     }
   }
@@ -156,8 +156,8 @@ export const updateAddress = createAsyncThunk<
   ) => {
     try {
       const state = getState();
-      await axios.put(
-        `${apiUrl}/address/update`,
+      await axiosConfig.put(
+        `/address/update`,
         {
           address_id: addressId,
           contact_name: formData.contact_name,

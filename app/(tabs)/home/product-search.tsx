@@ -43,6 +43,10 @@ const ProductSearchScreen: React.FC = () => {
   const dispatch = useAppDispatch();
   const products = useSelector((state: any) => state.products.data);
   const loading = useSelector((state: any) => state.products.loading);
+const allProducts = useSelector((state: any) => state.products.data);
+const filteredProducts = allProducts.filter((product: Product) =>
+  product.title.toLowerCase().includes(searchTerm.toLowerCase())
+);
   const error = useSelector((state: any) => state.products.error);
   const [page, setPage] = useState(1);
   const { subCategories, sizes, colors, priceMin, priceMax } = productFilters;
@@ -269,7 +273,7 @@ const ProductSearchScreen: React.FC = () => {
             <Text style={styles.errorText}>Error: {error}</Text>
           ) : products.length > 0 ? (
             <FlatList
-              data={products}
+              data={filteredProducts}
               renderItem={renderProductItem}
               keyExtractor={(item) => item.id.toString()}
               numColumns={2}

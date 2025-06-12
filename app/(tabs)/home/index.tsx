@@ -35,7 +35,7 @@ import { fontFamilies } from "@/style/fontFamilies";
 import { commonStyles } from "@/style/commonStyle";
 import { CategoriresCard } from "@/components/categoriesCard";
 import ImageSlider from "@/components/home/ImageSlider";
-import bannerData from "../../assets/data/banner.json";
+import bannerData from "../../../assets/data/banner.json";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import ProductCardSkeleton from "@/components/common/ProductCardSkeleton";
 import { PRODUCT_LIMIT } from "@/constants/constants";
@@ -79,7 +79,7 @@ const HomeScreen: React.FC = () => {
           return true;
         } else {
           if (Platform.OS === "ios") {
-            router.navigate("/(tabs)");
+            router.navigate("/(tabs)/(profile)");
           } else {
             BackHandler.exitApp();
           }
@@ -215,7 +215,7 @@ const HomeScreen: React.FC = () => {
               placeholderTextColor={staticColors.gray200}
               value={productSearchQuery}
               onChangeText={setProductSearchQuery}
-              onFocus={() => router.navigate("/product-search")}
+              onFocus={() => router.navigate("/home/product-search")}
             />
             <TouchableOpacity>
               <Ionicons
