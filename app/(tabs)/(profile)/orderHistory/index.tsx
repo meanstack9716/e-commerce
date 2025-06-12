@@ -22,10 +22,11 @@ import staticColors from "@/style/staticColors";
 import gapSizes from "@/style/gapSizes";
 import ReviewModal from "@/modal/ReviewModal/ReviewModal";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
-import { Order } from "../../interfaces/orderHistory.interface";
+
 import { SelectedItem } from "./orderHistory.types";
 import OrderItem from "@/components/order/orderItem/OrderItem";
 import ProfileHeaderBar from "@/components/profile/ProfileHeaderBar/ProfileHeaderBar";
+import { Order } from "@/interfaces";
 
 const OrderHistoryScreen: React.FC = () => {
   const dispatch = useAppDispatch();

@@ -28,7 +28,8 @@ import images from "@/constants/images";
 import { ReviewModalProps, ReviewState } from "./ReviewModal.types";
 
 import { useFieldValidation } from "@/hooks/useFieldValidation";
-import ConfirmationModal from "../commonModal/confirmationModal/ConfirmationModal";
+import ConfirmationModal from "@/modal/commonModal/confirmationModal/ConfirmationModal";
+
 
 const initialReviewState: ReviewState = {
   rating: 0,

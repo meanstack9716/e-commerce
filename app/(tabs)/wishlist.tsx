@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -12,7 +12,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import {
@@ -36,22 +36,37 @@ const WishlistScreen: React.FC = () => {
   const { items, loading, error } = useSelector(
     (state: RootState) => state.wishlist
   );
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
+  const token = useSelector((state: RootState) => state.auth.token);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleBack = () => {
     router.back();
   };
 
-  useEffect(() => {
-    dispatch(fetchWishlist()).then((result) => {
-      if (fetchWishlist.rejected.match(result)) {
-        Toast.show({
-          type: "error",
-          text1: "Error",
-          text2: result.payload as string,
-        });
-      }
-    });
-  }, [dispatch]);
+  useFocusEffect(
+    useCallback(() => {
+      const loadWishlistData = async () => {
+        try {
+          if (isAuthenticated && token) {
+            await dispatch(fetchWishlist()).unwrap();
+          }
+        } catch (error) {
+          Toast.show({
+            type: "error",
+            text1: "Error",
+            text2: error as string,
+          });
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      loadWishlistData();
+    }, [isAuthenticated, token, dispatch])
+  );
 
   const handleRemoveItem = (id: string) => {
     if (!id) {
@@ -149,7 +164,11 @@ const WishlistScreen: React.FC = () => {
             style={styles.removeButtonOverlay}
             onPress={() => handleRemoveItem(item.id)}
           >
-            <Ionicons name="trash-outline" size={22} color={staticColors.brightRed} />
+            <Ionicons
+              name="trash-outline"
+              size={22}
+              color={staticColors.brightRed}
+            />
           </TouchableOpacity>
         </View>
 
@@ -278,7 +297,7 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.white,
     justifyContent: "center",
     alignItems: "center",
-     shadowColor: staticColors.black,
+    shadowColor: staticColors.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
@@ -292,22 +311,22 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.sm,
     color: staticColors.darkGray,
     ...spacingStyles.mb4,
-    fontFamily: fontFamilies.ralewayBold
+    fontFamily: fontFamilies.ralewayBold,
   },
   itemPrice: {
     fontSize: fontSizes.base,
     fontWeight: fontWeights.bold,
-    ...spacingStyles.mb8
+    ...spacingStyles.mb8,
   },
   priceContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
   },
   originalPrice: {
     fontSize: fontSizes.sm,
     color: staticColors.textLightGray,
-    textDecorationLine: 'line-through',
+    textDecorationLine: "line-through",
     ...spacingStyles.mb4,
   },
   optionRow: {

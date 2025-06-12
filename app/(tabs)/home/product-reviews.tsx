@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { fetchProductById } from "@/store/product/productsSlice";

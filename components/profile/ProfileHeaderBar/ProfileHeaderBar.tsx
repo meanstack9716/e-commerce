@@ -36,7 +36,7 @@ const ProfileHeaderBar: React.FC<ProfileHeaderBarProps> = ({
             color={staticColors.primaryBlue}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.iconWrapper} onPress={() => router.navigate('/settings')}>
+        <TouchableOpacity style={styles.iconWrapper} onPress={() => router.push('/settings')}>
           <Ionicons
             name="settings-outline"
             size={20}
