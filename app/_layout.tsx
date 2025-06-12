@@ -40,6 +40,7 @@ function AppLayout() {
         <Stack.Screen name="/wishlist" />
         <Stack.Screen name="/faqs" />
         <Stack.Screen name="/product-filter" />
+        <Stack.Screen name="/faq" />
       </Stack>
 
       <StatusBar style="auto" />

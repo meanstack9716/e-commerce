@@ -186,8 +186,21 @@ export default function UserManageAccount() {
     }
   }, [error, dispatch]);
 
+  const isValidName = (text: string) => /^[a-zA-Z\s]+$/.test(text);
+  const isValidPhoneNumber = (text: string) => /^[0-9]{0,10}$/.test(text);
+
   const handleChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    if (field === "first_name" || field === "last_name") {
+      if (value === "" || isValidName(value)) {
+        setFormData((prev) => ({ ...prev, [field]: value }));
+      }
+    } else if (field === "phone_number") {
+      if (value === "" || isValidPhoneNumber(value)) {
+        setFormData((prev) => ({ ...prev, [field]: value }));
+      }
+    } else {
+      setFormData((prev) => ({ ...prev, [field]: value }));
+    }
   };
 
   const handleSaveDetails = () => {

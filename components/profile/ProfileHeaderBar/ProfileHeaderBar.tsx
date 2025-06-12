@@ -32,13 +32,14 @@ const ProfileHeaderBar: React.FC<ProfileHeaderBarProps> = ({
         <TouchableOpacity style={[styles.iconWrapper]} onPress={()=> router.push('/wishlist')}>
           <Ionicons
             name="heart-outline"
-            size={24}
+            size={20}
+            color={staticColors.primaryBlue}
           />
         </TouchableOpacity>
         <TouchableOpacity style={styles.iconWrapper} onPress={() => router.push('/settings')}>
           <Ionicons
             name="settings-outline"
-            size={24}
+            size={20}
             color={staticColors.primaryBlue}
           />
         </TouchableOpacity>
@@ -51,6 +52,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    ...spacingStyles.pb10
   },
   leftSection: {
     flexDirection: "row",
@@ -61,7 +63,7 @@ const styles = StyleSheet.create({
     height: 40,
     marginLeft: -7,
     borderRadius: borderRadius.circle,
-    borderWidth: 2,
+    borderWidth: 3,
     borderColor: staticColors.white,
     alignSelf: "center",
     backgroundColor: staticColors.white,
@@ -84,9 +86,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   iconWrapper: {
-    ...spacingStyles.p5,
+    padding:7,
     ...spacingStyles.ml10,
     position: "relative",
+    backgroundColor:staticColors.skyBlue50,
+    borderRadius:borderRadius.circle
   },
 });
 export default ProfileHeaderBar;
