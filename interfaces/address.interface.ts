@@ -21,4 +21,5 @@ export interface AddressFormData {
   city: string;
   state: string;
   country: string;
+  is_primary?: boolean;
 }

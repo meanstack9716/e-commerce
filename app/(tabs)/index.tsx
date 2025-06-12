@@ -192,7 +192,7 @@ const HomeScreen: React.FC = () => {
   return (
     <View style={styles.container}>
       <SafeAreaViewWrapper>
-        <FullScreenLoader visible={isLoading} />
+        {/* <FullScreenLoader visible={isLoading} /> */}
         <StatusBar
           barStyle="dark-content"
           translucent

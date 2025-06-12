@@ -52,13 +52,12 @@ export const saveAddress = createAsyncThunk<
   {
     formData: AddressFormData;
     addressType: string;
-    isDefault: boolean;
   },
   { state: RootState; rejectValue: { [key: string]: string } }
 >(
   "address/saveAddress",
   async (
-    { formData, addressType, isDefault },
+    { formData, addressType },
     { getState, rejectWithValue }
   ) => {
     try {
@@ -75,7 +74,7 @@ export const saveAddress = createAsyncThunk<
           state: formData.state,
           postal_code: formData.postal_code,
           country: formData.country,
-          is_primary: isDefault,
+          is_primary: formData.is_primary ?? false,
         },
         getAuthHeaders(state)
       );
@@ -147,13 +146,12 @@ export const updateAddress = createAsyncThunk<
     addressId: string;
     formData: AddressFormData;
     addressType: string;
-    isDefault: boolean;
   },
   { state: RootState; rejectValue: { [key: string]: string } }
 >(
   "address/updateAddress",
   async (
-    { addressId, formData, addressType, isDefault },
+    { addressId, formData, addressType },
     { getState, rejectWithValue }
   ) => {
     try {
@@ -171,7 +169,7 @@ export const updateAddress = createAsyncThunk<
           state: formData.state,
           postal_code: formData.postal_code,
           country: formData.country,
-          is_primary: isDefault,
+          is_primary: formData.is_primary || false,
         },
         getAuthHeaders(state)
       );
@@ -292,6 +290,10 @@ const addressSlice = createSlice({
       .addCase(removeAddress.rejected, (state, action) => {
         state.loading = false;
         state.error = { general: action.payload || "Failed to remove address" };
+      })
+      .addCase(updateAddress.pending, (state) => {
+        state.loading = true;
+        state.error = null;
       })
       .addCase(updateAddress.fulfilled, (state) => {
         state.loading = false;

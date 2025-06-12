@@ -40,6 +40,9 @@ const ShoppingBagScreen: React.FC = () => {
   const { cartItems, loading } = useSelector((state: RootState) => state.cart);
   const token = useSelector((state: RootState) => state.auth.token);
   const addresses = useSelector((state: RootState) => state.address.addresses);
+  const selectedAddressId = useSelector(
+    (state: RootState) => state.address.selectedAddressId
+  );
   const [isLoading, setIsLoading] = useState(true);
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
@@ -205,7 +208,7 @@ const ShoppingBagScreen: React.FC = () => {
           {isAuthenticated && token && (
             <ContactCard
               title="Shipping Address"
-              information={[getFormattedAddress(addresses)]}
+              information={[getFormattedAddress(addresses, selectedAddressId)]}
             />
           )}
           {isAuthenticated && token && cartItems.length ? (

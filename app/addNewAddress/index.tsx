@@ -121,12 +121,10 @@ const AddNewAddress = () => {
           addressId: editingAddress.id,
           formData,
           addressType: selectedAddressType,
-          isDefault,
         })
       : saveAddress({
           formData,
           addressType: selectedAddressType,
-          isDefault,
         });
 
     dispatch(action)

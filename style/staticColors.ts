@@ -97,5 +97,7 @@ export default {
   blue500: "#004BFE",
   pink100: "#FFEBEB",
   blue200: "#E8ECFF",
-  skyBlue50:'#F4F6FE'
+  skyBlue50:'#F4F6FE',
+  skyBlue100:"#AAC3FF",
+  inputBg: "#F1F4FE",
 };
