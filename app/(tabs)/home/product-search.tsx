@@ -20,7 +20,7 @@ import { commonStyles } from "@/style/commonStyle";
 import spacingStyles from "@/style/spacingStyles";
 import { fontSizes } from "@/style/typography";
 import {
-  PRODUCT_LIMIT,
+  LIST_LIMIT,
   PRODUCT_RANGE_MAX_PRICE,
   PRODUCT_RANGE_MIN_PRICE,
 } from "@/constants/constants";
@@ -53,7 +53,7 @@ const filteredProducts = allProducts.filter((product: Product) =>
   const hasMore = useSelector(
     (state: any) => state.products.pagination.hasMore
   );
-  const limit = PRODUCT_LIMIT;
+  const limit = LIST_LIMIT;
 
   useEffect(() => {
     const hasFilters =

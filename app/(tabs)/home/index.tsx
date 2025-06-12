@@ -38,7 +38,7 @@ import ImageSlider from "@/components/home/ImageSlider";
 import bannerData from "../../../assets/data/banner.json";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import ProductCardSkeleton from "@/components/common/ProductCardSkeleton";
-import { PRODUCT_LIMIT } from "@/constants/constants";
+import { LIST_LIMIT } from "@/constants/constants";
 
 const HomeScreen: React.FC = () => {
   const [likedProductItems, setLikedProductItems] = useState<string[]>([]);
@@ -50,7 +50,7 @@ const HomeScreen: React.FC = () => {
   );
   const insets = useSafeAreaInsets();
   const dispatch = useAppDispatch();
-  const limit = PRODUCT_LIMIT;
+  const limit = LIST_LIMIT;
   const {
     data: categories,
     loading: categoriesLoading,

@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { handleApiError } from "@/utils/handleApiError";
 import axiosConfig from "@/utils/axiosConfig";
 import { Product, Color } from "@/interfaces";
-import { PRODUCT_LIMIT } from "@/constants/constants";
+import { LIST_LIMIT } from "@/constants/constants";
 
 interface ProductsState {
   data: Product[];
@@ -33,7 +33,7 @@ const initialState: ProductsState = {
   colorsError: null,
   pagination: {
     currentPage: 1,
-    limit: PRODUCT_LIMIT,
+    limit: LIST_LIMIT,
     hasMore: true,
   },
 };

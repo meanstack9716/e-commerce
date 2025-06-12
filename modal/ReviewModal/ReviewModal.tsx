@@ -22,14 +22,19 @@ import { fontSizes, fontWeights } from "@/style/typography";
 import staticColors from "@/style/staticColors";
 import gapSizes from "@/style/gapSizes";
 import { RootState } from "@/store/store";
-import { resetReviewState, submitReview } from "@/store/review/reviewSlice";
+import {
+  resetReviewState,
+  submitReview,
+  updateReview,
+} from "@/store/review/reviewSlice";
 import { useAppDispatch } from "@/store/hooks";
 import images from "@/constants/images";
 import { ReviewModalProps, ReviewState } from "./ReviewModal.types";
-
 import { useFieldValidation } from "@/hooks/useFieldValidation";
 import ConfirmationModal from "@/modal/commonModal/confirmationModal/ConfirmationModal";
-
+import { Review } from "@/interfaces";
+import { clearOrderStatus, fetchOrders } from "@/store/order/orderSlice";
+import { LIST_LIMIT } from "@/constants/constants";
 
 const initialReviewState: ReviewState = {
   rating: 0,
@@ -49,8 +54,16 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
   const { loading, error, success } = useSelector(
     (state: RootState) => state.review
   );
+
+  const currentUserId = useSelector((state: RootState) => state.auth?.user?.id);
+  const { orders, currentPage } = useSelector(
+    (state: RootState) => state.order
+  );
   const [reviewState, setReviewState] =
     useState<ReviewState>(initialReviewState);
+  const [hasExistingReview, setHasExistingReview] = useState(false);
+  const [existingReview, setExistingReview] = useState<Review | null>(null);
+  const [removedImageIndices, setRemovedImageIndices] = useState<number[]>([]);
   const {
     errors,
     handleFieldChange,
@@ -58,6 +71,36 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
     resetErrors,
     validateAllFields,
   } = useFieldValidation();
+
+  useEffect(() => {
+    if (visible && productId && currentUserId && orders) {
+      const currentOrder = orders.find((order) => order.id === orderId);
+      if (currentOrder) {
+        const orderItem = currentOrder.items?.find(
+          (item) => item.product.id === productId
+        );
+        if (orderItem?.product?.reviews) {
+          const userReview = orderItem.product.reviews.find(
+            (review) => review.by?.id === currentUserId
+          );
+
+          if (userReview) {
+            setHasExistingReview(true);
+            setExistingReview(userReview);
+            setReviewState((prev) => ({
+              ...prev,
+              rating: parseInt(userReview.rating),
+              comment: userReview.review,
+              selectedImages: userReview.img_urls || [],
+            }));
+          } else {
+            setHasExistingReview(false);
+            setExistingReview(null);
+          }
+        }
+      }
+    }
+  }, [visible, productId, currentUserId, orders, orderId]);
 
   const setImagePickerModal = (value: boolean) => {
     setReviewState((prev) => ({ ...prev, showImagePickerModal: value }));
@@ -99,18 +142,53 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
 
     if (!isValid) return;
 
-    dispatch(
-      submitReview({
-        product_id: productId,
-        rating: reviewState.rating.toString(),
-        review: reviewState.comment.trim(),
-      })
-    );
+    const reviewData = {
+      product_id: productId,
+      rating: reviewState.rating.toString(),
+      review: reviewState.comment.trim(),
+      images: reviewState.selectedImages,
+      ...(hasExistingReview &&
+        existingReview?.id && { review_id: existingReview.id }),
+      remove_img_indexes: removedImageIndices,
+    };
+
+    if (hasExistingReview) {
+      dispatch(updateReview(reviewData))
+        .unwrap()
+        .then((updatedReview) => {
+          setExistingReview(updatedReview);
+          setReviewState({
+            ...reviewState,
+            rating: parseInt(updatedReview.rating),
+            comment: updatedReview.review,
+            selectedImages: updatedReview.img_urls || [],
+          });
+          setExistingReview(updatedReview);
+          dispatch(clearOrderStatus());
+          dispatch(fetchOrders({ page: 1, limit: LIST_LIMIT }));
+          setRemovedImageIndices([]);
+        })
+        .catch((error) => {
+          console.error("Update failed:", error);
+        });
+    } else {
+      dispatch(submitReview(reviewData))
+        .unwrap()
+        .then(() => {
+          dispatch(clearOrderStatus());
+          dispatch(fetchOrders({ page: 1, limit: LIST_LIMIT }));
+        })
+        .catch((error) => {
+          console.error("Submit failed:", error);
+        });
+    }
   };
 
   const handleClose = () => {
     if (loading) return;
     setReviewState(initialReviewState);
+    setHasExistingReview(false);
+    setExistingReview(null);
     resetErrors();
     dispatch(resetReviewState());
     onClose();
@@ -118,6 +196,8 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
 
   const handleConfirmationClose = () => {
     setReviewState(initialReviewState);
+    setHasExistingReview(false);
+    setExistingReview(null);
     resetErrors();
     dispatch(resetReviewState());
     onClose();
@@ -152,10 +232,18 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
   };
 
   const removeImage = (uriToRemove: string) => {
-    setReviewState((prev) => ({
-      ...prev,
-      selectedImages: prev.selectedImages.filter((uri) => uri !== uriToRemove),
-    }));
+    const indexToRemove = reviewState.selectedImages.findIndex(
+      (uri) => uri === uriToRemove
+    );
+    if (indexToRemove !== -1) {
+      setRemovedImageIndices((prev) => [...prev, indexToRemove]);
+      setReviewState((prev) => ({
+        ...prev,
+        selectedImages: prev.selectedImages.filter(
+          (index) => index !== uriToRemove
+        ),
+      }));
+    }
   };
 
   useEffect(() => {
@@ -163,6 +251,15 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
       resetErrors();
     }
   }, [visible]);
+
+  const getButtonText = () => {
+    if (loading) return null;
+    return hasExistingReview ? "Update it!" : "Say it!";
+  };
+
+  const getModalTitle = () => {
+    return hasExistingReview ? "Update Review" : "Review";
+  };
 
   return (
     <>
@@ -176,7 +273,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
           <View style={styles.centeredView}>
             <TouchableWithoutFeedback>
               <View style={styles.modalView}>
-                <Text style={styles.modalTitle}>Review</Text>
+                <Text style={styles.modalTitle}>{getModalTitle()}</Text>
                 <View style={styles.orderInfo}>
                   <Image
                     source={images.genderFemale}
@@ -239,8 +336,11 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
                       showsHorizontalScrollIndicator={false}
                       contentContainerStyle={styles.imagePreviewContainer}
                     >
-                      {reviewState.selectedImages.map((uri) => (
-                        <View key={uri} style={styles.imageWrapper}>
+                      {reviewState.selectedImages.map((uri, index) => (
+                        <View
+                          key={`${uri}-${index}`}
+                          style={styles.imageWrapper}
+                        >
                           <Image source={{ uri }} style={styles.previewImage} />
                           <TouchableOpacity
                             style={styles.removeIcon}
@@ -291,7 +391,9 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
                       color={staticColors.white}
                     />
                   ) : (
-                    <Text style={styles.submitButtonText}>Say it!</Text>
+                    <Text style={styles.submitButtonText}>
+                      {getButtonText()}
+                    </Text>
                   )}
                 </TouchableOpacity>
               </View>
