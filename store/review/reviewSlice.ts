@@ -110,7 +110,6 @@ const reviewSlice = createSlice({
         state.loading = false;
         state.success = true;
         state.error = null;
-        console.log("Submit review fulfilled:", action.payload);
       })
       .addCase(submitReview.rejected, (state, action) => {
         state.loading = false;
@@ -126,7 +125,6 @@ const reviewSlice = createSlice({
         state.loading = false;
         state.success = true;
         state.error = null;
-        console.log("Update review fulfilled:", action.payload);
       })
       .addCase(updateReview.rejected, (state, action) => {
         state.loading = false;

@@ -219,7 +219,6 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
 
   const handleGalleryPick = async () => {
     const uris = await pickImages(setImagePickerModal, "gallery");
-    console.log(uris);
     if (uris.length > 0) {
       setReviewState((prev) => ({
         ...prev,

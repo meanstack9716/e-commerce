@@ -39,7 +39,6 @@ export const pickImages = async (setModal: (value: boolean) => void, source: str
     setModal(false);
     return [];    
   } catch (error) {
-    console.error("Image picker error:", error);
     setModal(false);
     return [];
   }
