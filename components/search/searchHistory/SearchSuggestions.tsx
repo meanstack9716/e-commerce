@@ -27,20 +27,18 @@ const SearchSuggestions: React.FC<SearchSuggestionsProps> = ({
     <View style={styles.historyContainer}>
       <View style={styles.historyHeader}>
         <Text style={styles.historyTitle}>{title}</Text>
-        <TouchableOpacity onPress={onClearHistory}>
-          <Ionicons
-            name="trash-outline"
-            size={16}
-            color={staticColors.red50}
-            style={styles.iconStyle}
-          />
-        </TouchableOpacity>
+        {onClearHistory && (
+          <TouchableOpacity onPress={onClearHistory}>
+            <Ionicons
+              name="trash-outline"
+              size={16}
+              color={staticColors.red50}
+              style={styles.iconStyle}
+            />
+          </TouchableOpacity>
+        )}
       </View>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.historyList}
-      >
+      <View style={styles.historyList}>
         {history.map((item, index) => (
           <TouchableOpacity
             key={index}
@@ -50,7 +48,7 @@ const SearchSuggestions: React.FC<SearchSuggestionsProps> = ({
             <Text style={styles.historyItemText}>{item.toUpperCase()}</Text>
           </TouchableOpacity>
         ))}
-      </ScrollView>
+      </View>
     </View>
   );
 };
@@ -58,13 +56,13 @@ const SearchSuggestions: React.FC<SearchSuggestionsProps> = ({
 const styles = StyleSheet.create({
   historyContainer: {
     ...spacingStyles.px5,
-    ...spacingStyles.mb10,
+    ...spacingStyles.mb20,
   },
   historyHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    ...spacingStyles.mb10,
+    ...spacingStyles.mb15,
   },
   historyTitle: {
     fontSize: fontSizes.base,
@@ -73,11 +71,13 @@ const styles = StyleSheet.create({
   },
   historyList: {
     flexDirection: "row",
+    flexWrap: "wrap",
     gap: gapSizes.md,
   },
+
   iconStyle: {
     backgroundColor: staticColors.gray300,
-    padding:8,
+    padding: 8,
     borderRadius: borderRadius.circle,
   },
   historyItem: {

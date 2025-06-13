@@ -2,7 +2,10 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { handleApiError } from "@/utils/handleApiError";
 import axiosConfig from "@/utils/axiosConfig";
 import { Product, Color } from "@/interfaces";
-import { PRODUCT_LIMIT, RECOMMENDED_KEYWORD_LIMIT } from "@/constants/constants";
+import {
+  PRODUCT_LIMIT,
+  RECOMMENDED_KEYWORD_LIMIT,
+} from "@/constants/constants";
 
 interface ProductsState {
   data: Product[];
@@ -69,19 +72,20 @@ export const fetchColors = createAsyncThunk<
 
 export const fetchProducts = createAsyncThunk<
   { products: Product[]; pagination: any },
-  { params?: any; page?: number; limit?: number; isSearch?: boolean },
+  { params?: any; page?: number; limit?: number },
   { rejectValue: string }
 >(
   "products/fetchProducts",
   async (
-    { params = {}, page = 1, limit = PRODUCT_LIMIT, isSearch = false },
+    { params = {}, page = 1, limit = PRODUCT_LIMIT },
     { rejectWithValue }
   ) => {
     try {
       const response = await axiosConfig.get("/products/list", {
         params: {
           ...params,
-          ...(isSearch ? {} : { page, limit }), // Skip pagination for search
+          page,
+          limit,
         },
       });
       if (response.data?.data) {
@@ -90,7 +94,7 @@ export const fetchProducts = createAsyncThunk<
           pagination: {
             currentPage: page,
             limit,
-            hasMore: !isSearch && response.data.data.length === limit,
+            hasMore: response.data.data.length === limit,
           },
         };
       }
@@ -134,9 +138,14 @@ export const fetchRecommendedKeywords = createAsyncThunk<
           params: { limit },
         }
       );
+
       if (Array.isArray(response.data.data)) {
         return response.data.data;
       }
+
+      return rejectWithValue(
+        "Invalid response format from recommended keywords API"
+      );
     } catch (error) {
       return rejectWithValue(
         handleApiError(error, "Failed to fetch recommended keywords")
@@ -171,17 +180,17 @@ const productsSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-  .addCase(fetchProducts.fulfilled, (state, action) => {
-  state.loading = false;
-  state.data = action.payload.pagination.currentPage === 1
-    ? action.payload.products
-    : [...state.data, ...action.payload.products];
-  state.pagination = action.payload.pagination;
-  state.pagination.currentPage = action.payload.pagination.currentPage;
-  state.pagination.hasMore = action.payload.pagination.hasMore;
-  state.error = null;
-})
-
+      .addCase(fetchProducts.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data =
+          action.payload.pagination.currentPage === 1
+            ? action.payload.products
+            : [...state.data, ...action.payload.products];
+        state.pagination = action.payload.pagination;
+        state.pagination.currentPage += 1;
+        state.pagination.hasMore = action.payload.pagination.hasMore;
+        state.error = null;
+      })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;

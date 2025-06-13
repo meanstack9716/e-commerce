@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -56,10 +57,6 @@ const ProductSearchScreen: React.FC = () => {
   const dispatch = useAppDispatch();
   const products = useSelector((state: any) => state.products.data);
   const loading = useSelector((state: any) => state.products.loading);
-  const allProducts = useSelector((state: any) => state.products.data);
-  const filteredProducts = allProducts.filter((product: Product) =>
-    product.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
   const error = useSelector((state: any) => state.products.error);
   const {
     recommendedKeywords,
@@ -110,38 +107,33 @@ const ProductSearchScreen: React.FC = () => {
     }
   }, [dispatch, subCategories, sizes, colors, priceMin, priceMax]);
 
-const handleSearchSubmit = async () => {
-  if (!searchTerm.trim()) {
-    console.warn("Search term is empty");
-    return;
-  }
-
-  try {
-    await saveSearchQuery(searchTerm);
-    const updatedHistory = await getSearchHistory();
-    setSearchHistory(updatedHistory);
-    setIsSearchSubmitted(true);
-    setPage(1);
-    dispatch(resetProducts());
-    dispatch(
-      fetchProducts({
-        params: {
-          searchTerm: searchTerm,
-          subCategoryIds: subCategories,
-          sizes,
-          colors,
-          minPrice: priceMin,
-          maxPrice: priceMax,
-        },
-        isSearch: true, // Enable full search
-      })
-    );
-    console.log("Search submitted:", { searchTerm });
-  } catch (error) {
-    console.error("Search submission failed:", error);
-    setIsSearchSubmitted(false);
-  }
-};
+  const handleSearchSubmit = async () => {
+    if (!searchTerm.trim()) {
+      console.warn("Search term is empty");
+      return;
+    }
+    try {
+      await saveSearchQuery(searchTerm);
+      const updatedHistory = await getSearchHistory();
+      setSearchHistory(updatedHistory);
+      setIsSearchSubmitted(true);
+      setPage(1);
+      dispatch(resetProducts());
+      dispatch(
+        fetchProducts({
+          params: {
+            searchTerm: searchTerm,
+            subCategoryIds: subCategories,
+            sizes,
+            colors,
+          },
+        })
+      );
+    } catch (error) {
+      console.error("Search submission failed:", error);
+      setIsSearchSubmitted(false);
+    }
+  };
 
   const handleHistoryItemPress = async (query: string) => {
     setSearchTerm(query);
@@ -155,8 +147,6 @@ const handleSearchSubmit = async () => {
           subCategoryIds: subCategories,
           sizes,
           colors,
-          minPrice: priceMin,
-          maxPrice: priceMax,
         },
         page: 1,
         limit,
@@ -331,9 +321,9 @@ const handleSearchSubmit = async () => {
               onClearHistory={handleClearSearchHistory}
             />
             {recommendedKeywordsLoading ? (
-              <Text style={styles.loadingText}>
-                Loading recommended keywords...
-              </Text>
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="small" color={staticColors.lightGray} />
+              </View>
             ) : recommendedKeywordsError ? (
               <Text style={styles.errorText}>
                 Error: {recommendedKeywordsError}
@@ -362,7 +352,7 @@ const handleSearchSubmit = async () => {
             <Text style={styles.errorText}>Error: {error}</Text>
           ) : products.length > 0 ? (
             <FlatList
-              data={filteredProducts}
+              data={products}
               renderItem={renderProductItem}
               keyExtractor={(item) => item.id}
               numColumns={2}
@@ -434,10 +424,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     ...spacingStyles.mb10,
   },
-  loadingText: {
-    textAlign: "center",
-    fontSize: fontSizes.base,
-    color: staticColors.darkGray,
+  loadingContainer: {
+    ...spacingStyles.p10,
+    alignItems: "center",
   },
   errorText: {
     textAlign: "center",
