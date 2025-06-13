@@ -67,7 +67,10 @@ export const fetchProducts = createAsyncThunk<
   { rejectValue: string }
 >(
   "products/fetchProducts",
-  async ({ params = {}, page = 1, limit = 10 }, { rejectWithValue }) => {
+  async (
+    { params = {}, page = 1, limit = LIST_LIMIT },
+    { rejectWithValue }
+  ) => {
     try {
       const response = await axiosConfig.get("/products/list", {
         params: {
@@ -79,7 +82,7 @@ export const fetchProducts = createAsyncThunk<
       if (response.data?.data) {
         return {
           products: response.data.data,
-          pagination:{
+          pagination: {
             currentPage: page,
             limit,
             hasMore: response.data.data.length === limit,
@@ -120,6 +123,11 @@ const productsSlice = createSlice({
       state.data = [];
       state.loading = false;
       state.error = null;
+      state.pagination = {
+        currentPage: 1,
+        limit: LIST_LIMIT,
+        hasMore: true,
+      };
     },
     clearSelectedProduct: (state) => {
       state.selectedProduct = null;
@@ -139,14 +147,12 @@ const productsSlice = createSlice({
           action.payload.pagination.currentPage === 1
             ? action.payload.products
             : [...state.data, ...action.payload.products];
-        state.pagination = {
-          currentPage: action.payload.pagination.currentPage,
-          limit: action.payload.pagination.limit,
-          hasMore:
-            action.payload.pagination.currentPage <
-            action.payload.pagination.totalPages,
-        };
+        state.pagination = action.payload.pagination;
+        state.pagination.currentPage += 1;
+        state.pagination.hasMore = action.payload.pagination.hasMore;
+        state.error = null;
       })
+
       .addCase(fetchProducts.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;

@@ -3,6 +3,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { RootState } from "../store";
 import { getAuthHeaders } from "@/utils/apiHeader";
+import axiosConfig from "@/utils/axiosConfig";
 
 interface WishlistState {
   items: WishlistItem[];
@@ -21,10 +22,8 @@ export const fetchWishlist = createAsyncThunk(
   "wishlist/fetch",
   async (_, { getState, rejectWithValue }) => {
     try {
-      const state = getState() as RootState;
-      const response = await axios.get(
-        `${apiUrl}/wishlist/list`,
-        getAuthHeaders(state)
+      const response = await axiosConfig.get(
+        `/wishlist/list`,
       );
       if (!response.data?.data) {
         throw new Error("Invalid fetchWishlist response structure");
@@ -42,9 +41,7 @@ export const removeWishlistItem = createAsyncThunk(
   "wishlist/removeWishlistItem",
   async (id: string, { getState, rejectWithValue }) => {
     try {
-      const state = getState() as RootState;
-      const response = await axios.delete(`${apiUrl}/wishlist/remove`, {
-        ...getAuthHeaders(state),
+      const response = await axiosConfig.delete(`/wishlist/remove`, {
         data: { item_ids: [id] },
       });
       return id;
@@ -80,11 +77,7 @@ export const addToWishlist = createAsyncThunk(
         selected_color: selectedColor,
         quantity,
       };
-      console.log("addToWishlist request body:", requestBody);
-      const response = await axios.post(`${apiUrl}/wishlist/add`, requestBody, {
-        ...getAuthHeaders(state),
-      });
-      console.log("addToWishlist response:", response?.data);
+      const response = await axiosConfig.post(`/wishlist/add`, requestBody);
       return response.data.data as WishlistItem;
     } catch (error: any) {
       return rejectWithValue(
@@ -102,15 +95,15 @@ export const moveToCart = createAsyncThunk(
   async (id: string, { getState, rejectWithValue }) => {
     try {
       const state = getState() as RootState;
-      const response = await axios.post(
-        `${apiUrl}/wishlist/to-cart`,
+      const response = await axiosConfig.post(
+        `/wishlist/to-cart`,
         { item_ids: [id] },
         getAuthHeaders(state)
       );
       return id; 
     } catch (error: any) {
       return rejectWithValue(
-        error.response?.data?.message || "Failed to move item to cart"
+        error.response?.data || "Failed to move item to cart"
       );
     }
   }

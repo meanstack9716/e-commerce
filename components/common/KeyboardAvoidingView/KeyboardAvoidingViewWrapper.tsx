@@ -19,7 +19,7 @@ export const KeyboardAvoidingViewWrapper: React.FC<
   return (
     <KeyboardAvoidingView
       style={[styles.keyboardAvoiding, { backgroundColor }, style]}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior={Platform.OS === "ios" ? "padding" : "padding"}
       keyboardVerticalOffset={keyboardVerticalOffset}
     >
       {children}
