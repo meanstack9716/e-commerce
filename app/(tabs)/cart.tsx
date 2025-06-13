@@ -34,6 +34,7 @@ import CardItemCard from "@/components/cart-items/cartItemCard";
 import ProductDeleteConfirmationModal from "@/modal/ProductDeleteConfirmationModal";
 import Toast from "react-native-toast-message";
 import { commonStyles } from "@/style/commonStyle";
+import PromoCodeSection from "@/components/promoCode/PromoCodeSection";
 
 const ShoppingBagScreen: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -178,6 +179,10 @@ const ShoppingBagScreen: React.FC = () => {
     });
   };
 
+  const selectedCartItems = cartItems.filter((item) =>
+    selectedItems.includes(item.id)
+  );
+
   if (isLoading) {
     return (
       <SafeAreaViewWrapper style={styles.container}>
@@ -222,6 +227,7 @@ const ShoppingBagScreen: React.FC = () => {
                 removeClippedSubviews={true}
                 initialNumToRender={10}
               />
+              <PromoCodeSection selectedCartItems={selectedCartItems} />
             </View>
           ) : (
             <EmptyCart />
