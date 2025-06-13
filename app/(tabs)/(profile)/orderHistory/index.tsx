@@ -22,7 +22,6 @@ import staticColors from "@/style/staticColors";
 import gapSizes from "@/style/gapSizes";
 import ReviewModal from "@/modal/ReviewModal/ReviewModal";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
-
 import { SelectedItem } from "./orderHistory.types";
 import OrderItem from "@/components/order/orderItem/OrderItem";
 import ProfileHeaderBar from "@/components/profile/ProfileHeaderBar/ProfileHeaderBar";
