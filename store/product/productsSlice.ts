@@ -143,8 +143,9 @@ const productsSlice = createSlice({
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.loading = false;
+          console.log('API Response:', action.payload.products);
         state.data =
-          action.payload.pagination.currentPage === 1
+          action.payload.pagination.currentPage === 2
             ? action.payload.products
             : [...state.data, ...action.payload.products];
         state.pagination = action.payload.pagination;
