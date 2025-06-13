@@ -95,8 +95,6 @@ const filteredProducts = allProducts.filter((product: Product) =>
             subCategoryIds: subCategories,
             sizes,
             colors,
-            minPrice: priceMin,
-            maxPrice: priceMax,
           },
           page: 1,
           limit,
