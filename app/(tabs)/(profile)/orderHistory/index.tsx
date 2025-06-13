@@ -4,8 +4,6 @@ import { useSelector } from "react-redux";
 import { useAppDispatch } from "@/store/hooks";
 import { RootState } from "@/store/store";
 import { clearOrderStatus, fetchOrders } from "@/store/order/orderSlice";
-import { textTruncate } from "@/utils/textTruncate";
-import FullScreenLoader from "@/components/common/FullScreenLoader";
 import images from "@/constants/images";
 import borderRadius from "@/style/borderRadius";
 import spacingStyles from "@/style/spacingStyles";
@@ -17,9 +15,9 @@ import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaVi
 import { SelectedItem } from "./orderHistory.types";
 import OrderItem from "@/components/order/orderItem/OrderItem";
 import ProfileHeaderBar from "@/components/profile/ProfileHeaderBar/ProfileHeaderBar";
-import { Order } from "@/interfaces";
 import OrderItemSkeleton from "@/components/common/OrderItemSkeleton";
 import { LIST_LIMIT } from "@/constants/constants";
+import { Order } from "@/interfaces";
 
 const OrderHistoryScreen: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -123,10 +121,9 @@ const styles = StyleSheet.create({
     ...spacingStyles.px12,
     ...spacingStyles.py15,
   },
-  profileHeaderContainer: {
-    ...spacingStyles.pl20,
-    ...spacingStyles.pr12,
-    ...spacingStyles.pt10,
+    profileHeaderContainer: {
+    ...spacingStyles.px15,
+    ...spacingStyles.py5
   },
   errorText: {
     fontSize: fontSizes.xs,
