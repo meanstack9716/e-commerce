@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { handleApiError } from "@/utils/handleApiError";
 import axiosConfig from "@/utils/axiosConfig";
 import { Product, Color } from "@/interfaces";
-import { PRODUCT_LIMIT } from "@/constants/constants";
+import { PRODUCT_LIMIT, RECOMMENDED_KEYWORD_LIMIT } from "@/constants/constants";
 
 interface ProductsState {
   data: Product[];
@@ -19,6 +19,9 @@ interface ProductsState {
     limit: number;
     hasMore: boolean;
   };
+  recommendedKeywords: string[];
+  recommendedKeywordsLoading: boolean;
+  recommendedKeywordsError: string | null;
 }
 
 const initialState: ProductsState = {
@@ -36,6 +39,9 @@ const initialState: ProductsState = {
     limit: PRODUCT_LIMIT,
     hasMore: true,
   },
+  recommendedKeywords: [],
+  recommendedKeywordsLoading: false,
+  recommendedKeywordsError: null,
 };
 
 export const fetchColors = createAsyncThunk<
@@ -63,20 +69,19 @@ export const fetchColors = createAsyncThunk<
 
 export const fetchProducts = createAsyncThunk<
   { products: Product[]; pagination: any },
-  { params?: any; page?: number; limit?: number },
+  { params?: any; page?: number; limit?: number; isSearch?: boolean },
   { rejectValue: string }
 >(
   "products/fetchProducts",
   async (
-    { params = {}, page = 1, limit = PRODUCT_LIMIT },
+    { params = {}, page = 1, limit = PRODUCT_LIMIT, isSearch = false },
     { rejectWithValue }
   ) => {
     try {
       const response = await axiosConfig.get("/products/list", {
         params: {
           ...params,
-          page,
-          limit,
+          ...(isSearch ? {} : { page, limit }), // Skip pagination for search
         },
       });
       if (response.data?.data) {
@@ -85,7 +90,7 @@ export const fetchProducts = createAsyncThunk<
           pagination: {
             currentPage: page,
             limit,
-            hasMore: response.data.data.length === limit,
+            hasMore: !isSearch && response.data.data.length === limit,
           },
         };
       }
@@ -115,6 +120,31 @@ export const fetchProductById = createAsyncThunk<
   }
 });
 
+export const fetchRecommendedKeywords = createAsyncThunk<
+  string[],
+  { limit?: number },
+  { rejectValue: string }
+>(
+  "products/fetchRecommendedKeywords",
+  async ({ limit = RECOMMENDED_KEYWORD_LIMIT }, { rejectWithValue }) => {
+    try {
+      const response = await axiosConfig.get(
+        "/search/products/recommended-keywords",
+        {
+          params: { limit },
+        }
+      );
+      if (Array.isArray(response.data.data)) {
+        return response.data.data;
+      }
+    } catch (error) {
+      return rejectWithValue(
+        handleApiError(error, "Failed to fetch recommended keywords")
+      );
+    }
+  }
+);
+
 const productsSlice = createSlice({
   name: "products",
   initialState,
@@ -141,23 +171,21 @@ const productsSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchProducts.fulfilled, (state, action) => {
-        state.loading = false;
-        state.data =
-          action.payload.pagination.currentPage === 1
-            ? action.payload.products
-            : [...state.data, ...action.payload.products];
-        state.pagination = action.payload.pagination;
-        state.pagination.currentPage += 1;
-        state.pagination.hasMore = action.payload.pagination.hasMore;
-        state.error = null;
-      })
+  .addCase(fetchProducts.fulfilled, (state, action) => {
+  state.loading = false;
+  state.data = action.payload.pagination.currentPage === 1
+    ? action.payload.products
+    : [...state.data, ...action.payload.products];
+  state.pagination = action.payload.pagination;
+  state.pagination.currentPage = action.payload.pagination.currentPage;
+  state.pagination.hasMore = action.payload.pagination.hasMore;
+  state.error = null;
+})
 
       .addCase(fetchProducts.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
-      });
-    builder
+      })
       .addCase(fetchProductById.pending, (state) => {
         state.selectedProductLoading = true;
         state.selectedProductError = null;
@@ -171,8 +199,7 @@ const productsSlice = createSlice({
         state.selectedProductLoading = false;
         state.selectedProductError =
           action.payload || "Failed to fetch product details";
-      });
-    builder
+      })
       .addCase(fetchColors.pending, (state) => {
         state.colorsLoading = true;
         state.colorsError = null;
@@ -184,6 +211,19 @@ const productsSlice = createSlice({
       .addCase(fetchColors.rejected, (state, action) => {
         state.colorsLoading = false;
         state.colorsError = action.payload as string;
+      })
+      .addCase(fetchRecommendedKeywords.pending, (state) => {
+        state.recommendedKeywordsLoading = true;
+        state.recommendedKeywordsError = null;
+      })
+      .addCase(fetchRecommendedKeywords.fulfilled, (state, action) => {
+        state.recommendedKeywordsLoading = false;
+        state.recommendedKeywords = action.payload;
+      })
+      .addCase(fetchRecommendedKeywords.rejected, (state, action) => {
+        state.recommendedKeywordsLoading = false;
+        state.recommendedKeywordsError =
+          action.payload || "Failed to load keywords";
       });
   },
 });

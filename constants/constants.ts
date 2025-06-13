@@ -30,3 +30,4 @@ export const NUMERIC_SIZES = [
 export const PRODUCT_RANGE_MIN_PRICE = 10;
 export const PRODUCT_RANGE_MAX_PRICE = 30000;
 export const PRODUCT_LIMIT = 10
+export const RECOMMENDED_KEYWORD_LIMIT=5

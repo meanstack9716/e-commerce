@@ -13,7 +13,11 @@ import { router } from "expo-router";
 import { useSelector } from "react-redux";
 import { Product } from "@/interfaces";
 import { useAppDispatch } from "@/store/hooks";
-import { fetchProducts, resetProducts } from "@/store/product/productsSlice";
+import {
+  fetchProducts,
+  fetchRecommendedKeywords,
+  resetProducts,
+} from "@/store/product/productsSlice";
 import images from "@/constants/images";
 import staticColors from "@/style/staticColors";
 import { commonStyles } from "@/style/commonStyle";
@@ -23,17 +27,19 @@ import {
   PRODUCT_LIMIT,
   PRODUCT_RANGE_MAX_PRICE,
   PRODUCT_RANGE_MIN_PRICE,
+  RECOMMENDED_KEYWORD_LIMIT,
 } from "@/constants/constants";
 import ProductFilter from "@/components/productFilter/ProductFilter";
 import ProductCard from "@/components/home/ProductCard";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import ProductCardSkeleton from "@/components/common/ProductCardSkeleton";
-import SearchHistory from "@/components/search/searchHistory/SearchHistory";
+
 import {
   clearSearchHistory,
   getSearchHistory,
   saveSearchQuery,
 } from "@/utils/searchStorage";
+import SearchSuggestions from "@/components/search/searchHistory/SearchSuggestions";
 
 const ProductSearchScreen: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -50,11 +56,16 @@ const ProductSearchScreen: React.FC = () => {
   const dispatch = useAppDispatch();
   const products = useSelector((state: any) => state.products.data);
   const loading = useSelector((state: any) => state.products.loading);
-const allProducts = useSelector((state: any) => state.products.data);
-const filteredProducts = allProducts.filter((product: Product) =>
-  product.title.toLowerCase().includes(searchTerm.toLowerCase())
-);
+  const allProducts = useSelector((state: any) => state.products.data);
+  const filteredProducts = allProducts.filter((product: Product) =>
+    product.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   const error = useSelector((state: any) => state.products.error);
+  const {
+    recommendedKeywords,
+    recommendedKeywordsLoading,
+    recommendedKeywordsError,
+  } = useSelector((state: any) => state.products);
   const [page, setPage] = useState(1);
   const { subCategories, sizes, colors, priceMin, priceMax } = productFilters;
   const hasMore = useSelector(
@@ -68,7 +79,8 @@ const filteredProducts = allProducts.filter((product: Product) =>
       setSearchHistory(history);
     };
     loadSearchHistory();
-  }, []);
+    dispatch(fetchRecommendedKeywords({ limit: RECOMMENDED_KEYWORD_LIMIT }));
+  }, [dispatch]);
 
   useEffect(() => {
     const hasFilters =
@@ -98,30 +110,38 @@ const filteredProducts = allProducts.filter((product: Product) =>
     }
   }, [dispatch, subCategories, sizes, colors, priceMin, priceMax]);
 
-  const handleSearchSubmit = async () => {
-    if (searchTerm.trim()) {
-      await saveSearchQuery(searchTerm);
-      const updatedHistory = await getSearchHistory();
-      setSearchHistory(updatedHistory);
-      setIsSearchSubmitted(true);
-      setPage(1);
-      dispatch(resetProducts());
-      dispatch(
-        fetchProducts({
-          params: {
-            searchTerm: searchTerm,
-            subCategoryIds: subCategories,
-            sizes,
-            colors,
-            minPrice: priceMin,
-            maxPrice: priceMax,
-          },
-          page: 1,
-          limit,
-        })
-      );
-    }
-  };
+const handleSearchSubmit = async () => {
+  if (!searchTerm.trim()) {
+    console.warn("Search term is empty");
+    return;
+  }
+
+  try {
+    await saveSearchQuery(searchTerm);
+    const updatedHistory = await getSearchHistory();
+    setSearchHistory(updatedHistory);
+    setIsSearchSubmitted(true);
+    setPage(1);
+    dispatch(resetProducts());
+    dispatch(
+      fetchProducts({
+        params: {
+          searchTerm: searchTerm,
+          subCategoryIds: subCategories,
+          sizes,
+          colors,
+          minPrice: priceMin,
+          maxPrice: priceMax,
+        },
+        isSearch: true, // Enable full search
+      })
+    );
+    console.log("Search submitted:", { searchTerm });
+  } catch (error) {
+    console.error("Search submission failed:", error);
+    setIsSearchSubmitted(false);
+  }
+};
 
   const handleHistoryItemPress = async (query: string) => {
     setSearchTerm(query);
@@ -303,11 +323,29 @@ const filteredProducts = allProducts.filter((product: Product) =>
           </TouchableOpacity>
         </View>
         {!isSearchSubmitted && (
-          <SearchHistory
-            history={searchHistory}
-            onItemPress={handleHistoryItemPress}
-            onClearHistory={handleClearSearchHistory}
-          />
+          <>
+            <SearchSuggestions
+              title="Search history"
+              history={searchHistory}
+              onItemPress={handleHistoryItemPress}
+              onClearHistory={handleClearSearchHistory}
+            />
+            {recommendedKeywordsLoading ? (
+              <Text style={styles.loadingText}>
+                Loading recommended keywords...
+              </Text>
+            ) : recommendedKeywordsError ? (
+              <Text style={styles.errorText}>
+                Error: {recommendedKeywordsError}
+              </Text>
+            ) : (
+              <SearchSuggestions
+                title="Recommended"
+                history={recommendedKeywords}
+                onItemPress={handleHistoryItemPress}
+              />
+            )}
+          </>
         )}
 
         {isSearchSubmitted ? (
@@ -326,7 +364,7 @@ const filteredProducts = allProducts.filter((product: Product) =>
             <FlatList
               data={filteredProducts}
               renderItem={renderProductItem}
-              keyExtractor={(item) => item.id.toString()}
+              keyExtractor={(item) => item.id}
               numColumns={2}
               columnWrapperStyle={styles.row}
               contentContainerStyle={styles.productList}

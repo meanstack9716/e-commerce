@@ -10,12 +10,13 @@ import { Ionicons } from "@expo/vector-icons";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import { fontSizes, fontWeights } from "@/style/typography";
-import { SearchHistoryProps } from "./SearchHistory.types";
 import borderRadius from "@/style/borderRadius";
 import { fontFamilies } from "@/style/fontFamilies";
 import gapSizes from "@/style/gapSizes";
+import { SearchSuggestionsProps } from "./SearchSuggestions.types";
 
-const SearchHistory: React.FC<SearchHistoryProps> = ({
+const SearchSuggestions: React.FC<SearchSuggestionsProps> = ({
+  title,
   history,
   onItemPress,
   onClearHistory,
@@ -25,7 +26,7 @@ const SearchHistory: React.FC<SearchHistoryProps> = ({
   return (
     <View style={styles.historyContainer}>
       <View style={styles.historyHeader}>
-        <Text style={styles.historyTitle}>Search history</Text>
+        <Text style={styles.historyTitle}>{title}</Text>
         <TouchableOpacity onPress={onClearHistory}>
           <Ionicons
             name="trash-outline"
@@ -57,6 +58,7 @@ const SearchHistory: React.FC<SearchHistoryProps> = ({
 const styles = StyleSheet.create({
   historyContainer: {
     ...spacingStyles.px5,
+    ...spacingStyles.mb10,
   },
   historyHeader: {
     flexDirection: "row",
@@ -91,4 +93,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SearchHistory;
+export default SearchSuggestions;
