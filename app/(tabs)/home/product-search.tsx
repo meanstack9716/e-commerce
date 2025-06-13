@@ -205,26 +205,27 @@ const filteredProducts = allProducts.filter((product: Product) =>
     setPage(1);
   };
 
-  const loadMoreProducts = () => {
-    if (!loading && hasMore) {
-      const nextPage = page + 1;
-      setPage(nextPage);
-      dispatch(
-        fetchProducts({
-          params: {
-            searchTerm: searchTerm,
-            subCategoryIds: subCategories,
-            sizes,
-            colors,
-            minPrice: priceMin,
-            maxPrice: priceMax,
-          },
-          page: nextPage,
-          limit,
-        })
-      );
-    }
-  };
+const loadMoreProducts = () => {
+  if (!loading && hasMore) {
+    console.log("Loading more products", { page, hasMore });
+    const nextPage = page + 1;
+    setPage(nextPage);
+    dispatch(
+      fetchProducts({
+        params: {
+          searchTerm: searchTerm,
+          subCategoryIds: subCategories,
+          sizes,
+          colors,
+          minPrice: priceMin,
+          maxPrice: priceMax,
+        },
+        page: nextPage,
+        limit,
+      })
+    );
+  }
+};
 
   const renderSkeletonItem = () => <ProductCardSkeleton />;
   const renderFooter = () => {
@@ -326,7 +327,7 @@ const filteredProducts = allProducts.filter((product: Product) =>
             <FlatList
               data={filteredProducts}
               renderItem={renderProductItem}
-              keyExtractor={(item) => item.id.toString()}
+              keyExtractor={(item) => item.id}
               numColumns={2}
               columnWrapperStyle={styles.row}
               contentContainerStyle={styles.productList}

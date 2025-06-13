@@ -34,8 +34,8 @@ const OrderHistoryScreen: React.FC = () => {
     productDescription: "",
   });
   const [isReviewModalVisible, setReviewModalVisible] = useState(false);
-  const [isOrderHistoryModalVisible, setOrderHistoryModalVisible] = useState(false);
-
+  const [isOrderHistoryModalVisible, setOrderHistoryModalVisible] =
+    useState(false);
 
   useEffect(() => {
     dispatch(fetchOrders({ page: 1, limit: LIST_LIMIT }));
@@ -67,9 +67,9 @@ const OrderHistoryScreen: React.FC = () => {
     setReviewModalVisible(true);
   };
 
-  // const renderOrderItem = ({ item }: { item: Order }) => (
-  //   <OrderItem item={item} onReviewPress={handleReviewPress} />
-  // );
+  const renderOrderItem = ({ item }: { item: Order }) => (
+    <OrderItem item={item} onReviewPress={handleReviewPress} />
+  );
 
   const renderSkeletonItems = () => {
     return Array(5)
@@ -85,7 +85,7 @@ const OrderHistoryScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaViewWrapper backgroundColor={staticColors.white}>
+    <SafeAreaViewWrapper>
       <ProfileHeaderBar
         title="History"
         profileImage={images.unKnownUser}
@@ -125,7 +125,9 @@ const styles = StyleSheet.create({
     ...spacingStyles.py15,
   },
   profileHeaderContainer: {
-    ...spacingStyles.pl10,
+    ...spacingStyles.pl20,
+    ...spacingStyles.pr12,
+    ...spacingStyles.pt10,
   },
   errorText: {
     fontSize: fontSizes.xs,

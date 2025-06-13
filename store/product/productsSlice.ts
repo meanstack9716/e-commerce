@@ -68,7 +68,7 @@ export const fetchProducts = createAsyncThunk<
 >(
   "products/fetchProducts",
   async (
-    { params = {}, page = 1, limit = PRODUCT_LIMIT },
+    { params = {}, page = 1, limit = LIST_LIMIT },
     { rejectWithValue }
   ) => {
     try {
@@ -125,7 +125,7 @@ const productsSlice = createSlice({
       state.error = null;
       state.pagination = {
         currentPage: 1,
-        limit: PRODUCT_LIMIT,
+        limit: LIST_LIMIT,
         hasMore: true,
       };
     },

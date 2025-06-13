@@ -25,7 +25,7 @@ import { fontSizes, fontWeights } from "@/style/typography";
 
 const UserProfile = () => {
   const [likedProductItems, setLikedProductItems] = useState<string[]>([]);
-  
+
   const {
     data: categories,
     loading: categoriesLoading,
@@ -60,8 +60,12 @@ const UserProfile = () => {
   const isLoading = productsLoading;
 
   return (
-    <SafeAreaViewWrapper style={styles.container}>
-      <ProfileHeaderBar title="category" profileImage={images.genderFemale} titleStyle={styles.profileHeaderTitle} />
+    <View style={styles.container}>
+      <ProfileHeaderBar
+        title="category"
+        profileImage={images.genderFemale}
+        titleStyle={styles.profileHeaderTitle}
+      />
       <CategoriresCard categoryList={categories} />
       <View style={styles.allProductsContainer}>
         <Text style={styles.headingText}>Just for you</Text>
@@ -83,17 +87,16 @@ const UserProfile = () => {
           )}
         />
       </View>
-    </SafeAreaViewWrapper>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     flexDirection: "column",
     gap: gapSizes.sm,
     ...spacingStyles.px12,
-    backgroundColor: staticColors.white
+    backgroundColor: staticColors.white,
   },
   profileHeaderTitle: {
     ...spacingStyles.pb5,

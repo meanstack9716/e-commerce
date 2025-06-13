@@ -107,7 +107,7 @@ export default function CreateAccountScreen() {
   };
 
   return (
-    <SafeAreaViewWrapper>
+    <SafeAreaViewWrapper edges={['bottom']}>
       <KeyboardAvoidingViewWrapper style={styles.keyboardAvoidingView}>
         <ScrollView
           contentContainerStyle={styles.scrollViewContainer}
@@ -239,8 +239,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
     alignSelf: "flex-start",
     ...spacingStyles.px10,
-    ...spacingStyles.py25,
-    ...spacingStyles.mt20,
+    ...spacingStyles.pb25,
   },
   profilePicContainer: {
     width: 90,
@@ -262,7 +261,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     gap: gapSizes.md,
     zIndex: 15,
-    backgroundColor: "transparent", // Already transparent
+    backgroundColor: "transparent",
   },
   passwordContainer: {
     position: "relative",
