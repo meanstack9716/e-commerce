@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
+import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { textTruncate } from "@/utils/textTruncate";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
@@ -23,10 +17,21 @@ const OrderItem: React.FC<OrderItemProps> = ({ item, onReviewPress }) => {
   const product = firstItem?.product;
   if (!product || !product.id) return null;
 
-  const createdDate = new Date(item.created_at).toLocaleDateString(LOCALE_DATE_FORMAT, {
-    month: "short",
-    day: "numeric",
-  });
+  const getStatusColor = (status: string) => {
+    const normalizedStatus = status.toLowerCase();
+    if (normalizedStatus === "delivered") return staticColors.darkGreen;
+    if (normalizedStatus === "return" || normalizedStatus === "cancelled")
+      return staticColors.errorColor;
+    return staticColors.darkYellow;
+  };
+
+  const createdDate = new Date(item.created_at).toLocaleDateString(
+    LOCALE_DATE_FORMAT,
+    {
+      month: "short",
+      day: "numeric",
+    }
+  );
 
   const imageUrl =
     firstItem?.gallery?.[0]?.img_url || product.thumbnail_url || "";
@@ -38,10 +43,16 @@ const OrderItem: React.FC<OrderItemProps> = ({ item, onReviewPress }) => {
       ) : null}
 
       <View style={styles.cardContent}>
+        <Text
+          style={[styles.statusText, { color: getStatusColor(item.status) }]}
+        >
+          Status : {item.status}
+        </Text>
+
         <Text style={styles.description}>
           {textTruncate(product.description, 10, "...")}
         </Text>
-        <Text style={styles.orderNumber}>Order #{item.id.slice(-6)}</Text>
+        <Text style={styles.orderNumber}>OrderId #{item.id}</Text>
 
         <View style={styles.footer}>
           <View style={styles.button}>
@@ -99,9 +110,14 @@ const styles = StyleSheet.create({
     ...spacingStyles.mt2,
   },
   orderNumber: {
-    fontSize: fontSizes.sm,
+    fontSize: 11,
     fontFamily: fontFamilies.ralewayExtraBold,
-    ...spacingStyles.my10,
+    ...spacingStyles.my5,
+  },
+  statusText: {
+    fontSize: fontSizes.sm,
+    fontFamily: fontFamilies.ralewayBold,
+    ...spacingStyles.mb2,
   },
   footer: {
     flexDirection: "row",

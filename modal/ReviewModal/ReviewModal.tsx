@@ -28,7 +28,8 @@ import images from "@/constants/images";
 import { ReviewModalProps, ReviewState } from "./ReviewModal.types";
 
 import { useFieldValidation } from "@/hooks/useFieldValidation";
-import ConfirmationModal from "../commonModal/confirmationModal/ConfirmationModal";
+import ConfirmationModal from "@/modal/commonModal/confirmationModal/ConfirmationModal";
+
 
 const initialReviewState: ReviewState = {
   rating: 0,
@@ -77,8 +78,8 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
     handleFieldChange(
       "comment",
       text,
-      (value) => value.trim().length >= 200,
-      "Comment must be at least 200 characters"
+      (value) => value.trim().length >= 50,
+      "Comment must be at least 50 characters"
     );
   };
 
@@ -91,8 +92,8 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
       },
       comment: {
         value: reviewState.comment,
-        validator: (v) => v.trim().length >= 200,
-        errorMessage: "Comment must be at least 200 characters",
+        validator: (v) => v.trim().length >= 50,
+        errorMessage: "Comment must be at least 50 characters",
       },
     });
 
@@ -260,7 +261,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
                 <TextInput
                   style={styles.commentInput}
                   multiline
-                  placeholder="Write your review (minimum 200 characters)"
+                  placeholder="Write your review (minimum 50 characters)"
                   placeholderTextColor={staticColors.black}
                   value={reviewState.comment}
                   onChangeText={handleCommentChange}
@@ -268,7 +269,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
                   textAlign="left"
                 />
                 <Text style={styles.charCount}>
-                  {reviewState.comment.length}/200
+                  {reviewState.comment.length}/50
                 </Text>
                 {errors.comment && (
                   <Text style={styles.errorText}>{errors.comment}</Text>
@@ -443,7 +444,7 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.primaryBlue,
     borderRadius: borderRadius.r10,
     ...spacingStyles.py10,
-    ...spacingStyles.mt10,
+    ...spacingStyles.mt5,
     alignItems: "center",
     justifyContent: "center",
     ...spacingStyles.mx20,
@@ -459,13 +460,11 @@ const styles = StyleSheet.create({
   },
   ratingWithCamera: {
     ...spacingStyles.px20,
-    ...spacingStyles.mb15,
     alignItems: "flex-start",
   },
   cameraRow: {
     flexDirection: "row",
     alignItems: "center",
-    ...spacingStyles.mb5,
     gap: gapSizes.md,
   },
   cameraText: {

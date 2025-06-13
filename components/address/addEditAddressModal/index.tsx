@@ -175,7 +175,7 @@ const AddEditAddressModal: React.FC<AddEditAddressModalProps> = ({
 
                     <TextFieldWithLabel
                       label="Mobile Number"
-                      value={formData.contact_name}
+                      value={formData.contact_number}
                       field="contact_number"
                       placeholder="Enter contact number"
                       onChangeText={(field, text) =>
@@ -230,17 +230,6 @@ const AddEditAddressModal: React.FC<AddEditAddressModalProps> = ({
                         handleInputChange(field, text)
                       }
                       errorMessage={errors.line2}
-                    />
-
-                    <TextFieldWithLabel
-                      label="City"
-                      value={formData.city}
-                      field="city"
-                      placeholder="Enter city/district"
-                      onChangeText={(field, text) =>
-                        handleInputChange(field, text)
-                      }
-                      errorMessage={errors.city}
                     />
 
                     <View style={styles.row}>

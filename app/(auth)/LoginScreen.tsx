@@ -31,7 +31,7 @@ export default function LoginScreen() {
     handleEmailValidation(email);
     if (validateEmail(email) && !errors.email) {
       resetErrors();
-      router.push({
+      router.navigate({
         pathname: "/PasswordScreen",
         params: { email: email.trim() },
       });

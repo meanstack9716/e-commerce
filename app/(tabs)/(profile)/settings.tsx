@@ -36,7 +36,7 @@ export default function SettingPage() {
       title: "Shop",
       items: [
         { label: "Order", route: "/orderHistory" },
-        { label: "Faq", route: null },
+        { label: "Faq", route: 'faq' },
         { label: "About Us", route: null },
         { label: "Terms and Use", route: null },
         { label: "Privacy Policy", route: null },
@@ -93,14 +93,13 @@ export default function SettingPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    ...spacingStyles.py10,
     ...spacingStyles.px15,
     backgroundColor: staticColors.white,
   },
   headerContain: {
     flexDirection: 'row',
     alignItems: 'center',
-    ...spacingStyles.mb25,
+    ...spacingStyles.mb20,
   },
   backButton: {
     ...spacingStyles.mr15
@@ -111,12 +110,12 @@ const styles = StyleSheet.create({
     color: staticColors.black,
   },
   section: {
-    ...spacingStyles.mb25,
+    ...spacingStyles.mb20,
   },
   sectionTitle: {
     fontSize: fontSizes.lg,
     fontWeight: fontWeights.semiBold,
-    ...spacingStyles.mb20,
+    ...spacingStyles.mb10,
     color: staticColors.black,
   },
   item: {
