@@ -21,7 +21,7 @@ import { Order } from "@/interfaces";
 
 const OrderHistoryScreen: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { orders, loading, error, currentPage, hasMore } = useSelector(
+  const { orders, loading, error, currentPage, moreOrdersAvailable } = useSelector(
     (state: RootState) => state.order
   );
   const [filteredOrders, setFilteredOrders] = useState<Order[]>(orders);
@@ -46,7 +46,7 @@ const OrderHistoryScreen: React.FC = () => {
   }, [orders]);
 
   const handleLoadMore = () => {
-    if (!loading && hasMore) {
+    if (!loading && moreOrdersAvailable) {
       dispatch(fetchOrders({ page: currentPage, limit: LIST_LIMIT }));
     }
   };
@@ -75,7 +75,7 @@ const OrderHistoryScreen: React.FC = () => {
   };
 
   const renderFooter = () => {
-    if (!loading || !hasMore) return null;
+    if (!loading || !moreOrdersAvailable) return null;
     return (
       <View style={styles.skeletonContainer}>{renderSkeletonItems()}</View>
     );

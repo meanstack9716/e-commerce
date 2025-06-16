@@ -20,7 +20,7 @@ interface OrderState {
   statusTypes: string[];
   selectedOrder: Order | null;
   currentPage: number; 
-  hasMore: boolean;
+  moreOrdersAvailable: boolean;
 }
 
 const initialState: OrderState = {
@@ -31,11 +31,11 @@ const initialState: OrderState = {
   statusTypes: [],
   selectedOrder: null,
   currentPage: 1,
-  hasMore: true,
+  moreOrdersAvailable: true,
 };
 
 export const fetchOrders = createAsyncThunk<
-  { orders: Order[]; hasMore: boolean },
+  { orders: Order[]; moreOrdersAvailable: boolean },
   { page: number; limit?: number },
   { state: RootState }
 >(
@@ -52,8 +52,8 @@ export const fetchOrders = createAsyncThunk<
         getAuthHeaders(state)
       );
       const orders = response.data.data;
-      const hasMore = response.data.hasMore || orders.length === limit;
-      return { orders, hasMore };
+      const moreOrdersAvailable = response.data.moreOrdersAvailable || orders.length === limit;
+      return { orders, moreOrdersAvailable };
     } catch (error: any) {
       const errorMessage =
         error.response?.data?.message || "Failed to fetch orders.";
@@ -147,7 +147,7 @@ const orderSlice = createSlice({
       state.orderId = null;
       state.selectedOrder = null;
       state.currentPage = 1;
-      state.hasMore = true;
+      state.moreOrdersAvailable = true;
     },
   },
   extraReducers: (builder) => {
@@ -183,7 +183,7 @@ const orderSlice = createSlice({
             ? action.payload.orders
             : [...state.orders, ...action.payload.orders];
         state.currentPage += 1;
-        state.hasMore = action.payload.hasMore;
+        state.moreOrdersAvailable = action.payload.moreOrdersAvailable;
         state.error = null;
       })
       .addCase(fetchOrders.rejected, (state, action) => {
