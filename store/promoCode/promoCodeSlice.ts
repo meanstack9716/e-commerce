@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "@/store/store";
-import { handleApiError } from "@/utils/handleApiError";
 import axiosConfig from "@/utils/axiosConfig";
 import { getAuthHeaders } from "@/utils/apiHeader";
 
@@ -15,7 +14,6 @@ interface PromoCode {
   expiry_date: string | null;
   description: string;
   is_active: boolean;
-  only_first_order: boolean;
 }
 
 interface PromoCodeState {
@@ -40,11 +38,6 @@ export const fetchPromoCodes = createAsyncThunk<
   { state: RootState }
 >("promoCode/fetchPromoCodes", async (_, { getState, rejectWithValue }) => {
   const state = getState() as RootState;
-  const token = state.auth.token;
-  if (!token) {
-    return rejectWithValue("No authentication token found.");
-  }
-
   try {
     const response = await axiosConfig.get(
       `/promo-code/list`,
@@ -52,9 +45,8 @@ export const fetchPromoCodes = createAsyncThunk<
     );
     return response.data.data;
   } catch (error: any) {
-    return rejectWithValue(
-      handleApiError(error, "Failed to fetch promo codes")
-    );
+    const errorMessage = error || "Failed to fetch promo codes";
+    return rejectWithValue(errorMessage);
   }
 });
 
@@ -66,12 +58,6 @@ export const applyPromoCode = createAsyncThunk<
   "promoCode/applyPromoCode",
   async ({ code, cartItemIds }, { getState, rejectWithValue }) => {
     const state = getState();
-    const token = state.auth.token;
-
-    if (!token) {
-      return rejectWithValue("No authentication token found.");
-    }
-
     try {
       const response = await axiosConfig.post(
         `/orders/validate-promo-code`,
@@ -90,9 +76,8 @@ export const applyPromoCode = createAsyncThunk<
         );
       }
     } catch (error: any) {
-      return rejectWithValue(
-        handleApiError(error, "Failed to apply promo code")
-      );
+      const errorMessage = error || "Failed to apply promo code.";
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -108,7 +93,7 @@ const promoCodeSlice = createSlice({
       state.loadingPromoCode = null;
     },
     removePromoCode: (state) => {
-      state.appliedPromoCode = null; // Remove the applied promo code
+      state.appliedPromoCode = null;
     },
   },
   extraReducers: (builder) => {

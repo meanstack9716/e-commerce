@@ -32,7 +32,6 @@ const isPromoCodeValid = (
   const currentDate = new Date();
   const start = new Date(startDate);
   const expiry = expiryDate ? new Date(expiryDate) : null;
-
   return start <= currentDate && (!expiry || expiry >= currentDate);
 };
 
@@ -168,7 +167,6 @@ const PromoCodeSection: React.FC<PromoCodeSectionProps> = ({
           promo.max_discount_amount
             ? `Max discount ₹${promo.max_discount_amount}`
             : null,
-          promo.only_first_order ? "Only for first order" : null,
         ]
           .filter(Boolean)
           .join(" | ");
