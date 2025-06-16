@@ -22,6 +22,7 @@ interface PromoCodeState {
   error: string | null;
   appliedPromoCode: string | null;
   loadingPromoCode: string | null;
+  discounted_amount: number | null;
 }
 
 const initialState: PromoCodeState = {
@@ -30,6 +31,7 @@ const initialState: PromoCodeState = {
   error: null,
   appliedPromoCode: null,
   loadingPromoCode: null,
+  discounted_amount: null,
 };
 
 export const fetchPromoCodes = createAsyncThunk<
@@ -51,7 +53,7 @@ export const fetchPromoCodes = createAsyncThunk<
 });
 
 export const applyPromoCode = createAsyncThunk<
-  string,
+  { code: string; discounted_amount: number }, 
   { code: string; cartItemIds: string[] },
   { state: RootState }
 >(
@@ -69,7 +71,10 @@ export const applyPromoCode = createAsyncThunk<
       );
 
       if (response.data?.promo_code && response.data?.discount_amount >= 0) {
-        return code;
+        return {
+          code,
+          discounted_amount: response.data.discounted_amount, 
+        };
       } else {
         return rejectWithValue(
           response.data?.message || "This promo code is not valid."
@@ -83,7 +88,7 @@ export const applyPromoCode = createAsyncThunk<
 );
 
 const promoCodeSlice = createSlice({
-  name: "promoCode",
+  name: "promoCode",  
   initialState,
   reducers: {
     resetPromoCodeState: (state) => {
@@ -91,9 +96,11 @@ const promoCodeSlice = createSlice({
       state.error = null;
       state.appliedPromoCode = null;
       state.loadingPromoCode = null;
+      state.discounted_amount = null;
     },
     removePromoCode: (state) => {
       state.appliedPromoCode = null;
+      state.discounted_amount = null;
     },
   },
   extraReducers: (builder) => {
@@ -119,7 +126,8 @@ const promoCodeSlice = createSlice({
       })
       .addCase(applyPromoCode.fulfilled, (state, action) => {
         state.loading = false;
-        state.appliedPromoCode = action.payload;
+        state.appliedPromoCode = action.payload.code;
+        state.discounted_amount = action.payload.discounted_amount;
         state.error = null;
         state.loadingPromoCode = null;
       })
@@ -127,6 +135,7 @@ const promoCodeSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
         state.loadingPromoCode = null;
+        state.discounted_amount = null;
       });
   },
 });
