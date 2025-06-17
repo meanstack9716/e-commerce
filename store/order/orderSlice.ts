@@ -4,13 +4,8 @@ import { getAuthHeaders } from "@/utils/apiHeader";
 import axiosConfig from "@/utils/axiosConfig";
 import { Order } from "@/interfaces";
 import Toast from "react-native-toast-message";
+import { OrderPayload } from "@/app/placeorder/placeorder.type";
 import { LIST_LIMIT } from "@/constants/constants";
-
-interface OrderPayload {
-  cart_items_ids: String[];
-  shipping_address_id: string;
-  payment_method: string;
-}
 
 interface OrderState {
   loading: boolean;

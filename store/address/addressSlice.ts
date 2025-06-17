@@ -115,6 +115,7 @@ export const fetchAddresses = createAsyncThunk<
     const response = await axiosConfig.get(`/address/list`,getAuthHeaders(state));
     return response.data.data;
   } catch (error: any) {
+    console.log("address:",error)
     return rejectWithValue(
       error.response?.data?.message || "Failed to fetch addresses"
     );

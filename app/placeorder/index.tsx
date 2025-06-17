@@ -16,6 +16,8 @@ import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import { fontSizes } from "@/style/typography";
 import borderRadius from "@/style/borderRadius";
+import { fontFamilies } from "@/style/fontFamilies";
+import { commonStyles } from "@/style/commonStyle";
 import { placeOrder } from "@/store/order/orderSlice";
 import { useAppDispatch } from "@/store/hooks";
 import Toast from "react-native-toast-message";
@@ -23,8 +25,7 @@ import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaVi
 import CartItemsList from "@/components/cartItemList/CardItemList";
 import ContactCard from "@/components/contactCard/ContactCard";
 import { getFormattedAddress } from "@/utils/formatAddress";
-import { fontFamilies } from "@/style/fontFamilies";
-import { commonStyles } from "@/style/commonStyle";
+import { OrderPayload } from "./placeorder.type";
 
 const paymentOptions = [
   {
@@ -38,7 +39,9 @@ const PlaceOrderScreen: React.FC = () => {
   const selectedCartItemsId: String[] = selectedItems
     ? selectedItems.split(",")
     : [];
-
+  const { discounted_amount, appliedPromoCode } = useSelector(
+    (state: RootState) => state.promoCode
+  );
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
     string | null
   >(paymentOptions[0].label);
@@ -88,11 +91,15 @@ const PlaceOrderScreen: React.FC = () => {
       return;
     }
 
-    const payload = {
+    const payload: OrderPayload = {
       cart_items_ids: selectedCartItemsId,
       shipping_address_id: shippingAddressId,
       payment_method: selectedPaymentMethod,
     };
+
+    if (appliedPromoCode) {
+      payload.promo_code = appliedPromoCode;
+    }
 
     const result = await dispatch(placeOrder(payload)).unwrap();
     if (result) {
@@ -105,10 +112,20 @@ const PlaceOrderScreen: React.FC = () => {
     }
   };
 
-  const calculateTotalPrice = () => {
+  const calculateOriginalTotal = () => {
     return selectedCartItems.reduce((total, item) => {
       return total + item.product.final_price * item.quantity;
     }, 0);
+  };
+
+  const calculateTotalPrice = () => {
+    const subtotal = calculateOriginalTotal();
+    return discounted_amount !== null ? discounted_amount : subtotal;
+  };
+
+  const calculateDiscount = () => {
+    const original = calculateOriginalTotal();
+    return discounted_amount !== null ? original - discounted_amount : 0;
   };
 
   if (!selectedCartItems || selectedCartItems.length === 0) {
@@ -139,6 +156,36 @@ const PlaceOrderScreen: React.FC = () => {
             information={[getFormattedAddress(addresses, shippingAddressId)]}
           />
           <CartItemsList cartItems={selectedCartItems} />
+
+          {appliedPromoCode !== null && (
+            <View style={styles.totalPriceContainerColumn}>
+              <Text style={styles.summaryHeading}>Price Summary</Text>
+              <View style={styles.priceRow}>
+                <Text style={styles.priceLabel}>Promo Code</Text>
+                <Text style={[styles.priceValue, styles.promoText]}>
+                  {appliedPromoCode}
+                </Text>
+              </View>
+              <View style={styles.priceRow}>
+                <Text style={styles.priceLabel}>Subtotal</Text>
+                <Text style={styles.priceValue}>
+                  ₹ {calculateOriginalTotal()}
+                </Text>
+              </View>
+              <View style={styles.priceRow}>
+                <Text style={styles.priceLabel}>Discount</Text>
+                <Text style={[styles.priceValue, styles.discountText]}>
+                  - ₹ {calculateDiscount()}
+                </Text>
+              </View>
+              <View style={styles.priceRow}>
+                <Text style={[styles.priceLabel, styles.totalText]}>Total</Text>
+                <Text style={[styles.priceValue, styles.totalText]}>
+                  ₹ {calculateTotalPrice()}
+                </Text>
+              </View>
+            </View>
+          )}
 
           <View style={[commonStyles.justifyBetwwen, { ...spacingStyles.mt5 }]}>
             <Text style={commonStyles.itemCountTitle}>Payment Method</Text>
@@ -252,6 +299,49 @@ const styles = StyleSheet.create({
   },
   backButton: {
     ...spacingStyles.p5,
+  },
+  totalPriceContainerColumn: {
+    width: "100%",
+    backgroundColor: staticColors.gray100,
+    ...spacingStyles.px15,
+    ...spacingStyles.py10,
+    ...spacingStyles.mt5,
+    borderRadius: borderRadius.r10,
+  },
+  summaryHeading: {
+    fontSize: fontSizes.md,
+    fontFamily: fontFamilies.ralewayBold,
+    ...spacingStyles.mb5,
+    color: staticColors.black,
+  },
+
+  priceRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    ...spacingStyles.mb2,
+  },
+  priceLabel: {
+    fontSize: fontSizes.sm,
+    fontFamily: fontFamilies.nunitoSans,
+    color: staticColors.black,
+  },
+  priceValue: {
+    fontSize: fontSizes.sm,
+    fontFamily: fontFamilies.nunitoSans,
+    color: staticColors.black,
+  },
+  promoText: {
+    color: staticColors.errorColor,
+    fontFamily: fontFamilies.ralewayeSemiBold,
+  },
+  discountText: {
+    color: staticColors.darkGreen,
+    fontFamily: fontFamilies.ralewayeSemiBold,
+  },
+  totalText: {
+    fontSize: fontSizes.md,
+    fontFamily: fontFamilies.ralewayBold,
   },
 });
 

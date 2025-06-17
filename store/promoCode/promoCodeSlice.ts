@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "@/store/store";
-import { handleApiError } from "@/utils/handleApiError";
 import axiosConfig from "@/utils/axiosConfig";
 import { getAuthHeaders } from "@/utils/apiHeader";
 
@@ -15,7 +14,6 @@ interface PromoCode {
   expiry_date: string | null;
   description: string;
   is_active: boolean;
-  only_first_order: boolean;
 }
 
 interface PromoCodeState {
@@ -24,6 +22,7 @@ interface PromoCodeState {
   error: string | null;
   appliedPromoCode: string | null;
   loadingPromoCode: string | null;
+  discounted_amount: number | null;
 }
 
 const initialState: PromoCodeState = {
@@ -32,6 +31,7 @@ const initialState: PromoCodeState = {
   error: null,
   appliedPromoCode: null,
   loadingPromoCode: null,
+  discounted_amount: null,
 };
 
 export const fetchPromoCodes = createAsyncThunk<
@@ -40,11 +40,6 @@ export const fetchPromoCodes = createAsyncThunk<
   { state: RootState }
 >("promoCode/fetchPromoCodes", async (_, { getState, rejectWithValue }) => {
   const state = getState() as RootState;
-  const token = state.auth.token;
-  if (!token) {
-    return rejectWithValue("No authentication token found.");
-  }
-
   try {
     const response = await axiosConfig.get(
       `/promo-code/list`,
@@ -52,26 +47,19 @@ export const fetchPromoCodes = createAsyncThunk<
     );
     return response.data.data;
   } catch (error: any) {
-    return rejectWithValue(
-      handleApiError(error, "Failed to fetch promo codes")
-    );
+    const errorMessage = error || "Failed to fetch promo codes";
+    return rejectWithValue(errorMessage);
   }
 });
 
 export const applyPromoCode = createAsyncThunk<
-  string,
+  { code: string; discounted_amount: number }, 
   { code: string; cartItemIds: string[] },
   { state: RootState }
 >(
   "promoCode/applyPromoCode",
   async ({ code, cartItemIds }, { getState, rejectWithValue }) => {
     const state = getState();
-    const token = state.auth.token;
-
-    if (!token) {
-      return rejectWithValue("No authentication token found.");
-    }
-
     try {
       const response = await axiosConfig.post(
         `/orders/validate-promo-code`,
@@ -83,22 +71,24 @@ export const applyPromoCode = createAsyncThunk<
       );
 
       if (response.data?.promo_code && response.data?.discount_amount >= 0) {
-        return code;
+        return {
+          code,
+          discounted_amount: response.data.discounted_amount, 
+        };
       } else {
         return rejectWithValue(
           response.data?.message || "This promo code is not valid."
         );
       }
     } catch (error: any) {
-      return rejectWithValue(
-        handleApiError(error, "Failed to apply promo code")
-      );
+      const errorMessage = error || "Failed to apply promo code.";
+      return rejectWithValue(errorMessage);
     }
   }
 );
 
 const promoCodeSlice = createSlice({
-  name: "promoCode",
+  name: "promoCode",  
   initialState,
   reducers: {
     resetPromoCodeState: (state) => {
@@ -106,9 +96,11 @@ const promoCodeSlice = createSlice({
       state.error = null;
       state.appliedPromoCode = null;
       state.loadingPromoCode = null;
+      state.discounted_amount = null;
     },
     removePromoCode: (state) => {
-      state.appliedPromoCode = null; // Remove the applied promo code
+      state.appliedPromoCode = null;
+      state.discounted_amount = null;
     },
   },
   extraReducers: (builder) => {
@@ -134,7 +126,8 @@ const promoCodeSlice = createSlice({
       })
       .addCase(applyPromoCode.fulfilled, (state, action) => {
         state.loading = false;
-        state.appliedPromoCode = action.payload;
+        state.appliedPromoCode = action.payload.code;
+        state.discounted_amount = action.payload.discounted_amount;
         state.error = null;
         state.loadingPromoCode = null;
       })
@@ -142,6 +135,7 @@ const promoCodeSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
         state.loadingPromoCode = null;
+        state.discounted_amount = null;
       });
   },
 });

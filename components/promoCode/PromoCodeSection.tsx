@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   View,
   Text,
@@ -24,6 +24,8 @@ import RenderHtml from "react-native-render-html";
 import { CartItem } from "@/interfaces";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import gapSizes from "@/style/gapSizes";
+import { router } from "expo-router";
+import PromoCodeModal from "@/modal/promoCodeModal/PromoCodeModal";
 
 const isPromoCodeValid = (
   startDate: string,
@@ -32,22 +34,35 @@ const isPromoCodeValid = (
   const currentDate = new Date();
   const start = new Date(startDate);
   const expiry = expiryDate ? new Date(expiryDate) : null;
-
   return start <= currentDate && (!expiry || expiry >= currentDate);
 };
 
 interface PromoCodeSectionProps {
   selectedCartItems: CartItem[];
+  headerTitle?: string;
+  showAllCouponsLink?: boolean;
+  maxPromoCodes?: number;
+  shouldNavigateToCart?: boolean;
 }
 
 const PromoCodeSection: React.FC<PromoCodeSectionProps> = ({
   selectedCartItems,
+  headerTitle = "Best Coupons For You",
+  showAllCouponsLink = true,
+  maxPromoCodes,
+  shouldNavigateToCart = false,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
   const { promoCodes, loading, error, appliedPromoCode, loadingPromoCode } =
     useSelector((state: RootState) => state.promoCode);
   const token = useSelector((state: RootState) => state.auth.token);
   const { width } = useWindowDimensions();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [showModalForPromoCode, setShowModalForPromoCode] = useState<
+    string | null
+  >(null);
+
+  const prevAppliedPromoCodeRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (token) {
@@ -64,6 +79,13 @@ const PromoCodeSection: React.FC<PromoCodeSectionProps> = ({
     });
   };
 
+  const handleAllCoupons = () => {
+    router.navigate({
+      pathname: "/cart/promoCode",
+      params: { selectedItems: JSON.stringify(selectedCartItems) },
+    });
+  };
+
   const handleApplyPromoCode = (code: string) => {
     if (!selectedCartItems.length) {
       Toast.show({
@@ -75,6 +97,7 @@ const PromoCodeSection: React.FC<PromoCodeSectionProps> = ({
     }
 
     const cartItemIds = selectedCartItems.map((item) => item.id);
+    setShowModalForPromoCode(code);
     dispatch(applyPromoCode({ code, cartItemIds }));
   };
 
@@ -85,20 +108,31 @@ const PromoCodeSection: React.FC<PromoCodeSectionProps> = ({
         text1: "Error",
         text2: error,
       });
+      setShowModalForPromoCode(null);
     }
-    if (appliedPromoCode) {
-      Toast.show({
-        type: "success",
-        text1: "Success",
-        text2: `Promo code ${appliedPromoCode} applied successfully!`,
-      });
+    if (
+      appliedPromoCode &&
+      appliedPromoCode !== prevAppliedPromoCodeRef.current &&
+      appliedPromoCode === showModalForPromoCode
+    ) {
+      setModalVisible(true);
+      setShowModalForPromoCode(null);
     }
-  }, [error, appliedPromoCode]);
+    prevAppliedPromoCodeRef.current = appliedPromoCode;
+  }, [error, appliedPromoCode, showModalForPromoCode]);
+
+  const handleModalClose = () => {
+    setModalVisible(false);
+  };
 
   const validPromoCodes = promoCodes.filter(
     (promo) =>
       promo.is_active && isPromoCodeValid(promo.start_date, promo.expiry_date)
   );
+
+  const displayedPromoCodes = maxPromoCodes
+    ? validPromoCodes.slice(0, maxPromoCodes)
+    : validPromoCodes;
 
   if (loading && !promoCodes.length) {
     return (
@@ -109,34 +143,15 @@ const PromoCodeSection: React.FC<PromoCodeSectionProps> = ({
     );
   }
 
-  if (!validPromoCodes.length) {
-    return (
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <View style={styles.headerLeft}>
-            <MaterialCommunityIcons
-              name="wallet-giftcard"
-              size={20}
-              color={staticColors.black}
-            />
-            <Text style={styles.headerText}>Best Coupons For You</Text>
-          </View>
-          <TouchableOpacity style={styles.headerRight}>
-            <Text style={styles.allCouponsText}>ALL COUPONS</Text>
-            <Ionicons
-              name="chevron-forward"
-              size={16}
-              color={staticColors.blue500}
-            />
-          </TouchableOpacity>
-        </View>
-        <Text>No valid promo codes available.</Text>
-      </View>
-    );
-  }
-
   return (
     <View style={styles.container}>
+      <PromoCodeModal
+        visible={modalVisible}
+        promoCode={appliedPromoCode}
+        onClose={handleModalClose}
+        shouldNavigateToCart={shouldNavigateToCart}
+      />
+
       <View style={styles.header}>
         <View style={styles.headerLeft}>
           <MaterialCommunityIcons
@@ -144,86 +159,94 @@ const PromoCodeSection: React.FC<PromoCodeSectionProps> = ({
             size={20}
             color={staticColors.black}
           />
-          <Text style={styles.headerText}>Best Coupons For You</Text>
+          <Text style={styles.headerText}>{headerTitle}</Text>
         </View>
-        <TouchableOpacity style={styles.headerRight}>
-          <Text style={styles.allCouponsText}>ALL COUPONS</Text>
-          <Ionicons
-            name="chevron-forward"
-            size={16}
-            color={staticColors.blue500}
-          />
-        </TouchableOpacity>
+        {showAllCouponsLink && (
+          <TouchableOpacity
+            style={styles.headerRight}
+            onPress={handleAllCoupons}
+          >
+            <Text style={styles.allCouponsText}>ALL COUPONS</Text>
+            <Ionicons
+              name="chevron-forward"
+              size={16}
+              color={staticColors.blue500}
+            />
+          </TouchableOpacity>
+        )}
       </View>
 
-      {validPromoCodes.map((promo, index) => {
-        const discountText =
-          promo.discount_type === "fixed"
-            ? `Extra ₹${promo.discount_value} OFF`
-            : `Extra ${promo.discount_value}% OFF`;
-        const terms = [
-          promo.min_order_amount
-            ? `Min. order ₹${promo.min_order_amount}`
-            : null,
-          promo.max_discount_amount
-            ? `Max discount ₹${promo.max_discount_amount}`
-            : null,
-          promo.only_first_order ? "Only for first order" : null,
-        ]
-          .filter(Boolean)
-          .join(" | ");
+      {displayedPromoCodes.length === 0 ? (
+        <Text>No valid promo codes available.</Text>
+      ) : (
+        displayedPromoCodes.map((promo, index) => {
+          const discountText =
+            promo.discount_type === "fixed"
+              ? `Extra ₹${promo.discount_value} OFF`
+              : `Extra ${promo.discount_value}% OFF`;
+          const terms = [
+            promo.min_order_amount
+              ? `Min. order ₹${promo.min_order_amount}`
+              : null,
+            promo.max_discount_amount
+              ? `Max discount ₹${promo.max_discount_amount}`
+              : null,
+          ]
+            .filter(Boolean)
+            .join(" | ");
 
-        return (
-          <View key={index} style={styles.promoCard}>
-            <View style={styles.promoDetails}>
-              <Text style={styles.discountText}>{discountText}</Text>
-              {promo.description ? (
-                <RenderHtml
-                  contentWidth={width}
-                  source={{ html: promo.description }}
-                  baseStyle={styles.descriptionText}
-                />
-              ) : null}
-              {terms && <Text style={styles.termsText}>{terms}</Text>}
-              <View style={styles.promoCodeAndButtonContainer}>
-                <View style={styles.promoCodeContainer}>
-                  <Text style={styles.promoCodeText}>{promo.code}</Text>
-                </View>
-                <TouchableOpacity
-                  style={[
-                    styles.applyButton,
-                    appliedPromoCode === promo.code && styles.appliedButton,
-                  ]}
-                  onPress={() =>
-                    appliedPromoCode === promo.code
-                      ? handleRemovePromoCode()
-                      : handleApplyPromoCode(promo.code)
-                  }
-                  disabled={loadingPromoCode === promo.code}
-                >
-                  {loadingPromoCode === promo.code ? (
-                    <ActivityIndicator
-                      size="small"
-                      color={staticColors.BoldPink}
-                    />
-                  ) : appliedPromoCode === promo.code ? (
-                    <View style={styles.appliedButtonContent}>
-                      <Text style={styles.appliedButtonText}>APPLIED</Text>
-                      <Ionicons
-                        name="close"
-                        size={16}
-                        color={staticColors.white}
+          return (
+            <View key={index} style={styles.promoCard}>
+              <View style={styles.promoDetails}>
+                <Text style={styles.discountText}>{discountText}</Text>
+                {promo.description ? (
+                  <RenderHtml
+                    contentWidth={width}
+                    source={{ html: promo.description }}
+                    baseStyle={styles.descriptionText}
+                  />
+                ) : null}
+                {terms && <Text style={styles.termsText}>{terms}</Text>}
+                <View style={styles.promoCodeAndButtonContainer}>
+                  <View style={styles.promoCodeContainer}>
+                    <Text style={styles.promoCodeText}>{promo.code}</Text>
+                  </View>
+                  <TouchableOpacity
+                    style={[
+                      styles.applyButton,
+                      appliedPromoCode === promo.code && styles.appliedButton,
+                    ]}
+                    onPress={() =>
+                      appliedPromoCode === promo.code
+                        ? handleRemovePromoCode()
+                        : handleApplyPromoCode(promo.code)
+                    }
+                    disabled={loadingPromoCode === promo.code}
+                  >
+                    {loadingPromoCode === promo.code ? (
+                      <ActivityIndicator
+                        size="small"
+                        color={staticColors.BoldPink}
                       />
-                    </View>
-                  ) : (
-                    <Text style={styles.applyButtonText}>APPLY COUPON</Text>
-                  )}
-                </TouchableOpacity>
+                    ) : appliedPromoCode === promo.code ? (
+                      <View style={styles.appliedButtonContent}>
+                        <Text style={styles.appliedButtonText}>APPLIED</Text>
+                        <Ionicons
+                          name="close"
+                          size={16}
+                          color={staticColors.white}
+                        />
+                      </View>
+                    ) : (
+                      <Text style={styles.applyButtonText}>APPLY COUPON</Text>
+                    )}
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
-          </View>
-        );
-      })}
+          );
+        })
+      )}
     </View>
   );
 };
@@ -231,9 +254,8 @@ const PromoCodeSection: React.FC<PromoCodeSectionProps> = ({
 const styles = StyleSheet.create({
   container: {
     backgroundColor: staticColors.white,
-    ...spacingStyles.py15,
+    ...spacingStyles.py10,
     ...spacingStyles.px5,
-    alignItems: "center",
   },
   header: {
     flexDirection: "row",

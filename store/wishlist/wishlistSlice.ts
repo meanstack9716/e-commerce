@@ -30,6 +30,7 @@ export const fetchWishlist = createAsyncThunk(
       }
       return response.data.data as WishlistItem[];
     } catch (error: any) {
+      console.log("wishlist" , error)
       return rejectWithValue(
         error.response?.data?.message || "Failed to fetch wishlist"
       );
