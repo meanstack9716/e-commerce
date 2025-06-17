@@ -29,6 +29,7 @@ const AddressListModal: React.FC<AddressListModalProps> = ({
   onEditAddress,
   onConfirmAddress,
   onAddAddress,
+  onDeleteAddress,
 }) => {
   const [selectedId, setSelectedId] = useState<string | null>(
     selectedAddressId || null
@@ -47,6 +48,7 @@ const AddressListModal: React.FC<AddressListModalProps> = ({
         onEditAddress={onEditAddress}
         selectedId={selectedId}
         setSelectedId={setSelectedId}
+        onDeleteAddress={onDeleteAddress}
       />
     );
   };
