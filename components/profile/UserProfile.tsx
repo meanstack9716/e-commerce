@@ -60,7 +60,7 @@ const UserProfile = () => {
   const isLoading = productsLoading;
 
   return (
-    <SafeAreaViewWrapper style={styles.container}>
+    <View style={styles.container}>
       <ProfileHeaderBar title="category" profileImage={images.genderFemale} titleStyle={styles.profileHeaderTitle} />
       <CategoriresCard categoryList={categories} />
       <View style={styles.allProductsContainer}>
@@ -83,7 +83,7 @@ const UserProfile = () => {
           )}
         />
       </View>
-    </SafeAreaViewWrapper>
+    </View>
   );
 };
 

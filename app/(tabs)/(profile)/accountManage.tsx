@@ -32,6 +32,7 @@ const AccountScreen: React.FC = () => {
     last_name: "",
     email: "",
     phone_number: "",
+    profile_url: "",
   });
 
   useEffect(() => {
@@ -41,6 +42,7 @@ const AccountScreen: React.FC = () => {
         last_name: user.last_name || "",
         email: user.email || "",
         phone_number: user.phone_number || "",
+        profile_url: user.profile_url || "",
       });
     }
   }, [user]);
