@@ -2,10 +2,9 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { RootState } from "@/store/store";
 import { handleApiError } from "@/utils/handleApiError";
-import { getAuthFormDataHeaders } from "@/utils/apiHeader";
+import { getAuthFormDataHeaders, getAuthHeaders } from "@/utils/apiHeader";
 import { buildFormData } from "@/utils/buildFormData";
-
-const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+import axiosConfig from "@/utils/axiosConfig";
 
 interface ReviewState {
   loading: boolean;
@@ -42,11 +41,10 @@ export const submitReview = createAsyncThunk<
     }
 
     try {
-      const formData = buildFormData(payload);
-      const response = await axios.post(
-        `${apiUrl}/products/review`,
-        formData,
-        getAuthFormDataHeaders(state)
+      const response = await axiosConfig.post(
+        `/products/review`,
+        payload,
+        getAuthHeaders(state)
       );
       return response.data;
     } catch (error: any) {
@@ -70,15 +68,13 @@ export const updateReview = createAsyncThunk<
     if (!token) {
       return rejectWithValue("No authentication token found.");
     }
-
     try {
       const formData = buildFormData(payload);
       if (payload.review_id) {
         formData.append("review_id", payload.review_id);
       }
-
-      const response = await axios.post(
-        `${apiUrl}/products/update-review`,
+      const response = await axiosConfig.post(
+        `/products/update-review`,
         formData,
         getAuthFormDataHeaders(state)
       );

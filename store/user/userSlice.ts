@@ -4,8 +4,7 @@ import { RootState } from "../store";
 import { getAuthHeaders } from "@/utils/apiHeader";
 import { handleApiError } from "@/utils/handleApiError";
 import { UserProfile } from "@/types/types";
-
-const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+import axiosConfig from "@/utils/axiosConfig";
 
 interface UserState {
   loading: boolean;
@@ -28,8 +27,8 @@ export const updateProfile = createAsyncThunk<
 >("user/updateProfile", async (userData, { getState, rejectWithValue }) => {
   try {
     const state = getState();
-    const response = await axios.put(
-      `${apiUrl}/user/update-profile`,
+    const response = await axiosConfig.put(
+      `/user/update-profile`,
       userData,
       getAuthHeaders(state)
     );
@@ -47,12 +46,13 @@ export const fetchUserProfile = createAsyncThunk<
 >("user/fetchUserProfile", async (_, { getState, rejectWithValue }) => {
   try {
     const state = getState();
-    const response = await axios.get(
-      `${apiUrl}/user/me`,
+    const response = await axiosConfig.get(
+      `/user/me`,
       getAuthHeaders(state)
     );
     return response.data.data;
   } catch (error) {
+        console.log(error)
     const errorMessage = handleApiError(error, "Failed to fetch user profile");
     return rejectWithValue(errorMessage);
   }
@@ -65,8 +65,8 @@ export const updateProfilePicture = createAsyncThunk<
 >("user/updateProfilePicture", async (formData, { getState, rejectWithValue }) => {
   try {
     const state = getState();
-    const response = await axios.post(
-      `${apiUrl}/user/update-profile-pic`,
+    const response = await axiosConfig.post(
+      `/user/update-profile-pic`,
       formData,
       {
         ...getAuthHeaders(state),

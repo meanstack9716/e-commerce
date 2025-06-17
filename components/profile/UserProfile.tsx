@@ -61,11 +61,7 @@ const UserProfile = () => {
 
   return (
     <View style={styles.container}>
-      <ProfileHeaderBar
-        title="category"
-        profileImage={images.genderFemale}
-        titleStyle={styles.profileHeaderTitle}
-      />
+      <ProfileHeaderBar title="category" profileImage={images.genderFemale} titleStyle={styles.profileHeaderTitle} />
       <CategoriresCard categoryList={categories} />
       <View style={styles.allProductsContainer}>
         <Text style={styles.headingText}>Just for you</Text>

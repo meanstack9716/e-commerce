@@ -72,8 +72,6 @@ const ProductDetailsScreen: React.FC = () => {
   const flatListRef = useRef<FlatList>(null);
   const imageCarouselRef = useRef<FlatList>(null);
   const screenHeight = Dimensions.get("window").height;
-  const [isLoginModalVisible, setLoginModalVisible] = useState(false);
-  const [isSignupModalVisible, setSignupModalVisible] = useState(false);
 
   const isAuthenticatedUser = useAppSelector(
     (state) => state.auth.isAuthenticated
@@ -101,24 +99,6 @@ const ProductDetailsScreen: React.FC = () => {
   //     />
   //   );
   // };
-
-  const handleCloseLoginModal = () => {
-    setLoginModalVisible(false);
-  };
-
-  const handleCloseSignupModal = () => {
-    setSignupModalVisible(false);
-  };
-
-  const handleOpenSignupModal = () => {
-    setLoginModalVisible(false);
-    setSignupModalVisible(true);
-  };
-
-  const handleOpenLoginModal = () => {
-    setSignupModalVisible(false);
-    setLoginModalVisible(true);
-  };
 
   const handleScroll = (event: any) => {
     const index = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
@@ -149,7 +129,7 @@ const ProductDetailsScreen: React.FC = () => {
   const handleLikePress = async () => {
     if (!product) return;
     if (!isAuthenticatedUser) {
-      setLoginModalVisible(true);
+      router.navigate("./LoginScreen");
       return;
     }
     try {
@@ -202,7 +182,7 @@ const ProductDetailsScreen: React.FC = () => {
         ).unwrap();
         router.push("/cart");
       } else {
-        handleOpenLoginModal()
+        router.navigate("./LoginScreen");
       }
     }
   };
@@ -414,20 +394,6 @@ const ProductDetailsScreen: React.FC = () => {
         onClose={() => setViewSimilarModalVisible(false)}
         currentProduct={product}
       /> */}
-
-      {/* Login Modal */}
-      <LoginModal
-        visible={isLoginModalVisible}
-        onClose={handleCloseLoginModal}
-        onSignupPress={handleOpenSignupModal}
-      />
-
-      {/* Signup Modal */}
-      <SignUpModal
-        visible={isSignupModalVisible}
-        onClose={handleCloseSignupModal}
-        onLoginPress={handleOpenLoginModal}
-      />
     </SafeAreaViewWrapper>
   );
 };
