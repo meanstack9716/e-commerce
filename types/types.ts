@@ -1,3 +1,5 @@
+import { Seller } from "@/interfaces";
+
 export interface Product {
   id: string;
   title: string;
@@ -47,7 +49,6 @@ export interface Brand {
   description: string;
   img_url: string;
 }
-import { GalleryItem, Product } from "@/interfaces";
 
 export interface SubSubCategory {
   id: string;

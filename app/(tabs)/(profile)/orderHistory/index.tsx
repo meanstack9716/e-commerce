@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, Image, StyleSheet } from "react-native";
+import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "@/store/hooks";
 import { RootState } from "@/store/store";
@@ -18,6 +18,7 @@ import ProfileHeaderBar from "@/components/profile/ProfileHeaderBar/ProfileHeade
 import OrderItemSkeleton from "@/components/common/OrderItemSkeleton";
 import { LIST_LIMIT } from "@/constants/constants";
 import { Order } from "@/interfaces";
+import OrderDetailsModal from "@/modal/OrderDetailsModal/OrderDetailsModal";
 
 const OrderHistoryScreen: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -31,7 +32,13 @@ const OrderHistoryScreen: React.FC = () => {
     productDescription: "",
   });
   const [isReviewModalVisible, setReviewModalVisible] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [isDetailsModalVisible, setDetailsModalVisible] = useState(false);
 
+  const handleOrderItemPress = (order: Order) => {
+    setSelectedOrder(order);
+    setDetailsModalVisible(true);
+  };
   useEffect(() => {
     dispatch(fetchOrders({ page: 1, limit: LIST_LIMIT }));
     return () => {
@@ -63,7 +70,9 @@ const OrderHistoryScreen: React.FC = () => {
   };
 
   const renderOrderItem = ({ item }: { item: Order }) => (
-    <OrderItem item={item} onReviewPress={handleReviewPress} />
+    <TouchableOpacity onPress={() => handleOrderItemPress(item)}>
+      <OrderItem item={item} onReviewPress={handleReviewPress} />
+    </TouchableOpacity>
   );
 
   const renderSkeletonItems = () => {
@@ -110,6 +119,11 @@ const OrderHistoryScreen: React.FC = () => {
         productId={selectedItem.productId}
         productDescription={selectedItem.productDescription}
       />
+      <OrderDetailsModal
+        visible={isDetailsModalVisible}
+        order={selectedOrder}
+        onClose={() => setDetailsModalVisible(false)}
+      />
     </SafeAreaViewWrapper>
   );
 };
@@ -119,9 +133,9 @@ const styles = StyleSheet.create({
     ...spacingStyles.px12,
     ...spacingStyles.py15,
   },
-    profileHeaderContainer: {
+  profileHeaderContainer: {
     ...spacingStyles.px15,
-    ...spacingStyles.py5
+    ...spacingStyles.py5,
   },
   errorText: {
     fontSize: fontSizes.xs,

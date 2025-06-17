@@ -134,6 +134,7 @@ export const removeAddress = createAsyncThunk<
       await axiosConfig.delete(`/address/remove/${id}`, getAuthHeaders(state));
       return id;
     } catch (error: any) {
+      console.log(error)
       return rejectWithValue(
         error.response?.data?.message || "Failed to remove address"
       );
@@ -224,7 +225,6 @@ const addressSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchAddressTypes.pending, (state) => {
-        // state.loading = true;
         state.error = null;
       })
       .addCase(fetchAddressTypes.fulfilled, (state, action) => {
