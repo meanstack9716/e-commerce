@@ -3,4 +3,5 @@ export interface OrderPayload {
   shipping_address_id: string;
   payment_method: string;
   promo_code?: string;
+  razorpay_payment_id?: string;
 }

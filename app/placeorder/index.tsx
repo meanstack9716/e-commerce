@@ -26,10 +26,15 @@ import CartItemsList from "@/components/cartItemList/CardItemList";
 import ContactCard from "@/components/contactCard/ContactCard";
 import { getFormattedAddress } from "@/utils/formatAddress";
 import { OrderPayload } from "./placeorder.type";
+import RazorpayCheckout from "react-native-razorpay";
+import images from "@/constants/images";
 
 const paymentOptions = [
   {
     label: "Cash On Delivery",
+  },
+  {
+    label: "Razorpay",
   },
 ];
 
@@ -73,6 +78,45 @@ const PlaceOrderScreen: React.FC = () => {
     }
   }, [selectedAddressId]);
 
+  // const handlePlaceOrder = async () => {
+  //   if (!selectedPaymentMethod) {
+  //     Toast.show({
+  //       type: "error",
+  //       text1: "Error",
+  //       text2: "Please select a payment method.",
+  //     });
+  //     return;
+  //   }
+  //   if (!shippingAddressId) {
+  //     Toast.show({
+  //       type: "error",
+  //       text1: "Error",
+  //       text2: "Please select aa address or create new address",
+  //     });
+  //     return;
+  //   }
+
+  //   const payload: OrderPayload = {
+  //     cart_items_ids: selectedCartItemsId,
+  //     shipping_address_id: shippingAddressId,
+  //     payment_method: selectedPaymentMethod,
+  //   };
+
+  //   if (appliedPromoCode) {
+  //     payload.promo_code = appliedPromoCode;
+  //   }
+
+  //   const result = await dispatch(placeOrder(payload)).unwrap();
+  //   if (result) {
+  //     Toast.show({
+  //       type: "success",
+  //       text1: "Order Placed",
+  //       text2: "Your order has been placed successfully",
+  //     });
+  //     router.navigate("/orderHistory");
+  //   }
+  // };
+
   const handlePlaceOrder = async () => {
     if (!selectedPaymentMethod) {
       Toast.show({
@@ -82,11 +126,12 @@ const PlaceOrderScreen: React.FC = () => {
       });
       return;
     }
+
     if (!shippingAddressId) {
       Toast.show({
         type: "error",
         text1: "Error",
-        text2: "Please select aa address or create new address",
+        text2: "Please select an address or create one.",
       });
       return;
     }
@@ -101,14 +146,57 @@ const PlaceOrderScreen: React.FC = () => {
       payload.promo_code = appliedPromoCode;
     }
 
-    const result = await dispatch(placeOrder(payload)).unwrap();
-    if (result) {
-      Toast.show({
-        type: "success",
-        text1: "Order Placed",
-        text2: "Your order has been placed successfully",
-      });
-      router.navigate("/orderHistory");
+    if (selectedPaymentMethod === "Razorpay") {
+      const amount = calculateTotalPrice() * 100;
+      const options = {
+        description: "Order Payment",
+        image: images.logoBlue,
+        currency: "INR",
+        key: "rzp_test_5uJjLyO7c8wfiw",
+        amount: amount,
+        name: "ecommerce",
+        order_id: "order_KJ3bs93kflSDF",
+        prefill: {
+          email: "admin@admin.com",
+          contact: "9876543210",
+          name: "Kaushaki Singh",
+        },
+        theme: {
+          color: staticColors.white,
+        },
+      };
+
+      RazorpayCheckout.open(options)
+        .then(async (data: any) => {
+          console.log("Payment Success:", data);
+          const result = await dispatch(placeOrder(payload)).unwrap();
+          if (result) {
+            Toast.show({
+              type: "success",
+              text1: "Order Placed",
+              text2: "Your order has been placed successfully",
+            });
+            router.navigate("/orderHistory");
+          }
+        })
+        .catch((error: any) => {
+          console.error(error);
+          Toast.show({
+            type: "error",
+            text1: "Payment Failed",
+            text2: error.description || "Something went wrong",
+          });
+        });
+    } else {
+      const result = await dispatch(placeOrder(payload)).unwrap();
+      if (result) {
+        Toast.show({
+          type: "success",
+          text1: "Order Placed",
+          text2: "Your order has been placed successfully",
+        });
+        router.navigate("/orderHistory");
+      }
     }
   };
 
@@ -194,9 +282,32 @@ const PlaceOrderScreen: React.FC = () => {
             </TouchableOpacity> */}
           </View>
           <View style={styles.paymentMethodsWrapper}>
-            <View style={styles.selectedPaymentWrap}>
+            {/* <View style={styles.selectedPaymentWrap}>
               <Text style={styles.paymentType}>{selectedPaymentMethod}</Text>
-            </View>
+            </View> */}
+            {paymentOptions.map((option) => (
+              <TouchableOpacity
+                key={option.label}
+                style={[
+                  styles.selectedPaymentWrap,
+                  selectedPaymentMethod === option.label && {
+                    backgroundColor: staticColors.blue200,
+                  },
+                ]}
+                onPress={() => setSelectedPaymentMethod(option.label)}
+              >
+                <Text
+                  style={[
+                    styles.paymentType,
+                    selectedPaymentMethod === option.label && {
+                      color: staticColors.darkSlate,
+                    },
+                  ]}
+                >
+                  {option.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
           </View>
         </ScrollView>
         <View style={styles.totalPriceContainer}>
