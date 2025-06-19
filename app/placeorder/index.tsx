@@ -7,6 +7,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   ScrollView,
+  Linking,
 } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
@@ -34,7 +35,7 @@ const paymentOptions = [
     label: "Cash On Delivery",
   },
   {
-    label: "Razorpay",
+    label: "card",
   },
 ];
 
@@ -131,7 +132,7 @@ const PlaceOrderScreen: React.FC = () => {
       Toast.show({
         type: "error",
         text1: "Error",
-        text2: "Please select an address or create one.",
+        text2: "Please select an address or create a new address",
       });
       return;
     }
@@ -146,57 +147,29 @@ const PlaceOrderScreen: React.FC = () => {
       payload.promo_code = appliedPromoCode;
     }
 
-    if (selectedPaymentMethod === "Razorpay") {
-      const amount = calculateTotalPrice() * 100;
-      const options = {
-        description: "Order Payment",
-        image: images.logoBlue,
-        currency: "INR",
-        key: "rzp_test_5uJjLyO7c8wfiw",
-        amount: amount,
-        name: "ecommerce",
-        order_id: "order_KJ3bs93kflSDF",
-        prefill: {
-          email: "admin@admin.com",
-          contact: "9876543210",
-          name: "Kaushaki Singh",
-        },
-        theme: {
-          color: staticColors.white,
-        },
-      };
-
-      RazorpayCheckout.open(options)
-        .then(async (data: any) => {
-          console.log("Payment Success:", data);
-          const result = await dispatch(placeOrder(payload)).unwrap();
-          if (result) {
-            Toast.show({
-              type: "success",
-              text1: "Order Placed",
-              text2: "Your order has been placed successfully",
-            });
-            router.navigate("/orderHistory");
-          }
-        })
-        .catch((error: any) => {
-          console.error(error);
-          Toast.show({
-            type: "error",
-            text1: "Payment Failed",
-            text2: error.description || "Something went wrong",
-          });
-        });
-    } else {
+    try {
       const result = await dispatch(placeOrder(payload)).unwrap();
-      if (result) {
-        Toast.show({
-          type: "success",
-          text1: "Order Placed",
-          text2: "Your order has been placed successfully",
-        });
-        router.navigate("/orderHistory");
+      console.log("Place Order Response:", result);
+      if (
+        selectedPaymentMethod === "card" &&
+        result?.payment_links &&
+        result.payment_links[0]?.payment_link_url
+      ) {
+        const paymentUrl = result.payment_links[0].payment_link_url;
+
+        Linking.openURL(paymentUrl);
+
+        return;
       }
+
+      Toast.show({
+        type: "success",
+        text1: "Order Placed",
+        text2: "Your order has been placed successfully",
+      });
+      router.navigate("/orderHistory");
+    } catch (error) {
+      console.error("Place order error:", error);
     }
   };
 
