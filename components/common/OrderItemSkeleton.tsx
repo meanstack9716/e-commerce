@@ -4,11 +4,12 @@ import { MotiView } from "moti";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import borderRadius from "@/style/borderRadius";
+import SkeletonPlaceholder from "./SkeletonPlaceholder";
 
 const OrderItemSkeleton: React.FC = () => {
   return (
     <View style={styles.container}>
-      <MotiView
+      {/* <MotiView
         style={styles.thumbnailPlaceholder}
         from={{ opacity: 0.4 }}
         animate={{ opacity: 1 }}
@@ -18,7 +19,8 @@ const OrderItemSkeleton: React.FC = () => {
           loop: true,
           repeatReverse: true,
         }}
-      />
+      /> */}
+      <SkeletonPlaceholder style={styles.thumbnailPlaceholder} fromOpacity={0.4} toOpacity={1} />
       <View style={styles.detailsContainer}>
         <MotiView
           style={[styles.textPlaceholder, styles.orderNumberPlaceholder]}
