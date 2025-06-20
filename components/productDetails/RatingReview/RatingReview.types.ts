@@ -1,6 +1,6 @@
 import { Review } from "@/interfaces";
 
 export interface RatingReviewProps {
-  review: Review;
+  review?: Review;
   productId: string;
 }

@@ -15,8 +15,9 @@ import RatingReview from "@/components/productDetails/RatingReview/RatingReview"
 const ReviewsScreen: React.FC = () => {
   const { productId } = useLocalSearchParams();
   const dispatch = useDispatch<AppDispatch>();
-  const { selectedProduct: product, selectedProductLoading: loading } =
-    useSelector((state: RootState) => state.products);
+  const { productReviews, loading } = useSelector(
+    (state: RootState) => state.review
+  );
 
   useEffect(() => {
     if (productId) {
@@ -32,9 +33,9 @@ const ReviewsScreen: React.FC = () => {
       </View>
 
       <FlatList
-        data={product?.reviews}
+        data={productReviews}
         renderItem={({ item }) => (
-          <RatingReview productId={product?.id || ""} review={item} />
+          <RatingReview productId={productId as string} review={item} />
         )}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.list}

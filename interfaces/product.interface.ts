@@ -4,7 +4,7 @@ export interface Product {
   description: string;
   discount_percent?: number;
   final_price: number;
-  price:number;
+  price: number;
   stock_quantity?: string;
   thumbnail_url: string;
   images: string[];
@@ -17,18 +17,20 @@ export interface Product {
   gallery?: GalleryItem[];
   seller?: Seller;
   delivery_days?: string;
-  reviews?:Review[];
-  total_rating:number,
+  total_rating: number;
 }
 
 export interface Review {
   id: string;
+  product_id: string;
+  order_id: string;
   rating: string;
   review: string;
-  by: {
-    id:string;
+  reviewed_by: {
+    id: string;
     first_name?: string;
     last_name?: string;
+    email?: string; 
   };
   img_urls?: string[];
 }

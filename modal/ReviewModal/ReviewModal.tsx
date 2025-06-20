@@ -23,6 +23,7 @@ import staticColors from "@/style/staticColors";
 import gapSizes from "@/style/gapSizes";
 import { RootState } from "@/store/store";
 import {
+  fetchUserReview,
   resetReviewState,
   submitReview,
   updateReview,
@@ -51,7 +52,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
   productDescription,
 }) => {
   const dispatch = useAppDispatch();
-  const { loading, error, success } = useSelector(
+  const { loading, error, success, userReview } = useSelector(
     (state: RootState) => state.review
   );
 
@@ -73,21 +74,16 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
   } = useFieldValidation();
 
   const loadExistingUserReview = () => {
-    if (!visible || !productId || !currentUserId || !orders) return;
+    if (!visible || !productId || !currentUserId) return;
+    dispatch(fetchUserReview(productId));
+  };
 
-    const currentOrder = orders.find((order) => order.id === orderId);
-    if (!currentOrder) return;
+  useEffect(() => {
+    loadExistingUserReview();
+  }, [visible, productId, currentUserId]);
 
-    const orderItem = currentOrder.items?.find(
-      (item) => item.product.id === productId
-    );
-    if (!orderItem?.product?.reviews) return;
-
-    const userReview = orderItem.product.reviews.find(
-      (review) => review.by?.id === currentUserId
-    );
-
-    if (userReview) {
+  useEffect(() => {
+    if (userReview && visible) {
       setIsReviewSubmitted(true);
       setCurrentReview(userReview);
       setReviewState((prev) => ({
@@ -96,15 +92,12 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
         comment: userReview.review,
         selectedImages: userReview.img_urls || [],
       }));
-    } else {
+    } else if (!userReview && visible) {
       setIsReviewSubmitted(false);
       setCurrentReview(null);
+      setReviewState(initialReviewState);
     }
-  };
-
-  useEffect(() => {
-    loadExistingUserReview();
-  }, [visible, productId, currentUserId, orders, orderId]);
+  }, [userReview, visible]);
 
   const setImagePickerModal = (value: boolean) => {
     setReviewState((prev) => ({ ...prev, showImagePickerModal: value }));
@@ -158,18 +151,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
 
     try {
       if (isReviewSubmitted) {
-        const updatedReview = await dispatch(
-          updateReview(productReviewData)
-        ).unwrap();
-
-        setCurrentReview(updatedReview);
-        setReviewState({
-          ...reviewState,
-          rating: parseInt(updatedReview.rating),
-          comment: updatedReview.review,
-          selectedImages: updatedReview.img_urls || [],
-        });
-        setRemovedImageIndices([]);
+        await dispatch(updateReview(productReviewData)).unwrap();
       } else {
         await dispatch(submitReview(productReviewData)).unwrap();
       }
