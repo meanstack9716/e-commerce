@@ -4,26 +4,47 @@ import { router, useLocalSearchParams } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { fetchProductById } from "@/store/product/productsSlice";
-import FullScreenLoader from "@/components/common/FullScreenLoader";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import { fontSizes } from "@/style/typography";
 import { fontFamilies } from "@/style/fontFamilies";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import RatingReview from "@/components/productDetails/RatingReview/RatingReview";
+import FullScreenLoader from "@/components/common/FullScreenLoader";
+import { fetchProductReviews } from "@/store/review/reviewSlice";
+import { LIST_LIMIT } from "@/constants/constants";
 
 const ReviewsScreen: React.FC = () => {
   const { productId } = useLocalSearchParams();
   const dispatch = useDispatch<AppDispatch>();
-  const { productReviews, loading } = useSelector(
+  const { productReviews, loading, page, hasMoreReviews } = useSelector(
     (state: RootState) => state.review
   );
 
   useEffect(() => {
     if (productId) {
       dispatch(fetchProductById(productId as string));
+      dispatch(
+        fetchProductReviews({
+          productId: productId as string,
+          page: 1,
+          limit: LIST_LIMIT,
+        })
+      );
     }
   }, [productId, dispatch]);
+
+  const loadMoreReviews = () => {
+    if (!loading && hasMoreReviews && productId) {
+      dispatch(
+        fetchProductReviews({
+          productId: productId as string,
+          page,
+          limit: LIST_LIMIT,
+        })
+      );
+    }
+  };
 
   return (
     <SafeAreaViewWrapper backgroundColor={staticColors.white}>
@@ -44,6 +65,8 @@ const ReviewsScreen: React.FC = () => {
             <Text style={styles.emptyText}>No reviews available</Text>
           </View>
         }
+        onEndReached={loadMoreReviews}
+        onEndReachedThreshold={0.5}
       />
     </SafeAreaViewWrapper>
   );

@@ -13,6 +13,8 @@ interface ReviewState {
   success: boolean;
   userReview: Review | null;
   productReviews: Review[];
+  page: number;
+  hasMoreReviews: boolean;
 }
 
 const initialState: ReviewState = {
@@ -21,6 +23,8 @@ const initialState: ReviewState = {
   success: false,
   userReview: null,
   productReviews: [],
+  page: 1,
+  hasMoreReviews: true,
 };
 
 export interface ReviewPayload {
@@ -60,15 +64,20 @@ export const fetchUserReview = createAsyncThunk<
 );
 
 export const fetchProductReviews = createAsyncThunk<
-  Review[],
-  string,
+  { reviews: Review[]; hasMoreReviews: boolean },
+  { productId: string; page: number; limit: number },
   { state: RootState }
 >(
   "review/fetchProductReviews",
-  async (productId: string, { rejectWithValue }) => {
+  async ({ productId, page, limit }, { rejectWithValue }) => {
     try {
-      const response = await axiosConfig.get(`/products/${productId}/reviews`);
-      return response.data.data;
+      const response = await axiosConfig.get(
+        `/products/${productId}/reviews?page=${page}&limit=${limit}`
+      );
+      console.log(response, { limit });
+      const reviews = response.data.data;
+      const hasMoreReviews = reviews.length === limit;
+      return { reviews, hasMoreReviews };
     } catch (error: any) {
       return rejectWithValue(
         handleApiError(error, "Failed to fetch product reviews")
@@ -91,11 +100,10 @@ export const submitReview = createAsyncThunk<
     }
 
     try {
-      const formData = buildFormData(payload);
       const response = await axiosConfig.post(
         `/products/review`,
-        formData,
-        getAuthFormDataHeaders(state)
+        payload,
+        getAuthHeaders(state)
       );
       return response.data;
     } catch (error: any) {
@@ -148,6 +156,8 @@ const reviewSlice = createSlice({
       state.success = false;
       state.userReview = null;
       state.productReviews = [];
+      state.page = 1;
+      state.hasMoreReviews = true;
     },
   },
   extraReducers: (builder) => {
@@ -170,7 +180,12 @@ const reviewSlice = createSlice({
       })
       .addCase(fetchProductReviews.fulfilled, (state, action) => {
         state.loading = false;
-        state.productReviews = action.payload;
+        state.productReviews = [
+          ...state.productReviews,
+          ...action.payload.reviews,
+        ];
+        state.page += 1;
+        state.hasMoreReviews = action.payload.hasMoreReviews;
       })
       .addCase(fetchProductReviews.rejected, (state, action) => {
         state.loading = false;

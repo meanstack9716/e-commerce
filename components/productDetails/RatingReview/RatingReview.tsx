@@ -74,7 +74,7 @@ const RatingReview: React.FC<RatingReviewProps> = ({ review }) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: staticColors.white,
-    borderRadius: borderRadius.r10,
+    ...spacingStyles.mb15
   },
   starsContainer: {
     flexDirection: "row",
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     fontFamily: "NunitoSans",
     fontWeight: fontWeights.black,
     color: staticColors.black,
-    // ...spacingStyles.mb5,
+    ...spacingStyles.mb5,
   },
 });
 

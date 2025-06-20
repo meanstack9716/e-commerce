@@ -18,20 +18,28 @@ const initialState: WishlistState = {
   error: null,
 };
 
-export const fetchWishlist = createAsyncThunk(
+export const fetchWishlist = createAsyncThunk<
+  WishlistItem[],          
+  void,                   
+  { state: RootState; rejectValue: string } 
+>(
   "wishlist/fetch",
   async (_, { getState, rejectWithValue }) => {
     try {
+      const state = getState(); 
       const response = await axiosConfig.get(
         `/wishlist/list`,
+        getAuthHeaders(state)
       );
+
       if (!response.data?.data) {
         throw new Error("Invalid fetchWishlist response structure");
       }
       return response.data.data as WishlistItem[];
     } catch (error: any) {
+      console.log("wishlist", error);
       return rejectWithValue(
-        error.response?.data?.message || "Failed to fetch wishlist"
+        error?.response?.data?.message || "Failed to fetch wishlist"
       );
     }
   }

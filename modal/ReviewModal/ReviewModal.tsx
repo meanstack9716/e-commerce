@@ -119,7 +119,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
       "comment",
       text,
       (value) => value.trim().length >= REVIEW_COMMENT_CHARACTER,
-      "Comment must be at least 50 characters"
+      `Comment must be at least ${REVIEW_COMMENT_CHARACTER} characters`
     );
   };
 
@@ -133,7 +133,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
       comment: {
         value: reviewState.comment,
         validator: (v) => v.trim().length >= REVIEW_COMMENT_CHARACTER,
-        errorMessage: "Comment must be at least 50 characters",
+        errorMessage: `Comment must be at least ${REVIEW_COMMENT_CHARACTER}  characters`,
       },
     });
 
