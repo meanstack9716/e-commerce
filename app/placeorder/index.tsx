@@ -8,6 +8,8 @@ import {
   ActivityIndicator,
   ScrollView,
 } from "react-native";
+import * as Linking from "expo-linking";
+import * as WebBrowser from "expo-web-browser";
 import { router, useLocalSearchParams } from "expo-router";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
@@ -26,10 +28,14 @@ import CartItemsList from "@/components/cartItemList/CardItemList";
 import ContactCard from "@/components/contactCard/ContactCard";
 import { getFormattedAddress } from "@/utils/formatAddress";
 import { OrderPayload } from "./placeorder.type";
+import images from "@/constants/images";
 
 const paymentOptions = [
   {
     label: "Cash On Delivery",
+  },
+  {
+    label: "Razorpay",
   },
 ];
 
@@ -82,11 +88,12 @@ const PlaceOrderScreen: React.FC = () => {
       });
       return;
     }
+
     if (!shippingAddressId) {
       Toast.show({
         type: "error",
         text1: "Error",
-        text2: "Please select aa address or create new address",
+        text2: "Please select an address or create a new address",
       });
       return;
     }
@@ -100,15 +107,25 @@ const PlaceOrderScreen: React.FC = () => {
     if (appliedPromoCode) {
       payload.promo_code = appliedPromoCode;
     }
+    const redirectUrl = Linking.createURL("orderHistory");
+    payload.redirect_url = redirectUrl;
 
     const result = await dispatch(placeOrder(payload)).unwrap();
-    if (result) {
-      Toast.show({
-        type: "success",
-        text1: "Order Placed",
-        text2: "Your order has been placed successfully",
-      });
-      router.navigate("/orderHistory");
+    if (result?.payment_link) {
+      const paymentUrl = result.payment_link;
+      const authResult = await WebBrowser.openAuthSessionAsync(
+        paymentUrl,
+        redirectUrl
+      );
+
+      if (authResult.type === "success") {
+        Toast.show({
+          type: "success",
+          text1: "Order Placed",
+          text2: "Your order has been placed successfully",
+        });
+      }
+      return;
     }
   };
 
@@ -194,9 +211,32 @@ const PlaceOrderScreen: React.FC = () => {
             </TouchableOpacity> */}
           </View>
           <View style={styles.paymentMethodsWrapper}>
-            <View style={styles.selectedPaymentWrap}>
+            {/* <View style={styles.selectedPaymentWrap}>
               <Text style={styles.paymentType}>{selectedPaymentMethod}</Text>
-            </View>
+            </View> */}
+            {paymentOptions.map((option) => (
+              <TouchableOpacity
+                key={option.label}
+                style={[
+                  styles.selectedPaymentWrap,
+                  selectedPaymentMethod === option.label && {
+                    backgroundColor: staticColors.blue200,
+                  },
+                ]}
+                onPress={() => setSelectedPaymentMethod(option.label)}
+              >
+                <Text
+                  style={[
+                    styles.paymentType,
+                    selectedPaymentMethod === option.label && {
+                      color: staticColors.darkSlate,
+                    },
+                  ]}
+                >
+                  {option.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
           </View>
         </ScrollView>
         <View style={styles.totalPriceContainer}>
@@ -284,7 +324,7 @@ const styles = StyleSheet.create({
   },
   selectedPaymentWrap: {
     borderRadius: borderRadius.r14,
-    backgroundColor: staticColors.blue100,
+    backgroundColor: staticColors.blue200,
     ...spacingStyles.py6,
     ...spacingStyles.px25,
   },
