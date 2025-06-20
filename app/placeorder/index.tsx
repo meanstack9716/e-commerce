@@ -8,6 +8,8 @@ import {
   ActivityIndicator,
   ScrollView,
 } from "react-native";
+import * as Linking from "expo-linking";
+import * as WebBrowser from "expo-web-browser";
 import { router, useLocalSearchParams } from "expo-router";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
@@ -100,15 +102,25 @@ const PlaceOrderScreen: React.FC = () => {
     if (appliedPromoCode) {
       payload.promo_code = appliedPromoCode;
     }
+    const redirectUrl = Linking.createURL("orderHistory");
+    payload.redirect_url = redirectUrl;
 
     const result = await dispatch(placeOrder(payload)).unwrap();
-    if (result) {
-      Toast.show({
-        type: "success",
-        text1: "Order Placed",
-        text2: "Your order has been placed successfully",
-      });
-      router.navigate("/orderHistory");
+    if (result?.payment_link) {
+      const paymentUrl = result.payment_link;
+      const authResult = await WebBrowser.openAuthSessionAsync(
+        paymentUrl,
+        redirectUrl
+      );
+
+      if (authResult.type === "success") {
+        Toast.show({
+          type: "success",
+          text1: "Order Placed",
+          text2: "Your order has been placed successfully",
+        });
+      }
+      return;
     }
   };
 
