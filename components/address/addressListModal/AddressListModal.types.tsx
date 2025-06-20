@@ -9,4 +9,5 @@ export interface AddressListModalProps {
   onEditAddress?: (address: Address) => void;
   onConfirmAddress?: (id: string) => void;
   onAddAddress?: () => void;
+  onDeleteAddress?: (address: Address) => void;
 }
