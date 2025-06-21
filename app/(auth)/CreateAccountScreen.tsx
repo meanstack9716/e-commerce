@@ -107,7 +107,7 @@ export default function CreateAccountScreen() {
   };
 
   return (
-    <SafeAreaViewWrapper edges={['bottom']}>
+    <SafeAreaViewWrapper edges={["bottom"]}>
       <KeyboardAvoidingViewWrapper style={styles.keyboardAvoidingView}>
         <ScrollView
           contentContainerStyle={styles.scrollViewContainer}
@@ -168,7 +168,7 @@ export default function CreateAccountScreen() {
                 />
               </View>
             </View>
-
+            {error && <Text style={styles.errorText}>{error}</Text>}
             <View style={styles.bottomButtonContainer}>
               <Button
                 title="Done"

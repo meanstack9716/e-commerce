@@ -13,16 +13,24 @@ import { Review } from "@/interfaces";
 
 const RatingReview: React.FC<RatingReviewProps> = ({ review }) => {
   const getUsername = (review: Review) => {
-    const { first_name, last_name } = review.by;
+    const { first_name, last_name } = review.reviewed_by || {};
     if (first_name && last_name) {
       return `${first_name} ${last_name}`;
     }
-    return "Unknown";
+    return "Anonymous";
   };
 
   const getAvatarSource = () => {
     return images.unKnownUser;
   };
+
+  if (!review) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.reviewText}>No review available</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -66,7 +74,7 @@ const RatingReview: React.FC<RatingReviewProps> = ({ review }) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: staticColors.white,
-    borderRadius: borderRadius.r10,
+    ...spacingStyles.mb10
   },
   starsContainer: {
     flexDirection: "row",
@@ -79,7 +87,7 @@ const styles = StyleSheet.create({
   },
   userInfo: {
     flex: 1,
-    gap:gapSizes.sm
+    gap: gapSizes.sm,
   },
   username: {
     fontSize: fontSizes.base,
@@ -91,7 +99,7 @@ const styles = StyleSheet.create({
     fontFamily: "NunitoSans",
     fontWeight: fontWeights.black,
     color: staticColors.black,
-    ...spacingStyles.mb10,
+    ...spacingStyles.mb5,
   },
 });
 

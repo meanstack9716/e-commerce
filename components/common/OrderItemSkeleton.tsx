@@ -4,57 +4,26 @@ import { MotiView } from "moti";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import borderRadius from "@/style/borderRadius";
-import SkeletonPlaceholder from "./SkeletonPlaceholder";
+import SkeletonPlaceholder from "./SkeletonPlaceholder ";
 
 const OrderItemSkeleton: React.FC = () => {
   return (
     <View style={styles.container}>
-      {/* <MotiView
+      <SkeletonPlaceholder
         style={styles.thumbnailPlaceholder}
-        from={{ opacity: 0.4 }}
-        animate={{ opacity: 1 }}
-        transition={{
-          type: "timing" as const,
-          duration: 1000,
-          loop: true,
-          repeatReverse: true,
-        }}
-      /> */}
-      <SkeletonPlaceholder style={styles.thumbnailPlaceholder} fromOpacity={0.4} toOpacity={1} />
+        fromOpacity={0.4}
+        toOpacity={1}
+      />
       <View style={styles.detailsContainer}>
-        <MotiView
+        <SkeletonPlaceholder
           style={[styles.textPlaceholder, styles.orderNumberPlaceholder]}
-          from={{ opacity: 0.4 }}
-          animate={{ opacity: 1 }}
-          transition={{
-            type: "timing" as const,
-            duration: 1000,
-            loop: true,
-            repeatReverse: true,
-          }}
+          fromOpacity={0.4}
+          toOpacity={1}
         />
-        <MotiView
+        <SkeletonPlaceholder
           style={[styles.textPlaceholder, styles.descriptionPlaceholder]}
-          from={{ opacity: 0.3 }}
-          animate={{ opacity: 0.7 }}
-          transition={{
-            type: "timing",
-            duration: 1000,
-            loop: true,
-            repeatReverse: true,
-          }}
         />
-        <MotiView
-          style={styles.textPlaceholder}
-          from={{ opacity: 0.3 }}
-          animate={{ opacity: 0.7 }}
-          transition={{
-            type: "timing",
-            duration: 1000,
-            loop: true,
-            repeatReverse: true,
-          }}
-        />
+        <SkeletonPlaceholder style={styles.textPlaceholder} />
       </View>
     </View>
   );
@@ -84,6 +53,7 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.lightGray,
     borderRadius: borderRadius.r5,
     ...spacingStyles.mb8,
+    height: 10,
   },
   orderNumberPlaceholder: {
     width: "60%",
