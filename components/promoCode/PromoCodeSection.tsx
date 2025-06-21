@@ -24,8 +24,9 @@ import RenderHtml from "react-native-render-html";
 import { CartItem } from "@/interfaces";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import gapSizes from "@/style/gapSizes";
-import { router } from "expo-router";
+import PromoCodeSuccessModal from "@/modal/promoCodeModal/PromoCodeSuccessModal";
 import PromoCodeModal from "@/modal/promoCodeModal/PromoCodeModal";
+import { PromoCodeSectionProps } from "./PromoCodeSection.types";
 
 const isPromoCodeValid = (
   startDate: string,
@@ -36,14 +37,6 @@ const isPromoCodeValid = (
   const expiry = expiryDate ? new Date(expiryDate) : null;
   return start <= currentDate && (!expiry || expiry >= currentDate);
 };
-
-interface PromoCodeSectionProps {
-  selectedCartItems: CartItem[];
-  headerTitle?: string;
-  showAllCouponsLink?: boolean;
-  maxPromoCodes?: number;
-  shouldNavigateToCart?: boolean;
-}
 
 const PromoCodeSection: React.FC<PromoCodeSectionProps> = ({
   selectedCartItems,
@@ -61,6 +54,7 @@ const PromoCodeSection: React.FC<PromoCodeSectionProps> = ({
   const [showModalForPromoCode, setShowModalForPromoCode] = useState<
     string | null
   >(null);
+  const [allCouponsModalVisible, setAllCouponsModalVisible] = useState(false);
 
   const prevAppliedPromoCodeRef = useRef<string | null>(null);
 
@@ -80,10 +74,7 @@ const PromoCodeSection: React.FC<PromoCodeSectionProps> = ({
   };
 
   const handleAllCoupons = () => {
-    router.navigate({
-      pathname: "/cart/promoCode",
-      params: { selectedItems: JSON.stringify(selectedCartItems) },
-    });
+    setAllCouponsModalVisible(true);
   };
 
   const handleApplyPromoCode = (code: string) => {
@@ -125,6 +116,10 @@ const PromoCodeSection: React.FC<PromoCodeSectionProps> = ({
     setModalVisible(false);
   };
 
+  const handleAllCouponsModalClose = () => {
+    setAllCouponsModalVisible(false);
+  };
+
   const validPromoCodes = promoCodes.filter(
     (promo) =>
       promo.is_active && isPromoCodeValid(promo.start_date, promo.expiry_date)
@@ -145,11 +140,16 @@ const PromoCodeSection: React.FC<PromoCodeSectionProps> = ({
 
   return (
     <View style={styles.container}>
-      <PromoCodeModal
+      <PromoCodeSuccessModal
         visible={modalVisible}
         promoCode={appliedPromoCode}
         onClose={handleModalClose}
         shouldNavigateToCart={shouldNavigateToCart}
+      />
+      <PromoCodeModal
+        visible={allCouponsModalVisible}
+        onClose={handleAllCouponsModalClose}
+        selectedItems={(selectedCartItems)}
       />
 
       <View style={styles.header}>
