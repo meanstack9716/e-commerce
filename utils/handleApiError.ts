@@ -1,9 +1,10 @@
-import { AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
+
 export const handleApiError = (
   error: unknown,
   defaultMessage = "Something went wrong"
 ): string => {
-  if (error instanceof AxiosError) {
+  if (axios.isAxiosError(error)) {
     if (error.response) {
       const { data } = error.response;
       if (data) {
@@ -12,10 +13,10 @@ export const handleApiError = (
             for (const field in data.errors) {
               if (data.errors[field]) {
                 return (
-                  Array.isArray(data.errors[field])
+                  (Array.isArray(data.errors[field])
                     ? data.errors[field][0]
-                    : data.errors[field]
-                ) || defaultMessage;
+                    : data.errors[field]) || defaultMessage
+                );
               }
             }
           }
@@ -36,29 +37,34 @@ export const handleApiError = (
     }
 
     // Network error (no response)
-  if (error.request) {
-  const errorDetails = {
-    url: error.request._url,
-    method: error.request._method,
-    headers: error.request._headers,
-    readyState: error.request.readyState,
-    status: error.request.status,
-    responseURL: error.request.responseURL,
-    timeout: error.request.timeout,
-  };
-  console.error("Network error details:", {
-    requestDetails: errorDetails,
-    message: error.message,
-    config: error.config,
-  });
-  return `Network error: ${JSON.stringify(errorDetails)}`; 
-}
+    if (error.request) {
+      const errorDetails = {
+        url: error.request._url,
+        method: error.request._method,
+        headers: error.request._headers,
+        readyState: error.request.readyState,
+        status: error.request.status,
+        responseURL: error.request.responseURL,
+        timeout: error.request.timeout,
+      };
+      console.error("Network error details:", {
+        requestDetails: errorDetails,
+        message: error.message,
+        config: error.config,
+      });
+      return `Network error: ${JSON.stringify(errorDetails)}`;
+    }
 
     // Other Axios errors
     return error.message || defaultMessage;
   }
 
-  // Handle non-Axios errors
   console.error("Non-Axios error:", error);
-  return error instanceof Error ? error.message : defaultMessage;
+  if (error instanceof Error) {
+    return error.message || defaultMessage;
+  }
+  if (typeof error === "string") {
+    return error; 
+  }
+  return defaultMessage;
 };

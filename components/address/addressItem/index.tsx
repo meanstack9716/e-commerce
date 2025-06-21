@@ -50,7 +50,7 @@ const AddressItem: React.FC<AddressItemProps> = ({
           </Text>
         </View>
         <TouchableOpacity
-          style={styles.editIconWrapper}
+          style={styles.deleteIconWrapper}
           onPress={() => setIsDeleteModalVisible(true)}
         >
           <Ionicons name="trash-outline" size={16} color={staticColors.white} />
@@ -67,7 +67,7 @@ const AddressItem: React.FC<AddressItemProps> = ({
         onCancel={() => setIsDeleteModalVisible(false)}
         onConfirm={() => {
           setIsDeleteModalVisible(false);
-          onDeleteAddress && onDeleteAddress(address); 
+          onDeleteAddress && onDeleteAddress(address);
         }}
         title="Are you sure you want to delete this address?"
       />
@@ -123,6 +123,17 @@ const styles = StyleSheet.create({
   },
   editIconWrapper: {
     backgroundColor: staticColors.blue500,
+    flexShrink: 0,
+    borderRadius: borderRadius.circle,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 35,
+    height: 35,
+    ...spacingStyles.ml5,
+  },
+  deleteIconWrapper: {
+    backgroundColor: staticColors.errorColor,
     flexShrink: 0,
     borderRadius: borderRadius.circle,
     flexDirection: "row",
