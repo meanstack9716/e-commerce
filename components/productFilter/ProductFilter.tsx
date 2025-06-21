@@ -302,12 +302,12 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
                     styles.colorCircle,
                     styles.shadowWrapper,
                     { backgroundColor: color.color },
-                    selectedColors.includes(color.color) &&
+                    selectedColors.includes(color.name) &&
                       styles.selectedColorCircle,
                   ]}
-                  onPress={() => toggleColor(color.color)}
+                  onPress={() => toggleColor(color.name)}
                 >
-                  {selectedColors.includes(color.color) && (
+                  {selectedColors.includes(color.name) && (
                     <View style={styles.checkOverlay}>
                       <Ionicons
                         name="checkmark"
@@ -520,10 +520,10 @@ const styles = StyleSheet.create({
     width: width - 30,
   },
   sizeScrollContent: {
-    flexDirection: "row",
+  flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    minWidth: width - 30,
+    ...spacingStyles.px15,
+    gap: gapSizes.xxl,
   },
   sizeButton: {
     borderRadius: borderRadius.circle,
