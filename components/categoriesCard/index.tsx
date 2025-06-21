@@ -20,73 +20,77 @@ import gapSizes from "@/style/gapSizes";
 import borderRadius from "@/style/borderRadius";
 import { router } from "expo-router";
 
-export const CategoriresCard: React.FC<
-  CategoriesCardProps
-> = ({
+export const CategoriresCard: React.FC<CategoriesCardProps> = ({
   categoryList,
 }) => {
-    return (
-      <>
-        <View style={styles.headingWrap}>
-          <Text style={styles.headingText}>Categories</Text>
-          <View style={styles.seeAllContainer}>
-            <Text style={styles.seeAllText}>See All</Text>
-            <TouchableOpacity onPress={() => router.navigate("/categories")}>
-              <Ionicons
-                name="arrow-forward-circle"
-                size={30}
-                color={staticColors.blue300}
-              />
-            </TouchableOpacity>
-          </View>
+  return (
+    <>
+      <View style={styles.headingWrap}>
+        <Text style={styles.headingText}>Categories</Text>
+        <View style={styles.seeAllContainer}>
+          <Text style={styles.seeAllText}>See All</Text>
+          <TouchableOpacity onPress={() => router.navigate("/categories")}>
+            <Ionicons
+              name="arrow-forward-circle"
+              size={30}
+              color={staticColors.blue300}
+            />
+          </TouchableOpacity>
         </View>
+      </View>
 
-        <View style={styles.cardContainer}>
-          {categoryList.map((option: CategoryItem, index: number) => {
-            if (
-              index <= 5 &&
-              option.sub_categories &&
-              option.sub_categories.length
-            ) {
-              return (
-                <View style={styles.cardItem} key={option.id}>
-                  <View style={styles.subCardContainer}>
-                    {option.sub_categories.map(
-                      (subOption: SubCategoryItem, subIndex: number) => {
-                        if (subIndex <= 3) {
-                          return (
-                            <View
-                              style={styles.categoryImgContainer}
-                              key={subOption.id}
-                            >
-                              <Image
-                                style={styles.categoryImage}
-                                source={{ uri: subOption.img_url }}
-                              />
-                            </View>
-                          );
-                        }
-                        return null;
+      <View style={styles.cardContainer}>
+        {categoryList.map((option: CategoryItem, index: number) => {
+          if (
+            index <= 5 &&
+            option.sub_categories &&
+            option.sub_categories.length
+          ) {
+            return (
+              <TouchableOpacity
+                style={styles.cardItem}
+                key={option.id}
+                onPress={() =>
+                  router.navigate(`/categories?categoryId=${option.id}`)
+                }
+              >
+                <View style={styles.subCardContainer}>
+                  {option.sub_categories.map(
+                    (subOption: SubCategoryItem, subIndex: number) => {
+                      if (subIndex <= 3) {
+                        return (
+                          <View
+                            style={styles.categoryImgContainer}
+                            key={subOption.id}
+                          >
+                            <Image
+                              style={styles.categoryImage}
+                              source={{ uri: subOption.img_url }}
+                            />
+                          </View>
+                        );
                       }
-                    )}
-                  </View>
-                  <View style={styles.cardDetails}>
-                    <Text style={styles.categoryName}>{option.name}</Text>
-                    <View style={styles.categoryCountWrap}>
-                      <Text style={styles.categoryCountText}>
-                        {option.sub_sub_category_count}
-                      </Text>
-                    </View>
+                      return null;
+                    }
+                  )}
+                </View>
+                <View style={styles.cardDetails}>
+                  <Text style={styles.categoryName}>{option.name}</Text>
+                  <View style={styles.categoryCountWrap}>
+                    <Text style={styles.categoryCountText}>
+                      {option.sub_sub_category_count}
+                    </Text>
                   </View>
                 </View>
-              );
-            }
-            return null;
-          })}
-        </View>
-      </>
-    );
-  };
+              </TouchableOpacity>
+            );
+          }
+          return null;
+        })}
+      </View>
+    </>
+  );
+};
 
 const styles = StyleSheet.create({
   headingWrap: {
@@ -134,7 +138,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     width: "100%",
     rowGap: gapSizes.sm,
-    
   },
   categoryImgContainer: {
     width: "48.5%",

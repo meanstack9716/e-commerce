@@ -35,13 +35,13 @@ const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
               style={[styles.modalButton, styles.cancelButton]}
               onPress={onCancel}
             >
-              <Text style={styles.modalButtonText}>Cancel</Text>
+              <Text style={styles.cancelButtonText}>Cancel</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.modalButton, styles.confirmButton]}
               onPress={onConfirm}
             >
-              <Text style={styles.modalButtonText}>Delete</Text>
+              <Text style={styles.confirmButtonText}>Delete</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -88,12 +88,17 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.r5,
   },
   cancelButton: {
-    backgroundColor: staticColors.secondaryGray,
+    borderWidth: 1,
+    borderColor: staticColors.primaryBlue,
   },
   confirmButton: {
     backgroundColor: staticColors.primaryBlue,
   },
-  modalButtonText: {
+  cancelButtonText: {
+    color: staticColors.primaryBlue,
+    fontFamily: fontFamilies.ralewayBold,
+  },
+  confirmButtonText: {
     color: staticColors.white,
     fontFamily: fontFamilies.ralewayBold,
   },
