@@ -20,9 +20,9 @@ import { commonStyles } from "@/style/commonStyle";
 import spacingStyles from "@/style/spacingStyles";
 import { fontSizes } from "@/style/typography";
 import {
-  PRODUCT_LIMIT,
   PRODUCT_RANGE_MAX_PRICE,
   PRODUCT_RANGE_MIN_PRICE,
+  PRODUCT_LIMIT,
 } from "@/constants/constants";
 import ProductFilter from "@/components/productFilter/ProductFilter";
 import ProductCard from "@/components/home/ProductCard";
@@ -40,20 +40,18 @@ const ProductSearchScreen: React.FC = () => {
     priceMin: PRODUCT_RANGE_MIN_PRICE,
     priceMax: PRODUCT_RANGE_MAX_PRICE as number | null,
   });
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const limit = PRODUCT_LIMIT;
   const dispatch = useAppDispatch();
   const products = useSelector((state: any) => state.products.data);
   const loading = useSelector((state: any) => state.products.loading);
-const allProducts = useSelector((state: any) => state.products.data);
-const filteredProducts = allProducts.filter((product: Product) =>
-  product.title.toLowerCase().includes(searchTerm.toLowerCase())
-);
-  const error = useSelector((state: any) => state.products.error);
-  const [page, setPage] = useState(1);
-  const { subCategories, sizes, colors, priceMin, priceMax } = productFilters;
-  const hasMore = useSelector(
-    (state: any) => state.products.pagination.hasMore
+  const allProducts = useSelector((state: any) => state.products.data);
+  const filteredProducts = allProducts.filter((product: Product) =>
+    product.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  const limit = PRODUCT_LIMIT;
+  const error = useSelector((state: any) => state.products.error);
+  const { subCategories, sizes, colors, priceMin, priceMax } = productFilters;
 
   useEffect(() => {
     const hasFilters =
@@ -66,6 +64,7 @@ const filteredProducts = allProducts.filter((product: Product) =>
     if (hasFilters && isSearchSubmitted) {
       setIsSearchSubmitted(true);
       setPage(1);
+      setHasMore(true);
       dispatch(resetProducts());
       dispatch(
         fetchProducts({
@@ -75,9 +74,9 @@ const filteredProducts = allProducts.filter((product: Product) =>
             colors,
             minPrice: priceMin,
             maxPrice: priceMax,
+            page: 1,
+            limit,
           },
-          page: 1,
-          limit,
         })
       );
     }
@@ -87,6 +86,7 @@ const filteredProducts = allProducts.filter((product: Product) =>
     if (searchTerm.trim()) {
       setIsSearchSubmitted(true);
       setPage(1);
+      setHasMore(true);
       dispatch(resetProducts());
       dispatch(
         fetchProducts({
@@ -95,9 +95,9 @@ const filteredProducts = allProducts.filter((product: Product) =>
             subCategoryIds: subCategories,
             sizes,
             colors,
+            page: 1,
+            limit,
           },
-          page: 1,
-          limit,
         })
       );
     }
@@ -107,6 +107,7 @@ const filteredProducts = allProducts.filter((product: Product) =>
     setSearchTerm("");
     setIsSearchSubmitted(false);
     setPage(1);
+    setHasMore(true);
     setProductFilters({
       subCategories: [],
       sizes: [],
@@ -121,31 +122,38 @@ const filteredProducts = allProducts.filter((product: Product) =>
     setSetFilter(true);
   };
 
-  const handleApplyFilters = (newFilters: {
+  const handleApplyFilters = async (newFilters: {
     subCategories: string[];
     sizes: string[];
     colors: string[];
     priceMin: number;
     priceMax: number | null;
   }) => {
+    const firstPage = 1;
     setProductFilters(newFilters);
     setIsSearchSubmitted(true);
-    setPage(1);
+    setPage(firstPage);
+    setHasMore(true);
     dispatch(resetProducts());
-    dispatch(
-      fetchProducts({
-        params: {
-          searchTerm: searchTerm,
-          subCategoryIds: newFilters.subCategories,
-          sizes: newFilters.sizes,
-          colors: newFilters.colors,
-          minPrice: newFilters.priceMin,
-          maxPrice: newFilters.priceMax,
-        },
-        page: 1,
-        limit,
-      })
-    );
+
+    try {
+      await dispatch(
+        fetchProducts({
+          params: {
+            searchTerm,
+            subCategoryIds: newFilters.subCategories,
+            sizes: newFilters.sizes,
+            colors: newFilters.colors,
+            minPrice: newFilters.priceMin,
+            maxPrice: newFilters.priceMax,
+            page: firstPage,
+            limit,
+          },
+        })
+      );
+    } catch (error) {
+      console.error("Error applying filters:", error);
+    }
   };
 
   const handleClearFilters = () => {
@@ -157,30 +165,45 @@ const filteredProducts = allProducts.filter((product: Product) =>
       priceMax: PRODUCT_RANGE_MAX_PRICE,
     });
     setPage(1);
+    setHasMore(true);
   };
 
-  const loadMoreProducts = () => {
-    if (!loading && hasMore) {
-      const nextPage = page + 1;
-      setPage(nextPage);
-      dispatch(
+  const loadMoreProducts = async () => {
+    if (loading || !hasMore) return;
+
+    const nextPage = page + 1;
+    setPage(nextPage);
+
+    try {
+      const action = await dispatch(
         fetchProducts({
           params: {
-            searchTerm: searchTerm,
+            searchTerm,
             subCategoryIds: subCategories,
             sizes,
             colors,
             minPrice: priceMin,
             maxPrice: priceMax,
+            page: nextPage,
+            limit,
           },
-          page: nextPage,
-          limit,
         })
       );
+
+      const products = action.payload;
+      if (Array.isArray(products)) {
+        setHasMore(products.length === limit);
+      } else {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error("Error loading more products:", error);
+      setHasMore(false);
     }
   };
 
   const renderSkeletonItem = () => <ProductCardSkeleton />;
+
   const renderFooter = () => {
     if (!loading) return null;
     return (
@@ -240,13 +263,13 @@ const filteredProducts = allProducts.filter((product: Product) =>
               ) : null}
             </View>
 
-            {/* <TouchableOpacity>
+            <TouchableOpacity>
               <Ionicons
                 name="camera-outline"
                 size={22}
                 color={staticColors.blue400}
               />
-            </TouchableOpacity> */}
+            </TouchableOpacity>
           </View>
           <TouchableOpacity onPress={handleProductFilter}>
             <Ionicons
@@ -278,7 +301,7 @@ const filteredProducts = allProducts.filter((product: Product) =>
               columnWrapperStyle={styles.row}
               contentContainerStyle={styles.productList}
               onEndReached={loadMoreProducts}
-              onEndReachedThreshold={0.5}
+              onEndReachedThreshold={0.2}
               ListFooterComponent={renderFooter}
             />
           ) : (
@@ -342,11 +365,6 @@ const styles = StyleSheet.create({
   row: {
     justifyContent: "space-between",
     ...spacingStyles.mb10,
-  },
-  loadingText: {
-    textAlign: "center",
-    fontSize: fontSizes.base,
-    color: staticColors.darkGray,
   },
   errorText: {
     textAlign: "center",
