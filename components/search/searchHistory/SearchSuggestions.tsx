@@ -10,12 +10,13 @@ import { Ionicons } from "@expo/vector-icons";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import { fontSizes, fontWeights } from "@/style/typography";
-import { SearchHistoryProps } from "./SearchHistory.types";
 import borderRadius from "@/style/borderRadius";
 import { fontFamilies } from "@/style/fontFamilies";
 import gapSizes from "@/style/gapSizes";
+import { SearchSuggestionsProps } from "./SearchSuggestions.types";
 
-const SearchHistory: React.FC<SearchHistoryProps> = ({
+const SearchSuggestions: React.FC<SearchSuggestionsProps> = ({
+  title,
   history,
   onItemPress,
   onClearHistory,
@@ -25,21 +26,19 @@ const SearchHistory: React.FC<SearchHistoryProps> = ({
   return (
     <View style={styles.historyContainer}>
       <View style={styles.historyHeader}>
-        <Text style={styles.historyTitle}>Search history</Text>
-        <TouchableOpacity onPress={onClearHistory}>
-          <Ionicons
-            name="trash-outline"
-            size={16}
-            color={staticColors.red50}
-            style={styles.iconStyle}
-          />
-        </TouchableOpacity>
+        <Text style={styles.historyTitle}>{title}</Text>
+        {onClearHistory && (
+          <TouchableOpacity onPress={onClearHistory}>
+            <Ionicons
+              name="trash-outline"
+              size={16}
+              color={staticColors.red50}
+              style={styles.iconStyle}
+            />
+          </TouchableOpacity>
+        )}
       </View>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.historyList}
-      >
+      <View style={styles.historyList}>
         {history.map((item, index) => (
           <TouchableOpacity
             key={index}
@@ -49,7 +48,7 @@ const SearchHistory: React.FC<SearchHistoryProps> = ({
             <Text style={styles.historyItemText}>{item.toUpperCase()}</Text>
           </TouchableOpacity>
         ))}
-      </ScrollView>
+      </View>
     </View>
   );
 };
@@ -57,12 +56,13 @@ const SearchHistory: React.FC<SearchHistoryProps> = ({
 const styles = StyleSheet.create({
   historyContainer: {
     ...spacingStyles.px5,
+    ...spacingStyles.mb20,
   },
   historyHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    ...spacingStyles.mb10,
+    ...spacingStyles.mb15,
   },
   historyTitle: {
     fontSize: fontSizes.base,
@@ -71,11 +71,13 @@ const styles = StyleSheet.create({
   },
   historyList: {
     flexDirection: "row",
+    flexWrap: "wrap",
     gap: gapSizes.md,
   },
+
   iconStyle: {
     backgroundColor: staticColors.gray300,
-    padding:8,
+    padding: 8,
     borderRadius: borderRadius.circle,
   },
   historyItem: {
@@ -91,4 +93,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SearchHistory;
+export default SearchSuggestions;

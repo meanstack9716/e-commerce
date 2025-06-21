@@ -28,12 +28,13 @@ import ProductFilter from "@/components/productFilter/ProductFilter";
 import ProductCard from "@/components/home/ProductCard";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import ProductCardSkeleton from "@/components/common/ProductCardSkeleton";
-import SearchHistory from "@/components/search/searchHistory/SearchHistory";
+
 import {
   clearSearchHistory,
   getSearchHistory,
   saveSearchQuery,
 } from "@/utils/searchStorage";
+import SearchSuggestions from "@/components/search/searchHistory/SearchSuggestions";
 
 const ProductSearchScreen: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -49,7 +50,6 @@ const ProductSearchScreen: React.FC = () => {
   });
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const limit = LIST_LIMIT;
   const dispatch = useAppDispatch();
   const products = useSelector((state: any) => state.products.data);
   const loading = useSelector((state: any) => state.products.loading);
@@ -57,6 +57,15 @@ const ProductSearchScreen: React.FC = () => {
   const filteredProducts = allProducts.filter((product: Product) =>
     product.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
+  const limit = LIST_LIMIT;
+
+  useEffect(() => {
+    const loadSearchHistory = async () => {
+      const history = await getSearchHistory();
+      setSearchHistory(history);
+    };
+    loadSearchHistory();
+  }, []);
   const error = useSelector((state: any) => state.products.error);
   const { subCategories, sizes, colors, priceMin, priceMax } = productFilters;
 
@@ -127,9 +136,9 @@ const ProductSearchScreen: React.FC = () => {
           colors,
           minPrice: priceMin,
           maxPrice: priceMax,
+          page: 1,
+          limit,
         },
-        page: 1,
-        limit,
       })
     );
   };
@@ -204,37 +213,25 @@ const ProductSearchScreen: React.FC = () => {
     setHasMore(true);
   };
 
-  const loadMoreProducts = async () => {
-    if (loading || !hasMore) return;
-
-    const nextPage = page + 1;
-    setPage(nextPage);
-
-    try {
-      const action = await dispatch(
+  const loadMoreProducts = () => {
+    if (!loading && hasMore) {
+      console.log("Loading more products", { page, hasMore });
+      const nextPage = page + 1;
+      setPage(nextPage);
+      dispatch(
         fetchProducts({
           params: {
-            searchTerm,
+            searchTerm: searchTerm,
             subCategoryIds: subCategories,
             sizes,
             colors,
             minPrice: priceMin,
             maxPrice: priceMax,
-            page: nextPage,
-            limit,
           },
+          page: nextPage,
+          limit,
         })
       );
-
-      const products = action.payload;
-      if (Array.isArray(products)) {
-        setHasMore(products.length === limit);
-      } else {
-        setHasMore(false);
-      }
-    } catch (error) {
-      console.error("Error loading more products:", error);
-      setHasMore(false);
     }
   };
 
@@ -316,7 +313,8 @@ const ProductSearchScreen: React.FC = () => {
           </TouchableOpacity>
         </View>
         {!isSearchSubmitted && (
-          <SearchHistory
+          <SearchSuggestions
+          title="Search History"
             history={searchHistory}
             onItemPress={handleHistoryItemPress}
             onClearHistory={handleClearSearchHistory}
