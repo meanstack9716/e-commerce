@@ -217,13 +217,13 @@ const HomeScreen: React.FC = () => {
               onChangeText={setProductSearchQuery}
               onFocus={() => router.navigate("/home/product-search")}
             />
-            <TouchableOpacity>
+            {/* <TouchableOpacity>
               <Ionicons
                 name="camera-outline"
                 size={20}
                 color={staticColors.blue400}
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
 
