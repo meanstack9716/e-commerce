@@ -1,102 +1,110 @@
 import React from "react";
 import {
   View,
-  Text,
-  Modal,
+  ScrollView,
   StyleSheet,
-  TouchableWithoutFeedback,
-  Image,
+  Modal,
+  TouchableOpacity,
+  Text,
 } from "react-native";
-import { router, useLocalSearchParams } from "expo-router";
+import { useSelector } from "react-redux";
+import { CartItem } from "@/interfaces";
+import PromoCodeSection from "@/components/promoCode/PromoCodeSection";
+import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
+import { RootState } from "@/store/store";
+import spacingStyles from "@/style/spacingStyles";
+import { PromoCodeModalProps } from "./PromoCodeModal.types";
+import borderRadius from "@/style/borderRadius";
 import staticColors from "@/style/staticColors";
 import { fontSizes } from "@/style/typography";
 import { fontFamilies } from "@/style/fontFamilies";
-import borderRadius from "@/style/borderRadius";
-import spacingStyles from "@/style/spacingStyles";
-import { PromoCodeModalProps } from "./PromoCodeModal.types";
-import { Ionicons } from "@expo/vector-icons";
-import images from "@/constants/images";
 
 const PromoCodeModal: React.FC<PromoCodeModalProps> = ({
   visible,
-  promoCode,
   onClose,
-  shouldNavigateToCart = false,
+  selectedItems,
 }) => {
-  const { selectedItems } = useLocalSearchParams();
-  const handleClose = () => {
-    onClose();
-    if (shouldNavigateToCart) {
-      router.push({
-        pathname: "/cart",
-        params: { selectedItems },
-      });
-    }
-  };
+  const cartItems = useSelector((state: RootState) => state.cart.cartItems);
+
+  const selectedCartItems: CartItem[] = (() => {
+    if (!selectedItems) return [];
+    const selectedIds = new Set(selectedItems.map((item) => item.id));
+    return cartItems.filter((item) => selectedIds.has(item.id));
+  })();
 
   return (
     <Modal
       animationType="slide"
       transparent={true}
       visible={visible}
-      onRequestClose={handleClose}
+      onRequestClose={onClose}
     >
-      <TouchableWithoutFeedback onPress={handleClose}>
-        <View style={styles.modalOverlay}>
-          <TouchableWithoutFeedback>
-            <View style={styles.modalContent}>
-              <Image
-                source={images.promoCodeSuccess}
-                style={styles.promoCodeImage}
-                resizeMode="contain"
-              />
-
-              <Text style={styles.modalTitle}> 🎉 Congratulations !</Text>
-              <Text style={styles.modalMessage}>
-                Coupon code   
-                <Text style={styles.promoText}> "{promoCode}" </Text> applied
-                successfully!
-              </Text>
+      <SafeAreaViewWrapper>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <View style={styles.header}>
+              <Text style={styles.headerTitle}>Apply Promo Code</Text>
+              <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+                <Text style={styles.closeButtonText}>✕</Text>
+              </TouchableOpacity>
             </View>
-          </TouchableWithoutFeedback>
+            <ScrollView contentContainerStyle={styles.scrollContent}>
+              <PromoCodeSection
+                selectedCartItems={selectedCartItems}
+                headerTitle="All Codes"
+                showAllCouponsLink={false}
+                shouldNavigateToCart={true}
+              />
+            </ScrollView>
+          </View>
         </View>
-      </TouchableWithoutFeedback>
+      </SafeAreaViewWrapper>
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
-  modalOverlay: {
+  modalContainer: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "flex-end",
   },
   modalContent: {
-    backgroundColor: staticColors.white,
-    borderRadius: borderRadius.r10,
-    ...spacingStyles.py10,
-    ...spacingStyles.px15,
-    width: "80%",
+    backgroundColor: "white",
+    borderTopLeftRadius: borderRadius.r20,
+    borderTopRightRadius: borderRadius.r20,
+    maxHeight: "90%",
+    ...spacingStyles.pt20,
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
+    ...spacingStyles.px20,
+    ...spacingStyles.pb15,
+    borderBottomWidth: 1,
+    borderBottomColor: staticColors.borderLight,
   },
-  promoCodeImage: { width: 100, height: 100 },
-  modalTitle: {
-    fontSize: fontSizes.lg,
+  headerTitle: {
+    fontSize: fontSizes.md,
+    fontFamily: fontFamilies.ralewayBold,
+  },
+  closeButton: {
+    width: 30,
+    height: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: borderRadius.circle,
+    backgroundColor: staticColors.lightGray,
+  },
+  closeButtonText: {
+    fontSize: fontSizes.md,
     fontFamily: fontFamilies.ralewayBold,
     color: staticColors.black,
-    ...spacingStyles.mb5,
   },
-  modalMessage: {
-    fontSize: fontSizes.sm,
-    fontFamily: fontFamilies.ralewayeMedium,
-    color: staticColors.black,
-    textAlign: "center",
-    ...spacingStyles.mb20,
-  },
-  promoText: {
-    color: staticColors.darkGreen,
-    fontFamily: fontFamilies.ralewayBold,
+  scrollContent: {
+    flexGrow: 1,
+    ...spacingStyles.px5,
   },
 });
 
