@@ -100,10 +100,11 @@ export const submitReview = createAsyncThunk<
     }
 
     try {
+      const formData = buildFormData(payload);
       const response = await axiosConfig.post(
         `/products/review`,
-        payload,
-        getAuthHeaders(state)
+        formData,
+        getAuthFormDataHeaders(state)
       );
       return response.data;
     } catch (error: any) {

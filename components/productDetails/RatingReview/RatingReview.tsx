@@ -74,7 +74,7 @@ const RatingReview: React.FC<RatingReviewProps> = ({ review }) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: staticColors.white,
-    ...spacingStyles.mb15
+    ...spacingStyles.mb10
   },
   starsContainer: {
     flexDirection: "row",
