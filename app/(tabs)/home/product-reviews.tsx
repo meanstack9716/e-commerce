@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View, Text, FlatList, StyleSheet } from "react-native";
+import { View, Text, FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
@@ -13,6 +13,7 @@ import RatingReview from "@/components/productDetails/RatingReview/RatingReview"
 import FullScreenLoader from "@/components/common/FullScreenLoader";
 import { fetchProductReviews } from "@/store/review/reviewSlice";
 import { LIST_LIMIT } from "@/constants/constants";
+import { Ionicons } from "@expo/vector-icons";
 
 const ReviewsScreen: React.FC = () => {
   const { productId } = useLocalSearchParams();
@@ -49,8 +50,13 @@ const ReviewsScreen: React.FC = () => {
   return (
     <SafeAreaViewWrapper backgroundColor={staticColors.white}>
       <FullScreenLoader visible={loading} />
-      <View style={styles.header}>
-        <Text style={styles.title}>REVIEWS</Text>
+       <View style={styles.header}>
+        <View style={styles.headerContainer}>
+          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+            <Ionicons name="arrow-back" size={24} color={staticColors.black} />
+          </TouchableOpacity>
+          <Text style={styles.title}>REVIEWS</Text>
+        </View>
       </View>
 
       <FlatList
@@ -77,6 +83,13 @@ const styles = StyleSheet.create({
     ...spacingStyles.px20,
     ...spacingStyles.pt10,
     ...spacingStyles.pb5,
+  },
+    headerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  backButton: {
+   ...spacingStyles.mr10
   },
   title: {
     fontSize: fontSizes["2xl"],
