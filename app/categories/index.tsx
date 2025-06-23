@@ -11,7 +11,7 @@ import {
   BackHandler,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useSelector } from "react-redux";
 import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
@@ -33,6 +33,7 @@ const CategoriesScreen: React.FC = () => {
     loading: isLoading,
     error,
   } = useSelector((state: RootState) => state.categories);
+  const { categoryId } = useLocalSearchParams();
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [expandedSubCategory, setExpandedSubCategory] = useState<string | null>(
@@ -48,10 +49,12 @@ const CategoriesScreen: React.FC = () => {
   };
 
   useEffect(() => {
-    if (categories && categories.length) {
-      setSelectedCategory(categories[0].id);
+    if (categoryId && typeof categoryId === "string") {
+      setSelectedCategory(categoryId); 
+    } else if (categories && categories.length) {
+      setSelectedCategory(categories[0].id); 
     }
-  }, [categories]);
+  }, [categoryId, categories]);
 
   useEffect(() => {
     setExpandedSubCategory(null);

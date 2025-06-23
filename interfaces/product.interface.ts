@@ -71,4 +71,5 @@ export interface Seller {
 export interface Color {
   name: string;
   color: string;
+  id:string
 }

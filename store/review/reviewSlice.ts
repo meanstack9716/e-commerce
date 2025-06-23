@@ -3,8 +3,7 @@ import axios from "axios";
 import { getAuthHeaders } from "@/utils/apiHeader";
 import { RootState } from "@/store/store";
 import { handleApiError } from "@/utils/handleApiError";
-
-const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+import axiosConfig from "@/utils/axiosConfig";
 
 interface ReviewState {
   loading: boolean;
@@ -38,8 +37,8 @@ export const submitReview = createAsyncThunk<
     }
 
     try {
-      const response = await axios.post(
-        `${apiUrl}/products/review`,
+      const response = await axiosConfig.post(
+        `/products/review`,
         payload,
         getAuthHeaders(state)
       );
