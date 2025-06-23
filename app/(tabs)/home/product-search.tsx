@@ -227,9 +227,9 @@ const ProductSearchScreen: React.FC = () => {
             colors,
             minPrice: priceMin,
             maxPrice: priceMax,
+            page: nextPage,
+            limit,
           },
-          page: nextPage,
-          limit,
         })
       );
     }
@@ -314,7 +314,7 @@ const ProductSearchScreen: React.FC = () => {
         </View>
         {!isSearchSubmitted && (
           <SearchSuggestions
-          title="Search History"
+            title="Search History"
             history={searchHistory}
             onItemPress={handleHistoryItemPress}
             onClearHistory={handleClearSearchHistory}
