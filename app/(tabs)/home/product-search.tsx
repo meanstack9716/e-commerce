@@ -319,33 +319,27 @@ const ProductSearchScreen: React.FC = () => {
             />
           </TouchableOpacity>
         </View>
-        {!isSearchSubmitted && (
-          <>
-            <SearchSuggestions
-              title="Search history"
-              history={searchHistory}
-              onItemPress={handleHistoryItemPress}
-              onClearHistory={handleClearSearchHistory}
-            />
-            {recommendedKeywordsLoading ? (
-              <View style={styles.loadingContainer}>
-                <ActivityIndicator
-                  size="small"
-                  color={staticColors.lightGray}
-                />
-              </View>
-            ) : recommendedKeywordsError ? (
-              <Text style={styles.errorText}>
-                Error: {recommendedKeywordsError}
-              </Text>
-            ) : (
-              <SearchSuggestions
-                title="Recommended"
-                history={recommendedKeywords}
-                onItemPress={handleHistoryItemPress}
-              />
-            )}
-          </>
+
+        <SearchSuggestions
+          title="Search history"
+          history={searchHistory}
+          onItemPress={handleHistoryItemPress}
+          onClearHistory={handleClearSearchHistory}
+        />
+        {recommendedKeywordsLoading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="small" color={staticColors.lightGray} />
+          </View>
+        ) : recommendedKeywordsError ? (
+          <Text style={styles.errorText}>
+            Error: {recommendedKeywordsError}
+          </Text>
+        ) : (
+          <SearchSuggestions
+            title="Recommended"
+            history={recommendedKeywords}
+            onItemPress={handleHistoryItemPress}
+          />
         )}
 
         {isSearchSubmitted ? (
