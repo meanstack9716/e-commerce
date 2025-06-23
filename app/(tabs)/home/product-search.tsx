@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -23,6 +24,7 @@ import {
   LIST_LIMIT,
   PRODUCT_RANGE_MAX_PRICE,
   PRODUCT_RANGE_MIN_PRICE,
+  RECOMMENDED_KEYWORD_LIMIT,
 } from "@/constants/constants";
 import ProductFilter from "@/components/productFilter/ProductFilter";
 import ProductCard from "@/components/home/ProductCard";
@@ -58,6 +60,11 @@ const ProductSearchScreen: React.FC = () => {
     product.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
   const limit = LIST_LIMIT;
+  const {
+    recommendedKeywords,
+    recommendedKeywordsLoading,
+    recommendedKeywordsError,
+  } = useSelector((state: any) => state.products);
 
   useEffect(() => {
     const loadSearchHistory = async () => {
@@ -313,12 +320,32 @@ const ProductSearchScreen: React.FC = () => {
           </TouchableOpacity>
         </View>
         {!isSearchSubmitted && (
-          <SearchSuggestions
-            title="Search History"
-            history={searchHistory}
-            onItemPress={handleHistoryItemPress}
-            onClearHistory={handleClearSearchHistory}
-          />
+          <>
+            <SearchSuggestions
+              title="Search history"
+              history={searchHistory}
+              onItemPress={handleHistoryItemPress}
+              onClearHistory={handleClearSearchHistory}
+            />
+            {recommendedKeywordsLoading ? (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator
+                  size="small"
+                  color={staticColors.lightGray}
+                />
+              </View>
+            ) : recommendedKeywordsError ? (
+              <Text style={styles.errorText}>
+                Error: {recommendedKeywordsError}
+              </Text>
+            ) : (
+              <SearchSuggestions
+                title="Recommended"
+                history={recommendedKeywords}
+                onItemPress={handleHistoryItemPress}
+              />
+            )}
+          </>
         )}
 
         {isSearchSubmitted ? (
@@ -406,6 +433,10 @@ const styles = StyleSheet.create({
   row: {
     justifyContent: "space-between",
     ...spacingStyles.mb10,
+  },
+  loadingContainer: {
+    ...spacingStyles.p10,
+    alignItems: "center",
   },
   errorText: {
     textAlign: "center",

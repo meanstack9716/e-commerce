@@ -3,7 +3,6 @@ import { handleApiError } from "@/utils/handleApiError";
 import axiosConfig from "@/utils/axiosConfig";
 import { Product, Color } from "@/interfaces";
 import { RECOMMENDED_KEYWORD_LIMIT } from "@/constants/constants";
-
 interface ProductsState {
   data: Product[];
   selectedProduct: Product | null;
@@ -14,7 +13,7 @@ interface ProductsState {
   colors: Color[];
   colorsLoading: boolean;
   colorsError: string | null;
-    recommendedKeywords: string[];
+  recommendedKeywords: string[];
   recommendedKeywordsLoading: boolean;
   recommendedKeywordsError: string | null;
 }
@@ -29,7 +28,7 @@ const initialState: ProductsState = {
   colors: [],
   colorsLoading: false,
   colorsError: null,
-   recommendedKeywords: [],
+  recommendedKeywords: [],
   recommendedKeywordsLoading: false,
   recommendedKeywordsError: null,
 };
@@ -58,7 +57,7 @@ export const fetchColors = createAsyncThunk<
 });
 
 export const fetchProducts = createAsyncThunk<
-  { data: Product[]; page: number }, 
+  { data: Product[]; page: number },
   { params?: any },
   { rejectValue: string }
 >("products/fetchProducts", async ({ params = {} }, { rejectWithValue }) => {
@@ -69,7 +68,7 @@ export const fetchProducts = createAsyncThunk<
       },
     });
     if (response.data?.data) {
-      return { data: response.data.data, page: params.page || 1 }; 
+      return { data: response.data.data, page: params.page || 1 };
     }
     return rejectWithValue("Invalid response format from API");
   } catch (error) {
