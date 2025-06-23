@@ -5,10 +5,7 @@ import { handleApiError } from "@/utils/handleApiError";
 import { getAuthFormDataHeaders, getAuthHeaders } from "@/utils/apiHeader";
 import { buildFormData } from "@/utils/buildFormData";
 import axiosConfig from "@/utils/axiosConfig";
-<<<<<<< HEAD
-=======
 import { Review } from "@/interfaces";
->>>>>>> 3b38f39b98de6a66251c901df8c3b48e119c3a58
 
 interface ReviewState {
   loading: boolean;
@@ -103,18 +100,11 @@ export const submitReview = createAsyncThunk<
     }
 
     try {
-<<<<<<< HEAD
-      const response = await axiosConfig.post(
-        `/products/review`,
-        payload,
-        getAuthHeaders(state)
-=======
       const formData = buildFormData(payload);
       const response = await axiosConfig.post(
         `/products/review`,
         formData,
         getAuthFormDataHeaders(state)
->>>>>>> 3b38f39b98de6a66251c901df8c3b48e119c3a58
       );
       return response.data;
     } catch (error: any) {
@@ -143,10 +133,6 @@ export const updateReview = createAsyncThunk<
       if (payload.review_id) {
         formData.append("review_id", payload.review_id);
       }
-<<<<<<< HEAD
-=======
-
->>>>>>> 3b38f39b98de6a66251c901df8c3b48e119c3a58
       const response = await axiosConfig.post(
         `/products/update-review`,
         formData,
