@@ -107,7 +107,7 @@ export default function CreateAccountScreen() {
   };
 
   return (
-    <SafeAreaViewWrapper edges={['bottom']}>
+    <SafeAreaViewWrapper edges={["bottom"]}>
       <KeyboardAvoidingViewWrapper style={styles.keyboardAvoidingView}>
         <ScrollView
           contentContainerStyle={styles.scrollViewContainer}
@@ -168,7 +168,7 @@ export default function CreateAccountScreen() {
                 />
               </View>
             </View>
-
+            {error && <Text style={styles.errorText}>{error}</Text>}
             <View style={styles.bottomButtonContainer}>
               <Button
                 title="Done"
@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
     alignSelf: "flex-start",
     ...spacingStyles.px10,
-  ...spacingStyles.pb25,
+    ...spacingStyles.pb25,
   },
   profilePicContainer: {
     width: 90,

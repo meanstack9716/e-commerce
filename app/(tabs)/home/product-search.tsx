@@ -20,9 +20,9 @@ import { commonStyles } from "@/style/commonStyle";
 import spacingStyles from "@/style/spacingStyles";
 import { fontSizes } from "@/style/typography";
 import {
+  LIST_LIMIT,
   PRODUCT_RANGE_MAX_PRICE,
-  PRODUCT_RANGE_MIN_PRICE,
-  PRODUCT_LIMIT,
+  PRODUCT_RANGE_MIN_PRICE
 } from "@/constants/constants";
 import ProductFilter from "@/components/productFilter/ProductFilter";
 import ProductCard from "@/components/home/ProductCard";
@@ -42,7 +42,6 @@ const ProductSearchScreen: React.FC = () => {
   });
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const limit = PRODUCT_LIMIT;
   const dispatch = useAppDispatch();
   const products = useSelector((state: any) => state.products.data);
   const loading = useSelector((state: any) => state.products.loading);
@@ -50,6 +49,7 @@ const ProductSearchScreen: React.FC = () => {
   const filteredProducts = allProducts.filter((product: Product) =>
     product.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
+  const limit = LIST_LIMIT;
   const error = useSelector((state: any) => state.products.error);
   const { subCategories, sizes, colors, priceMin, priceMax } = productFilters;
 
