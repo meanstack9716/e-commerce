@@ -186,7 +186,7 @@ const WishlistScreen: React.FC = () => {
               style={styles.cartIconWrapper}
               onPress={() => handleMoveToBag(item.id)}
             >
-              <Ionicons name="add-outline" size={20} color="#2A52BE" />
+              <Ionicons name="cart-outline" size={20} color="black" />
             </TouchableOpacity>
           </View>
         </View>
@@ -343,9 +343,9 @@ const styles = StyleSheet.create({
   },
   cartIconWrapper: {
     marginLeft: "auto",
-    ...spacingStyles.p6,
-    borderRadius: borderRadius.r8,
-    borderWidth: 1.5,
+    ...spacingStyles.p5,
+    borderRadius: borderRadius.r5,
+    borderWidth: 1,
     backgroundColor: staticColors.white,
   },
   emptyWishlistContainer: {

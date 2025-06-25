@@ -31,6 +31,7 @@ import { fontSizes, fontWeights } from "@/style/typography";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import { useFieldValidation } from "@/hooks/useFieldValidation";
+import { KeyboardAvoidingViewWrapper } from "@/components/common/KeyboardAvoidingView/KeyboardAvoidingViewWrapper";
 
 export const pickImages = async (
   setShowImagePickerModal: (value: boolean) => void,
@@ -253,168 +254,170 @@ export default function UserManageAccount() {
 
   return (
     <SafeAreaViewWrapper style={styles.safeArea}>
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={handleBack}>
-            <Ionicons
-              name="arrow-back"
-              size={22}
-              color={staticColors.darkGray}
-            />
+      <KeyboardAvoidingViewWrapper>
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <TouchableOpacity onPress={handleBack}>
+              <Ionicons
+                name="arrow-back"
+                size={22}
+                color={staticColors.darkGray}
+              />
+            </TouchableOpacity>
+            <Text style={styles.heading}>Your Profile</Text>
+          </View>
+
+          <View style={styles.profileContainer}>
+            <View style={styles.outerCircle}>
+              <View style={styles.innerCircle}>
+                {profilePicLoading ? (
+                  <ActivityIndicator
+                    size="large"
+                    color={staticColors.primaryBlue}
+                  />
+                ) : formData.profile_url ? (
+                  <Image
+                    source={{ uri: formData.profile_url }}
+                    style={styles.profileImage}
+                  />
+                ) : (
+                  <Ionicons name="person" size={40} color="#005CFF" />
+                )}
+              </View>
+              <TouchableOpacity
+                style={styles.editIcon}
+                onPress={() => setShowImagePickerModal(true)}
+                disabled={profilePicLoading}
+              >
+                <Ionicons name="pencil" size={16} color="#fff" />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={styles.inputContainer}>
+            <View>
+              <TextInput
+                style={styles.input}
+                value={formData.first_name}
+                placeholder="First Name"
+                onChangeText={(text) => handleChange("first_name", text)}
+              />
+              {errors.first_name ? (
+                <Text style={styles.errorText}>{errors.first_name}</Text>
+              ) : null}
+            </View>
+            <View>
+              <TextInput
+                style={styles.input}
+                value={formData.last_name}
+                placeholder="Last Name"
+                onChangeText={(text) => handleChange("last_name", text)}
+              />
+              {errors.last_name ? (
+                <Text style={styles.errorText}>{errors.last_name}</Text>
+              ) : null}
+            </View>
+            <View>
+              <TextInput
+                style={styles.input}
+                value={formData.email}
+                placeholder="Email"
+                editable={false}
+              />
+              {errors.email ? (
+                <Text style={styles.errorText}>{errors.email}</Text>
+              ) : null}
+            </View>
+            <View>
+              <TextInput
+                style={styles.input}
+                value={formData.phone_number}
+                placeholder="Phone Number"
+                keyboardType="phone-pad"
+                onChangeText={(text) => handleChange("phone_number", text)}
+              />
+              {errors.phone_number ? (
+                <Text style={styles.errorText}>{errors.phone_number}</Text>
+              ) : null}
+            </View>
+          </View>
+
+          {errors.general ? (
+            <Text style={styles.errorText}>{errors.general}</Text>
+          ) : null}
+
+          <TouchableOpacity
+            style={[styles.saveButton, loading && styles.saveButtonDisabled]}
+            onPress={handleSaveDetails}
+            disabled={loading}
+          >
+            <Text style={styles.saveButtonText}>
+              {loading ? "Saving..." : "Save Changes"}
+            </Text>
           </TouchableOpacity>
-          <Text style={styles.heading}>Your Profile</Text>
         </View>
 
-        <View style={styles.profileContainer}>
-          <View style={styles.outerCircle}>
-            <View style={styles.innerCircle}>
-              {profilePicLoading ? (
-                <ActivityIndicator
-                  size="large"
-                  color={staticColors.primaryBlue}
-                />
-              ) : formData.profile_url ? (
-                <Image
-                  source={{ uri: formData.profile_url }}
-                  style={styles.profileImage}
-                />
-              ) : (
-                <Ionicons name="person" size={40} color="#005CFF" />
-              )}
-            </View>
-            <TouchableOpacity
-              style={styles.editIcon}
-              onPress={() => setShowImagePickerModal(true)}
-              disabled={profilePicLoading}
-            >
-              <Ionicons name="pencil" size={16} color="#fff" />
-            </TouchableOpacity>
-          </View>
-        </View>
+        <Modal visible={showImagePickerModal} transparent animationType="slide">
+          <TouchableOpacity
+            style={styles.modalOverlay}
+            activeOpacity={1}
+            onPress={() => setShowImagePickerModal(false)}
+          >
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Choose an option</Text>
 
-        <View style={styles.inputContainer}>
-          <View>
-            <TextInput
-              style={styles.input}
-              value={formData.first_name}
-              placeholder="First Name"
-              onChangeText={(text) => handleChange("first_name", text)}
-            />
-            {errors.first_name ? (
-              <Text style={styles.errorText}>{errors.first_name}</Text>
-            ) : null}
-          </View>
-          <View>
-            <TextInput
-              style={styles.input}
-              value={formData.last_name}
-              placeholder="Last Name"
-              onChangeText={(text) => handleChange("last_name", text)}
-            />
-            {errors.last_name ? (
-              <Text style={styles.errorText}>{errors.last_name}</Text>
-            ) : null}
-          </View>
-          <View>
-            <TextInput
-              style={styles.input}
-              value={formData.email}
-              placeholder="Email"
-              editable={false}
-            />
-            {errors.email ? (
-              <Text style={styles.errorText}>{errors.email}</Text>
-            ) : null}
-          </View>
-          <View>
-            <TextInput
-              style={styles.input}
-              value={formData.phone_number}
-              placeholder="Phone Number"
-              keyboardType="phone-pad"
-              onChangeText={(text) => handleChange("phone_number", text)}
-            />
-            {errors.phone_number ? (
-              <Text style={styles.errorText}>{errors.phone_number}</Text>
-            ) : null}
-          </View>
-        </View>
+              <View style={styles.rowOptions}>
+                <TouchableOpacity
+                  style={styles.optionButton}
+                  onPress={async () => {
+                    await pickImages(
+                      setShowImagePickerModal,
+                      setProfilePicLoading,
+                      "camera",
+                      dispatch
+                    );
+                  }}
+                >
+                  <Ionicons
+                    name="camera"
+                    size={20}
+                    color="#005CFF"
+                    style={styles.optionIcon}
+                  />
+                  <Text style={styles.optionText}>Take Photo</Text>
+                </TouchableOpacity>
 
-        {errors.general ? (
-          <Text style={styles.errorText}>{errors.general}</Text>
-        ) : null}
-
-        <TouchableOpacity
-          style={[styles.saveButton, loading && styles.saveButtonDisabled]}
-          onPress={handleSaveDetails}
-          disabled={loading}
-        >
-          <Text style={styles.saveButtonText}>
-            {loading ? "Saving..." : "Save Changes"}
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      <Modal visible={showImagePickerModal} transparent animationType="slide">
-        <TouchableOpacity
-          style={styles.modalOverlay}
-          activeOpacity={1}
-          onPress={() => setShowImagePickerModal(false)}
-        >
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Choose an option</Text>
-
-            <View style={styles.rowOptions}>
-              <TouchableOpacity
-                style={styles.optionButton}
-                onPress={async () => {
-                  await pickImages(
-                    setShowImagePickerModal,
-                    setProfilePicLoading,
-                    "camera",
-                    dispatch
-                  );
-                }}
-              >
-                <Ionicons
-                  name="camera"
-                  size={20}
-                  color="#005CFF"
-                  style={styles.optionIcon}
-                />
-                <Text style={styles.optionText}>Take Photo</Text>
-              </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.optionButton}
+                  onPress={async () => {
+                    await pickImages(
+                      setShowImagePickerModal,
+                      setProfilePicLoading,
+                      "gallery",
+                      dispatch
+                    );
+                  }}
+                >
+                  <Ionicons
+                    name="image"
+                    size={20}
+                    color="#005CFF"
+                    style={styles.optionIcon}
+                  />
+                  <Text style={styles.optionText}>Gallery</Text>
+                </TouchableOpacity>
+              </View>
 
               <TouchableOpacity
-                style={styles.optionButton}
-                onPress={async () => {
-                  await pickImages(
-                    setShowImagePickerModal,
-                    setProfilePicLoading,
-                    "gallery",
-                    dispatch
-                  );
-                }}
+                style={styles.modalCancelButton}
+                onPress={() => setShowImagePickerModal(false)}
               >
-                <Ionicons
-                  name="image"
-                  size={20}
-                  color="#005CFF"
-                  style={styles.optionIcon}
-                />
-                <Text style={styles.optionText}>Gallery</Text>
+                <Text style={styles.modalCancelText}>Cancel</Text>
               </TouchableOpacity>
             </View>
-
-            <TouchableOpacity
-              style={styles.modalCancelButton}
-              onPress={() => setShowImagePickerModal(false)}
-            >
-              <Text style={styles.modalCancelText}>Cancel</Text>
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-      </Modal>
+          </TouchableOpacity>
+        </Modal>
+      </KeyboardAvoidingViewWrapper>
     </SafeAreaViewWrapper>
   );
 }
@@ -502,7 +505,6 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.r12,
     alignItems: "center",
     marginTop: "auto",
-    ...spacingStyles.mb20,
   },
   saveButtonDisabled: {
     backgroundColor: staticColors.lightGray,
