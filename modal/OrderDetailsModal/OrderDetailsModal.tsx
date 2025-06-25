@@ -76,6 +76,11 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                   <Text style={styles.label}>Status:</Text>
                   <Text style={styles.value}>{order.status}</Text>
                 </View>
+
+                 <View style={styles.inlineRow}>
+                  <Text style={styles.label}>Payment Status:</Text>
+                  <Text style={styles.value}>{order.payment_status}</Text>
+                </View>
               </ScrollView>
 
               <View style={styles.footerButtons}>

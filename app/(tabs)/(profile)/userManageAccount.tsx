@@ -30,6 +30,7 @@ import staticColors from "@/style/staticColors";
 import { fontSizes, fontWeights } from "@/style/typography";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
+import { useFieldValidation } from "@/hooks/useFieldValidation";
 
 export const pickImages = async (
   setShowImagePickerModal: (value: boolean) => void,
@@ -144,6 +145,15 @@ export default function UserManageAccount() {
     profile_url: "",
   });
 
+  const {
+    errors,
+    handleFieldChange,
+    validateEmail,
+    resetErrors,
+    setFieldErrors,
+    validateAllFields,
+  } = useFieldValidation();
+
   useEffect(() => {
     dispatch(resetState());
     dispatch(fetchUserProfile());
@@ -176,48 +186,64 @@ export default function UserManageAccount() {
 
   useEffect(() => {
     if (error) {
-      Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: error,
-      });
+      setFieldErrors({ general: error });
       dispatch(resetState());
       setProfilePicLoading(false);
     }
-  }, [error, dispatch]);
+  }, [error, dispatch, setFieldErrors]);
 
   const isValidName = (text: string) => /^[a-zA-Z\s]+$/.test(text);
   const isValidPhoneNumber = (text: string) => /^[0-9]{0,10}$/.test(text);
 
   const handleChange = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+
     if (field === "first_name" || field === "last_name") {
-      if (value === "" || isValidName(value)) {
-        setFormData((prev) => ({ ...prev, [field]: value }));
-      }
+      handleFieldChange(
+        field,
+        value,
+        isValidName,
+        `Invalid ${field === "first_name" ? "first" : "last"} name`
+      );
+    } else if (field === "email") {
+      handleFieldChange(field, value, validateEmail, "Invalid email");
     } else if (field === "phone_number") {
-      if (value === "" || isValidPhoneNumber(value)) {
-        setFormData((prev) => ({ ...prev, [field]: value }));
-      }
-    } else {
-      setFormData((prev) => ({ ...prev, [field]: value }));
+      handleFieldChange(
+        field,
+        value,
+        isValidPhoneNumber,
+        "Invalid phone number"
+      );
     }
   };
 
   const handleSaveDetails = () => {
     const { first_name, last_name, email, phone_number } = formData;
-    if (
-      first_name.trim() &&
-      last_name.trim() &&
-      email.trim() &&
-      phone_number.trim()
-    ) {
+    const isValid = validateAllFields({
+      first_name: {
+        value: first_name,
+        validator: isValidName,
+        errorMessage: "Invalid first name",
+      },
+      last_name: {
+        value: last_name,
+        validator: isValidName,
+        errorMessage: "Invalid last name",
+      },
+      email: {
+        value: email,
+        validator: validateEmail,
+        errorMessage: "Invalid email",
+      },
+      phone_number: {
+        value: phone_number,
+        validator: isValidPhoneNumber,
+        errorMessage: "Invalid phone number",
+      },
+    });
+
+    if (isValid) {
       dispatch(updateProfile(formData));
-    } else {
-      Toast.show({
-        type: "error",
-        text1: "Validation Error",
-        text2: "Please fill in all fields.",
-      });
     }
   };
 
@@ -243,7 +269,10 @@ export default function UserManageAccount() {
           <View style={styles.outerCircle}>
             <View style={styles.innerCircle}>
               {profilePicLoading ? (
-                <ActivityIndicator size="large" color="#005CFF" />
+                <ActivityIndicator
+                  size="large"
+                  color={staticColors.primaryBlue}
+                />
               ) : formData.profile_url ? (
                 <Image
                   source={{ uri: formData.profile_url }}
@@ -264,34 +293,56 @@ export default function UserManageAccount() {
         </View>
 
         <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            value={formData.first_name}
-            placeholder="First Name"
-            onChangeText={(text) => handleChange("first_name", text)}
-          />
-          <TextInput
-            style={styles.input}
-            value={formData.last_name}
-            placeholder="Last Name"
-            onChangeText={(text) => handleChange("last_name", text)}
-          />
-          <TextInput
-            style={styles.input}
-            value={formData.email}
-            placeholder="Email"
-            editable={false}
-          />
-          <TextInput
-            style={styles.input}
-            value={formData.phone_number}
-            placeholder="Phone Number"
-            keyboardType="phone-pad"
-            onChangeText={(text) => handleChange("phone_number", text)}
-          />
+          <View>
+            <TextInput
+              style={styles.input}
+              value={formData.first_name}
+              placeholder="First Name"
+              onChangeText={(text) => handleChange("first_name", text)}
+            />
+            {errors.first_name ? (
+              <Text style={styles.errorText}>{errors.first_name}</Text>
+            ) : null}
+          </View>
+          <View>
+            <TextInput
+              style={styles.input}
+              value={formData.last_name}
+              placeholder="Last Name"
+              onChangeText={(text) => handleChange("last_name", text)}
+            />
+            {errors.last_name ? (
+              <Text style={styles.errorText}>{errors.last_name}</Text>
+            ) : null}
+          </View>
+          <View>
+            <TextInput
+              style={styles.input}
+              value={formData.email}
+              placeholder="Email"
+              editable={false}
+            />
+            {errors.email ? (
+              <Text style={styles.errorText}>{errors.email}</Text>
+            ) : null}
+          </View>
+          <View>
+            <TextInput
+              style={styles.input}
+              value={formData.phone_number}
+              placeholder="Phone Number"
+              keyboardType="phone-pad"
+              onChangeText={(text) => handleChange("phone_number", text)}
+            />
+            {errors.phone_number ? (
+              <Text style={styles.errorText}>{errors.phone_number}</Text>
+            ) : null}
+          </View>
         </View>
 
-        {error && <Text style={styles.errorText}>{error}</Text>}
+        {errors.general ? (
+          <Text style={styles.errorText}>{errors.general}</Text>
+        ) : null}
 
         <TouchableOpacity
           style={[styles.saveButton, loading && styles.saveButtonDisabled]}
@@ -410,7 +461,7 @@ const styles = StyleSheet.create({
     width: 90,
     height: 90,
     borderRadius: borderRadius.circle,
-    backgroundColor: "#E5E4FD",
+    backgroundColor: staticColors.borderLight,
     justifyContent: "center",
     alignItems: "center",
     overflow: "hidden",
@@ -434,20 +485,19 @@ const styles = StyleSheet.create({
     borderColor: staticColors.white,
   },
   inputContainer: {
-    gap: 16,
-    ...spacingStyles.mb25,
+    gap: gapSizes.lg,
   },
   input: {
-    backgroundColor: "#F4F6FF",
+    backgroundColor: staticColors.blue0,
     ...spacingStyles.p15,
     borderRadius: borderRadius.r10,
     fontSize: fontSizes.base,
     fontFamily: fontFamilies.raleway,
     borderWidth: 1,
-    borderColor: "#E5E4FD",
+    borderColor: staticColors.borderLight,
   },
   saveButton: {
-    backgroundColor: "#005CFF",
+    backgroundColor: staticColors.primaryBlue,
     ...spacingStyles.py15,
     borderRadius: borderRadius.r12,
     alignItems: "center",
@@ -455,7 +505,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.mb20,
   },
   saveButtonDisabled: {
-    backgroundColor: "#99BFFF",
+    backgroundColor: staticColors.lightGray,
   },
   saveButtonText: {
     color: staticColors.white,
@@ -464,9 +514,8 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: staticColors.errorColor,
-    fontSize: fontSizes.md,
-    ...spacingStyles.my10,
-    ...spacingStyles.px20,
+    fontSize: fontSizes.xs,
+    ...spacingStyles.mt10,
   },
   modalOverlay: {
     flex: 1,

@@ -14,7 +14,7 @@ import {
   Platform,
   ScrollView,
 } from "react-native";
-import { Ionicons, MaterialIcons, FontAwesome6 } from "@expo/vector-icons";
+
 import { useSelector } from "react-redux";
 import { router, useFocusEffect } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -45,9 +45,8 @@ const HomeScreen: React.FC = () => {
   const [activeProductTab, setActiveProductTab] = useState<string>("All");
   const [productSearchQuery, setProductSearchQuery] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const productsPagination = useSelector(
-    (state: any) => state.products.pagination
-  );
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const insets = useSafeAreaInsets();
   const dispatch = useAppDispatch();
   const limit = LIST_LIMIT;
@@ -66,7 +65,9 @@ const HomeScreen: React.FC = () => {
   useFocusEffect(
     useCallback(() => {
       dispatch(fetchCategories());
-      dispatch(fetchProducts({ page: 1, limit }));
+      setPage(1);
+      setHasMore(true);
+      dispatch(fetchProducts({ params: { page: 1, limit } }));
     }, [dispatch])
   );
 
@@ -103,7 +104,9 @@ const HomeScreen: React.FC = () => {
             text: "Retry",
             onPress: () => {
               dispatch(fetchCategories());
-              dispatch(fetchProducts({ page: 1, limit }));
+              setPage(1);
+              setHasMore(true);
+              dispatch(fetchProducts({ params: { page: 1, limit } }));
             },
           },
           {
@@ -173,8 +176,18 @@ const HomeScreen: React.FC = () => {
   };
 
   const handleLoadMore = () => {
-    if (products.length && !productsLoading && productsPagination.hasMore) {
-      dispatch(fetchProducts({ page: productsPagination.currentPage, limit }));
+    if (products.length && !productsLoading && hasMore) {
+      const nextPage = page + 1;
+      setPage(nextPage);
+      dispatch(fetchProducts({ params: { page: nextPage, limit } })).then(
+        (action) => {
+          if (action.payload && Array.isArray(action.payload)) {
+            setHasMore(action.payload.length === limit);
+          } else {
+            setHasMore(false);
+          }
+        }
+      );
     }
   };
 
@@ -217,13 +230,13 @@ const HomeScreen: React.FC = () => {
               onChangeText={setProductSearchQuery}
               onFocus={() => router.navigate("/home/product-search")}
             />
-            <TouchableOpacity>
+            {/* <TouchableOpacity>
               <Ionicons
                 name="camera-outline"
                 size={20}
                 color={staticColors.blue400}
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
 
@@ -251,7 +264,7 @@ const HomeScreen: React.FC = () => {
                 : renderProductItem
             }
             onEndReached={handleLoadMore}
-            onEndReachedThreshold={0.7} 
+            onEndReachedThreshold={0.5}
             scrollEnabled={false}
             showsVerticalScrollIndicator={false}
             columnWrapperStyle={{
@@ -261,7 +274,16 @@ const HomeScreen: React.FC = () => {
             ListFooterComponent={() =>
               productsLoading && products.length > 0 ? (
                 <View style={{ paddingVertical: 20 }}>
-                  <ProductCardSkeleton />
+                  <FlatList
+                    data={Array.from({ length: 4 })}
+                    renderItem={renderSkeletonItem}
+                    keyExtractor={(_, index) => `footer-skeleton-${index}`}
+                    numColumns={2}
+                    columnWrapperStyle={{
+                      justifyContent: "space-between",
+                      ...spacingStyles.my20,
+                    }}
+                  />
                 </View>
               ) : null
             }
@@ -312,7 +334,6 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.sm,
     fontFamily: fontFamilies.ralewayBold,
   },
-
   categoryCountText: {
     fontSize: fontSizes.xs,
     fontFamily: fontFamilies.ralewayExtraBold,
