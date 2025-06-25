@@ -11,7 +11,7 @@ import {
 import * as Linking from "expo-linking";
 import * as WebBrowser from "expo-web-browser";
 import { router, useLocalSearchParams } from "expo-router";
-import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import staticColors from "@/style/staticColors";
@@ -206,31 +206,25 @@ const PlaceOrderScreen: React.FC = () => {
 
           <View style={[commonStyles.justifyBetwwen, { ...spacingStyles.mt5 }]}>
             <Text style={commonStyles.itemCountTitle}>Payment Method</Text>
-            {/* <TouchableOpacity style={styles.editIconWrapper}>
-              <FontAwesome5 name="pen" size={16} color={staticColors.white} />
-            </TouchableOpacity> */}
           </View>
           <View style={styles.paymentMethodsWrapper}>
-            {/* <View style={styles.selectedPaymentWrap}>
-              <Text style={styles.paymentType}>{selectedPaymentMethod}</Text>
-            </View> */}
             {paymentOptions.map((option) => (
               <TouchableOpacity
                 key={option.label}
                 style={[
                   styles.selectedPaymentWrap,
-                  selectedPaymentMethod === option.label && {
-                    backgroundColor: staticColors.blue200,
-                  },
+                  selectedPaymentMethod === option.label
+                    ? styles.selectedPayment
+                    : styles.unselectedPayment,
                 ]}
                 onPress={() => setSelectedPaymentMethod(option.label)}
               >
                 <Text
                   style={[
                     styles.paymentType,
-                    selectedPaymentMethod === option.label && {
-                      color: staticColors.darkSlate,
-                    },
+                    selectedPaymentMethod === option.label
+                      ? styles.selectedPaymentText
+                      : styles.unselectedPaymentText,
                   ]}
                 >
                   {option.label}
@@ -321,17 +315,32 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     ...spacingStyles.py12,
     flexWrap: "wrap",
+    gap: 10, // Adds spacing between payment options
   },
   selectedPaymentWrap: {
     borderRadius: borderRadius.r14,
-    backgroundColor: staticColors.blue200,
     ...spacingStyles.py6,
     ...spacingStyles.px25,
   },
+  selectedPayment: {
+    backgroundColor: staticColors.blue500,
+    borderWidth: 1,
+    borderColor: staticColors.blue500,
+  },
+  unselectedPayment: {
+    backgroundColor: staticColors.white,
+    borderWidth: 1,
+    borderColor: staticColors.blue500,
+  },
   paymentType: {
     fontSize: fontSizes.sm,
-    color: staticColors.blue500,
     fontFamily: fontFamilies.ralewayBold,
+  },
+  selectedPaymentText: {
+    color: staticColors.white,
+  },
+  unselectedPaymentText: {
+    color: staticColors.black,
   },
   header: {
     flexDirection: "row",
