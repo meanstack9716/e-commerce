@@ -220,15 +220,15 @@ const ProductSearchScreen: React.FC = () => {
     setHasMore(true);
   };
 
-  const loadMoreProducts = () => {
-    if (!loading && hasMore) {
-      console.log("Loading more products", { page, hasMore });
-      const nextPage = page + 1;
-      setPage(nextPage);
-      dispatch(
+  const loadMoreProducts = async () => {
+    if (loading || !hasMore) return;
+    const nextPage = page + 1;
+    setPage(nextPage);
+    try {
+      const action = await dispatch(
         fetchProducts({
           params: {
-            searchTerm: searchTerm,
+            searchTerm,
             subCategoryIds: subCategories,
             sizes,
             colors,
@@ -239,6 +239,15 @@ const ProductSearchScreen: React.FC = () => {
           },
         })
       );
+      const products = action.payload;
+      if (Array.isArray(products)) {
+        setHasMore(products.length === limit);
+      } else {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error("Error loading more products:", error);
+      setHasMore(false);
     }
   };
 

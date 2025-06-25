@@ -31,7 +31,7 @@ const UserProfile = () => {
   const [likedProductItems, setLikedProductItems] = useState<string[]>([]);
   const dispatch = useAppDispatch();
   const [page, setPage] = useState(1);
-   const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(true);
   const limit = LIST_LIMIT;
   const {
     data: categories,

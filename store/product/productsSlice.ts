@@ -3,6 +3,8 @@ import { handleApiError } from "@/utils/handleApiError";
 import axiosConfig from "@/utils/axiosConfig";
 import { Product, Color } from "@/interfaces";
 import { RECOMMENDED_KEYWORD_LIMIT } from "@/constants/constants";
+import { LIST_LIMIT } from "@/constants/constants";
+
 interface ProductsState {
   data: Product[];
   selectedProduct: Product | null;
@@ -68,7 +70,7 @@ export const fetchProducts = createAsyncThunk<
       },
     });
     if (response.data?.data) {
-      return { data: response.data.data, page: params.page || 1 };
+      return { data: response.data.data, page: params.page || 1 }; 
     }
     return rejectWithValue("Invalid response format from API");
   } catch (error) {
