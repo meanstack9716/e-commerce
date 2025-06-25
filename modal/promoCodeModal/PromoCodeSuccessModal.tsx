@@ -27,7 +27,7 @@ const PromoCodeSuccessModal: React.FC<PromoCodeSuccessProps> = ({
     onClose();
     if (shouldNavigateToCart) {
       router.push({
-        pathname: "/cart",
+        pathname: "/placeorder",
         params: { selectedItems },
       });
     }

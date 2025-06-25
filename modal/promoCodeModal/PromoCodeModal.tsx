@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { useSelector } from "react-redux";
 import { CartItem } from "@/interfaces";
-import PromoCodeSection from "@/components/promoCode/PromoCodeSection";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import { RootState } from "@/store/store";
 import spacingStyles from "@/style/spacingStyles";
@@ -18,6 +17,7 @@ import borderRadius from "@/style/borderRadius";
 import staticColors from "@/style/staticColors";
 import { fontSizes } from "@/style/typography";
 import { fontFamilies } from "@/style/fontFamilies";
+import PromoCodeSection from "@/components/promoCode/PromoCodeSection";
 
 const PromoCodeModal: React.FC<PromoCodeModalProps> = ({
   visible,

@@ -55,7 +55,6 @@ const PromoCodeSection: React.FC<PromoCodeSectionProps> = ({
     string | null
   >(null);
   const [allCouponsModalVisible, setAllCouponsModalVisible] = useState(false);
-
   const prevAppliedPromoCodeRef = useRef<string | null>(null);
 
   useEffect(() => {
@@ -129,14 +128,14 @@ const PromoCodeSection: React.FC<PromoCodeSectionProps> = ({
     ? validPromoCodes.slice(0, maxPromoCodes)
     : validPromoCodes;
 
-  if (loading && !promoCodes.length) {
-    return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color={staticColors.blue500} />
-        <Text style={styles.loadingText}>Loading promo codes...</Text>
-      </View>
-    );
-  }
+ if (loading && !promoCodes.length && !loadingPromoCode) {
+  return (
+    <View style={styles.container}>
+      <ActivityIndicator size="large" color={staticColors.blue500} />
+      <Text style={styles.loadingText}>Loading promo codes...</Text>
+    </View>
+  );
+}
 
   return (
     <View style={styles.container}>
