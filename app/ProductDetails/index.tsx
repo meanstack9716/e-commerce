@@ -36,8 +36,6 @@ import { fontFamilies } from "@/style/fontFamilies";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import RatingReview from "@/components/productDetails/RatingReview/RatingReview";
 import { renderStars } from "@/utils/starUtils";
-import LoginModal from "../(auth)/loginModal";
-import SignUpModal from "../(auth)/signUpModal";
 import {
   fetchProductReviews,
   fetchUserReview,
