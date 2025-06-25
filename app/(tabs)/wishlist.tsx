@@ -146,7 +146,6 @@ const WishlistScreen: React.FC = () => {
         discount: `${item.product.discount_percent}% OFF`,
         color: item.selected_color_name || item.selected_color || "N/A",
         size: item.selected_size || "N/A",
-        reviews: item.product.reviews || [],
       };
     });
 

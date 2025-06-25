@@ -1,58 +1,45 @@
 import * as ImagePicker from "expo-image-picker";
 
-export const pickImages = async (
-  setShowImagePickerModal: (value: boolean) => void,
-  source: "camera" | "gallery" | "cancel"
-): Promise<string[]> => {
-  return new Promise((resolve) => {
-    if (source === "cancel") {
-      setShowImagePickerModal(false);
-      resolve([]);
-      return;
-    }
-
+export const pickImages = async (setModal: (value: boolean) => void, source: string) => {
+  try {
+    let result;
     if (source === "camera") {
-      ImagePicker.requestCameraPermissionsAsync().then((cameraPermission) => {
-        if (cameraPermission.granted) {
-          ImagePicker.launchCameraAsync({
-            allowsEditing: true,
-            aspect: [1, 1],
-            quality: 0.7,
-          }).then((result) => {
-            if (!result.canceled && result.assets?.length > 0) {
-              resolve(result.assets.map((asset) => asset.uri));
-            } else {
-              resolve([]);
-            }
-            setShowImagePickerModal(false);
-          });
-        } else {
-          resolve([]);
-          setShowImagePickerModal(false);
-        }
+      const { status } = await ImagePicker.requestCameraPermissionsAsync();
+      if (status !== "granted") {
+        alert("Camera permission is required!");
+        setModal(false);
+        return [];
+      }
+      result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        quality: 1,
       });
     } else if (source === "gallery") {
-      ImagePicker.requestMediaLibraryPermissionsAsync().then((mediaLibraryPermission) => {
-        if (mediaLibraryPermission.granted) {
-          ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsMultipleSelection: true,
-            allowsEditing: true,
-            aspect: [1, 1],
-            quality: 0.7,
-          }).then((result) => {
-            if (!result.canceled && result.assets?.length > 0) {
-              resolve(result.assets.map((asset) => asset.uri));
-            } else {
-              resolve([]);
-            }
-            setShowImagePickerModal(false);
-          });
-        } else {
-          resolve([]);
-          setShowImagePickerModal(false);
-        }
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== "granted") {
+        alert("Gallery permission is required!");
+        setModal(false);
+        return [];
+      }
+      result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        quality: 1,
       });
+    } else {
+      setModal(false);
+      return [];
     }
-  });
+
+    if (!result.canceled && result.assets) {
+      setModal(false);
+      return result.assets.map((asset) => asset.uri);
+    }
+    setModal(false);
+    return [];    
+  } catch (error) {
+    setModal(false);
+    return [];
+  }
 };

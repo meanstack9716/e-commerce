@@ -22,14 +22,20 @@ import { fontSizes, fontWeights } from "@/style/typography";
 import staticColors from "@/style/staticColors";
 import gapSizes from "@/style/gapSizes";
 import { RootState } from "@/store/store";
-import { resetReviewState, submitReview } from "@/store/review/reviewSlice";
+import {
+  fetchUserReview,
+  resetReviewState,
+  submitReview,
+  updateReview,
+} from "@/store/review/reviewSlice";
 import { useAppDispatch } from "@/store/hooks";
 import images from "@/constants/images";
 import { ReviewModalProps, ReviewState } from "./ReviewModal.types";
-
 import { useFieldValidation } from "@/hooks/useFieldValidation";
 import ConfirmationModal from "@/modal/commonModal/confirmationModal/ConfirmationModal";
-
+import { Review } from "@/interfaces";
+import { clearOrderStatus, fetchOrders } from "@/store/order/orderSlice";
+import { LIST_LIMIT, REVIEW_COMMENT_CHARACTER } from "@/constants/constants";
 
 const initialReviewState: ReviewState = {
   rating: 0,
@@ -46,11 +52,19 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
   productDescription,
 }) => {
   const dispatch = useAppDispatch();
-  const { loading, error, success } = useSelector(
+  const { loading, error, success, userReview } = useSelector(
     (state: RootState) => state.review
+  );
+
+  const currentUserId = useSelector((state: RootState) => state.auth?.user?.id);
+  const { orders, currentPage } = useSelector(
+    (state: RootState) => state.order
   );
   const [reviewState, setReviewState] =
     useState<ReviewState>(initialReviewState);
+  const [isReviewSubmitted, setIsReviewSubmitted] = useState(false);
+  const [currentReview, setCurrentReview] = useState<Review | null>(null);
+  const [removedImageIndices, setRemovedImageIndices] = useState<number[]>([]);
   const {
     errors,
     handleFieldChange,
@@ -58,6 +72,32 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
     resetErrors,
     validateAllFields,
   } = useFieldValidation();
+
+  const loadExistingUserReview = () => {
+    if (!visible || !productId || !currentUserId) return;
+    dispatch(fetchUserReview(productId));
+  };
+
+  useEffect(() => {
+    loadExistingUserReview();
+  }, [visible, productId, currentUserId]);
+
+  useEffect(() => {
+    if (userReview && visible) {
+      setIsReviewSubmitted(true);
+      setCurrentReview(userReview);
+      setReviewState((prev) => ({
+        ...prev,
+        rating: parseInt(userReview.rating),
+        comment: userReview.review,
+        selectedImages: userReview.img_urls || [],
+      }));
+    } else if (!userReview && visible) {
+      setIsReviewSubmitted(false);
+      setCurrentReview(null);
+      setReviewState(initialReviewState);
+    }
+  }, [userReview, visible]);
 
   const setImagePickerModal = (value: boolean) => {
     setReviewState((prev) => ({ ...prev, showImagePickerModal: value }));
@@ -78,12 +118,12 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
     handleFieldChange(
       "comment",
       text,
-      (value) => value.trim().length >= 50,
-      "Comment must be at least 50 characters"
+      (value) => value.trim().length >= REVIEW_COMMENT_CHARACTER,
+      `Comment must be at least ${REVIEW_COMMENT_CHARACTER} characters`
     );
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const isValid = validateAllFields({
       rating: {
         value: reviewState.rating.toString(),
@@ -92,25 +132,45 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
       },
       comment: {
         value: reviewState.comment,
-        validator: (v) => v.trim().length >= 50,
-        errorMessage: "Comment must be at least 50 characters",
+        validator: (v) => v.trim().length >= REVIEW_COMMENT_CHARACTER,
+        errorMessage: `Comment must be at least ${REVIEW_COMMENT_CHARACTER}  characters`,
       },
     });
 
     if (!isValid) return;
 
-    dispatch(
-      submitReview({
-        product_id: productId,
-        rating: reviewState.rating.toString(),
-        review: reviewState.comment.trim(),
-      })
-    );
+    const productReviewData = {
+      product_id: productId,
+      rating: reviewState.rating.toString(),
+      review: reviewState.comment.trim(),
+      images: reviewState.selectedImages,
+      ...(isReviewSubmitted &&
+        currentReview?.id && { review_id: currentReview.id }),
+      remove_img_indexes: removedImageIndices,
+    };
+
+    try {
+      if (isReviewSubmitted) {
+        await dispatch(updateReview(productReviewData)).unwrap();
+      } else {
+        await dispatch(submitReview(productReviewData)).unwrap();
+      }
+
+      dispatch(clearOrderStatus());
+      dispatch(fetchOrders({ page: 1, limit: LIST_LIMIT }));
+    } catch (error) {
+      console.error(
+        isReviewSubmitted ? "Update failed:" : "Submit failed:",
+        error
+      );
+    }
   };
 
   const handleClose = () => {
     if (loading) return;
     setReviewState(initialReviewState);
+    setIsReviewSubmitted(false);
+    setCurrentReview(null);
     resetErrors();
     dispatch(resetReviewState());
     onClose();
@@ -118,6 +178,8 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
 
   const handleConfirmationClose = () => {
     setReviewState(initialReviewState);
+    setIsReviewSubmitted(false);
+    setCurrentReview(null);
     resetErrors();
     dispatch(resetReviewState());
     onClose();
@@ -151,11 +213,19 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
     await pickImages(setImagePickerModal, "cancel");
   };
 
-  const removeImage = (uriToRemove: string) => {
-    setReviewState((prev) => ({
-      ...prev,
-      selectedImages: prev.selectedImages.filter((uri) => uri !== uriToRemove),
-    }));
+  const removeSelectedReviewImage = (uriToRemove: string) => {
+    const indexToRemove = reviewState.selectedImages.findIndex(
+      (uri) => uri === uriToRemove
+    );
+    if (indexToRemove !== -1) {
+      setRemovedImageIndices((prev) => [...prev, indexToRemove]);
+      setReviewState((prev) => ({
+        ...prev,
+        selectedImages: prev.selectedImages.filter(
+          (index) => index !== uriToRemove
+        ),
+      }));
+    }
   };
 
   useEffect(() => {
@@ -163,6 +233,15 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
       resetErrors();
     }
   }, [visible]);
+
+  const getReveiwButtonText = () => {
+    if (loading) return null;
+    return isReviewSubmitted ? "Update it!" : "Say it!";
+  };
+
+  const getModalTitle = () => {
+    return isReviewSubmitted ? "Update Review" : "Review";
+  };
 
   return (
     <>
@@ -176,7 +255,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
           <View style={styles.centeredView}>
             <TouchableWithoutFeedback>
               <View style={styles.modalView}>
-                <Text style={styles.modalTitle}>Review</Text>
+                <Text style={styles.modalTitle}>{getModalTitle()}</Text>
                 <View style={styles.orderInfo}>
                   <Image
                     source={images.genderFemale}
@@ -239,12 +318,15 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
                       showsHorizontalScrollIndicator={false}
                       contentContainerStyle={styles.imagePreviewContainer}
                     >
-                      {reviewState.selectedImages.map((uri) => (
-                        <View key={uri} style={styles.imageWrapper}>
+                      {reviewState.selectedImages.map((uri, index) => (
+                        <View
+                          key={`${uri}-${index}`}
+                          style={styles.imageWrapper}
+                        >
                           <Image source={{ uri }} style={styles.previewImage} />
                           <TouchableOpacity
                             style={styles.removeIcon}
-                            onPress={() => removeImage(uri)}
+                            onPress={() => removeSelectedReviewImage(uri)}
                           >
                             <Ionicons
                               name="close-circle"
@@ -291,7 +373,9 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
                       color={staticColors.white}
                     />
                   ) : (
-                    <Text style={styles.submitButtonText}>Say it!</Text>
+                    <Text style={styles.submitButtonText}>
+                      {getReveiwButtonText()}
+                    </Text>
                   )}
                 </TouchableOpacity>
               </View>
@@ -393,7 +477,7 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.circle,
     alignSelf: "center",
     resizeMode: "cover",
-    marginRight: 10,
+    ...spacingStyles.mr10,
   },
   orderText: {
     fontSize: fontSizes.sm,
