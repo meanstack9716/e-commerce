@@ -74,18 +74,12 @@ const OrderHistoryScreen: React.FC = () => {
     });
     setReviewModalVisible(true);
   };
-
+  // Show loading skeletons while fetching more orders
   const renderOrderItem = ({ item }: { item: Order }) => (
     <TouchableOpacity onPress={() => handleOrderItemPress(item)}>
       <OrderItem item={item} onReviewPress={handleReviewPress} />
     </TouchableOpacity>
   );
-
-  const renderSkeletonItems = () => {
-    return Array(5)
-      .fill(0)
-      .map((_, index) => <OrderItemSkeleton key={`skeleton-${index}`} />);
-  };
 
   const renderFooter = () => {
     if (!loading || !isMoreOrdersAvailable) return null;
@@ -105,11 +99,13 @@ const OrderHistoryScreen: React.FC = () => {
       />
       {error ? (
         <Text style={styles.errorText}>{error}</Text>
-      ) : filteredOrders.length === 0 && !loading ? (
+      ) : // No orders case
+      filteredOrders.length === 0 && !loading ? (
         <View style={styles.noOrdersContainer}>
           <Image source={images.noOrderImage} style={styles.noOrderImage} />
         </View>
       ) : (
+        // Orders List
         <FlatList
           data={filteredOrders}
           renderItem={renderOrderItem}
@@ -120,6 +116,7 @@ const OrderHistoryScreen: React.FC = () => {
           ListFooterComponent={renderFooter}
         />
       )}
+      {/* Review Modal */}
       <ReviewModal
         visible={isReviewModalVisible}
         onClose={() => setReviewModalVisible(false)}
@@ -127,6 +124,7 @@ const OrderHistoryScreen: React.FC = () => {
         productId={selectedItem.productId}
         productDescription={selectedItem.productDescription}
       />
+      {/* Order Details Modal */}
       <OrderDetailsModal
         visible={isDetailsModalVisible}
         order={selectedOrder}
