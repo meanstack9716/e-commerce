@@ -33,7 +33,6 @@ import { fontSizes, fontWeights } from "@/style/typography";
 import borderRadius from "@/style/borderRadius";
 import { fontFamilies } from "@/style/fontFamilies";
 import { commonStyles } from "@/style/commonStyle";
-import PromoCodeSection from "@/components/promoCode/PromoCodeSection";
 
 const ShoppingBagScreen: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -193,10 +192,6 @@ useEffect(() => {
     });
   };
 
-  const selectedCartItems = cartItems.filter((item) =>
-    selectedItems.includes(item.id)
-  );
-
   if (isLoading) {
     return (
       <SafeAreaViewWrapper style={styles.container}>
@@ -240,10 +235,7 @@ useEffect(() => {
                 removeClippedSubviews={true}
                 initialNumToRender={10}
               />
-              <PromoCodeSection
-                selectedCartItems={selectedCartItems}
-                maxPromoCodes={3}
-              />
+             
             </View>
           ) : (
             <EmptyCart />

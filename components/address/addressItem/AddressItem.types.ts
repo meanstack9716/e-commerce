@@ -5,4 +5,5 @@ export interface AddressItemProps {
   selectedId: string | null;
   setSelectedId: (id: string) => void;
   onEditAddress?: (address: Address) => void;
+  onDeleteAddress?: (address: Address) => void; 
 }

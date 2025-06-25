@@ -5,53 +5,73 @@ import borderRadius from "@/style/borderRadius";
 import spacingStyles from "@/style/spacingStyles";
 import { fontSizes } from "@/style/typography";
 import { fontFamilies } from "@/style/fontFamilies";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { AddressItemProps } from "./AddressItem.types";
+import ConfirmDeleteModal from "@/modal/commonModal/ConfirmDeleteModal/ConfirmDeleteModal";
 
 const AddressItem: React.FC<AddressItemProps> = ({
   address,
   selectedId,
   setSelectedId,
   onEditAddress,
+  onDeleteAddress,
 }) => {
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   return (
-    <View
-      style={[
-        styles.addressItem,
-        selectedId === address.id && styles.selectedAddress,
-      ]}
-    >
-      <TouchableOpacity
-        style={styles.radioContainer}
-        onPress={() => setSelectedId(address.id)}
+    <>
+      <View
+        style={[
+          styles.addressItem,
+          selectedId === address.id && styles.selectedAddress,
+        ]}
       >
-        <View
-          style={[
-            styles.radio,
-            selectedId === address.id && styles.radioSelected,
-          ]}
+        <TouchableOpacity
+          style={styles.radioContainer}
+          onPress={() => setSelectedId(address.id)}
         >
-          {selectedId === address.id && <View style={styles.radioInner} />}
+          <View
+            style={[
+              styles.radio,
+              selectedId === address.id && styles.radioSelected,
+            ]}
+          >
+            {selectedId === address.id && <View style={styles.radioInner} />}
+          </View>
+        </TouchableOpacity>
+        <View style={styles.addressDetails}>
+          <Text style={styles.addressName}>{address.contact_name}</Text>
+          <Text style={styles.addressText}>{address.contact_number}</Text>
+          <Text style={styles.addressText}>
+            {address.line1} {address.line2}
+          </Text>
+          <Text style={styles.addressText}>
+            {address.city}, {address.state} - {address.postal_code},{" "}
+            {address.country}
+          </Text>
         </View>
-      </TouchableOpacity>
-      <View style={styles.addressDetails}>
-        <Text style={styles.addressName}>{address.contact_name}</Text>
-        <Text style={styles.addressText}>{address.contact_number}</Text>
-        <Text style={styles.addressText}>
-          {address.line1} {address.line2}
-        </Text>
-        <Text style={styles.addressText}>
-          {address.city}, {address.state} - {address.postal_code},{" "}
-          {address.country}
-        </Text>
+        <TouchableOpacity
+          style={styles.deleteIconWrapper}
+          onPress={() => setIsDeleteModalVisible(true)}
+        >
+          <Ionicons name="trash-outline" size={16} color={staticColors.white} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.editIconWrapper}
+          onPress={() => onEditAddress && onEditAddress(address)}
+        >
+          <Ionicons name="pencil" size={16} color={staticColors.white} />
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity
-        style={styles.editIconWrapper}
-        onPress={() => onEditAddress && onEditAddress(address)}
-      >
-        <FontAwesome5 name="pen" size={16} color={staticColors.white} />
-      </TouchableOpacity>
-    </View>
+      <ConfirmDeleteModal
+        visible={isDeleteModalVisible}
+        onCancel={() => setIsDeleteModalVisible(false)}
+        onConfirm={() => {
+          setIsDeleteModalVisible(false);
+          onDeleteAddress && onDeleteAddress(address);
+        }}
+        title="Are you sure you want to delete this address?"
+      />
+    </>
   );
 };
 
@@ -108,8 +128,20 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    width: 40,
-    height: 40,
+    width: 35,
+    height: 35,
+    ...spacingStyles.ml5,
+  },
+  deleteIconWrapper: {
+    backgroundColor: staticColors.errorColor,
+    flexShrink: 0,
+    borderRadius: borderRadius.circle,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 35,
+    height: 35,
+    ...spacingStyles.ml5,
   },
 });
 

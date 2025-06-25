@@ -2,14 +2,13 @@ import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
-  Image,
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
   ScrollView,
 } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
-import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import staticColors from "@/style/staticColors";
@@ -26,6 +25,8 @@ import CartItemsList from "@/components/cartItemList/CardItemList";
 import ContactCard from "@/components/contactCard/ContactCard";
 import { getFormattedAddress } from "@/utils/formatAddress";
 import { OrderPayload } from "./placeorder.type";
+import { CartItem } from "@/interfaces";
+import PromoCodeSection from "@/components/promoCode/PromoCodeSection";
 
 const paymentOptions = [
   {
@@ -35,10 +36,15 @@ const paymentOptions = [
 
 const PlaceOrderScreen: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { selectedItems } = useLocalSearchParams<{ selectedItems: string }>();
-  const selectedCartItemsId: String[] = selectedItems
-    ? selectedItems.split(",")
-    : [];
+  const { selectedItems, productId, quantity, isBuyNow, imageUrl } =
+    useLocalSearchParams<{
+      selectedItems?: string;
+      productId?: string;
+      quantity?: string;
+      isBuyNow?: string;
+      imageUrl?: string;
+    }>();
+  const selectedCartItemsId = selectedItems ? selectedItems.split(",") : [];
   const { discounted_amount, appliedPromoCode } = useSelector(
     (state: RootState) => state.promoCode
   );
@@ -46,26 +52,18 @@ const PlaceOrderScreen: React.FC = () => {
     string | null
   >(paymentOptions[0].label);
   const cartItems = useSelector((state: RootState) => state.cart.cartItems);
-  const selectedCartItems = cartItems.filter((item) =>
-    selectedCartItemsId.includes(item.id)
-  );
-
   const addresses = useSelector((state: RootState) => state.address.addresses);
   const selectedAddressId = useSelector(
     (state: RootState) => state.address.selectedAddressId
   );
-
+  const { selectedProduct, selectedProductLoading } = useSelector(
+    (state: RootState) => state.products
+  );
+  const { loading } = useSelector((state: RootState) => state.order);
   const [shippingAddressId, setShippingAddressId] = useState<string | null>(
     null
   );
-
-  const { loading, error, orderId } = useSelector(
-    (state: RootState) => state.order
-  );
-
-  const handleBack = () => {
-    router.back();
-  };
+  const isInstantBuy = isBuyNow === "true";
 
   useEffect(() => {
     if (selectedAddressId) {
@@ -73,42 +71,68 @@ const PlaceOrderScreen: React.FC = () => {
     }
   }, [selectedAddressId]);
 
+  let buyNowItem: CartItem | null = null;
+
+  if (isInstantBuy && selectedProduct && productId) {
+    buyNowItem = {
+      id: productId,
+      product: {
+        ...selectedProduct,
+        images: imageUrl ? [imageUrl] : selectedProduct.images,
+      },
+      quantity: parseInt(quantity || "1", 10),
+    };
+  }
+
+  const selectedCartItems: CartItem[] =
+    isInstantBuy && buyNowItem
+      ? [buyNowItem]
+      : cartItems.filter((item) => selectedCartItemsId.includes(item.id));
+
+  const totalPrice = selectedCartItems.reduce(
+    (total, item) => total + item.product.final_price * item.quantity,
+    0
+  );
+
   const handlePlaceOrder = async () => {
-    if (!selectedPaymentMethod) {
+    if (!selectedPaymentMethod || !shippingAddressId) {
       Toast.show({
         type: "error",
         text1: "Error",
-        text2: "Please select a payment method.",
-      });
-      return;
-    }
-    if (!shippingAddressId) {
-      Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: "Please select aa address or create new address",
+        text2: !selectedPaymentMethod
+          ? "Please select a payment method."
+          : "Please select an address or create a new address",
       });
       return;
     }
 
+    const cartItemsIds =
+      isInstantBuy && buyNowItem ? [buyNowItem.id] : selectedCartItemsId;
+
     const payload: OrderPayload = {
-      cart_items_ids: selectedCartItemsId,
+      cart_items_ids: cartItemsIds,
       shipping_address_id: shippingAddressId,
       payment_method: selectedPaymentMethod,
     };
-
     if (appliedPromoCode) {
       payload.promo_code = appliedPromoCode;
     }
-
-    const result = await dispatch(placeOrder(payload)).unwrap();
-    if (result) {
+    try {
+      const result = await dispatch(placeOrder(payload)).unwrap();
+      if (result) {
+        Toast.show({
+          type: "success",
+          text1: "Order Placed",
+          text2: "Your order has been placed successfully",
+        });
+        router.navigate("/orderHistory");
+      }
+    } catch (err) {
       Toast.show({
-        type: "success",
-        text1: "Order Placed",
-        text2: "Your order has been placed successfully",
+        type: "error",
+        text1: "Order Failed",
+        text2: "Unable to place order. Please try again.",
       });
-      router.navigate("/orderHistory");
     }
   };
 
@@ -128,21 +152,12 @@ const PlaceOrderScreen: React.FC = () => {
     return discounted_amount !== null ? original - discounted_amount : 0;
   };
 
-  if (!selectedCartItems || selectedCartItems.length === 0) {
-    handleBack();
-    return (
-      <SafeAreaViewWrapper>
-        <Text>No items found in cart.</Text>
-      </SafeAreaViewWrapper>
-    );
-  }
-
   return (
     <SafeAreaViewWrapper>
       <View style={styles.mainContainer}>
         <ScrollView style={styles.container}>
           <View style={styles.header}>
-            <TouchableOpacity onPress={handleBack} style={styles.backButton}>
+            <TouchableOpacity onPress={router.back} style={styles.backButton}>
               <Ionicons
                 name="arrow-back"
                 size={24}
@@ -156,6 +171,20 @@ const PlaceOrderScreen: React.FC = () => {
             information={[getFormattedAddress(addresses, shippingAddressId)]}
           />
           <CartItemsList cartItems={selectedCartItems} />
+
+          <View style={[commonStyles.justifyBetwwen, { ...spacingStyles.mt5 }]}>
+            <Text style={commonStyles.itemCountTitle}>Payment Method</Text>
+          </View>
+
+          <View style={styles.paymentMethodsWrapper}>
+            <View style={styles.selectedPaymentWrap}>
+              <Text style={styles.paymentType}>{selectedPaymentMethod}</Text>
+            </View>
+          </View>
+          <PromoCodeSection
+            selectedCartItems={selectedCartItems}
+            maxPromoCodes={3}
+          />
 
           {appliedPromoCode !== null && (
             <View style={styles.totalPriceContainerColumn}>
@@ -186,28 +215,16 @@ const PlaceOrderScreen: React.FC = () => {
               </View>
             </View>
           )}
-
-          <View style={[commonStyles.justifyBetwwen, { ...spacingStyles.mt5 }]}>
-            <Text style={commonStyles.itemCountTitle}>Payment Method</Text>
-            {/* <TouchableOpacity style={styles.editIconWrapper}>
-              <FontAwesome5 name="pen" size={16} color={staticColors.white} />
-            </TouchableOpacity> */}
-          </View>
-          <View style={styles.paymentMethodsWrapper}>
-            <View style={styles.selectedPaymentWrap}>
-              <Text style={styles.paymentType}>{selectedPaymentMethod}</Text>
-            </View>
-          </View>
         </ScrollView>
         <View style={styles.totalPriceContainer}>
           <Text style={styles.totalPrice}>Total ₹ {calculateTotalPrice()}</Text>
           <TouchableOpacity
             style={[
               styles.checkoutButton,
-              calculateTotalPrice() === 0 && styles.disableButton,
+              totalPrice === 0 && styles.disableButton,
             ]}
             onPress={handlePlaceOrder}
-            disabled={calculateTotalPrice() === 0}
+            disabled={totalPrice === 0}
           >
             {loading ? (
               <ActivityIndicator size="small" color={staticColors.white} />
@@ -224,7 +241,6 @@ const PlaceOrderScreen: React.FC = () => {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    flexDirection: "column",
     justifyContent: "space-between",
   },
   container: {
@@ -237,7 +253,6 @@ const styles = StyleSheet.create({
     ...spacingStyles.mb5,
   },
   totalPriceContainer: {
-    width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -267,20 +282,10 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.lightGray,
     opacity: 0.6,
   },
-  editIconWrapper: {
-    backgroundColor: staticColors.blue500,
-    flexShrink: 0,
-    borderRadius: borderRadius.circle,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    width: 40,
-    height: 40,
-  },
   paymentMethodsWrapper: {
     flexDirection: "row",
-    ...spacingStyles.py12,
     flexWrap: "wrap",
+    ...spacingStyles.py12,
   },
   selectedPaymentWrap: {
     borderRadius: borderRadius.r14,

@@ -26,6 +26,7 @@ import { SelectedItem } from "./orderHistory.types";
 import OrderItem from "@/components/order/orderItem/OrderItem";
 import ProfileHeaderBar from "@/components/profile/ProfileHeaderBar/ProfileHeaderBar";
 import { Order } from "@/interfaces";
+import OrderDetailsModal from "@/modal/OrderDetailsModal/OrderDetailsModal";
 
 const OrderHistoryScreen: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -39,7 +40,13 @@ const OrderHistoryScreen: React.FC = () => {
     productDescription: "",
   });
   const [isReviewModalVisible, setReviewModalVisible] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [isDetailsModalVisible, setDetailsModalVisible] = useState(false);
 
+  const handleOrderItemPress = (order: Order) => {
+    setSelectedOrder(order);
+    setDetailsModalVisible(true);
+  };
   useEffect(() => {
     dispatch(fetchOrders());
 
@@ -66,7 +73,9 @@ const OrderHistoryScreen: React.FC = () => {
   };
 
   const renderOrderItem = ({ item }: { item: Order }) => (
-    <OrderItem item={item} onReviewPress={handleReviewPress} />
+    <TouchableOpacity onPress={() => handleOrderItemPress(item)}>
+      <OrderItem item={item} onReviewPress={handleReviewPress} />
+    </TouchableOpacity>
   );
 
   return (
@@ -99,6 +108,11 @@ const OrderHistoryScreen: React.FC = () => {
         productId={selectedItem.productId}
         productDescription={selectedItem.productDescription}
       />
+      <OrderDetailsModal
+        visible={isDetailsModalVisible}
+        order={selectedOrder}
+        onClose={() => setDetailsModalVisible(false)}
+      />
     </SafeAreaViewWrapper>
   );
 };
@@ -108,9 +122,9 @@ const styles = StyleSheet.create({
     ...spacingStyles.px12,
     ...spacingStyles.py15,
   },
-    profileHeaderContainer: {
+  profileHeaderContainer: {
     ...spacingStyles.px15,
-    ...spacingStyles.py5
+    ...spacingStyles.py5,
   },
   errorText: {
     fontSize: fontSizes.xs,

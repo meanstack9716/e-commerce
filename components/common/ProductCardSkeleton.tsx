@@ -49,7 +49,7 @@ const ProductCardSkeleton: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    width: "48%",
+    width: "45%",
     backgroundColor: staticColors.white,
     ...spacingStyles.mx5,
   },

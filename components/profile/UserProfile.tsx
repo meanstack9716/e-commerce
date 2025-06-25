@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -22,10 +22,19 @@ import { fontFamilies } from "@/style/fontFamilies";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { fontSizes, fontWeights } from "@/style/typography";
+import { useAppDispatch } from "@/store/hooks";
+import { fetchProducts } from "@/store/product/productsSlice";
+import { PRODUCT_LIMIT } from "@/constants/constants";
+import ProductCardSkeleton from "../common/ProductCardSkeleton";
+import { RootState } from "@/store/store";
 
 const UserProfile = () => {
   const [likedProductItems, setLikedProductItems] = useState<string[]>([]);
-  
+  const dispatch = useAppDispatch();
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const limit = PRODUCT_LIMIT;
+ 
   const {
     data: categories,
     loading: categoriesLoading,
@@ -37,6 +46,26 @@ const UserProfile = () => {
     loading: productsLoading,
     error: productsError,
   } = useSelector((state: any) => state.products);
+
+  useEffect(() => {
+    dispatch(fetchProducts({ params: { page: 1, limit } }));
+  }, [dispatch]);
+
+  const handleLoadMore = () => {
+    if (products.length && !productsLoading && hasMore) {
+      const nextPage = page + 1;
+      setPage(nextPage);
+      dispatch(fetchProducts({ params: { page: nextPage, limit } })).then(
+        (action) => {
+          if (action.payload && Array.isArray(action.payload)) {
+            setHasMore(action.payload.length === limit);
+          } else {
+            setHasMore(false);
+          }
+        }
+      );
+    }
+  };
 
   const renderProductItem = ({ item }: { item: Product }) => (
     <ProductCard
@@ -60,30 +89,41 @@ const UserProfile = () => {
   const isLoading = productsLoading;
 
   return (
-    <SafeAreaViewWrapper style={styles.container}>
-      <ProfileHeaderBar title="category" profileImage={images.genderFemale} titleStyle={styles.profileHeaderTitle} />
+    <View style={styles.container}>
+      <ProfileHeaderBar
+        title="category"
+        profileImage={images.genderFemale}
+        titleStyle={styles.profileHeaderTitle}
+      />
       <CategoriresCard categoryList={categories} />
       <View style={styles.allProductsContainer}>
         <Text style={styles.headingText}>Just for you</Text>
-        <FlatList
-          data={products}
-          numColumns={2}
-          keyExtractor={(item) => item.id}
-          renderItem={renderProductItem}
-          scrollEnabled={false}
-          contentContainerStyle={styles.flatListContent}
-          columnWrapperStyle={styles.columnWrapper}
-          showsVerticalScrollIndicator={false}
-          ListEmptyComponent={() => (
-            <View style={styles.emptyContainer}>
-              <Text style={styles.emptyText}>
-                {isLoading ? "Loading products..." : "No products Available"}
-              </Text>
-            </View>
-          )}
-        />
+        {isLoading ? (
+          <View style={styles.skeletonContainer}>
+            {[...Array(4)].map((_, index) => (
+              <ProductCardSkeleton key={index} />
+            ))}
+          </View>
+        ) : (
+          <FlatList
+            data={products}
+            numColumns={2}
+            keyExtractor={(item) => item.id}
+            renderItem={renderProductItem}
+            scrollEnabled={false}
+            contentContainerStyle={styles.flatListContent}
+            columnWrapperStyle={styles.columnWrapper}
+            showsVerticalScrollIndicator={false}
+            ListEmptyComponent={() => (
+              <View style={styles.emptyContainer}>
+                <Text style={styles.emptyText}>No products available</Text>
+              </View>
+            )}
+            onEndReachedThreshold={0.2}
+          />
+        )}
       </View>
-    </SafeAreaViewWrapper>
+    </View>
   );
 };
 
@@ -93,7 +133,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     gap: gapSizes.sm,
     ...spacingStyles.px12,
-    backgroundColor: staticColors.white
+    backgroundColor: staticColors.white,
   },
   profileHeaderTitle: {
     ...spacingStyles.pb5,
@@ -128,6 +168,12 @@ const styles = StyleSheet.create({
   columnWrapper: {
     justifyContent: "space-between",
     ...spacingStyles.mb10,
+  },
+  skeletonContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    ...spacingStyles.pt10,
   },
 });
 
