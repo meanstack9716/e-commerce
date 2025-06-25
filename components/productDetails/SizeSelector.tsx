@@ -18,18 +18,7 @@ import gapSizes from "@/style/gapSizes";
 import ProductVarientModal from "@/modal/productVariants/ProductVarientModal";
 import { Product } from "@/interfaces";
 import { NUMERIC_SIZES, STANDARD_SIZES } from "@/constants/constants";
-
-interface SizeSelectorProps {
-  product: Product | null;
-  onColorSelect: (colorData: {
-    color: string;
-    colorName: string;
-    images: string[];
-  }) => void;
-  onSizeSelect: (size: string) => void;
-  price: number;
-}
-
+import { SizeSelectorProps } from "./SizeSelector.types";
 interface AvailableSize {
   label: string;
   left: number;
@@ -41,6 +30,8 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
   onColorSelect,
   onSizeSelect,
   price,
+  handleLikePress,
+  handleAddToCart
 }) => {
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState<string>("");
@@ -260,6 +251,8 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
             images: colorData.images,
           });
         }}
+        handleLikePress={handleLikePress}
+        handleAddToCart={handleAddToCart}
       />
     </View>
   );
