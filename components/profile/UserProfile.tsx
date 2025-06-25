@@ -26,6 +26,7 @@ import { useAppDispatch } from "@/store/hooks";
 import { fetchProducts } from "@/store/product/productsSlice";
 import ProductCardSkeleton from "../common/ProductCardSkeleton";
 import { LIST_LIMIT } from "@/constants/constants";
+import { RootState } from "@/store/store";
 
 const UserProfile = () => {
   const [likedProductItems, setLikedProductItems] = useState<string[]>([]);

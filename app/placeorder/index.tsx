@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
-  Image,
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
@@ -13,6 +12,7 @@ import * as WebBrowser from "expo-web-browser";
 import { router, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
+import { useAppDispatch } from "@/store/hooks";
 import { RootState } from "@/store/store";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
@@ -21,64 +21,96 @@ import borderRadius from "@/style/borderRadius";
 import { fontFamilies } from "@/style/fontFamilies";
 import { commonStyles } from "@/style/commonStyle";
 import { placeOrder } from "@/store/order/orderSlice";
-import { useAppDispatch } from "@/store/hooks";
 import Toast from "react-native-toast-message";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import CartItemsList from "@/components/cartItemList/CardItemList";
 import ContactCard from "@/components/contactCard/ContactCard";
 import { getFormattedAddress } from "@/utils/formatAddress";
+import { CartItem } from "@/interfaces";
 import { OrderPayload } from "./placeorder.type";
-import images from "@/constants/images";
-
-const paymentOptions = [
-  {
-    label: "Cash On Delivery",
-  },
-  {
-    label: "Razorpay",
-  },
-];
+const paymentOptions = [{ label: "Cash On Delivery" }, { label: "Razorpay" }];
 
 const PlaceOrderScreen: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { selectedItems } = useLocalSearchParams<{ selectedItems: string }>();
-  const selectedCartItemsId: String[] = selectedItems
+  const { selectedItems, productId, quantity, isBuyNow, imageUrl } =
+    useLocalSearchParams<{
+      selectedItems?: string;
+      productId?: string;
+      quantity?: string;
+      isBuyNow?: string;
+      imageUrl?: string;
+    }>();
+  const selectedCartItemsId: string[] = selectedItems
     ? selectedItems.split(",")
     : [];
   const { discounted_amount, appliedPromoCode } = useSelector(
     (state: RootState) => state.promoCode
   );
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
-    string | null
-  >(paymentOptions[0].label);
-  const cartItems = useSelector((state: RootState) => state.cart.cartItems);
-  const selectedCartItems = cartItems.filter((item) =>
-    selectedCartItemsId.includes(item.id)
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>(
+    paymentOptions[0].label
   );
-
+  const cartItems = useSelector((state: RootState) => state.cart.cartItems);
   const addresses = useSelector((state: RootState) => state.address.addresses);
   const selectedAddressId = useSelector(
     (state: RootState) => state.address.selectedAddressId
   );
-
+  const { selectedProduct, selectedProductLoading } = useSelector(
+    (state: RootState) => state.products
+  );
+  const { loading } = useSelector((state: RootState) => state.order);
   const [shippingAddressId, setShippingAddressId] = useState<string | null>(
     null
   );
+  const isInstantBuy = isBuyNow === "true";
 
-  const { loading, error, orderId } = useSelector(
-    (state: RootState) => state.order
-  );
+  // Set shipping address when selectedAddressId changes
+  useEffect(() => {
+    if (selectedAddressId && selectedAddressId !== shippingAddressId) {
+      setShippingAddressId(selectedAddressId);
+    }
+  }, [selectedAddressId, shippingAddressId]);
 
+  // Handle buy now item
+  const buyNowItem: CartItem | null =
+    isInstantBuy && selectedProduct && productId
+      ? {
+          id: productId,
+          product: {
+            ...selectedProduct,
+            images: imageUrl ? [imageUrl] : selectedProduct.images || [],
+          },
+          quantity: parseInt(quantity || "1", 10),
+        }
+      : null;
+
+  const selectedCartItems: CartItem[] =
+    isInstantBuy && buyNowItem
+      ? [buyNowItem]
+      : cartItems.filter((item) => selectedCartItemsId.includes(item.id));
+
+  // Calculate total price
+  const calculateSubtotal = () => {
+    return selectedCartItems.reduce(
+      (total, item) => total + item.product.final_price * item.quantity,
+      0
+    );
+  };
+
+  const calculateDiscount = () => {
+    const subtotal = calculateSubtotal();
+    return discounted_amount !== null ? subtotal - discounted_amount : 0;
+  };
+
+  const calculateTotalPrice = () => {
+    return discounted_amount !== null ? discounted_amount : calculateSubtotal();
+  };
+
+  // Handle back navigation
   const handleBack = () => {
     router.back();
   };
 
-  useEffect(() => {
-    if (selectedAddressId) {
-      setShippingAddressId(selectedAddressId);
-    }
-  }, [selectedAddressId]);
-
+  // Handle order placement
   const handlePlaceOrder = async () => {
     if (!selectedPaymentMethod) {
       Toast.show({
@@ -93,63 +125,82 @@ const PlaceOrderScreen: React.FC = () => {
       Toast.show({
         type: "error",
         text1: "Error",
-        text2: "Please select an address or create a new address",
+        text2: "Please select an address or create a new address.",
       });
       return;
     }
 
+    const cartItemsIds =
+      isInstantBuy && buyNowItem ? [buyNowItem.id] : selectedCartItemsId;
     const payload: OrderPayload = {
-      cart_items_ids: selectedCartItemsId,
+      cart_items_ids: cartItemsIds,
       shipping_address_id: shippingAddressId,
       payment_method: selectedPaymentMethod,
+      redirect_url: Linking.createURL("orderHistory"),
     };
 
     if (appliedPromoCode) {
       payload.promo_code = appliedPromoCode;
     }
-    const redirectUrl = Linking.createURL("orderHistory");
-    payload.redirect_url = redirectUrl;
 
-    const result = await dispatch(placeOrder(payload)).unwrap();
-    if (result?.payment_link) {
-      const paymentUrl = result.payment_link;
-      const authResult = await WebBrowser.openAuthSessionAsync(
-        paymentUrl,
-        redirectUrl
-      );
+    try {
+      const result = await dispatch(placeOrder(payload)).unwrap();
+      if (result?.payment_link && selectedPaymentMethod === "Razorpay") {
+        const paymentUrl = result.payment_link;
+        const redirectUrl = payload.redirect_url;
+        const authResult = await WebBrowser.openAuthSessionAsync(
+          paymentUrl,
+          redirectUrl
+        );
 
-      if (authResult.type === "success") {
+        if (authResult.type === "success") {
+          Toast.show({
+            type: "success",
+            text1: "Order Placed",
+            text2: "Your order has been placed successfully.",
+          });
+          router.navigate("/orderHistory");
+        } else {
+          Toast.show({
+            type: "error",
+            text1: "Payment Cancelled",
+            text2: "The payment process was cancelled.",
+          });
+        }
+      } else {
         Toast.show({
           type: "success",
           text1: "Order Placed",
-          text2: "Your order has been placed successfully",
+          text2: "Your order has been placed successfully.",
         });
+        router.navigate("/orderHistory");
       }
-      return;
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Order Failed",
+        text2: "Unable to place order. Please try again.",
+      });
     }
   };
 
-  const calculateOriginalTotal = () => {
-    return selectedCartItems.reduce((total, item) => {
-      return total + item.product.final_price * item.quantity;
-    }, 0);
-  };
-
-  const calculateTotalPrice = () => {
-    const subtotal = calculateOriginalTotal();
-    return discounted_amount !== null ? discounted_amount : subtotal;
-  };
-
-  const calculateDiscount = () => {
-    const original = calculateOriginalTotal();
-    return discounted_amount !== null ? original - discounted_amount : 0;
-  };
-
+  // Handle empty cart case
   if (!selectedCartItems || selectedCartItems.length === 0) {
-    handleBack();
     return (
       <SafeAreaViewWrapper>
-        <Text>No items found in cart.</Text>
+        <Text style={styles.errorText}>No items found in cart.</Text>
+        <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+          <Text style={styles.backButtonText}>Go Back</Text>
+        </TouchableOpacity>
+      </SafeAreaViewWrapper>
+    );
+  }
+
+  // Render loading state for product or address
+  if (selectedProductLoading || !addresses) {
+    return (
+      <SafeAreaViewWrapper>
+        <ActivityIndicator size="large" color={staticColors.darkSlate} />
       </SafeAreaViewWrapper>
     );
   }
@@ -174,7 +225,7 @@ const PlaceOrderScreen: React.FC = () => {
           />
           <CartItemsList cartItems={selectedCartItems} />
 
-          {appliedPromoCode !== null && (
+          {appliedPromoCode && (
             <View style={styles.totalPriceContainerColumn}>
               <Text style={styles.summaryHeading}>Price Summary</Text>
               <View style={styles.priceRow}>
@@ -185,9 +236,7 @@ const PlaceOrderScreen: React.FC = () => {
               </View>
               <View style={styles.priceRow}>
                 <Text style={styles.priceLabel}>Subtotal</Text>
-                <Text style={styles.priceValue}>
-                  ₹ {calculateOriginalTotal()}
-                </Text>
+                <Text style={styles.priceValue}>₹ {calculateSubtotal()}</Text>
               </View>
               <View style={styles.priceRow}>
                 <Text style={styles.priceLabel}>Discount</Text>
@@ -204,7 +253,7 @@ const PlaceOrderScreen: React.FC = () => {
             </View>
           )}
 
-          <View style={[commonStyles.justifyBetwwen, { ...spacingStyles.mt5 }]}>
+          <View style={[commonStyles.justifyBetwwen, spacingStyles.mt5]}>
             <Text style={commonStyles.itemCountTitle}>Payment Method</Text>
           </View>
           <View style={styles.paymentMethodsWrapper}>
@@ -241,7 +290,7 @@ const PlaceOrderScreen: React.FC = () => {
               calculateTotalPrice() === 0 && styles.disableButton,
             ]}
             onPress={handlePlaceOrder}
-            disabled={calculateTotalPrice() === 0}
+            disabled={calculateTotalPrice() === 0 || loading}
           >
             {loading ? (
               <ActivityIndicator size="small" color={staticColors.white} />
@@ -258,31 +307,49 @@ const PlaceOrderScreen: React.FC = () => {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    flexDirection: "column",
     justifyContent: "space-between",
   },
   container: {
     flex: 1,
     ...spacingStyles.px15,
   },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    ...spacingStyles.mb10,
+  },
+  backButton: {
+    ...spacingStyles.p5,
+  },
+  backButtonText: {
+    fontSize: fontSizes.md,
+    color: staticColors.darkSlate,
+    fontFamily: fontFamilies.ralewayBold,
+  },
   pageHeading: {
     fontSize: fontSizes["2xl"],
-    fontFamily: fontFamilies.ralewayeBold,
-    ...spacingStyles.mb5,
+    fontFamily: fontFamilies.ralewayBold,
+    color: staticColors.black,
+  },
+  errorText: {
+    fontSize: fontSizes.md,
+    color: staticColors.errorColor,
+    fontFamily: fontFamilies.nunitoSans,
+    textAlign: "center",
+    ...spacingStyles.mt20,
   },
   totalPriceContainer: {
-    width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: staticColors.bgSecondary,
     ...spacingStyles.px25,
     ...spacingStyles.py15,
-    ...spacingStyles.mt5,
   },
   totalPrice: {
     fontSize: fontSizes.md,
     fontFamily: fontFamilies.ralewayBold,
+    color: staticColors.black,
   },
   checkoutButton: {
     width: 140,
@@ -301,26 +368,17 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.lightGray,
     opacity: 0.6,
   },
-  editIconWrapper: {
-    backgroundColor: staticColors.blue500,
-    flexShrink: 0,
-    borderRadius: borderRadius.circle,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    width: 40,
-    height: 40,
-  },
   paymentMethodsWrapper: {
     flexDirection: "row",
-    ...spacingStyles.py12,
     flexWrap: "wrap",
-    gap: 10, // Adds spacing between payment options
+    ...spacingStyles.py12,
   },
   selectedPaymentWrap: {
     borderRadius: borderRadius.r14,
     ...spacingStyles.py6,
     ...spacingStyles.px25,
+    ...spacingStyles.mr10,
+    ...spacingStyles.mb10,
   },
   selectedPayment: {
     backgroundColor: staticColors.blue500,
@@ -342,13 +400,6 @@ const styles = StyleSheet.create({
   unselectedPaymentText: {
     color: staticColors.black,
   },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  backButton: {
-    ...spacingStyles.p5,
-  },
   totalPriceContainerColumn: {
     width: "100%",
     backgroundColor: staticColors.gray100,
@@ -363,7 +414,6 @@ const styles = StyleSheet.create({
     ...spacingStyles.mb5,
     color: staticColors.black,
   },
-
   priceRow: {
     flexDirection: "row",
     justifyContent: "space-between",

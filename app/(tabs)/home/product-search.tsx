@@ -308,13 +308,13 @@ const ProductSearchScreen: React.FC = () => {
               ) : null}
             </View>
 
-            <TouchableOpacity>
+            {/* <TouchableOpacity>
               <Ionicons
                 name="camera-outline"
                 size={22}
                 color={staticColors.blue400}
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
           <TouchableOpacity onPress={handleProductFilter}>
             <Ionicons

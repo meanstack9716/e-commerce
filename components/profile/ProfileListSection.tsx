@@ -17,6 +17,7 @@ export default function ProfileListSection() {
             <FontAwesome5 name="box-open" size={24} color={colors.textMuted} />
           }
           label="Orders"
+          onPress={() => router.navigate("/LoginScreen")}
           subtitle="Check your order status"
         />
         <ProfileOption
@@ -24,6 +25,7 @@ export default function ProfileListSection() {
             <MaterialIcons name="help" size={24} color={colors.textMuted} />
           }
           label="Help Center"
+          onPress={() => router.navigate("/LoginScreen")}
           subtitle="Help regarding your recent purchases"
         />
         <ProfileOption
@@ -31,6 +33,7 @@ export default function ProfileListSection() {
             <Ionicons name="heart-outline" size={24} color={colors.textMuted} />
           }
           label="Wishlist"
+          onPress={() => router.navigate("/LoginScreen")}
           subtitle="Your most loved styles"
         />
         <ProfileOption
