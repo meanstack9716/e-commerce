@@ -21,6 +21,8 @@ import {
 } from "./ProductVarientModal.types";
 import spacingStyles from "@/style/spacingStyles";
 import { fontFamilies } from "@/style/fontFamilies";
+import gapSizes from "@/style/gapSizes";
+import { router } from "expo-router";
 
 const ProductVarientModal: React.FC<ProductModalProps> = ({
   visible,
@@ -32,6 +34,9 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
   onSizeSelect,
   onColorSelect,
   price,
+  handleLikePress,
+  handleAddToCart,
+  productId,
 }) => {
   const [quantity, setQuantity] = useState(1);
 
@@ -51,6 +56,19 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
       color: colorOption.value,
       colorName: colorOption.color,
       images: colorOption.images,
+    });
+  };
+
+  const handleBuyNow = () => {
+    onClose(); 
+    router.push({
+      pathname: "/placeorder",
+      params: {
+        productId,
+        quantity: quantity.toString(),
+        isBuyNow: "true",
+        imageUrl: mainImage,
+      },
     });
   };
 
@@ -151,17 +169,26 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
                   </View>
 
                   <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.favoriteButton}>
+                    <TouchableOpacity
+                      style={styles.favoriteButton}
+                      onPress={handleLikePress}
+                    >
                       <Ionicons
                         name="heart-outline"
                         size={26}
                         color={staticColors.darkSlate}
                       />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.addToCartButton}>
+                    <TouchableOpacity
+                      style={styles.addToCartButton}
+                      onPress={handleAddToCart}
+                    >
                       <Text style={styles.buttonText}>Add to cart</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.buyNowButton}>
+                    <TouchableOpacity
+                      style={styles.buyNowButton}
+                      onPress={handleBuyNow}
+                    >
                       <Text style={styles.buttonText}>Buy now</Text>
                     </TouchableOpacity>
                   </View>
@@ -214,7 +241,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginTop: 6,
-    gap: 8,
+    gap: gapSizes.md,
   },
   priceTag: {
     fontSize: fontSizes["2xl"],

@@ -26,13 +26,15 @@ import { useAppDispatch } from "@/store/hooks";
 import { fetchProducts } from "@/store/product/productsSlice";
 import { PRODUCT_LIMIT } from "@/constants/constants";
 import ProductCardSkeleton from "../common/ProductCardSkeleton";
+import { RootState } from "@/store/store";
 
 const UserProfile = () => {
   const [likedProductItems, setLikedProductItems] = useState<string[]>([]);
   const dispatch = useAppDispatch();
   const [page, setPage] = useState(1);
-   const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(true);
   const limit = PRODUCT_LIMIT;
+ 
   const {
     data: categories,
     loading: categoriesLoading,
