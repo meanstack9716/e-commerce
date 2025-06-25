@@ -64,7 +64,7 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
     router.push({
       pathname: "/placeorder",
       params: {
-        productId,
+        productId: productId,
         quantity: quantity.toString(),
         isBuyNow: "true",
         imageUrl: mainImage,
