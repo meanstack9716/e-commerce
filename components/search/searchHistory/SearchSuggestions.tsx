@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.px15,
   },
   historyItemText: {
-    fontSize: fontSizes.sm,
+    fontSize: fontSizes.xs,
     color: staticColors.black,
     fontFamily: fontFamilies.ralewayMedium,
   },

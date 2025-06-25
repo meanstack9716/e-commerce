@@ -14,7 +14,11 @@ import { router } from "expo-router";
 import { useSelector } from "react-redux";
 import { Product } from "@/interfaces";
 import { useAppDispatch } from "@/store/hooks";
-import { fetchProducts, resetProducts } from "@/store/product/productsSlice";
+import {
+  fetchProducts,
+  fetchRecommendedKeywords,
+  resetProducts,
+} from "@/store/product/productsSlice";
 import images from "@/constants/images";
 import staticColors from "@/style/staticColors";
 import { commonStyles } from "@/style/commonStyle";
@@ -72,7 +76,8 @@ const ProductSearchScreen: React.FC = () => {
       setSearchHistory(history);
     };
     loadSearchHistory();
-  }, []);
+    dispatch(fetchRecommendedKeywords({ limit: RECOMMENDED_KEYWORD_LIMIT }));
+  }, [dispatch]);
   const error = useSelector((state: any) => state.products.error);
   const { subCategories, sizes, colors, priceMin, priceMax } = productFilters;
 
