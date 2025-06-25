@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "@/store/hooks";
 import { RootState } from "@/store/store";
@@ -22,9 +29,8 @@ import OrderDetailsModal from "@/modal/OrderDetailsModal/OrderDetailsModal";
 
 const OrderHistoryScreen: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { orders, loading, error, currentPage, isMoreOrdersAvailable } = useSelector(
-    (state: RootState) => state.order
-  );
+  const { orders, loading, error, currentPage, isMoreOrdersAvailable } =
+    useSelector((state: RootState) => state.order);
   const [filteredOrders, setFilteredOrders] = useState<Order[]>(orders);
   const [selectedItem, setSelectedItem] = useState<SelectedItem>({
     orderId: "",
@@ -84,7 +90,9 @@ const OrderHistoryScreen: React.FC = () => {
   const renderFooter = () => {
     if (!loading || !isMoreOrdersAvailable) return null;
     return (
-      <View style={styles.skeletonContainer}>{renderSkeletonItems()}</View>
+      <View style={styles.skeletonContainer}>
+        <OrderItemSkeleton count={5} />
+      </View>
     );
   };
 

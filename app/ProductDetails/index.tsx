@@ -54,7 +54,6 @@ const ProductDetailsScreen: React.FC = () => {
     selectedProductError: error,
   } = useSelector((state: RootState) => state.products);
   const {
-    userReview,
     productReviews,
     loading: reviewsLoading,
     error: reviewsError,
@@ -203,7 +202,7 @@ const ProductDetailsScreen: React.FC = () => {
     }
   };
 
-  if (loading || error || reviewsLoading) {
+  if (loading || error || reviewsLoading || reviewsError) {
     return (
       <SafeAreaViewWrapper>
         <FullScreenLoader visible={loading || reviewsLoading} />
@@ -227,7 +226,7 @@ const ProductDetailsScreen: React.FC = () => {
   const handleViewAllReview = () => {
     router.push({
       pathname: "/home/product-reviews",
-      params: { productReviewId: product.id },
+      params: { productId: product.id },
     });
   };
 
@@ -360,9 +359,6 @@ const ProductDetailsScreen: React.FC = () => {
                     </Text>
                   </View>
                 </View>
-                {/* {userReview && (
-                  <RatingReview productId={product.id} review={userReview} />
-                )} */}
                 {/* First Review Card */}
                 <RatingReview
                   productId={product.id}
