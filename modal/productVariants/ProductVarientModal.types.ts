@@ -28,4 +28,6 @@ export interface ProductModalProps {
   }) => void;
   price:number;
   productId?:string
+  handleLikePress: () => void;
+   handleAddToCart:() => void;
 }

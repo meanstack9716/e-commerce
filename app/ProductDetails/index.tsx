@@ -35,7 +35,6 @@ import { LinearGradient } from "expo-linear-gradient";
 import { fontFamilies } from "@/style/fontFamilies";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import RatingReview from "@/components/productDetails/RatingReview/RatingReview";
-import { commonStyles } from "@/style/commonStyle";
 import { renderStars } from "@/utils/starUtils";
 import LoginModal from "../(auth)/loginModal";
 import SignUpModal from "../(auth)/signUpModal";
@@ -345,6 +344,8 @@ const ProductDetailsScreen: React.FC = () => {
               onColorSelect={handleColorSelect}
               onSizeSelect={setSelectedSize}
               price={product.final_price}
+              handleLikePress={handleLikePress}
+              handleAddToCart={handleAddToCart}
             />
 
             {productReviews.length > 0 && (
