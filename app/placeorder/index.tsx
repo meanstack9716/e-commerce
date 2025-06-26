@@ -95,6 +95,16 @@ const PlaceOrderScreen: React.FC = () => {
       0
     );
   };
+ 
+  console.log("selectedItems:", selectedItems);
+  console.log("selectedCartItemsId:", selectedCartItemsId);
+  console.log("Navigation params:", {
+    selectedItems,
+    productId,
+    quantity,
+    isBuyNow,
+    imageUrl,
+  });
 
   const calculateDiscount = () => {
     const subtotal = calculateSubtotal();
