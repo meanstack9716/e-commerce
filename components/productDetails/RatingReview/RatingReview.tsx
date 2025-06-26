@@ -12,9 +12,10 @@ import { RatingReviewProps } from "./RatingReview.types";
 import { Review } from "@/interfaces";
 
 const RatingReview: React.FC<RatingReviewProps> = ({ review }) => {
+  // Helper to get the reviewer's full name or show 'Anonymous' if not available
   const getUsername = (review: Review) => {
     const { first_name, last_name } = review.reviewed_by || {};
-    if (first_name && last_name) {
+    if (first_name || last_name) {
       return `${first_name} ${last_name}`;
     }
     return "Anonymous";
@@ -74,7 +75,7 @@ const RatingReview: React.FC<RatingReviewProps> = ({ review }) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: staticColors.white,
-    ...spacingStyles.mb10
+    ...spacingStyles.mb10,
   },
   starsContainer: {
     flexDirection: "row",

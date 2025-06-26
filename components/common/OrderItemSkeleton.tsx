@@ -5,27 +5,36 @@ import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import borderRadius from "@/style/borderRadius";
 import SkeletonPlaceholder from "./SkeletonPlaceholder ";
+interface OrderItemSkeletonProps {
+  count?: number; // Number of skeleton items to render
+}
 
-const OrderItemSkeleton: React.FC = () => {
+const OrderItemSkeleton: React.FC<OrderItemSkeletonProps> = ({ count = 5 }) => {
   return (
-    <View style={styles.container}>
-      <SkeletonPlaceholder
-        style={styles.thumbnailPlaceholder}
-        fromOpacity={0.4}
-        toOpacity={1}
-      />
-      <View style={styles.detailsContainer}>
-        <SkeletonPlaceholder
-          style={[styles.textPlaceholder, styles.orderNumberPlaceholder]}
-          fromOpacity={0.4}
-          toOpacity={1}
-        />
-        <SkeletonPlaceholder
-          style={[styles.textPlaceholder, styles.descriptionPlaceholder]}
-        />
-        <SkeletonPlaceholder style={styles.textPlaceholder} />
-      </View>
-    </View>
+    <>
+      {Array(count)
+        .fill(0)
+        .map((_, index) => (
+          <View key={`skeleton-${index}`} style={styles.container}>
+            <SkeletonPlaceholder
+              style={styles.thumbnailPlaceholder}
+              fromOpacity={0.4}
+              toOpacity={1}
+            />
+            <View style={styles.detailsContainer}>
+              <SkeletonPlaceholder
+                style={[styles.textPlaceholder, styles.orderNumberPlaceholder]}
+                fromOpacity={0.4}
+                toOpacity={1}
+              />
+              <SkeletonPlaceholder
+                style={[styles.textPlaceholder, styles.descriptionPlaceholder]}
+              />
+              <SkeletonPlaceholder style={styles.textPlaceholder} />
+            </View>
+          </View>
+        ))}
+    </>
   );
 };
 
