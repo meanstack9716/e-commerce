@@ -42,6 +42,7 @@ import {
   resetReviewState,
 } from "@/store/review/reviewSlice";
 import { LIST_LIMIT } from "@/constants/constants";
+import ProductMayYouLike from "@/components/productDetails/ProductMayYouLike";
 
 const { width: screenWidth } = Dimensions.get("window");
 const ProductDetailsScreen: React.FC = () => {
@@ -57,7 +58,7 @@ const ProductDetailsScreen: React.FC = () => {
     productReviews,
     loading: reviewsLoading,
     error: reviewsError,
-    page
+    page,
   } = useSelector((state: RootState) => state.review);
   const { items: wishlistItems } = useSelector(
     (state: RootState) => state.wishlist
@@ -89,7 +90,11 @@ const ProductDetailsScreen: React.FC = () => {
     if (id) {
       dispatch(fetchProductById(id as string));
       dispatch(
-        fetchProductReviews({ productId: id as string, page: 1, limit:LIST_LIMIT })
+        fetchProductReviews({
+          productId: id as string,
+          page: 1,
+          limit: LIST_LIMIT,
+        })
       );
       if (isAuthenticatedUser) {
         dispatch(fetchUserReview(id as string));
@@ -335,6 +340,7 @@ const ProductDetailsScreen: React.FC = () => {
               <Text style={styles.title}>{product.title}</Text>
               <Text style={styles.description}>{product.description}</Text>
             </View>
+
             {/* <MegaDealBadge /> */}
             <SizeSelector
               product={product}
@@ -386,8 +392,9 @@ const ProductDetailsScreen: React.FC = () => {
             <SimilarProducts currentProduct={product} /> */}
             {/* 
             <BrandRating />
-            <Text style={styles.heading}>Products you may like</Text>
-            <ProductList /> */}
+           */}
+             <Text style={styles.heading}>Products you may like</Text>
+            <ProductMayYouLike />
           </>
         }
       />
