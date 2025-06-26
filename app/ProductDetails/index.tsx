@@ -42,6 +42,7 @@ import {
   resetReviewState,
 } from "@/store/review/reviewSlice";
 import { LIST_LIMIT } from "@/constants/constants";
+import SimilarProducts from "@/components/productDetails/similarProduct/SimilarProducts";
 
 const { width: screenWidth } = Dimensions.get("window");
 const ProductDetailsScreen: React.FC = () => {
@@ -345,6 +346,9 @@ const ProductDetailsScreen: React.FC = () => {
               handleAddToCart={handleAddToCart}
             />
 
+            <Text style={styles.heading}>Similar Products</Text>
+            <SimilarProducts currentProduct={product} handleAddToCart={handleAddToCart}/>
+
             {productReviews.length > 0 && (
               <View style={styles.reviewSection}>
                 {/* Title + Stars + Rating */}
@@ -382,8 +386,6 @@ const ProductDetailsScreen: React.FC = () => {
             {/* <DeliveryCheck />
             <ReturnPolicy /> */}
 
-            {/* <Text style={styles.heading}>Similar Products</Text>
-            <SimilarProducts currentProduct={product} /> */}
             {/* 
             <BrandRating />
             <Text style={styles.heading}>Products you may like</Text>

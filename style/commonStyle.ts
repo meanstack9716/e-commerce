@@ -16,12 +16,12 @@ export const commonStyles = StyleSheet.create({
     borderRadius: borderRadius.r10,
   },
   imagePlaceholderContainer: {
-    backgroundColor: staticColors.errorColor,
+    backgroundColor: staticColors.lightGray,
     justifyContent: "center",
     alignItems: "center",
   },
   imagePlaceholderText: {
-    color: staticColors.lightGray,
+    color: staticColors.white,
     fontSize: fontSizes.md,
     fontWeight: fontWeights.medium,
   },
