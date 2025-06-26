@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.lightGray,
   },
   closeButtonText: {
-    fontSize: fontSizes.md,
+    fontSize: fontSizes.sm,
     fontFamily: fontFamilies.ralewayBold,
     color: staticColors.black,
   },
