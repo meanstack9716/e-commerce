@@ -12,22 +12,23 @@ import * as WebBrowser from "expo-web-browser";
 import { router, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
+import Toast from "react-native-toast-message";
 import { useAppDispatch } from "@/store/hooks";
 import { RootState } from "@/store/store";
+import { placeOrder } from "@/store/order/orderSlice";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import { fontSizes } from "@/style/typography";
 import borderRadius from "@/style/borderRadius";
 import { fontFamilies } from "@/style/fontFamilies";
 import { commonStyles } from "@/style/commonStyle";
-import { placeOrder } from "@/store/order/orderSlice";
-import Toast from "react-native-toast-message";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import CartItemsList from "@/components/cartItemList/CardItemList";
 import ContactCard from "@/components/contactCard/ContactCard";
 import { getFormattedAddress } from "@/utils/formatAddress";
 import { CartItem } from "@/interfaces";
 import { OrderPayload } from "./placeorder.type";
+import PromoCodeSection from "@/components/promoCode/PromoCodeSection";
 const paymentOptions = [{ label: "Cash On Delivery" }, { label: "Razorpay" }];
 
 const PlaceOrderScreen: React.FC = () => {
@@ -95,7 +96,7 @@ const PlaceOrderScreen: React.FC = () => {
       0
     );
   };
- 
+
   console.log("selectedItems:", selectedItems);
   console.log("selectedCartItemsId:", selectedCartItemsId);
   console.log("Navigation params:", {
@@ -106,13 +107,20 @@ const PlaceOrderScreen: React.FC = () => {
     imageUrl,
   });
 
-  const calculateDiscount = () => {
-    const subtotal = calculateSubtotal();
-    return discounted_amount !== null ? subtotal - discounted_amount : 0;
+  const calculateOriginalTotal = () => {
+    return selectedCartItems.reduce((total, item) => {
+      return total + item.product.final_price * item.quantity;
+    }, 0);
   };
 
   const calculateTotalPrice = () => {
-    return discounted_amount !== null ? discounted_amount : calculateSubtotal();
+    const subtotal = calculateOriginalTotal();
+    return discounted_amount !== null ? discounted_amount : subtotal;
+  };
+
+  const calculateDiscount = () => {
+    const original = calculateOriginalTotal();
+    return discounted_amount !== null ? original - discounted_amount : 0;
   };
 
   // Handle back navigation
@@ -214,34 +222,6 @@ const PlaceOrderScreen: React.FC = () => {
           />
           <CartItemsList cartItems={selectedCartItems} />
 
-          {appliedPromoCode && (
-            <View style={styles.totalPriceContainerColumn}>
-              <Text style={styles.summaryHeading}>Price Summary</Text>
-              <View style={styles.priceRow}>
-                <Text style={styles.priceLabel}>Promo Code</Text>
-                <Text style={[styles.priceValue, styles.promoText]}>
-                  {appliedPromoCode}
-                </Text>
-              </View>
-              <View style={styles.priceRow}>
-                <Text style={styles.priceLabel}>Subtotal</Text>
-                <Text style={styles.priceValue}>₹ {calculateSubtotal()}</Text>
-              </View>
-              <View style={styles.priceRow}>
-                <Text style={styles.priceLabel}>Discount</Text>
-                <Text style={[styles.priceValue, styles.discountText]}>
-                  - ₹ {calculateDiscount()}
-                </Text>
-              </View>
-              <View style={styles.priceRow}>
-                <Text style={[styles.priceLabel, styles.totalText]}>Total</Text>
-                <Text style={[styles.priceValue, styles.totalText]}>
-                  ₹ {calculateTotalPrice()}
-                </Text>
-              </View>
-            </View>
-          )}
-
           <View style={[commonStyles.justifyBetwwen, spacingStyles.mt5]}>
             <Text style={commonStyles.itemCountTitle}>Payment Method</Text>
           </View>
@@ -270,6 +250,41 @@ const PlaceOrderScreen: React.FC = () => {
               </TouchableOpacity>
             ))}
           </View>
+
+          <PromoCodeSection
+            selectedCartItems={selectedCartItems}
+            maxPromoCodes={3}
+          />
+
+          {appliedPromoCode !== null && (
+            <View style={styles.totalPriceContainerColumn}>
+              <Text style={styles.summaryHeading}>Price Summary</Text>
+              <View style={styles.priceRow}>
+                <Text style={styles.priceLabel}>Promo Code</Text>
+                <Text style={[styles.priceValue, styles.promoText]}>
+                  {appliedPromoCode}
+                </Text>
+              </View>
+              <View style={styles.priceRow}>
+                <Text style={styles.priceLabel}>Subtotal</Text>
+                <Text style={styles.priceValue}>
+                  ₹ {calculateOriginalTotal()}
+                </Text>
+              </View>
+              <View style={styles.priceRow}>
+                <Text style={styles.priceLabel}>Discount</Text>
+                <Text style={[styles.priceValue, styles.discountText]}>
+                  - ₹ {calculateDiscount()}
+                </Text>
+              </View>
+              <View style={styles.priceRow}>
+                <Text style={[styles.priceLabel, styles.totalText]}>Total</Text>
+                <Text style={[styles.priceValue, styles.totalText]}>
+                  ₹ {calculateTotalPrice()}
+                </Text>
+              </View>
+            </View>
+          )}
         </ScrollView>
         <View style={styles.totalPriceContainer}>
           <Text style={styles.totalPrice}>Total ₹ {calculateTotalPrice()}</Text>
