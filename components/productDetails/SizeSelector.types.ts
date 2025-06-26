@@ -11,4 +11,5 @@ export interface SizeSelectorProps {
   price: number;
   handleLikePress: () => void;
   handleAddToCart:() => void;
+  isLiked?:boolean
 }
