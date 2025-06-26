@@ -6,12 +6,12 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
 import { router } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "@/store/product/productsSlice";
 import { RootState } from "@/store/store";
-import { Product } from "../../../types/types";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { fontSizes, fontWeights } from "@/style/typography";
@@ -21,12 +21,18 @@ import { FontAwesome } from "@expo/vector-icons";
 import borderRadius from "@/style/borderRadius";
 import { useAppDispatch } from "@/store/hooks";
 import { SimilarProductsProps } from "./SimilarProduct.types";
+import { fontFamilies } from "@/style/fontFamilies";
 
-const SimilarProducts = ({ currentProduct, handleAddToCart }: SimilarProductsProps) => {
+const SimilarProducts = ({
+  currentProduct,
+  handleAddToCart,
+}: SimilarProductsProps) => {
   const dispatch = useAppDispatch();
-  const { data: allProducts, loading, error } = useSelector(
-    (state: RootState) => state.products
-  );
+  const {
+    data: allProducts,
+    loading,
+    error,
+  } = useSelector((state: RootState) => state.products);
 
   useEffect(() => {
     dispatch(fetchProducts({ params: { page: 1, limit: 15 } }));
@@ -40,9 +46,9 @@ const SimilarProducts = ({ currentProduct, handleAddToCart }: SimilarProductsPro
     );
   }
 
-  // Limit to 15 products 
+  // Limit to 15 products
   const limitedProducts = allProducts
-    .filter((product) => product.id !== currentProduct.id) 
+    .filter((product) => product.id !== currentProduct.id)
     .slice(0, 15);
 
   // Handle navigation to product details
@@ -57,7 +63,7 @@ const SimilarProducts = ({ currentProduct, handleAddToCart }: SimilarProductsPro
   if (loading) {
     return (
       <View style={styles.container}>
-        <Text>Loading products...</Text>
+        <ActivityIndicator color={staticColors.lightGray}></ActivityIndicator>
       </View>
     );
   }
@@ -105,11 +111,11 @@ const SimilarProducts = ({ currentProduct, handleAddToCart }: SimilarProductsPro
                 </View>
               )}
               <View style={commonStyles.ratingContainer}>
-                <Text>
+                <Text style={styles.ratingText}>
                   {item.star || "N/A"}{" "}
                   <FontAwesome
                     name="star"
-                    size={14}
+                    size={12}
                     color={staticColors.lightYellow}
                   />
                 </Text>
@@ -121,7 +127,7 @@ const SimilarProducts = ({ currentProduct, handleAddToCart }: SimilarProductsPro
             <Text style={styles.price}>₹{item.price}</Text>
             <TouchableOpacity
               style={styles.addButton}
-              onPress={() => handleAddToCart(item)} 
+              onPress={() => handleAddToCart(item)}
             >
               <Text style={styles.addButtonText}>Add to Bag</Text>
             </TouchableOpacity>
@@ -139,7 +145,7 @@ const styles = StyleSheet.create({
   },
   card: {
     ...spacingStyles.mr10,
-    width: 150,
+    width: 160,
     borderRadius: borderRadius.r8,
     overflow: "hidden",
   },
@@ -159,18 +165,21 @@ const styles = StyleSheet.create({
     ...spacingStyles.mx5,
     color: staticColors.black,
   },
+  ratingText: { fontSize: fontSizes.xs },
   addButton: {
     ...spacingStyles.py5,
-    borderRadius: borderRadius.r20,
+    borderRadius: borderRadius.r12,
     ...spacingStyles.m5,
     borderWidth: 1,
-    borderColor: staticColors.primary,
+    borderColor: staticColors.primaryBlue,
+    alignItems: "center",
+    alignContent: "center",
   },
   addButtonText: {
-    color: staticColors.primary,
+    color: staticColors.primaryBlue,
     textAlign: "center",
-    fontSize: fontSizes.xs,
-    fontWeight: fontWeights.semiBold,
+    fontSize: fontSizes.sm,
+    fontFamily: fontFamilies.ralewayeSemiBold,
   },
 });
 

@@ -550,8 +550,8 @@ const styles = StyleSheet.create({
     color: staticColors.white,
   },
   heading: {
-    fontSize: fontSizes.md,
-    fontWeight: fontWeights.semiBold,
+    fontSize: fontSizes.lg,
+    fontFamily: fontFamilies.ralewayExtraBold,
     ...spacingStyles.mb10,
     color: staticColors.primary,
     ...spacingStyles.px15,
@@ -576,7 +576,7 @@ const styles = StyleSheet.create({
   reviewSection: { ...spacingStyles.mx15 },
   reviewTitle: {
     fontSize: fontSizes.lg,
-    fontFamily: "RalewayeExtraBold",
+    fontFamily: fontFamilies.ralewayExtraBold,
     color: staticColors.black,
     ...spacingStyles.mr10,
   },

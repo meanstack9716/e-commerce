@@ -16,7 +16,7 @@ export const commonStyles = StyleSheet.create({
     borderRadius: borderRadius.r10,
   },
   imagePlaceholderContainer: {
-    backgroundColor: staticColors.lightGray,
+    backgroundColor: staticColors.gray100,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -31,10 +31,10 @@ export const commonStyles = StyleSheet.create({
     left: 8,
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: staticColors.white,
-    ...spacingStyles.px10,
-    ...spacingStyles.py5,
-    borderRadius: borderRadius.r8,
+    backgroundColor: '#f5f3ed',
+    ...spacingStyles.px6,
+    ...spacingStyles.py2,
+    borderRadius: borderRadius.r5,
   },
   ratingText: {
     fontSize: fontSizes.xs,
