@@ -28,7 +28,7 @@ import CardItemCard from "@/components/cart-items/cartItemCard";
 import ProductDeleteConfirmationModal from "@/modal/ProductDeleteConfirmationModal";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import { fontSizes, fontWeights } from "@/style/typography";
+import { fontSizes } from "@/style/typography";
 import borderRadius from "@/style/borderRadius";
 import { fontFamilies } from "@/style/fontFamilies";
 import { commonStyles } from "@/style/commonStyle";
@@ -50,12 +50,10 @@ const ShoppingBagScreen: React.FC = () => {
     useState(false);
   const [confirmationModalDetails, setConfirmationModalDetails] = useState<{
     message: string;
-    onPrimaryAction: () => void;
-    onSecondaryAction: () => void;
+    onPrimaryAction?: () => void;
+    onSecondaryAction?: () => void;
   }>({
     message: "",
-    onPrimaryAction: () => {},
-    onSecondaryAction: () => {},
   });
 
   const handleGoBack = () => {
@@ -93,17 +91,13 @@ const ShoppingBagScreen: React.FC = () => {
     setIsConfirmationModalVisible(false);
     setConfirmationModalDetails({
       message: "",
-      onPrimaryAction: () => {},
-      onSecondaryAction: () => {},
     });
   };
 
   const onDeleteCartItem = (id: string) => {
     setConfirmationModalDetails({
       message: `Are you sure you want to remove this item from bag?`,
-      onPrimaryAction: () => {
-        handleCloseModal();
-      },
+      onPrimaryAction: handleCloseModal,
       onSecondaryAction: async () => {
         dispatch(removeFromCartApi({ ids: [id] }));
         handleCloseModal();
