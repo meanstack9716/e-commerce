@@ -6,9 +6,8 @@ import {
   FlatList,
   ScrollView,
   TouchableOpacity,
-  SafeAreaView,
 } from "react-native";
-import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 import Toast from "react-native-toast-message";
 import useBackHandler from "@/utils/useBackHandler";
@@ -37,17 +36,15 @@ import { commonStyles } from "@/style/commonStyle";
 const ShoppingBagScreen: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { cartItems, loading } = useSelector((state: RootState) => state.cart);
-
   const token = useSelector((state: RootState) => state.auth.token);
   const addresses = useSelector((state: RootState) => state.address.addresses);
   const selectedAddressId = useSelector(
     (state: RootState) => state.address.selectedAddressId
   );
-  const { selectedItems: paramSelectedItems } = useLocalSearchParams();
-  const [isLoading, setIsLoading] = useState(true);
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   );
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [isConfirmationModalVisible, setIsConfirmationModalVisible] =
     useState(false);
@@ -87,21 +84,10 @@ const ShoppingBagScreen: React.FC = () => {
   );
 
   useEffect(() => {
-    let parsedItemIds: string[] = [];
-    if (Array.isArray(paramSelectedItems)) {
-      parsedItemIds = paramSelectedItems;
-    } else if (typeof paramSelectedItems === "string") {
-      const parsed = JSON.parse(paramSelectedItems);
-      if (Array.isArray(parsed)) {
-        parsedItemIds = parsed.map((item: { id: string }) => item.id);
-      }
-    }
-    if (parsedItemIds.length > 0) {
-      setSelectedItems(parsedItemIds);
-    } else if (selectedItems.length === 0 && cartItems.length > 0) {
+    if (selectedItems.length === 0 && cartItems.length > 0) {
       setSelectedItems(cartItems.map((item) => item.id));
     }
-  }, [cartItems, paramSelectedItems]);
+  }, [cartItems]);
 
   const handleCloseModal = () => {
     setIsConfirmationModalVisible(false);

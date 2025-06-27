@@ -2,7 +2,6 @@ import { CartItem, PromoCode } from "@/interfaces";
 
 export interface PromoCodeSectionProps {
   selectedCartItems: CartItem[];
-  headerTitle?: string;
   maxPromoCodes?: number;
 }
 

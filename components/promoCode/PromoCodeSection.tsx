@@ -28,7 +28,6 @@ import PromoCodeList from "./PromoCodeList";
 
 const PromoCodeSection: React.FC<PromoCodeSectionProps> = ({
   selectedCartItems,
-  headerTitle = "Best Coupons For You",
   maxPromoCodes,
 }) => {
   const dispatch = useAppDispatch();
@@ -36,7 +35,7 @@ const PromoCodeSection: React.FC<PromoCodeSectionProps> = ({
     useSelector((state: RootState) => state.promoCode);
   const [promoCodeSuccessModalVisible, setPromoCodeSuccessModalVisible] =
     useState(false);
-  const [allCouponsModalVisible, setAllCouponsModalVisible] = useState(false);
+  const [promoCodeModalVisible, setPromoCodeModalVisible] = useState(false);
 
   useEffect(() => {
     dispatch(fetchPromoCodes());
@@ -57,7 +56,7 @@ const PromoCodeSection: React.FC<PromoCodeSectionProps> = ({
   };
 
   const handleAllCouponsModalClose = () => {
-    setAllCouponsModalVisible(false);
+    setPromoCodeModalVisible(false);
   };
 
   useEffect(() => {
@@ -97,7 +96,7 @@ const PromoCodeSection: React.FC<PromoCodeSectionProps> = ({
         onClose={handleModalClose}
       />
       <PromoCodeModal
-        visible={allCouponsModalVisible}
+        visible={promoCodeModalVisible}
         onClose={handleAllCouponsModalClose}
         appliedPromoCode={appliedPromoCode}
         onSelectPromoCode={handleSelectPromoCode}
@@ -113,11 +112,11 @@ const PromoCodeSection: React.FC<PromoCodeSectionProps> = ({
             size={20}
             color={staticColors.black}
           />
-          <Text style={styles.headerText}>{headerTitle}</Text>
+          <Text style={styles.headerText}>Best Coupons For You</Text>
         </View>
           <TouchableOpacity
             style={styles.headerRight}
-            onPress={() => setAllCouponsModalVisible(true)}
+            onPress={() => setPromoCodeModalVisible(true)}
           >
             <Text style={styles.allCouponsText}>ALL COUPONS</Text>
             <Ionicons
