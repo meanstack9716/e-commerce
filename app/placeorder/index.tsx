@@ -183,7 +183,6 @@ const PlaceOrderScreen: React.FC = () => {
           </View>
           <PromoCodeSection
             selectedCartItems={selectedCartItems}
-            maxPromoCodes={3}
           />
 
           {appliedPromoCode !== null && (

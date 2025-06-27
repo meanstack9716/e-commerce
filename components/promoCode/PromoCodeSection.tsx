@@ -28,7 +28,6 @@ import PromoCodeList from "./PromoCodeList";
 
 const PromoCodeSection: React.FC<PromoCodeSectionProps> = ({
   selectedCartItems,
-  maxPromoCodes,
 }) => {
   const dispatch = useAppDispatch();
   const { promoCodes, loading, error, appliedPromoCode, loadingPromoCode } =
@@ -76,10 +75,6 @@ const PromoCodeSection: React.FC<PromoCodeSectionProps> = ({
     setPromoCodeSuccessModalVisible(false);
   };
 
-  const displayedPromoCodes = maxPromoCodes
-    ? promoCodes.slice(0, maxPromoCodes)
-    : promoCodes;
-
   if (loading && !promoCodes.length && !loadingPromoCode) {
     return (
       <View style={styles.container}>
@@ -101,7 +96,6 @@ const PromoCodeSection: React.FC<PromoCodeSectionProps> = ({
         appliedPromoCode={appliedPromoCode}
         onSelectPromoCode={handleSelectPromoCode}
         promoCodes={promoCodes}
-        loadingPromoCode={loadingPromoCode}
         onRemovePromoCode={handleRemovePromoCode}
       />
 
@@ -128,7 +122,7 @@ const PromoCodeSection: React.FC<PromoCodeSectionProps> = ({
       </View>
 
       <PromoCodeList
-        promoCodes={displayedPromoCodes}
+        promoCodes={promoCodes.slice(0,3)}
         appliedPromoCode={appliedPromoCode}
         loadingPromoCode={loadingPromoCode}
         onApplyPromoCode={handleSelectPromoCode}

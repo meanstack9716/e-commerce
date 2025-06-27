@@ -23,7 +23,6 @@ const PromoCodeModal: React.FC<PromoCodeModalProps> = ({
   promoCodes,
   appliedPromoCode,
   onSelectPromoCode,
-  loadingPromoCode,
   onRemovePromoCode,
 }) => {
   return (
@@ -47,7 +46,6 @@ const PromoCodeModal: React.FC<PromoCodeModalProps> = ({
                 <PromoCodeList
                   promoCodes={promoCodes}
                   appliedPromoCode={appliedPromoCode}
-                  loadingPromoCode={loadingPromoCode}
                   onApplyPromoCode={onSelectPromoCode}
                   onRemovePromoCode={onRemovePromoCode}
                 />

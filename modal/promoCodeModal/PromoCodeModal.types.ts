@@ -13,6 +13,5 @@ export interface PromoCodeModalProps {
   promoCodes: PromoCode[];
   appliedPromoCode: string | null;
   onSelectPromoCode: (code: string) => void;
-  loadingPromoCode: string | null;
   onRemovePromoCode: () => void;
 }
