@@ -17,11 +17,11 @@ import { SearchSuggestionsProps } from "./SearchSuggestions.types";
 
 const SearchSuggestions: React.FC<SearchSuggestionsProps> = ({
   title,
-  history,
-  onItemPress,
+  recentSearches,
+  onSuggestionPress,
   onClearHistory,
 }) => {
-  if (history.length === 0) return null;
+  if (recentSearches.length === 0) return null;
 
   return (
     <View style={styles.historyContainer}>
@@ -39,11 +39,11 @@ const SearchSuggestions: React.FC<SearchSuggestionsProps> = ({
         )}
       </View>
       <View style={styles.historyList}>
-        {history.map((item, index) => (
+        {recentSearches.map((item, index) => (
           <TouchableOpacity
             key={index}
             style={styles.historyItem}
-            onPress={() => onItemPress(item)}
+            onPress={() => onSuggestionPress(item)}
           >
             <Text style={styles.historyItemText}>{item.toUpperCase()}</Text>
           </TouchableOpacity>
