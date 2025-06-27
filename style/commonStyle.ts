@@ -190,7 +190,7 @@ export const commonStyles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: borderRadius.r8,
-    ...spacingStyles.mr5,
+    ...spacingStyles.mr5
   },
   searchContainer: {
     flexDirection: "row",

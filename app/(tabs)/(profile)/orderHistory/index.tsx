@@ -11,28 +11,26 @@ import { useSelector } from "react-redux";
 import { useAppDispatch } from "@/store/hooks";
 import { RootState } from "@/store/store";
 import { clearOrderStatus, fetchOrders } from "@/store/order/orderSlice";
-import { textTruncate } from "@/utils/textTruncate";
-import FullScreenLoader from "@/components/common/FullScreenLoader";
 import images from "@/constants/images";
 import borderRadius from "@/style/borderRadius";
 import spacingStyles from "@/style/spacingStyles";
 import { fontFamilies } from "@/style/fontFamilies";
-import { fontSizes, fontWeights } from "@/style/typography";
+import { fontSizes } from "@/style/typography";
 import staticColors from "@/style/staticColors";
-import gapSizes from "@/style/gapSizes";
 import ReviewModal from "@/modal/ReviewModal/ReviewModal";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import { SelectedItem } from "./orderHistory.types";
 import OrderItem from "@/components/order/orderItem/OrderItem";
 import ProfileHeaderBar from "@/components/profile/ProfileHeaderBar/ProfileHeaderBar";
+import OrderItemSkeleton from "@/components/common/OrderItemSkeleton";
+import { LIST_LIMIT } from "@/constants/constants";
 import { Order } from "@/interfaces";
 import OrderDetailsModal from "@/modal/OrderDetailsModal/OrderDetailsModal";
 
 const OrderHistoryScreen: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { orders, loading, error } = useSelector(
-    (state: RootState) => state.order
-  );
+  const { orders, loading, error, currentPage, isMoreOrdersAvailable } =
+    useSelector((state: RootState) => state.order);
   const [filteredOrders, setFilteredOrders] = useState<Order[]>(orders);
   const [selectedItem, setSelectedItem] = useState<SelectedItem>({
     orderId: "",
@@ -48,8 +46,7 @@ const OrderHistoryScreen: React.FC = () => {
     setDetailsModalVisible(true);
   };
   useEffect(() => {
-    dispatch(fetchOrders());
-
+    dispatch(fetchOrders({ page: 1, limit: LIST_LIMIT }));
     return () => {
       dispatch(clearOrderStatus());
     };
@@ -58,6 +55,12 @@ const OrderHistoryScreen: React.FC = () => {
   useEffect(() => {
     setFilteredOrders(orders);
   }, [orders]);
+
+  const handleLoadMore = () => {
+    if (!loading && isMoreOrdersAvailable) {
+      dispatch(fetchOrders({ page: currentPage, limit: LIST_LIMIT }));
+    }
+  };
 
   const handleReviewPress = (
     orderId: string,
@@ -71,12 +74,21 @@ const OrderHistoryScreen: React.FC = () => {
     });
     setReviewModalVisible(true);
   };
-
+  // Show loading skeletons while fetching more orders
   const renderOrderItem = ({ item }: { item: Order }) => (
     <TouchableOpacity onPress={() => handleOrderItemPress(item)}>
       <OrderItem item={item} onReviewPress={handleReviewPress} />
     </TouchableOpacity>
   );
+
+  const renderFooter = () => {
+    if (!loading || !isMoreOrdersAvailable) return null;
+    return (
+      <View style={styles.skeletonContainer}>
+        <OrderItemSkeleton count={5} />
+      </View>
+    );
+  };
 
   return (
     <SafeAreaViewWrapper backgroundColor={staticColors.white}>
@@ -87,20 +99,24 @@ const OrderHistoryScreen: React.FC = () => {
       />
       {error ? (
         <Text style={styles.errorText}>{error}</Text>
-      ) : filteredOrders.length === 0 ? (
+      ) : // No orders case
+      filteredOrders.length === 0 && !loading ? (
         <View style={styles.noOrdersContainer}>
           <Image source={images.noOrderImage} style={styles.noOrderImage} />
         </View>
       ) : (
+        // Orders List
         <FlatList
           data={filteredOrders}
           renderItem={renderOrderItem}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.listContent}
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={renderFooter}
         />
       )}
-
-      <FullScreenLoader visible={loading} />
+      {/* Review Modal */}
       <ReviewModal
         visible={isReviewModalVisible}
         onClose={() => setReviewModalVisible(false)}
@@ -108,6 +124,7 @@ const OrderHistoryScreen: React.FC = () => {
         productId={selectedItem.productId}
         productDescription={selectedItem.productDescription}
       />
+      {/* Order Details Modal */}
       <OrderDetailsModal
         visible={isDetailsModalVisible}
         order={selectedOrder}
@@ -140,16 +157,9 @@ const styles = StyleSheet.create({
     width: "50%",
     height: "50%",
   },
-  description: {
-    fontSize: fontSizes.xs,
-    color: staticColors.black,
-    fontFamily: fontFamilies.nunitoSans,
-    ...spacingStyles.mt2,
-  },
-  orderNumber: {
-    fontSize: fontSizes.sm,
-    fontFamily: fontFamilies.ralewayExtraBold,
-    ...spacingStyles.my10,
+  skeletonContainer: {
+    ...spacingStyles.px12,
+    ...spacingStyles.py15,
   },
 });
 

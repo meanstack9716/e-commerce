@@ -29,4 +29,5 @@ export const NUMERIC_SIZES = [
 ];
 export const PRODUCT_RANGE_MIN_PRICE = 10;
 export const PRODUCT_RANGE_MAX_PRICE = 30000;
-export const PRODUCT_LIMIT = 10
+export const LIST_LIMIT = 10
+export const REVIEW_COMMENT_CHARACTER = 50

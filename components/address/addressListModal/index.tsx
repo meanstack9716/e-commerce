@@ -116,7 +116,7 @@ const AddressListModal: React.FC<AddressListModalProps> = ({
                   <TouchableOpacity
                     style={[styles.setAddressButton]}
                     onPress={() => onAddAddress && onAddAddress()}
-                    disabled={!selectedId}
+                    // disabled={!selectedId}
                   >
                     <Text style={styles.setAddressButtonText}>
                       Add an address

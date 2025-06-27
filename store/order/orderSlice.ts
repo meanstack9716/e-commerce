@@ -4,7 +4,13 @@ import { getAuthHeaders } from "@/utils/apiHeader";
 import axiosConfig from "@/utils/axiosConfig";
 import { Order } from "@/interfaces";
 import Toast from "react-native-toast-message";
-import { OrderPayload } from "@/app/placeorder/placeorder.type";
+import { LIST_LIMIT } from "@/constants/constants";
+
+interface OrderPayload {
+  cart_items_ids: String[];
+  shipping_address_id: string;
+  payment_method: string;
+}
 
 interface OrderState {
   loading: boolean;
@@ -13,6 +19,8 @@ interface OrderState {
   orders: Order[];
   statusTypes: string[];
   selectedOrder: Order | null;
+  currentPage: number; 
+  isMoreOrdersAvailable: boolean;
 }
 
 const initialState: OrderState = {
@@ -22,31 +30,37 @@ const initialState: OrderState = {
   orders: [],
   statusTypes: [],
   selectedOrder: null,
+  currentPage: 1,
+  isMoreOrdersAvailable: true,
 };
 
 export const fetchOrders = createAsyncThunk<
-  Order[],
-  void,
+  { orders: Order[]; isMoreOrdersAvailable: boolean },
+  { page: number; limit?: number },
   { state: RootState }
->("order/fetchOrders", async (_, { getState, rejectWithValue }) => {
-  try {
-    const state = getState();
-    const token = state.auth.token;
-    if (!token) {
-      return rejectWithValue("No authentication token found.");
+>(
+  "order/fetchOrders",
+  async ({ page, limit = LIST_LIMIT }, { getState, rejectWithValue }) => {
+    try {
+      const state = getState();
+      const token = state.auth.token;
+      if (!token) {
+        return rejectWithValue("No authentication token found.");
+      }
+      const response = await axiosConfig.get(
+        `/orders/list?page=${page}&limit=${limit}`,
+        getAuthHeaders(state)
+      );
+      const orders = response.data.data;
+      const isMoreOrdersAvailable = response.data.isMoreOrdersAvailable || orders.length === limit;
+      return { orders, isMoreOrdersAvailable };
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message || "Failed to fetch orders.";
+      return rejectWithValue(errorMessage);
     }
-
-    const response = await axiosConfig.get(
-      `/orders/list`,
-      getAuthHeaders(state)
-    );
-    return response.data.data;
-  } catch (error: any) {
-    const errorMessage =
-      error.response?.data?.message || "Failed to fetch orders.";
-    return rejectWithValue(errorMessage);
   }
-});
+);
 
 export const placeOrder = createAsyncThunk<
   any,
@@ -87,7 +101,6 @@ export const fetchStatusTypes = createAsyncThunk<
     if (!token) {
       return rejectWithValue("No authentication token found.");
     }
-
     const response = await axiosConfig.get(
       `/orders/status-types`,
       getAuthHeaders(state)
@@ -133,6 +146,8 @@ const orderSlice = createSlice({
       state.error = null;
       state.orderId = null;
       state.selectedOrder = null;
+      state.currentPage = 1;
+      state.isMoreOrdersAvailable = true;
     },
   },
   extraReducers: (builder) => {
@@ -163,13 +178,18 @@ const orderSlice = createSlice({
       })
       .addCase(fetchOrders.fulfilled, (state, action) => {
         state.loading = false;
-        state.orders = action.payload;
+        state.orders =
+          state.currentPage === 1
+            ? action.payload.orders
+            : [...state.orders, ...action.payload.orders];
+        state.currentPage += 1;
+        state.isMoreOrdersAvailable = action.payload.isMoreOrdersAvailable;
         state.error = null;
       })
       .addCase(fetchOrders.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
-        state.orders = [];
+        state.orders = state.currentPage === 1 ? [] : state.orders;
       })
 
       .addCase(fetchStatusTypes.pending, (state) => {

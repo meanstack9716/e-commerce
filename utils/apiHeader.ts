@@ -6,3 +6,11 @@ export const getAuthHeaders = (state: RootState) => ({
     "Content-Type": "application/json",
   },
 });
+
+export const getAuthFormDataHeaders = (state: RootState) => ({
+  headers: {
+    Authorization: `${state.auth.token}`,
+    "Content-Type": "multipart/form-data",
+    Accept: "multipart/form-data",
+  },
+});
