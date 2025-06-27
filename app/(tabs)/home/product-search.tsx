@@ -129,7 +129,6 @@ const ProductSearchScreen: React.FC = () => {
         })
       );
     } catch (error) {
-      console.error("Search submission failed:", error);
       setIsSearchSubmitted(false);
     }
   };
@@ -176,7 +175,7 @@ const ProductSearchScreen: React.FC = () => {
     setSetFilter(true);
   };
 
-  const handleApplyFilters = async (newFilters: {
+  const handleApplyFilters = (newFilters: {
     subCategories: string[];
     sizes: string[];
     colors: string[];
@@ -186,26 +185,21 @@ const ProductSearchScreen: React.FC = () => {
     setProductFilters(newFilters);
     setIsSearchSubmitted(true);
     setPage(1);
-    // dispatch(resetProducts());
 
-    try {
-      await dispatch(
-        fetchProducts({
-          params: {
-            searchTerm,
-            subCategoryIds: newFilters.subCategories,
-            sizes: newFilters.sizes,
-            colors: newFilters.colors,
-            minPrice: newFilters.priceMin,
-            maxPrice: newFilters.priceMax,
-            page: 1,
-            limit,
-          },
-        })
-      );
-    } catch (error) {
-      console.error("Error applying filters:", error);
-    }
+    dispatch(
+      fetchProducts({
+        params: {
+          searchTerm,
+          subCategoryIds: newFilters.subCategories,
+          sizes: newFilters.sizes,
+          colors: newFilters.colors,
+          minPrice: newFilters.priceMin,
+          maxPrice: newFilters.priceMax,
+          page: 1,
+          limit,
+        },
+      })
+    );
   };
 
   const handleClearFilters = () => {
@@ -224,26 +218,20 @@ const ProductSearchScreen: React.FC = () => {
 
     const nextPage = page + 1;
     setPage(nextPage);
-console.log("Loading next page:", page + 1);
-
-    try {
-      await dispatch(
-        fetchProducts({
-          params: {
-            searchTerm,
-            subCategoryIds: subCategories,
-            sizes,
-            colors,
-            minPrice: priceMin,
-            maxPrice: priceMax,
-            page: nextPage,
-            limit,
-          },
-        })
-      );
-    } catch (error) {
-      console.error("Error loading more products:", error);
-    }
+    dispatch(
+      fetchProducts({
+        params: {
+          searchTerm,
+          subCategoryIds: subCategories,
+          sizes,
+          colors,
+          minPrice: priceMin,
+          maxPrice: priceMax,
+          page: nextPage,
+          limit,
+        },
+      })
+    );
   };
 
   const renderSkeletonItem = () => <ProductCardSkeleton />;
@@ -326,14 +314,14 @@ console.log("Loading next page:", page + 1);
 
         <SearchSuggestions
           title="Search history"
-          history={searchHistory}
-          onItemPress={handleHistoryItemPress}
+          searchList={searchHistory}
+          onSuggestionPress={handleHistoryItemPress}
           onClearHistory={handleClearSearchHistory}
         />
         <SearchSuggestions
           title="Recommended"
-          history={recommendedKeywords}
-          onItemPress={handleHistoryItemPress}
+          searchList={recommendedKeywords}
+          onSuggestionPress={handleHistoryItemPress}
         />
 
         {isSearchSubmitted ? (

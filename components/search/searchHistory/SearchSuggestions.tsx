@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  StyleSheet,
-} from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
@@ -17,11 +11,11 @@ import { SearchSuggestionsProps } from "./SearchSuggestions.types";
 
 const SearchSuggestions: React.FC<SearchSuggestionsProps> = ({
   title,
-  recentSearches,
+  searchList,
   onSuggestionPress,
   onClearHistory,
 }) => {
-  if (recentSearches.length === 0) return null;
+  if (searchList.length === 0) return null;
 
   return (
     <View style={styles.historyContainer}>
@@ -39,7 +33,7 @@ const SearchSuggestions: React.FC<SearchSuggestionsProps> = ({
         )}
       </View>
       <View style={styles.historyList}>
-        {recentSearches.map((item, index) => (
+        {searchList.map((item, index) => (
           <TouchableOpacity
             key={index}
             style={styles.historyItem}
@@ -77,7 +71,7 @@ const styles = StyleSheet.create({
 
   iconStyle: {
     backgroundColor: staticColors.gray300,
-    padding: 8,
+    ...spacingStyles.p8,
     borderRadius: borderRadius.circle,
   },
   historyItem: {
@@ -87,7 +81,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.px15,
   },
   historyItemText: {
-    fontSize: fontSizes.sm,
+    fontSize: fontSizes.xs,
     color: staticColors.black,
     fontFamily: fontFamilies.ralewayMedium,
   },
