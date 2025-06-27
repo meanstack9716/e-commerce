@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  StyleSheet,
-} from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
@@ -17,11 +11,11 @@ import { SearchSuggestionsProps } from "./SearchSuggestions.types";
 
 const SearchSuggestions: React.FC<SearchSuggestionsProps> = ({
   title,
-  history,
-  onItemPress,
+  searchList,
+  onSuggestionPress,
   onClearHistory,
 }) => {
-  if (history.length === 0) return null;
+  if (searchList.length === 0) return null;
 
   return (
     <View style={styles.historyContainer}>
@@ -39,11 +33,11 @@ const SearchSuggestions: React.FC<SearchSuggestionsProps> = ({
         )}
       </View>
       <View style={styles.historyList}>
-        {history.map((item, index) => (
+        {searchList.map((item, index) => (
           <TouchableOpacity
             key={index}
             style={styles.historyItem}
-            onPress={() => onItemPress(item)}
+            onPress={() => onSuggestionPress(item)}
           >
             <Text style={styles.historyItemText}>{item.toUpperCase()}</Text>
           </TouchableOpacity>
@@ -77,7 +71,7 @@ const styles = StyleSheet.create({
 
   iconStyle: {
     backgroundColor: staticColors.gray300,
-    padding: 8,
+    ...spacingStyles.p8,
     borderRadius: borderRadius.circle,
   },
   historyItem: {

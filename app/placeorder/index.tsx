@@ -26,9 +26,11 @@ import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaVi
 import CartItemsList from "@/components/cartItemList/CardItemList";
 import ContactCard from "@/components/contactCard/ContactCard";
 import { getFormattedAddress } from "@/utils/formatAddress";
-import { CartItem } from "@/interfaces";
+
 import { OrderPayload } from "./placeorder.type";
+import { CartItem } from "@/interfaces";
 import PromoCodeSection from "@/components/promoCode/PromoCodeSection";
+
 const paymentOptions = [{ label: "Cash On Delivery" }, { label: "Razorpay" }];
 
 const PlaceOrderScreen: React.FC = () => {
@@ -41,15 +43,13 @@ const PlaceOrderScreen: React.FC = () => {
       isBuyNow?: string;
       imageUrl?: string;
     }>();
-  const selectedCartItemsId: string[] = selectedItems
-    ? selectedItems.split(",")
-    : [];
+  const selectedCartItemsId = selectedItems ? selectedItems.split(",") : [];
   const { discounted_amount, appliedPromoCode } = useSelector(
     (state: RootState) => state.promoCode
   );
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>(
-    paymentOptions[0].label
-  );
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
+    string | null
+  >(paymentOptions[0].label);
   const cartItems = useSelector((state: RootState) => state.cart.cartItems);
   const addresses = useSelector((state: RootState) => state.address.addresses);
   const selectedAddressId = useSelector(
@@ -97,32 +97,6 @@ const PlaceOrderScreen: React.FC = () => {
     );
   };
 
-  console.log("selectedItems:", selectedItems);
-  console.log("selectedCartItemsId:", selectedCartItemsId);
-  console.log("Navigation params:", {
-    selectedItems,
-    productId,
-    quantity,
-    isBuyNow,
-    imageUrl,
-  });
-
-  const calculateOriginalTotal = () => {
-    return selectedCartItems.reduce((total, item) => {
-      return total + item.product.final_price * item.quantity;
-    }, 0);
-  };
-
-  const calculateTotalPrice = () => {
-    const subtotal = calculateOriginalTotal();
-    return discounted_amount !== null ? discounted_amount : subtotal;
-  };
-
-  const calculateDiscount = () => {
-    const original = calculateOriginalTotal();
-    return discounted_amount !== null ? original - discounted_amount : 0;
-  };
-
   // Handle back navigation
   const handleBack = () => {
     router.back();
@@ -156,11 +130,9 @@ const PlaceOrderScreen: React.FC = () => {
       payment_method: selectedPaymentMethod,
       redirect_url: Linking.createURL("orderHistory"),
     };
-
     if (appliedPromoCode) {
       payload.promo_code = appliedPromoCode;
     }
-
     try {
       const result = await dispatch(placeOrder(payload)).unwrap();
       if (result?.payment_link && selectedPaymentMethod === "Razorpay") {
@@ -202,6 +174,22 @@ const PlaceOrderScreen: React.FC = () => {
     }
   };
 
+  const calculateOriginalTotal = () => {
+    return selectedCartItems.reduce((total, item) => {
+      return total + item.product.final_price * item.quantity;
+    }, 0);
+  };
+
+  const calculateTotalPrice = () => {
+    const subtotal = calculateOriginalTotal();
+    return discounted_amount !== null ? discounted_amount : subtotal;
+  };
+
+  const calculateDiscount = () => {
+    const original = calculateOriginalTotal();
+    return discounted_amount !== null ? original - discounted_amount : 0;
+  };
+
   return (
     <SafeAreaViewWrapper>
       <View style={styles.mainContainer}>
@@ -222,9 +210,10 @@ const PlaceOrderScreen: React.FC = () => {
           />
           <CartItemsList cartItems={selectedCartItems} />
 
-          <View style={[commonStyles.justifyBetwwen, spacingStyles.mt5]}>
+          <View style={[commonStyles.justifyBetwwen]}>
             <Text style={commonStyles.itemCountTitle}>Payment Method</Text>
           </View>
+
           <View style={styles.paymentMethodsWrapper}>
             {paymentOptions.map((option) => (
               <TouchableOpacity
@@ -250,10 +239,8 @@ const PlaceOrderScreen: React.FC = () => {
               </TouchableOpacity>
             ))}
           </View>
-
           <PromoCodeSection
             selectedCartItems={selectedCartItems}
-            maxPromoCodes={3}
           />
 
           {appliedPromoCode !== null && (
@@ -316,19 +303,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     ...spacingStyles.px15,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    ...spacingStyles.mb10,
-  },
-  backButton: {
-    ...spacingStyles.p5,
-  },
-  backButtonText: {
-    fontSize: fontSizes.md,
-    color: staticColors.darkSlate,
-    fontFamily: fontFamilies.ralewayBold,
   },
   pageHeading: {
     fontSize: fontSizes["2xl"],
@@ -445,6 +419,13 @@ const styles = StyleSheet.create({
   totalText: {
     fontSize: fontSizes.md,
     fontFamily: fontFamilies.ralewayBold,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  backButton: {
+    ...spacingStyles.p5,
   },
 });
 

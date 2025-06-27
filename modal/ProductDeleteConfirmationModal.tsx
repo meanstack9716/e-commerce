@@ -11,15 +11,14 @@ import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { Ionicons } from "@expo/vector-icons";
 import {fontSizes, fontWeights} from "@/style/typography";
-
 interface ProductDeleteConfirmationModalProps {
   visible: boolean;
   title: string;
   message: string;
   primaryButtonText: string;
   secondaryButtonText: string;
-  onFirstButtonPress: () => void;
-  onSecondButtonPress: () => void;
+  onFirstButtonPress?: () => void;
+  onSecondButtonPress?: () => void;
   onClose: () => void;
   isLoading: boolean;
 }

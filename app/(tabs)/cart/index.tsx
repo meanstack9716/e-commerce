@@ -6,9 +6,8 @@ import {
   FlatList,
   ScrollView,
   TouchableOpacity,
-  SafeAreaView,
 } from "react-native";
-import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 import Toast from "react-native-toast-message";
 import useBackHandler from "@/utils/useBackHandler";
@@ -29,7 +28,7 @@ import CardItemCard from "@/components/cart-items/cartItemCard";
 import ProductDeleteConfirmationModal from "@/modal/ProductDeleteConfirmationModal";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import { fontSizes, fontWeights } from "@/style/typography";
+import { fontSizes } from "@/style/typography";
 import borderRadius from "@/style/borderRadius";
 import { fontFamilies } from "@/style/fontFamilies";
 import { commonStyles } from "@/style/commonStyle";
@@ -37,30 +36,24 @@ import { commonStyles } from "@/style/commonStyle";
 const ShoppingBagScreen: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { cartItems, loading } = useSelector((state: RootState) => state.cart);
-  const { discounted_amount } = useSelector(
-    (state: RootState) => state.promoCode
-  );
   const token = useSelector((state: RootState) => state.auth.token);
   const addresses = useSelector((state: RootState) => state.address.addresses);
   const selectedAddressId = useSelector(
     (state: RootState) => state.address.selectedAddressId
   );
-  const { selectedItems: paramSelectedItems } = useLocalSearchParams();
-  const [isLoading, setIsLoading] = useState(true);
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   );
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [isConfirmationModalVisible, setIsConfirmationModalVisible] =
     useState(false);
   const [confirmationModalDetails, setConfirmationModalDetails] = useState<{
     message: string;
-    onPrimaryAction: () => void;
-    onSecondaryAction: () => void;
+    onPrimaryAction?: () => void;
+    onSecondaryAction?: () => void;
   }>({
     message: "",
-    onPrimaryAction: () => {},
-    onSecondaryAction: () => {},
   });
 
   const handleGoBack = () => {
@@ -88,38 +81,23 @@ const ShoppingBagScreen: React.FC = () => {
     }, [isAuthenticated, token])
   );
 
-useEffect(() => {
-  let parsedItemIds: string[] = [];
-  if (Array.isArray(paramSelectedItems)) {
-    parsedItemIds = paramSelectedItems;
-  } else if (typeof paramSelectedItems === "string") {
-    const parsed = JSON.parse(paramSelectedItems);
-    if (Array.isArray(parsed)) {
-      parsedItemIds = parsed.map((item: { id: string }) => item.id);
+  useEffect(() => {
+    if (selectedItems.length === 0 && cartItems.length > 0) {
+      setSelectedItems(cartItems.map((item) => item.id));
     }
-  }
-  if (parsedItemIds.length > 0) {
-    setSelectedItems(parsedItemIds);
-  } else if (selectedItems.length === 0 && cartItems.length > 0) {
-    setSelectedItems(cartItems.map((item) => item.id));
-  }
-}, [cartItems, paramSelectedItems]);
+  }, [cartItems]);
 
   const handleCloseModal = () => {
     setIsConfirmationModalVisible(false);
     setConfirmationModalDetails({
       message: "",
-      onPrimaryAction: () => {},
-      onSecondaryAction: () => {},
     });
   };
 
   const onDeleteCartItem = (id: string) => {
     setConfirmationModalDetails({
       message: `Are you sure you want to remove this item from bag?`,
-      onPrimaryAction: () => {
-        handleCloseModal();
-      },
+      onPrimaryAction: handleCloseModal,
       onSecondaryAction: async () => {
         dispatch(removeFromCartApi({ ids: [id] }));
         handleCloseModal();
@@ -163,13 +141,12 @@ useEffect(() => {
   };
 
   const calculateTotalPrice = () => {
-    const subtotal = cartItems.reduce((total, item) => {
+    return cartItems.reduce((total, item) => {
       if (selectedItems.length && selectedItems.includes(item.id)) {
         return total + item.product.final_price * item.quantity;
       }
       return total;
     }, 0);
-    return discounted_amount !== null ? discounted_amount : subtotal;
   };
 
   const handlePlaceOrder = () => {
@@ -235,7 +212,6 @@ useEffect(() => {
                 removeClippedSubviews={true}
                 initialNumToRender={10}
               />
-             
             </View>
           ) : (
             <EmptyCart />

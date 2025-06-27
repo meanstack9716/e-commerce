@@ -1,6 +1,6 @@
 export interface SearchSuggestionsProps {
   title: string;
-  history: string[];
-  onItemPress: (query: string) => void;
+  searchList: string[];
+  onSuggestionPress : (query: string) => void;
   onClearHistory?: () => void;
 }
