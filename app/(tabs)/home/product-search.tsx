@@ -22,7 +22,7 @@ import { fontSizes } from "@/style/typography";
 import {
   LIST_LIMIT,
   PRODUCT_RANGE_MAX_PRICE,
-  PRODUCT_RANGE_MIN_PRICE,
+  PRODUCT_RANGE_MIN_PRICE
 } from "@/constants/constants";
 import ProductFilter from "@/components/productFilter/ProductFilter";
 import ProductCard from "@/components/home/ProductCard";

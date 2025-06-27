@@ -23,6 +23,7 @@ import staticColors from "@/style/staticColors";
 import gapSizes from "@/style/gapSizes";
 import { RootState } from "@/store/store";
 import {
+  fetchUserReview,
   resetReviewState,
   submitReview,
   updateReview,
@@ -51,7 +52,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
   productDescription,
 }) => {
   const dispatch = useAppDispatch();
-  const { loading, error, success } = useSelector(
+  const { loading, error, success, userReview } = useSelector(
     (state: RootState) => state.review
   );
 
@@ -72,40 +73,31 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
     validateAllFields,
   } = useFieldValidation();
 
- const loadExistingUserReview = () => {
-  if (!visible || !productId || !currentUserId || !orders) return;
+  const loadExistingUserReview = () => {
+    if (!visible || !productId || !currentUserId) return;
+    dispatch(fetchUserReview(productId));
+  };
 
-  const currentOrder = orders.find((order) => order.id === orderId);
-  if (!currentOrder) return;
+  useEffect(() => {
+    loadExistingUserReview();
+  }, [visible, productId, currentUserId]);
 
-  const orderItem = currentOrder.items?.find(
-    (item) => item.product.id === productId
-  );
-  if (!orderItem?.product?.reviews) return;
-
-  const userReview = orderItem.product.reviews.find(
-    (review) => review.by?.id === currentUserId
-  );
-
-  if (userReview) {
-    setIsReviewSubmitted(true);
-    setCurrentReview(userReview);
-    setReviewState((prev) => ({
-      ...prev,
-      rating: parseInt(userReview.rating),
-      comment: userReview.review,
-      selectedImages: userReview.img_urls || [],
-    }));
-  } else {
-    setIsReviewSubmitted(false);
-    setCurrentReview(null);
-  }
-};
-
-useEffect(() => {
-  loadExistingUserReview();
-}, [visible, productId, currentUserId, orders, orderId]);
-
+  useEffect(() => {
+    if (userReview && visible) {
+      setIsReviewSubmitted(true);
+      setCurrentReview(userReview);
+      setReviewState((prev) => ({
+        ...prev,
+        rating: parseInt(userReview.rating),
+        comment: userReview.review,
+        selectedImages: userReview.img_urls || [],
+      }));
+    } else if (!userReview && visible) {
+      setIsReviewSubmitted(false);
+      setCurrentReview(null);
+      setReviewState(initialReviewState);
+    }
+  }, [userReview, visible]);
 
   const setImagePickerModal = (value: boolean) => {
     setReviewState((prev) => ({ ...prev, showImagePickerModal: value }));
@@ -127,11 +119,11 @@ useEffect(() => {
       "comment",
       text,
       (value) => value.trim().length >= REVIEW_COMMENT_CHARACTER,
-      "Comment must be at least 50 characters"
+      `Comment must be at least ${REVIEW_COMMENT_CHARACTER} characters`
     );
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const isValid = validateAllFields({
       rating: {
         value: reviewState.rating.toString(),
@@ -140,8 +132,8 @@ useEffect(() => {
       },
       comment: {
         value: reviewState.comment,
-        validator: (v) => v.trim().length >= 50,
-        errorMessage: "Comment must be at least 50 characters",
+        validator: (v) => v.trim().length >= REVIEW_COMMENT_CHARACTER,
+        errorMessage: `Comment must be at least ${REVIEW_COMMENT_CHARACTER}  characters`,
       },
     });
 
@@ -157,35 +149,20 @@ useEffect(() => {
       remove_img_indexes: removedImageIndices,
     };
 
-    if (isReviewSubmitted) {
-      dispatch(updateReview(productReviewData))
-        .unwrap()
-        .then((updatedReview) => {
-          setCurrentReview(updatedReview);
-          setReviewState({
-            ...reviewState,
-            rating: parseInt(updatedReview.rating),
-            comment: updatedReview.review,
-            selectedImages: updatedReview.img_urls || [],
-          });
-          setCurrentReview(updatedReview);
-          dispatch(clearOrderStatus());
-          dispatch(fetchOrders({ page: 1, limit: LIST_LIMIT }));
-          setRemovedImageIndices([]);
-        })
-        .catch((error) => {
-          console.error("Update failed:", error);
-        });
-    } else {
-      dispatch(submitReview(productReviewData))
-        .unwrap()
-        .then(() => {
-          dispatch(clearOrderStatus());
-          dispatch(fetchOrders({ page: 1, limit: LIST_LIMIT }));
-        })
-        .catch((error) => {
-          console.error("Submit failed:", error);
-        });
+    try {
+      if (isReviewSubmitted) {
+        await dispatch(updateReview(productReviewData)).unwrap();
+      } else {
+        await dispatch(submitReview(productReviewData)).unwrap();
+      }
+
+      dispatch(clearOrderStatus());
+      dispatch(fetchOrders({ page: 1, limit: LIST_LIMIT }));
+    } catch (error) {
+      console.error(
+        isReviewSubmitted ? "Update failed:" : "Submit failed:",
+        error
+      );
     }
   };
 
@@ -500,7 +477,7 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.circle,
     alignSelf: "center",
     resizeMode: "cover",
-    marginRight: 10,
+    ...spacingStyles.mr10,
   },
   orderText: {
     fontSize: fontSizes.sm,

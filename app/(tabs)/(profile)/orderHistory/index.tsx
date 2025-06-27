@@ -29,9 +29,8 @@ import OrderDetailsModal from "@/modal/OrderDetailsModal/OrderDetailsModal";
 
 const OrderHistoryScreen: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { orders, loading, error, currentPage, hasMore } = useSelector(
-    (state: RootState) => state.order
-  );
+  const { orders, loading, error, currentPage, isMoreOrdersAvailable } =
+    useSelector((state: RootState) => state.order);
   const [filteredOrders, setFilteredOrders] = useState<Order[]>(orders);
   const [selectedItem, setSelectedItem] = useState<SelectedItem>({
     orderId: "",
@@ -58,7 +57,7 @@ const OrderHistoryScreen: React.FC = () => {
   }, [orders]);
 
   const handleLoadMore = () => {
-    if (!loading && hasMore) {
+    if (!loading && isMoreOrdersAvailable) {
       dispatch(fetchOrders({ page: currentPage, limit: LIST_LIMIT }));
     }
   };
@@ -75,23 +74,19 @@ const OrderHistoryScreen: React.FC = () => {
     });
     setReviewModalVisible(true);
   };
-
+  // Show loading skeletons while fetching more orders
   const renderOrderItem = ({ item }: { item: Order }) => (
     <TouchableOpacity onPress={() => handleOrderItemPress(item)}>
       <OrderItem item={item} onReviewPress={handleReviewPress} />
     </TouchableOpacity>
   );
 
-  const renderSkeletonItems = () => {
-    return Array(5)
-      .fill(0)
-      .map((_, index) => <OrderItemSkeleton key={`skeleton-${index}`} />);
-  };
-
   const renderFooter = () => {
-    if (!loading || !hasMore) return null;
+    if (!loading || !isMoreOrdersAvailable) return null;
     return (
-      <View style={styles.skeletonContainer}>{renderSkeletonItems()}</View>
+      <View style={styles.skeletonContainer}>
+        <OrderItemSkeleton count={5} />
+      </View>
     );
   };
 
@@ -104,11 +99,13 @@ const OrderHistoryScreen: React.FC = () => {
       />
       {error ? (
         <Text style={styles.errorText}>{error}</Text>
-      ) : filteredOrders.length === 0 && !loading ? (
+      ) : // No orders case
+      filteredOrders.length === 0 && !loading ? (
         <View style={styles.noOrdersContainer}>
           <Image source={images.noOrderImage} style={styles.noOrderImage} />
         </View>
       ) : (
+        // Orders List
         <FlatList
           data={filteredOrders}
           renderItem={renderOrderItem}
@@ -119,6 +116,7 @@ const OrderHistoryScreen: React.FC = () => {
           ListFooterComponent={renderFooter}
         />
       )}
+      {/* Review Modal */}
       <ReviewModal
         visible={isReviewModalVisible}
         onClose={() => setReviewModalVisible(false)}
@@ -126,6 +124,7 @@ const OrderHistoryScreen: React.FC = () => {
         productId={selectedItem.productId}
         productDescription={selectedItem.productDescription}
       />
+      {/* Order Details Modal */}
       <OrderDetailsModal
         visible={isDetailsModalVisible}
         order={selectedOrder}

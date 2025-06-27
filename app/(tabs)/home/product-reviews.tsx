@@ -1,40 +1,68 @@
 import React, { useEffect } from "react";
-import { View, Text, FlatList, StyleSheet } from "react-native";
+import { View, Text, FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { fetchProductById } from "@/store/product/productsSlice";
-import FullScreenLoader from "@/components/common/FullScreenLoader";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import { fontSizes } from "@/style/typography";
 import { fontFamilies } from "@/style/fontFamilies";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import RatingReview from "@/components/productDetails/RatingReview/RatingReview";
+import FullScreenLoader from "@/components/common/FullScreenLoader";
+import { fetchProductReviews } from "@/store/review/reviewSlice";
+import { LIST_LIMIT } from "@/constants/constants";
+import { Ionicons } from "@expo/vector-icons";
 
 const ReviewsScreen: React.FC = () => {
   const { productId } = useLocalSearchParams();
   const dispatch = useDispatch<AppDispatch>();
-  const { selectedProduct: product, selectedProductLoading: loading } =
-    useSelector((state: RootState) => state.products);
+  const { productReviews, loading, page, hasMoreReviews } = useSelector(
+    (state: RootState) => state.review
+  );
 
   useEffect(() => {
     if (productId) {
       dispatch(fetchProductById(productId as string));
+      dispatch(
+        fetchProductReviews({
+          productId: productId as string,
+          page: 1,
+          limit: LIST_LIMIT,
+        })
+      );
     }
   }, [productId, dispatch]);
+
+  const loadMoreReviews = () => {
+    if (!loading && hasMoreReviews && productId) {
+      dispatch(
+        fetchProductReviews({
+          productId: productId as string,
+          page,
+          limit: LIST_LIMIT,
+        })
+      );
+    }
+  };
 
   return (
     <SafeAreaViewWrapper backgroundColor={staticColors.white}>
       <FullScreenLoader visible={loading} />
-      <View style={styles.header}>
-        <Text style={styles.title}>REVIEWS</Text>
+       <View style={styles.header}>
+        <View style={styles.headerContainer}>
+          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+            <Ionicons name="arrow-back" size={24} color={staticColors.black} />
+          </TouchableOpacity>
+          <Text style={styles.title}>REVIEWS</Text>
+        </View>
       </View>
 
       <FlatList
-        data={product?.reviews}
+        data={productReviews}
         renderItem={({ item }) => (
-          <RatingReview productId={product?.id || ""} review={item} />
+          <RatingReview productId={productId as string} review={item} />
         )}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.list}
@@ -43,6 +71,8 @@ const ReviewsScreen: React.FC = () => {
             <Text style={styles.emptyText}>No reviews available</Text>
           </View>
         }
+        onEndReached={loadMoreReviews}
+        onEndReachedThreshold={0.5}
       />
     </SafeAreaViewWrapper>
   );
@@ -53,6 +83,13 @@ const styles = StyleSheet.create({
     ...spacingStyles.px20,
     ...spacingStyles.pt10,
     ...spacingStyles.pb5,
+  },
+    headerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  backButton: {
+   ...spacingStyles.mr10
   },
   title: {
     fontSize: fontSizes["2xl"],

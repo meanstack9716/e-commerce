@@ -36,6 +36,12 @@ import { fontFamilies } from "@/style/fontFamilies";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import RatingReview from "@/components/productDetails/RatingReview/RatingReview";
 import { renderStars } from "@/utils/starUtils";
+import {
+  fetchProductReviews,
+  fetchUserReview,
+  resetReviewState,
+} from "@/store/review/reviewSlice";
+import { LIST_LIMIT } from "@/constants/constants";
 
 const { width: screenWidth } = Dimensions.get("window");
 const ProductDetailsScreen: React.FC = () => {
@@ -47,6 +53,12 @@ const ProductDetailsScreen: React.FC = () => {
     selectedProductLoading: loading,
     selectedProductError: error,
   } = useSelector((state: RootState) => state.products);
+  const {
+    productReviews,
+    loading: reviewsLoading,
+    error: reviewsError,
+    page
+  } = useSelector((state: RootState) => state.review);
   const { items: wishlistItems } = useSelector(
     (state: RootState) => state.wishlist
   );
@@ -73,16 +85,22 @@ const ProductDetailsScreen: React.FC = () => {
   const isAuthenticatedUser = useAppSelector(
     (state) => state.auth.isAuthenticated
   );
-
   useEffect(() => {
     if (id) {
       dispatch(fetchProductById(id as string));
+      dispatch(
+        fetchProductReviews({ productId: id as string, page: 1, limit:LIST_LIMIT })
+      );
+      if (isAuthenticatedUser) {
+        dispatch(fetchUserReview(id as string));
+      }
     }
 
     return () => {
       dispatch(clearSelectedProduct());
+      dispatch(resetReviewState());
     };
-  }, [id, dispatch]);
+  }, [id, dispatch, isAuthenticatedUser]);
 
   // const renderStars = () => {
   //   if (!product) return null;
@@ -184,12 +202,12 @@ const ProductDetailsScreen: React.FC = () => {
     }
   };
 
-  if (loading || error) {
+  if (loading || error || reviewsLoading || reviewsError) {
     return (
       <SafeAreaViewWrapper>
-        <FullScreenLoader visible={loading} />
+        <FullScreenLoader visible={loading || reviewsLoading} />
         <View style={styles.loadingContainer}>
-          <Text style={styles.loadingText}>{error}</Text>
+          <Text style={styles.loadingText}>{error || reviewsError}</Text>
         </View>
       </SafeAreaViewWrapper>
     );
@@ -326,7 +344,8 @@ const ProductDetailsScreen: React.FC = () => {
               handleLikePress={handleLikePress}
               handleAddToCart={handleAddToCart}
             />
-            {product.reviews && product.reviews.length > 0 && (
+
+            {productReviews.length > 0 && (
               <View style={styles.reviewSection}>
                 {/* Title + Stars + Rating */}
                 <Text style={styles.reviewTitle}>Rating & Reviews</Text>
@@ -340,15 +359,14 @@ const ProductDetailsScreen: React.FC = () => {
                     </Text>
                   </View>
                 </View>
-
                 {/* First Review Card */}
                 <RatingReview
                   productId={product.id}
-                  review={product.reviews[0]}
+                  review={productReviews[0]}
                 />
 
-                {/* View All Button (if more than 1 review) */}
-                {product.reviews.length > 1 && (
+                {/* View All Button */}
+                {productReviews.length > 1 && (
                   <TouchableOpacity
                     onPress={handleViewAllReview}
                     style={styles.reviewButton}
