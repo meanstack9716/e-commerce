@@ -74,7 +74,6 @@ export const fetchProductReviews = createAsyncThunk<
       const response = await axiosConfig.get(
         `/products/${productId}/reviews?page=${page}&limit=${limit}`
       );
-      console.log(response, { limit });
       const reviews = response.data.data;
       const hasMoreReviews = reviews.length === limit;
       return { reviews, hasMoreReviews };

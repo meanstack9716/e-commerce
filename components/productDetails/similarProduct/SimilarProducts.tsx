@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -6,47 +6,52 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
 import { router } from "expo-router";
-import data from "@/assets/data/products.json";
-import { Product } from "../../types/types";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProducts } from "@/store/product/productsSlice";
+import { RootState } from "@/store/store";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import {fontSizes, fontWeights} from "@/style/typography";
+import { fontSizes, fontWeights } from "@/style/typography";
 import { textTruncate } from "@/utils/textTruncate";
 import { commonStyles } from "@/style/commonStyle";
 import { FontAwesome } from "@expo/vector-icons";
-import { useDispatch, useSelector } from "react-redux";
-import { addToCart } from "@/store/cart/cartSlice";
-import { RootState } from "@/store/store";
 import borderRadius from "@/style/borderRadius";
-const SimilarProducts = ({ currentProduct }: { currentProduct: Product }) => {
-  const dispatch = useDispatch();
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated
-  );
-  if (!currentProduct) return null;
+import { useAppDispatch } from "@/store/hooks";
+import { SimilarProductsProps } from "./SimilarProduct.types";
+import { fontFamilies } from "@/style/fontFamilies";
 
-  const allProductData = data.products || data;
+const SimilarProducts = ({
+  currentProduct,
+  handleAddToCart,
+}: SimilarProductsProps) => {
+  const dispatch = useAppDispatch();
+  const {
+    data: allProducts,
+    loading,
+    error,
+  } = useSelector((state: RootState) => state.products);
 
-  const allProducts: Product[] = allProductData.map((item) => ({
-    ...item,
-    title: item.title ?? "Untitled Product",
-  }));
+  useEffect(() => {
+    dispatch(fetchProducts({ params: { page: 1, limit: 15 } }));
+  }, [dispatch]);
 
-  const similarProducts = allProducts.filter((product) => {
-    if (product.id === currentProduct.id) return false;
-
-    const sharedCategory = product.categories.some((cat) =>
-      currentProduct.categories.includes(cat)
+  if (!currentProduct) {
+    return (
+      <View style={styles.container}>
+        <Text>No product provided.</Text>
+      </View>
     );
+  }
 
-    return sharedCategory;
-  });
+  // Limit to 15 products
+  const limitedProducts = allProducts
+    .filter((product) => product.id !== currentProduct.id)
+    .slice(0, 15);
 
-  const limitedSimilar = similarProducts.slice(0, 6);
-  if (limitedSimilar.length === 0) return null;
-
+  // Handle navigation to product details
   const navigateToProductDetails = (productId: string) => {
     router.navigate({
       pathname: "/ProductDetails",
@@ -54,18 +59,38 @@ const SimilarProducts = ({ currentProduct }: { currentProduct: Product }) => {
     });
   };
 
-  const handleAddToCart = (product: Product) => {
-    dispatch(
-      addToCart({ product: product, selectedSize: undefined, isAuthenticated })
+  // Render loading state
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator color={staticColors.lightGray}></ActivityIndicator>
+      </View>
     );
-    router.navigate("/cart");
-  };
+  }
+
+  // Render error state
+  if (error) {
+    return (
+      <View style={styles.container}>
+        <Text>Error: {error}</Text>
+      </View>
+    );
+  }
+
+  // Render if no products are found
+  if (limitedProducts.length === 0) {
+    return (
+      <View style={styles.container}>
+        <Text>No products found.</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
       <FlatList
         horizontal
-        data={limitedSimilar}
+        data={limitedProducts}
         keyExtractor={(item) => item.id}
         showsHorizontalScrollIndicator={false}
         renderItem={({ item }) => (
@@ -86,18 +111,18 @@ const SimilarProducts = ({ currentProduct }: { currentProduct: Product }) => {
                 </View>
               )}
               <View style={commonStyles.ratingContainer}>
-                <Text>
-                  {item.star}{" "}
+                <Text style={styles.ratingText}>
+                  {item.star || "N/A"}{" "}
                   <FontAwesome
                     name="star"
-                    size={14}
+                    size={12}
                     color={staticColors.lightYellow}
                   />
                 </Text>
               </View>
             </View>
             <Text style={[commonStyles.cardTitle, styles.title]}>
-              {textTruncate(item.title)}
+              {textTruncate(item.title || "Untitled Product")}
             </Text>
             <Text style={styles.price}>₹{item.price}</Text>
             <TouchableOpacity
@@ -116,10 +141,11 @@ const SimilarProducts = ({ currentProduct }: { currentProduct: Product }) => {
 const styles = StyleSheet.create({
   container: {
     ...spacingStyles.px15,
+    ...spacingStyles.mb20,
   },
   card: {
     ...spacingStyles.mr10,
-    width: 150,
+    width: 160,
     borderRadius: borderRadius.r8,
     overflow: "hidden",
   },
@@ -139,18 +165,21 @@ const styles = StyleSheet.create({
     ...spacingStyles.mx5,
     color: staticColors.black,
   },
+  ratingText: { fontSize: fontSizes.xs },
   addButton: {
     ...spacingStyles.py5,
-    borderRadius: borderRadius.r20,
+    borderRadius: borderRadius.r12,
     ...spacingStyles.m5,
     borderWidth: 1,
-    borderColor: staticColors.primary,
+    borderColor: staticColors.primaryBlue,
+    alignItems: "center",
+    alignContent: "center",
   },
   addButtonText: {
-    color: staticColors.primary,
+    color: staticColors.primaryBlue,
     textAlign: "center",
-    fontSize: fontSizes.xs,
-    fontWeight: fontWeights.semiBold,
+    fontSize: fontSizes.sm,
+    fontFamily: fontFamilies.ralewayeSemiBold,
   },
 });
 

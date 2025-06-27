@@ -12,7 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import {fontSizes, fontWeights} from "@/style/typography";
-import SimilarProducts from "@/components/productDetails/SimilarProducts";
+import SimilarProducts from "@/components/productDetails/similarProduct/SimilarProducts";
 import { Product } from "@/types/types";
 
 interface ViewSimilarModalProps {
