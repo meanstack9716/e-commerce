@@ -16,6 +16,7 @@ interface ProductsState {
   recommendedKeywords: string[];
   recommendedKeywordsLoading: boolean;
   recommendedKeywordsError: string | null;
+  lastPage: number;
 }
 
 const initialState: ProductsState = {
@@ -31,6 +32,7 @@ const initialState: ProductsState = {
   recommendedKeywords: [],
   recommendedKeywordsLoading: false,
   recommendedKeywordsError: null,
+  lastPage: 1,
 };
 
 export const fetchColors = createAsyncThunk<
@@ -57,7 +59,7 @@ export const fetchColors = createAsyncThunk<
 });
 
 export const fetchProducts = createAsyncThunk<
-  { data: Product[]; page: number },
+  { data: Product[]; page: number; lastPage: number },
   { params?: any },
   { rejectValue: string }
 >("products/fetchProducts", async ({ params = {} }, { rejectWithValue }) => {
@@ -68,8 +70,11 @@ export const fetchProducts = createAsyncThunk<
       },
     });
     if (response.data?.data) {
-      return { data: response.data.data, page: params.page || 1 };
+      console.log("API response:", response.data);
+      const { data, current_page, last_page } = response.data;
+      return { data, page: current_page, lastPage: last_page };
     }
+
     return rejectWithValue("Invalid response format from API");
   } catch (error) {
     return rejectWithValue(handleApiError(error, "Failed to fetch products"));
@@ -133,6 +138,7 @@ const productsSlice = createSlice({
       state.data = [];
       state.loading = false;
       state.error = null;
+      state.lastPage = 1;
     },
     clearSelectedProduct: (state) => {
       state.selectedProduct = null;
@@ -148,10 +154,12 @@ const productsSlice = createSlice({
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.loading = false;
-        if (action.payload.page === 1) {
-          state.data = action.payload.data;
+        const { data, page, lastPage } = action.payload;
+        state.lastPage = lastPage;
+        if (page === 1) {
+          state.data = data;
         } else {
-          state.data = [...state.data, ...action.payload.data];
+          state.data = [...state.data, ...data];
         }
         state.error = null;
       })

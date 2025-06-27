@@ -55,21 +55,20 @@ const ProductSearchScreen: React.FC = () => {
     priceMax: PRODUCT_RANGE_MAX_PRICE as number | null,
   });
   const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
   const dispatch = useAppDispatch();
-  const products = useSelector((state: any) => state.products.data);
-  const loading = useSelector((state: any) => state.products.loading);
+  const {
+    data: products,
+    loading,
+    error,
+    lastPage,
+  } = useSelector((state: any) => state.products);
   const allProducts = useSelector((state: any) => state.products.data);
   const filteredProducts = allProducts.filter((product: Product) =>
     product.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
   const limit = LIST_LIMIT;
-  const error = useSelector((state: any) => state.products.error);
-  const {
-    recommendedKeywords,
-    recommendedKeywordsLoading,
-    recommendedKeywordsError,
-  } = useSelector((state: any) => state.products);
+  const hasMore = products.length > 0 && page < lastPage;
+  const { recommendedKeywords } = useSelector((state: any) => state.products);
   const { subCategories, sizes, colors, priceMin, priceMax } = productFilters;
 
   useEffect(() => {
@@ -92,7 +91,6 @@ const ProductSearchScreen: React.FC = () => {
     if (hasFilters && isSearchSubmitted) {
       setIsSearchSubmitted(true);
       setPage(1);
-      setHasMore(true);
       dispatch(resetProducts());
       dispatch(
         fetchProducts({
@@ -111,17 +109,12 @@ const ProductSearchScreen: React.FC = () => {
   }, [dispatch, subCategories, sizes, colors, priceMin, priceMax]);
 
   const handleSearchSubmit = async () => {
-    if (!searchTerm.trim()) {
-      console.warn("Search term is empty");
-      return;
-    }
     try {
       await saveSearchQuery(searchTerm);
       const updatedHistory = await getSearchHistory();
       setSearchHistory(updatedHistory);
       setIsSearchSubmitted(true);
       setPage(1);
-      setHasMore(true);
       dispatch(resetProducts());
       dispatch(
         fetchProducts({
@@ -169,7 +162,6 @@ const ProductSearchScreen: React.FC = () => {
     setSearchTerm("");
     setIsSearchSubmitted(false);
     setPage(1);
-    setHasMore(true);
     setProductFilters({
       subCategories: [],
       sizes: [],
@@ -191,12 +183,10 @@ const ProductSearchScreen: React.FC = () => {
     priceMin: number;
     priceMax: number | null;
   }) => {
-    const firstPage = 1;
     setProductFilters(newFilters);
     setIsSearchSubmitted(true);
-    setPage(firstPage);
-    setHasMore(true);
-    dispatch(resetProducts());
+    setPage(1);
+    // dispatch(resetProducts());
 
     try {
       await dispatch(
@@ -208,7 +198,7 @@ const ProductSearchScreen: React.FC = () => {
             colors: newFilters.colors,
             minPrice: newFilters.priceMin,
             maxPrice: newFilters.priceMax,
-            page: firstPage,
+            page: 1,
             limit,
           },
         })
@@ -227,7 +217,6 @@ const ProductSearchScreen: React.FC = () => {
       priceMax: PRODUCT_RANGE_MAX_PRICE,
     });
     setPage(1);
-    setHasMore(true);
   };
 
   const loadMoreProducts = async () => {
@@ -235,9 +224,10 @@ const ProductSearchScreen: React.FC = () => {
 
     const nextPage = page + 1;
     setPage(nextPage);
+console.log("Loading next page:", page + 1);
 
     try {
-      const action = await dispatch(
+      await dispatch(
         fetchProducts({
           params: {
             searchTerm,
@@ -251,16 +241,8 @@ const ProductSearchScreen: React.FC = () => {
           },
         })
       );
-
-      const products = action.payload;
-      if (Array.isArray(products)) {
-        setHasMore(products.length === limit);
-      } else {
-        setHasMore(false);
-      }
     } catch (error) {
       console.error("Error loading more products:", error);
-      setHasMore(false);
     }
   };
 
@@ -348,21 +330,11 @@ const ProductSearchScreen: React.FC = () => {
           onItemPress={handleHistoryItemPress}
           onClearHistory={handleClearSearchHistory}
         />
-        {recommendedKeywordsLoading ? (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="small" color={staticColors.lightGray} />
-          </View>
-        ) : recommendedKeywordsError ? (
-          <Text style={styles.errorText}>
-            Error: {recommendedKeywordsError}
-          </Text>
-        ) : (
-          <SearchSuggestions
-            title="Recommended"
-            history={recommendedKeywords}
-            onItemPress={handleHistoryItemPress}
-          />
-        )}
+        <SearchSuggestions
+          title="Recommended"
+          history={recommendedKeywords}
+          onItemPress={handleHistoryItemPress}
+        />
 
         {isSearchSubmitted ? (
           loading && page === 1 ? (
