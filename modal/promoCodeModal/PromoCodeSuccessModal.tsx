@@ -20,17 +20,9 @@ const PromoCodeSuccessModal: React.FC<PromoCodeSuccessProps> = ({
   visible,
   promoCode,
   onClose,
-  shouldNavigateToCart = false,
 }) => {
-  const { selectedItems } = useLocalSearchParams();
   const handleClose = () => {
     onClose();
-    if (shouldNavigateToCart) {
-      router.push({
-        pathname: "/placeorder",
-        params: { selectedItems },
-      });
-    }
   };
 
   return (

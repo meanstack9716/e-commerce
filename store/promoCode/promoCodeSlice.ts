@@ -2,20 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "@/store/store";
 import axiosConfig from "@/utils/axiosConfig";
 import { getAuthHeaders } from "@/utils/apiHeader";
-
-interface PromoCode {
-  id: string;
-  code: string;
-  discount_type: "fixed" | "percentage";
-  discount_value: number;
-  max_discount_amount: number | null;
-  min_order_amount: number | null;
-  start_date: string;
-  expiry_date: string | null;
-  description: string;
-  is_active: boolean;
-}
-
+import { PromoCode } from "@/interfaces";
 interface PromoCodeState {
   promoCodes: PromoCode[];
   loading: boolean;

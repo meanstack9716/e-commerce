@@ -6,32 +6,26 @@ import {
   Modal,
   TouchableOpacity,
   Text,
+  TouchableWithoutFeedback,
 } from "react-native";
-import { useSelector } from "react-redux";
-import { CartItem } from "@/interfaces";
-import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
-import { RootState } from "@/store/store";
+import Toast from "react-native-toast-message";
 import spacingStyles from "@/style/spacingStyles";
-import { PromoCodeModalProps } from "./PromoCodeModal.types";
 import borderRadius from "@/style/borderRadius";
 import staticColors from "@/style/staticColors";
 import { fontSizes } from "@/style/typography";
 import { fontFamilies } from "@/style/fontFamilies";
-import PromoCodeSection from "@/components/promoCode/PromoCodeSection";
+import PromoCodeList from "@/components/promoCode/PromoCodeList";
+import { PromoCodeModalProps } from "./PromoCodeModal.types";
 
 const PromoCodeModal: React.FC<PromoCodeModalProps> = ({
   visible,
   onClose,
-  selectedItems,
+  promoCodes,
+  appliedPromoCode,
+  onSelectPromoCode,
+  loadingPromoCode,
+  onRemovePromoCode,
 }) => {
-  const cartItems = useSelector((state: RootState) => state.cart.cartItems);
-
-  const selectedCartItems: CartItem[] = (() => {
-    if (!selectedItems) return [];
-    const selectedIds = new Set(selectedItems.map((item) => item.id));
-    return cartItems.filter((item) => selectedIds.has(item.id));
-  })();
-
   return (
     <Modal
       animationType="slide"
@@ -39,26 +33,29 @@ const PromoCodeModal: React.FC<PromoCodeModalProps> = ({
       visible={visible}
       onRequestClose={onClose}
     >
-      <SafeAreaViewWrapper>
+      <TouchableWithoutFeedback onPress={onClose}>
         <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <View style={styles.header}>
-              <Text style={styles.headerTitle}>Apply Promo Code</Text>
-              <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-                <Text style={styles.closeButtonText}>✕</Text>
-              </TouchableOpacity>
+          <TouchableWithoutFeedback>
+            <View style={styles.modalContent}>
+              <View style={styles.header}>
+                <Text style={styles.headerTitle}>Apply Promo Code</Text>
+                <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+                  <Text style={styles.closeButtonText}>✕</Text>
+                </TouchableOpacity>
+              </View>
+              <ScrollView contentContainerStyle={styles.scrollContent}>
+                <PromoCodeList
+                  promoCodes={promoCodes}
+                  appliedPromoCode={appliedPromoCode}
+                  loadingPromoCode={loadingPromoCode}
+                  onApplyPromoCode={onSelectPromoCode}
+                  onRemovePromoCode={onRemovePromoCode}
+                />
+              </ScrollView>
             </View>
-            <ScrollView contentContainerStyle={styles.scrollContent}>
-              <PromoCodeSection
-                selectedCartItems={selectedCartItems}
-                headerTitle="All Codes"
-                showAllCouponsLink={false}
-                shouldNavigateToCart={true}
-              />
-            </ScrollView>
-          </View>
+          </TouchableWithoutFeedback>
         </View>
-      </SafeAreaViewWrapper>
+      </TouchableWithoutFeedback>
     </Modal>
   );
 };

@@ -93,15 +93,6 @@ const PlaceOrderScreen: React.FC = () => {
     (total, item) => total + item.product.final_price * item.quantity,
     0
   );
-  console.log("selectedItems:", selectedItems);
-  console.log("selectedCartItemsId:", selectedCartItemsId);
-  console.log("Navigation params:", {
-    selectedItems,
-    productId,
-    quantity,
-    isBuyNow,
-    imageUrl,
-  });
 
   const handlePlaceOrder = async () => {
     if (!selectedPaymentMethod || !shippingAddressId) {
@@ -181,7 +172,7 @@ const PlaceOrderScreen: React.FC = () => {
           />
           <CartItemsList cartItems={selectedCartItems} />
 
-          <View style={[commonStyles.justifyBetwwen, { ...spacingStyles.mt5 }]}>
+          <View style={[commonStyles.justifyBetwwen]}>
             <Text style={commonStyles.itemCountTitle}>Payment Method</Text>
           </View>
 

@@ -37,9 +37,7 @@ import { commonStyles } from "@/style/commonStyle";
 const ShoppingBagScreen: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { cartItems, loading } = useSelector((state: RootState) => state.cart);
-  const { discounted_amount } = useSelector(
-    (state: RootState) => state.promoCode
-  );
+
   const token = useSelector((state: RootState) => state.auth.token);
   const addresses = useSelector((state: RootState) => state.address.addresses);
   const selectedAddressId = useSelector(
@@ -88,22 +86,22 @@ const ShoppingBagScreen: React.FC = () => {
     }, [isAuthenticated, token])
   );
 
-useEffect(() => {
-  let parsedItemIds: string[] = [];
-  if (Array.isArray(paramSelectedItems)) {
-    parsedItemIds = paramSelectedItems;
-  } else if (typeof paramSelectedItems === "string") {
-    const parsed = JSON.parse(paramSelectedItems);
-    if (Array.isArray(parsed)) {
-      parsedItemIds = parsed.map((item: { id: string }) => item.id);
+  useEffect(() => {
+    let parsedItemIds: string[] = [];
+    if (Array.isArray(paramSelectedItems)) {
+      parsedItemIds = paramSelectedItems;
+    } else if (typeof paramSelectedItems === "string") {
+      const parsed = JSON.parse(paramSelectedItems);
+      if (Array.isArray(parsed)) {
+        parsedItemIds = parsed.map((item: { id: string }) => item.id);
+      }
     }
-  }
-  if (parsedItemIds.length > 0) {
-    setSelectedItems(parsedItemIds);
-  } else if (selectedItems.length === 0 && cartItems.length > 0) {
-    setSelectedItems(cartItems.map((item) => item.id));
-  }
-}, [cartItems, paramSelectedItems]);
+    if (parsedItemIds.length > 0) {
+      setSelectedItems(parsedItemIds);
+    } else if (selectedItems.length === 0 && cartItems.length > 0) {
+      setSelectedItems(cartItems.map((item) => item.id));
+    }
+  }, [cartItems, paramSelectedItems]);
 
   const handleCloseModal = () => {
     setIsConfirmationModalVisible(false);
@@ -163,13 +161,12 @@ useEffect(() => {
   };
 
   const calculateTotalPrice = () => {
-    const subtotal = cartItems.reduce((total, item) => {
+    return cartItems.reduce((total, item) => {
       if (selectedItems.length && selectedItems.includes(item.id)) {
         return total + item.product.final_price * item.quantity;
       }
       return total;
     }, 0);
-    return discounted_amount !== null ? discounted_amount : subtotal;
   };
 
   const handlePlaceOrder = () => {
@@ -235,7 +232,6 @@ useEffect(() => {
                 removeClippedSubviews={true}
                 initialNumToRender={10}
               />
-             
             </View>
           ) : (
             <EmptyCart />

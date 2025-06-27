@@ -1,13 +1,18 @@
+import { PromoCode } from "@/interfaces";
+
 export interface PromoCodeSuccessProps {
   visible: boolean;
   promoCode?: string | null;
   error?: string | null;
   onClose: () => void;
-  shouldNavigateToCart?: boolean;
 }
 
 export interface PromoCodeModalProps {
   visible: boolean;
   onClose: () => void;
-  selectedItems: { id: string }[];
+  promoCodes: PromoCode[];
+  appliedPromoCode: string | null;
+  onSelectPromoCode: (code: string) => void;
+  loadingPromoCode: string | null;
+  onRemovePromoCode: () => void;
 }
