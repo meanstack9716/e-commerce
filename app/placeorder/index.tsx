@@ -28,6 +28,7 @@ import ContactCard from "@/components/contactCard/ContactCard";
 import { getFormattedAddress } from "@/utils/formatAddress";
 import { CartItem } from "@/interfaces";
 import { OrderPayload } from "./placeorder.type";
+import PromoCodeSection from "@/components/promoCode/PromoCodeSection";
 const paymentOptions = [{ label: "Cash On Delivery" }, { label: "Razorpay" }];
 
 const PlaceOrderScreen: React.FC = () => {
@@ -204,6 +205,11 @@ const PlaceOrderScreen: React.FC = () => {
       </SafeAreaViewWrapper>
     );
   }
+  const calculateOriginalTotal = () => {
+    return selectedCartItems.reduce((total, item) => {
+      return total + item.product.final_price * item.quantity;
+    }, 0);
+  };
 
   return (
     <SafeAreaViewWrapper>
@@ -256,6 +262,7 @@ const PlaceOrderScreen: React.FC = () => {
           <View style={[commonStyles.justifyBetwwen, spacingStyles.mt5]}>
             <Text style={commonStyles.itemCountTitle}>Payment Method</Text>
           </View>
+
           <View style={styles.paymentMethodsWrapper}>
             {paymentOptions.map((option) => (
               <TouchableOpacity
@@ -281,6 +288,39 @@ const PlaceOrderScreen: React.FC = () => {
               </TouchableOpacity>
             ))}
           </View>
+          <PromoCodeSection
+            selectedCartItems={selectedCartItems}
+          />
+
+          {appliedPromoCode !== null && (
+            <View style={styles.totalPriceContainerColumn}>
+              <Text style={styles.summaryHeading}>Price Summary</Text>
+              <View style={styles.priceRow}>
+                <Text style={styles.priceLabel}>Promo Code</Text>
+                <Text style={[styles.priceValue, styles.promoText]}>
+                  {appliedPromoCode}
+                </Text>
+              </View>
+              <View style={styles.priceRow}>
+                <Text style={styles.priceLabel}>Subtotal</Text>
+                <Text style={styles.priceValue}>
+                  ₹ {calculateOriginalTotal()}
+                </Text>
+              </View>
+              <View style={styles.priceRow}>
+                <Text style={styles.priceLabel}>Discount</Text>
+                <Text style={[styles.priceValue, styles.discountText]}>
+                  - ₹ {calculateDiscount()}
+                </Text>
+              </View>
+              <View style={styles.priceRow}>
+                <Text style={[styles.priceLabel, styles.totalText]}>Total</Text>
+                <Text style={[styles.priceValue, styles.totalText]}>
+                  ₹ {calculateTotalPrice()}
+                </Text>
+              </View>
+            </View>
+          )}
         </ScrollView>
         <View style={styles.totalPriceContainer}>
           <Text style={styles.totalPrice}>Total ₹ {calculateTotalPrice()}</Text>
@@ -441,7 +481,7 @@ const styles = StyleSheet.create({
   totalText: {
     fontSize: fontSizes.md,
     fontFamily: fontFamilies.ralewayBold,
-  },
+  }
 });
 
 export default PlaceOrderScreen;

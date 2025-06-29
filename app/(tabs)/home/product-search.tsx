@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -13,7 +14,11 @@ import { router } from "expo-router";
 import { useSelector } from "react-redux";
 import { Product } from "@/interfaces";
 import { useAppDispatch } from "@/store/hooks";
-import { fetchProducts, resetProducts } from "@/store/product/productsSlice";
+import {
+  fetchProducts,
+  fetchRecommendedKeywords,
+  resetProducts,
+} from "@/store/product/productsSlice";
 import images from "@/constants/images";
 import staticColors from "@/style/staticColors";
 import { commonStyles } from "@/style/commonStyle";
@@ -22,7 +27,8 @@ import { fontSizes } from "@/style/typography";
 import {
   LIST_LIMIT,
   PRODUCT_RANGE_MAX_PRICE,
-  PRODUCT_RANGE_MIN_PRICE
+  PRODUCT_RANGE_MIN_PRICE,
+  RECOMMENDED_KEYWORD_LIMIT,
 } from "@/constants/constants";
 import ProductFilter from "@/components/productFilter/ProductFilter";
 import ProductCard from "@/components/home/ProductCard";
@@ -34,6 +40,7 @@ import {
   getSearchHistory,
   saveSearchQuery,
 } from "@/utils/searchStorage";
+import SearchSuggestions from "@/components/search/searchHistory/SearchSuggestions";
 
 const ProductSearchScreen: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -48,15 +55,21 @@ const ProductSearchScreen: React.FC = () => {
     priceMax: PRODUCT_RANGE_MAX_PRICE as number | null,
   });
   const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
   const dispatch = useAppDispatch();
-  const products = useSelector((state: any) => state.products.data);
-  const loading = useSelector((state: any) => state.products.loading);
+  const {
+    data: products,
+    loading,
+    error,
+    lastPage,
+  } = useSelector((state: any) => state.products);
   const allProducts = useSelector((state: any) => state.products.data);
   const filteredProducts = allProducts.filter((product: Product) =>
     product.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
   const limit = LIST_LIMIT;
+  const hasMore = products.length > 0 && page < lastPage;
+  const { recommendedKeywords } = useSelector((state: any) => state.products);
+  const { subCategories, sizes, colors, priceMin, priceMax } = productFilters;
 
   useEffect(() => {
     const loadSearchHistory = async () => {
@@ -64,9 +77,8 @@ const ProductSearchScreen: React.FC = () => {
       setSearchHistory(history);
     };
     loadSearchHistory();
-  }, []);
-  const error = useSelector((state: any) => state.products.error);
-  const { subCategories, sizes, colors, priceMin, priceMax } = productFilters;
+    dispatch(fetchRecommendedKeywords({ limit: RECOMMENDED_KEYWORD_LIMIT }));
+  }, [dispatch]);
 
   useEffect(() => {
     const hasFilters =
@@ -79,7 +91,6 @@ const ProductSearchScreen: React.FC = () => {
     if (hasFilters && isSearchSubmitted) {
       setIsSearchSubmitted(true);
       setPage(1);
-      setHasMore(true);
       dispatch(resetProducts());
       dispatch(
         fetchProducts({
@@ -98,13 +109,12 @@ const ProductSearchScreen: React.FC = () => {
   }, [dispatch, subCategories, sizes, colors, priceMin, priceMax]);
 
   const handleSearchSubmit = async () => {
-    if (searchTerm.trim()) {
+    try {
       await saveSearchQuery(searchTerm);
       const updatedHistory = await getSearchHistory();
       setSearchHistory(updatedHistory);
       setIsSearchSubmitted(true);
       setPage(1);
-      setHasMore(true);
       dispatch(resetProducts());
       dispatch(
         fetchProducts({
@@ -118,6 +128,8 @@ const ProductSearchScreen: React.FC = () => {
           },
         })
       );
+    } catch (error) {
+      setIsSearchSubmitted(false);
     }
   };
 
@@ -133,12 +145,9 @@ const ProductSearchScreen: React.FC = () => {
           subCategoryIds: subCategories,
           sizes,
           colors,
-          minPrice: priceMin,
-          maxPrice: priceMax,
           page: 1,
-        limit,
+          limit,
         },
-        
       })
     );
   };
@@ -152,7 +161,6 @@ const ProductSearchScreen: React.FC = () => {
     setSearchTerm("");
     setIsSearchSubmitted(false);
     setPage(1);
-    setHasMore(true);
     setProductFilters({
       subCategories: [],
       sizes: [],
@@ -167,38 +175,31 @@ const ProductSearchScreen: React.FC = () => {
     setSetFilter(true);
   };
 
-  const handleApplyFilters = async (newFilters: {
+  const handleApplyFilters = (newFilters: {
     subCategories: string[];
     sizes: string[];
     colors: string[];
     priceMin: number;
     priceMax: number | null;
   }) => {
-    const firstPage = 1;
     setProductFilters(newFilters);
     setIsSearchSubmitted(true);
-    setPage(firstPage);
-    setHasMore(true);
-    dispatch(resetProducts());
+    setPage(1);
 
-    try {
-      await dispatch(
-        fetchProducts({
-          params: {
-            searchTerm,
-            subCategoryIds: newFilters.subCategories,
-            sizes: newFilters.sizes,
-            colors: newFilters.colors,
-            minPrice: newFilters.priceMin,
-            maxPrice: newFilters.priceMax,
-            page: firstPage,
-            limit,
-          },
-        })
-      );
-    } catch (error) {
-      console.error("Error applying filters:", error);
-    }
+    dispatch(
+      fetchProducts({
+        params: {
+          searchTerm,
+          subCategoryIds: newFilters.subCategories,
+          sizes: newFilters.sizes,
+          colors: newFilters.colors,
+          minPrice: newFilters.priceMin,
+          maxPrice: newFilters.priceMax,
+          page: 1,
+          limit,
+        },
+      })
+    );
   };
 
   const handleClearFilters = () => {
@@ -210,7 +211,6 @@ const ProductSearchScreen: React.FC = () => {
       priceMax: PRODUCT_RANGE_MAX_PRICE,
     });
     setPage(1);
-    setHasMore(true);
   };
 
   const loadMoreProducts = async () => {
@@ -218,33 +218,20 @@ const ProductSearchScreen: React.FC = () => {
 
     const nextPage = page + 1;
     setPage(nextPage);
-
-    try {
-      const action = await dispatch(
-        fetchProducts({
-          params: {
-            searchTerm,
-            subCategoryIds: subCategories,
-            sizes,
-            colors,
-            minPrice: priceMin,
-            maxPrice: priceMax,
-            page: nextPage,
-            limit,
-          },
-        })
-      );
-
-      const products = action.payload;
-      if (Array.isArray(products)) {
-        setHasMore(products.length === limit);
-      } else {
-        setHasMore(false);
-      }
-    } catch (error) {
-      console.error("Error loading more products:", error);
-      setHasMore(false);
-    }
+    dispatch(
+      fetchProducts({
+        params: {
+          searchTerm,
+          subCategoryIds: subCategories,
+          sizes,
+          colors,
+          minPrice: priceMin,
+          maxPrice: priceMax,
+          page: nextPage,
+          limit,
+        },
+      })
+    );
   };
 
   const renderSkeletonItem = () => <ProductCardSkeleton />;
@@ -332,6 +319,18 @@ const ProductSearchScreen: React.FC = () => {
           />
         )}
 
+        <SearchSuggestions
+          title="Search history"
+          searchList={searchHistory}
+          onSuggestionPress={handleHistoryItemPress}
+          onClearHistory={handleClearSearchHistory}
+        />
+        <SearchSuggestions
+          title="Recommended"
+          searchList={recommendedKeywords}
+          onSuggestionPress={handleHistoryItemPress}
+        />
+
         {isSearchSubmitted ? (
           loading && page === 1 ? (
             <FlatList
@@ -346,7 +345,7 @@ const ProductSearchScreen: React.FC = () => {
             <Text style={styles.errorText}>Error: {error}</Text>
           ) : products.length > 0 ? (
             <FlatList
-              data={filteredProducts}
+              data={products}
               renderItem={renderProductItem}
               keyExtractor={(item) => item.id}
               numColumns={2}
@@ -417,6 +416,10 @@ const styles = StyleSheet.create({
   row: {
     justifyContent: "space-between",
     ...spacingStyles.mb10,
+  },
+  loadingContainer: {
+    ...spacingStyles.p10,
+    alignItems: "center",
   },
   errorText: {
     textAlign: "center",

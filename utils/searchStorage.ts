@@ -1,3 +1,4 @@
+import { MAX_SEARCH_HISTORY_LENGTH } from "@/constants/constants";
 import { saveToStorage, getFromStorage, removeFromStorage } from "./storageUtils"; 
 
 const SEARCH_HISTORY_KEY = "searchHistory";
@@ -8,7 +9,7 @@ export const saveSearchQuery = async (query: string): Promise<void> => {
     const updatedHistory = [
       query,
       ...existingHistory.filter((item) => item !== query),
-    ].slice(0, 5); 
+    ].slice(0, MAX_SEARCH_HISTORY_LENGTH); 
     await saveToStorage(SEARCH_HISTORY_KEY, updatedHistory);
   } catch (e) {
     console.error(`Error saving search query "${query}" to storage`, e);

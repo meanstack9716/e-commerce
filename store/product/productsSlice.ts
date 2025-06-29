@@ -2,8 +2,12 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { handleApiError } from "@/utils/handleApiError";
 import axiosConfig from "@/utils/axiosConfig";
 import { Product, Color } from "@/interfaces";
+<<<<<<< HEAD
 import { LIST_LIMIT } from "@/constants/constants";
 
+=======
+import { RECOMMENDED_KEYWORD_LIMIT } from "@/constants/constants";
+>>>>>>> 11a36e72bdfe4fd6dd152de3b230c188f98ae6f1
 interface ProductsState {
   data: Product[];
   selectedProduct: Product | null;
@@ -14,6 +18,10 @@ interface ProductsState {
   colors: Color[];
   colorsLoading: boolean;
   colorsError: string | null;
+  recommendedKeywords: string[];
+  recommendedKeywordsLoading: boolean;
+  recommendedKeywordsError: string | null;
+  lastPage: number;
 }
 
 const initialState: ProductsState = {
@@ -26,6 +34,10 @@ const initialState: ProductsState = {
   colors: [],
   colorsLoading: false,
   colorsError: null,
+  recommendedKeywords: [],
+  recommendedKeywordsLoading: false,
+  recommendedKeywordsError: null,
+  lastPage: 1,
 };
 
 export const fetchColors = createAsyncThunk<
@@ -52,7 +64,7 @@ export const fetchColors = createAsyncThunk<
 });
 
 export const fetchProducts = createAsyncThunk<
-  { data: Product[]; page: number }, 
+  { data: Product[]; page: number; lastPage: number },
   { params?: any },
   { rejectValue: string }
 >("products/fetchProducts", async ({ params = {} }, { rejectWithValue }) => {
@@ -63,8 +75,11 @@ export const fetchProducts = createAsyncThunk<
       },
     });
     if (response.data?.data) {
-      return { data: response.data.data, page: params.page || 1 }; 
+      console.log("API response:", response.data);
+      const { data, current_page, last_page } = response.data;
+      return { data, page: current_page, lastPage: last_page };
     }
+
     return rejectWithValue("Invalid response format from API");
   } catch (error) {
     return rejectWithValue(handleApiError(error, "Failed to fetch products"));
@@ -90,6 +105,36 @@ export const fetchProductById = createAsyncThunk<
   }
 });
 
+export const fetchRecommendedKeywords = createAsyncThunk<
+  string[],
+  { limit?: number },
+  { rejectValue: string }
+>(
+  "products/fetchRecommendedKeywords",
+  async ({ limit = RECOMMENDED_KEYWORD_LIMIT }, { rejectWithValue }) => {
+    try {
+      const response = await axiosConfig.get(
+        "/search/products/recommended-keywords",
+        {
+          params: { limit },
+        }
+      );
+
+      if (Array.isArray(response.data.data)) {
+        return response.data.data;
+      }
+
+      return rejectWithValue(
+        "Invalid response format from recommended keywords API"
+      );
+    } catch (error) {
+      return rejectWithValue(
+        handleApiError(error, "Failed to fetch recommended keywords")
+      );
+    }
+  }
+);
+
 const productsSlice = createSlice({
   name: "products",
   initialState,
@@ -98,6 +143,7 @@ const productsSlice = createSlice({
       state.data = [];
       state.loading = false;
       state.error = null;
+      state.lastPage = 1;
     },
     clearSelectedProduct: (state) => {
       state.selectedProduct = null;
@@ -113,10 +159,12 @@ const productsSlice = createSlice({
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.loading = false;
-        if (action.payload.page === 1) {
-          state.data = action.payload.data;
+        const { data, page, lastPage } = action.payload;
+        state.lastPage = lastPage;
+        if (page === 1) {
+          state.data = data;
         } else {
-          state.data = [...state.data, ...action.payload.data];
+          state.data = [...state.data, ...data];
         }
         state.error = null;
       })
@@ -149,6 +197,19 @@ const productsSlice = createSlice({
       .addCase(fetchColors.rejected, (state, action) => {
         state.colorsLoading = false;
         state.colorsError = action.payload as string;
+      })
+      .addCase(fetchRecommendedKeywords.pending, (state) => {
+        state.recommendedKeywordsLoading = true;
+        state.recommendedKeywordsError = null;
+      })
+      .addCase(fetchRecommendedKeywords.fulfilled, (state, action) => {
+        state.recommendedKeywordsLoading = false;
+        state.recommendedKeywords = action.payload;
+      })
+      .addCase(fetchRecommendedKeywords.rejected, (state, action) => {
+        state.recommendedKeywordsLoading = false;
+        state.recommendedKeywordsError =
+          action.payload || "Failed to load keywords";
       });
   },
 });
