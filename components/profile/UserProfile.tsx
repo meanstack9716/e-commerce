@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,7 +8,7 @@ import {
   FlatList,
   SafeAreaView,
 } from "react-native";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { CategoriresCard } from "../categoriesCard";
 import { useSelector } from "react-redux";
 import { SafeAreaViewWrapper } from "../common/SafeAreaView/SafeAreaViewWrapper";
@@ -30,8 +30,6 @@ import { LIST_LIMIT } from "@/constants/constants";
 const UserProfile = () => {
   const [likedProductItems, setLikedProductItems] = useState<string[]>([]);
   const dispatch = useAppDispatch();
-  const [page, setPage] = useState(1);
-   const [hasMore, setHasMore] = useState(true);
   const limit = LIST_LIMIT;
   const {
     data: categories,
@@ -45,25 +43,13 @@ const UserProfile = () => {
     error: productsError,
   } = useSelector((state: any) => state.products);
 
-  useEffect(() => {
-    dispatch(fetchProducts({ params: { page: 1, limit } }));
-  }, [dispatch]);
-
-  const handleLoadMore = () => {
-    if (products.length && !productsLoading && hasMore) {
-      const nextPage = page + 1;
-      setPage(nextPage);
-      dispatch(fetchProducts({ params: { page: nextPage, limit } })).then(
-        (action) => {
-          if (action.payload && Array.isArray(action.payload)) {
-            setHasMore(action.payload.length === limit);
-          } else {
-            setHasMore(false);
-          }
-        }
-      );
-    }
-  };
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        dispatch(fetchProducts({ params: { page: 1, limit } }));
+      };
+    }, [dispatch])
+  );
 
   const renderProductItem = ({ item }: { item: Product }) => (
     <ProductCard
@@ -127,7 +113,6 @@ const UserProfile = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     flexDirection: "column",
     gap: gapSizes.sm,
     ...spacingStyles.px12,

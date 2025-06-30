@@ -42,6 +42,7 @@ import {
   resetReviewState,
 } from "@/store/review/reviewSlice";
 import { LIST_LIMIT } from "@/constants/constants";
+import ProductMayYouLike from "@/components/productDetails/ProductMayYouLike";
 
 const { width: screenWidth } = Dimensions.get("window");
 const ProductDetailsScreen: React.FC = () => {
@@ -392,8 +393,9 @@ const ProductDetailsScreen: React.FC = () => {
             <SimilarProducts currentProduct={product} /> */}
             {/* 
             <BrandRating />
-           
-            */}
+           */}
+             <Text style={styles.heading}>Products you may like</Text>
+            <ProductMayYouLike />
           </>
         }
       />

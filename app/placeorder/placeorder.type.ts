@@ -3,4 +3,5 @@ export interface OrderPayload {
   shipping_address_id: string;
   payment_method: string;
   promo_code?: string;
+  redirect_url?: string
 }

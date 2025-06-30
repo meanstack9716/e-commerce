@@ -70,7 +70,6 @@ export const fetchProducts = createAsyncThunk<
       },
     });
     if (response.data?.data) {
-      console.log("API response:", response.data);
       const { data, current_page, last_page } = response.data;
       return { data, page: current_page, lastPage: last_page };
     }
