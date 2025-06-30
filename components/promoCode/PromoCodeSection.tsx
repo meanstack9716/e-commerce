@@ -21,11 +21,10 @@ import {
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import gapSizes from "@/style/gapSizes";
 import PromoCodeSuccessModal from "@/modal/promoCodeModal/PromoCodeSuccessModal";
-
+import PromoCodeModal from "@/modal/promoCodeModal/PromoCodeModal";
 import { PromoCodeSectionProps } from "./PromoCode.types";
 import { useAppDispatch } from "@/store/hooks";
 import PromoCodeList from "./PromoCodeList";
-import PromoCodeModal from "@/modal/promoCodeModal/PromoCodeModal";
 
 const PromoCodeSection: React.FC<PromoCodeSectionProps> = ({
   selectedCartItems,
