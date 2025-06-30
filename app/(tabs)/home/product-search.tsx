@@ -39,6 +39,7 @@ import {
   getSearchHistory,
   saveSearchQuery,
 } from "@/utils/searchStorage";
+import SearchSuggestions from "@/components/search/searchHistory/SearchSuggestions";
 
 const ProductSearchScreen: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -309,6 +310,18 @@ const ProductSearchScreen: React.FC = () => {
             />
           </TouchableOpacity>
         </View>
+
+        <SearchSuggestions
+          title="Search history"
+          searchList={searchHistory}
+          onSuggestionPress={handleHistoryItemPress}
+          onClearHistory={handleClearSearchHistory}
+        />
+        <SearchSuggestions
+          title="Recommended"
+          searchList={recommendedKeywords}
+          onSuggestionPress={handleHistoryItemPress}
+        />
 
         {isSearchSubmitted ? (
           loading && page === 1 ? (
