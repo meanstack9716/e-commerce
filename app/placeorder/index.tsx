@@ -36,14 +36,9 @@ const paymentOptions = [
 
 const PlaceOrderScreen: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { selectedItems, productId, quantity, isBuyNow, imageUrl } =
-    useLocalSearchParams<{
-      selectedItems?: string;
-      productId?: string;
-      quantity?: string;
-      isBuyNow?: string;
-      imageUrl?: string;
-    }>();
+  const { selectedItems } = useLocalSearchParams<{
+    selectedItems?: string;
+  }>();
   const selectedCartItemsId = selectedItems ? selectedItems.split(",") : [];
   const { discounted_amount, appliedPromoCode } = useSelector(
     (state: RootState) => state.promoCode
@@ -56,14 +51,10 @@ const PlaceOrderScreen: React.FC = () => {
   const selectedAddressId = useSelector(
     (state: RootState) => state.address.selectedAddressId
   );
-  const { selectedProduct, selectedProductLoading } = useSelector(
-    (state: RootState) => state.products
-  );
   const { loading } = useSelector((state: RootState) => state.order);
   const [shippingAddressId, setShippingAddressId] = useState<string | null>(
     null
   );
-  const isInstantBuy = isBuyNow === "true";
 
   useEffect(() => {
     if (selectedAddressId) {
@@ -71,23 +62,9 @@ const PlaceOrderScreen: React.FC = () => {
     }
   }, [selectedAddressId]);
 
-  let buyNowItem: CartItem | null = null;
-
-  if (isInstantBuy && selectedProduct && productId) {
-    buyNowItem = {
-      id: productId,
-      product: {
-        ...selectedProduct,
-        images: imageUrl ? [imageUrl] : selectedProduct.images,
-      },
-      quantity: parseInt(quantity || "1", 10),
-    };
-  }
-
-  const selectedCartItems: CartItem[] =
-    isInstantBuy && buyNowItem
-      ? [buyNowItem]
-      : cartItems.filter((item) => selectedCartItemsId.includes(item.id));
+   const selectedCartItems: CartItem[] = cartItems.filter((item) =>
+    selectedCartItemsId.includes(item.id)
+  );
 
   const totalPrice = selectedCartItems.reduce(
     (total, item) => total + item.product.final_price * item.quantity,
@@ -104,13 +81,10 @@ const PlaceOrderScreen: React.FC = () => {
           : "Please select an address or create a new address",
       });
       return;
-    }
-
-    const cartItemsIds =
-      isInstantBuy && buyNowItem ? [buyNowItem.id] : selectedCartItemsId;
+    } 
 
     const payload: OrderPayload = {
-      cart_items_ids: cartItemsIds,
+      cart_items_ids: selectedCartItemsId,
       shipping_address_id: shippingAddressId,
       payment_method: selectedPaymentMethod,
     };
@@ -181,9 +155,7 @@ const PlaceOrderScreen: React.FC = () => {
               <Text style={styles.paymentType}>{selectedPaymentMethod}</Text>
             </View>
           </View>
-          <PromoCodeSection
-            selectedCartItems={selectedCartItems}
-          />
+          <PromoCodeSection selectedCartItems={selectedCartItems} />
 
           {appliedPromoCode !== null && (
             <View style={styles.totalPriceContainerColumn}>
