@@ -89,8 +89,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   orderImage: {
-    width: 145,
-    height: 120,
+    width: 150,
+    height: 150,
     borderRadius: borderRadius.r14,
     borderWidth: 3,
     borderColor: staticColors.white,
@@ -107,17 +107,17 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.xs,
     color: staticColors.black,
     fontFamily: fontFamilies.nunitoSans,
-    ...spacingStyles.mt2,
+    ...spacingStyles.my5,
   },
   orderNumber: {
     fontSize: 11,
-    fontFamily: fontFamilies.ralewayExtraBold,
-    ...spacingStyles.my5,
+    fontFamily: fontFamilies.ralewayeSemiBold,
+    ...spacingStyles.mb10,
   },
   statusText: {
     fontSize: fontSizes.sm,
     fontFamily: fontFamilies.ralewayBold,
-    ...spacingStyles.mb2,
+    ...spacingStyles.mb5,
   },
   footer: {
     flexDirection: "row",
