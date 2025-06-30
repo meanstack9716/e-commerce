@@ -15,6 +15,8 @@ import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import { fontSizes } from "@/style/typography";
 import borderRadius from "@/style/borderRadius";
+import { fontFamilies } from "@/style/fontFamilies";
+import { commonStyles } from "@/style/commonStyle";
 import { placeOrder } from "@/store/order/orderSlice";
 import { useAppDispatch } from "@/store/hooks";
 import Toast from "react-native-toast-message";
@@ -22,9 +24,15 @@ import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaVi
 import CartItemsList from "@/components/cartItemList/CardItemList";
 import ContactCard from "@/components/contactCard/ContactCard";
 import { getFormattedAddress } from "@/utils/formatAddress";
-import { fontFamilies } from "@/style/fontFamilies";
-import { commonStyles } from "@/style/commonStyle";
+import { OrderPayload } from "./placeorder.type";
 import { CartItem } from "@/interfaces";
+import PromoCodeSection from "@/components/promoCode/PromoCodeSection";
+
+const paymentOptions = [
+  {
+    label: "Cash On Delivery",
+  },
+];
 
 const PlaceOrderScreen: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -36,11 +44,13 @@ const PlaceOrderScreen: React.FC = () => {
       isBuyNow?: string;
       imageUrl?: string;
     }>();
-
   const selectedCartItemsId = selectedItems ? selectedItems.split(",") : [];
-
-  const [selectedPaymentMethod] = useState("Cash On Delivery");
-
+  const { discounted_amount, appliedPromoCode } = useSelector(
+    (state: RootState) => state.promoCode
+  );
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
+    string | null
+  >(paymentOptions[0].label);
   const cartItems = useSelector((state: RootState) => state.cart.cartItems);
   const addresses = useSelector((state: RootState) => state.address.addresses);
   const selectedAddressId = useSelector(
@@ -50,7 +60,6 @@ const PlaceOrderScreen: React.FC = () => {
     (state: RootState) => state.products
   );
   const { loading } = useSelector((state: RootState) => state.order);
-
   const [shippingAddressId, setShippingAddressId] = useState<string | null>(
     null
   );
@@ -100,12 +109,14 @@ const PlaceOrderScreen: React.FC = () => {
     const cartItemsIds =
       isInstantBuy && buyNowItem ? [buyNowItem.id] : selectedCartItemsId;
 
-    const payload = {
+    const payload: OrderPayload = {
       cart_items_ids: cartItemsIds,
       shipping_address_id: shippingAddressId,
       payment_method: selectedPaymentMethod,
     };
-
+    if (appliedPromoCode) {
+      payload.promo_code = appliedPromoCode;
+    }
     try {
       const result = await dispatch(placeOrder(payload)).unwrap();
       if (result) {
@@ -123,6 +134,22 @@ const PlaceOrderScreen: React.FC = () => {
         text2: "Unable to place order. Please try again.",
       });
     }
+  };
+
+  const calculateOriginalTotal = () => {
+    return selectedCartItems.reduce((total, item) => {
+      return total + item.product.final_price * item.quantity;
+    }, 0);
+  };
+
+  const calculateTotalPrice = () => {
+    const subtotal = calculateOriginalTotal();
+    return discounted_amount !== null ? discounted_amount : subtotal;
+  };
+
+  const calculateDiscount = () => {
+    const original = calculateOriginalTotal();
+    return discounted_amount !== null ? original - discounted_amount : 0;
   };
 
   return (
@@ -144,17 +171,52 @@ const PlaceOrderScreen: React.FC = () => {
             information={[getFormattedAddress(addresses, shippingAddressId)]}
           />
           <CartItemsList cartItems={selectedCartItems} />
-          <View style={[commonStyles.justifyBetwwen, spacingStyles.mt5]}>
+
+          <View style={[commonStyles.justifyBetwwen]}>
             <Text style={commonStyles.itemCountTitle}>Payment Method</Text>
           </View>
+
           <View style={styles.paymentMethodsWrapper}>
             <View style={styles.selectedPaymentWrap}>
               <Text style={styles.paymentType}>{selectedPaymentMethod}</Text>
             </View>
           </View>
+          <PromoCodeSection
+            selectedCartItems={selectedCartItems}
+          />
+
+          {appliedPromoCode !== null && (
+            <View style={styles.totalPriceContainerColumn}>
+              <Text style={styles.summaryHeading}>Price Summary</Text>
+              <View style={styles.priceRow}>
+                <Text style={styles.priceLabel}>Promo Code</Text>
+                <Text style={[styles.priceValue, styles.promoText]}>
+                  {appliedPromoCode}
+                </Text>
+              </View>
+              <View style={styles.priceRow}>
+                <Text style={styles.priceLabel}>Subtotal</Text>
+                <Text style={styles.priceValue}>
+                  ₹ {calculateOriginalTotal()}
+                </Text>
+              </View>
+              <View style={styles.priceRow}>
+                <Text style={styles.priceLabel}>Discount</Text>
+                <Text style={[styles.priceValue, styles.discountText]}>
+                  - ₹ {calculateDiscount()}
+                </Text>
+              </View>
+              <View style={styles.priceRow}>
+                <Text style={[styles.priceLabel, styles.totalText]}>Total</Text>
+                <Text style={[styles.priceValue, styles.totalText]}>
+                  ₹ {calculateTotalPrice()}
+                </Text>
+              </View>
+            </View>
+          )}
         </ScrollView>
         <View style={styles.totalPriceContainer}>
-          <Text style={styles.totalPrice}>Total ₹ {totalPrice}</Text>
+          <Text style={styles.totalPrice}>Total ₹ {calculateTotalPrice()}</Text>
           <TouchableOpacity
             style={[
               styles.checkoutButton,
@@ -183,13 +245,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     ...spacingStyles.px15,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  backButton: {
-    ...spacingStyles.p5,
   },
   pageHeading: {
     fontSize: fontSizes["2xl"],
@@ -240,6 +295,56 @@ const styles = StyleSheet.create({
   paymentType: {
     fontSize: fontSizes.sm,
     color: staticColors.blue500,
+    fontFamily: fontFamilies.ralewayBold,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  backButton: {
+    ...spacingStyles.p5,
+  },
+  totalPriceContainerColumn: {
+    width: "100%",
+    backgroundColor: staticColors.gray100,
+    ...spacingStyles.px15,
+    ...spacingStyles.py10,
+    ...spacingStyles.mt5,
+    borderRadius: borderRadius.r10,
+  },
+  summaryHeading: {
+    fontSize: fontSizes.md,
+    fontFamily: fontFamilies.ralewayBold,
+    ...spacingStyles.mb5,
+    color: staticColors.black,
+  },
+
+  priceRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    ...spacingStyles.mb2,
+  },
+  priceLabel: {
+    fontSize: fontSizes.sm,
+    fontFamily: fontFamilies.nunitoSans,
+    color: staticColors.black,
+  },
+  priceValue: {
+    fontSize: fontSizes.sm,
+    fontFamily: fontFamilies.nunitoSans,
+    color: staticColors.black,
+  },
+  promoText: {
+    color: staticColors.errorColor,
+    fontFamily: fontFamilies.ralewayeSemiBold,
+  },
+  discountText: {
+    color: staticColors.darkGreen,
+    fontFamily: fontFamilies.ralewayeSemiBold,
+  },
+  totalText: {
+    fontSize: fontSizes.md,
     fontFamily: fontFamilies.ralewayBold,
   },
 });

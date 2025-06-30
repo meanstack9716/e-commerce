@@ -58,7 +58,7 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
       images: colorOption.images,
     });
   };
-console.log(isLiked)
+
   return (
     <Modal
       animationType="slide"
