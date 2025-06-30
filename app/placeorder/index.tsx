@@ -33,17 +33,10 @@ const paymentOptions = [{ label: "Cash On Delivery" }, { label: "Razorpay" }];
 
 const PlaceOrderScreen: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { selectedItems, productId, quantity, isBuyNow, imageUrl } =
-    useLocalSearchParams<{
-      selectedItems?: string;
-      productId?: string;
-      quantity?: string;
-      isBuyNow?: string;
-      imageUrl?: string;
-    }>();
-  const selectedCartItemsId: string[] = selectedItems
-    ? selectedItems.split(",")
-    : [];
+  const { selectedItems } = useLocalSearchParams<{
+    selectedItems?: string;
+  }>();
+  const selectedCartItemsId = selectedItems ? selectedItems.split(",") : [];
   const { discounted_amount, appliedPromoCode } = useSelector(
     (state: RootState) => state.promoCode
   );
@@ -55,14 +48,10 @@ const PlaceOrderScreen: React.FC = () => {
   const selectedAddressId = useSelector(
     (state: RootState) => state.address.selectedAddressId
   );
-  const { selectedProduct, selectedProductLoading } = useSelector(
-    (state: RootState) => state.products
-  );
   const { loading } = useSelector((state: RootState) => state.order);
   const [shippingAddressId, setShippingAddressId] = useState<string | null>(
     null
   );
-  const isInstantBuy = isBuyNow === "true";
 
   // Set shipping address when selectedAddressId changes
   useEffect(() => {
@@ -71,23 +60,9 @@ const PlaceOrderScreen: React.FC = () => {
     }
   }, [selectedAddressId, shippingAddressId]);
 
-  // Handle buy now item
-  const buyNowItem: CartItem | null =
-    isInstantBuy && selectedProduct && productId
-      ? {
-          id: productId,
-          product: {
-            ...selectedProduct,
-            images: imageUrl ? [imageUrl] : selectedProduct.images || [],
-          },
-          quantity: parseInt(quantity || "1", 10),
-        }
-      : null;
-
-  const selectedCartItems: CartItem[] =
-    isInstantBuy && buyNowItem
-      ? [buyNowItem]
-      : cartItems.filter((item) => selectedCartItemsId.includes(item.id));
+   const selectedCartItems: CartItem[] = cartItems.filter((item) =>
+    selectedCartItemsId.includes(item.id)
+  );
 
   // Calculate total price
   const calculateSubtotal = () => {
@@ -129,12 +104,10 @@ const PlaceOrderScreen: React.FC = () => {
         text2: "Please select an address or create a new address.",
       });
       return;
-    }
+    } 
 
-    const cartItemsIds =
-      isInstantBuy && buyNowItem ? [buyNowItem.id] : selectedCartItemsId;
     const payload: OrderPayload = {
-      cart_items_ids: cartItemsIds,
+      cart_items_ids: selectedCartItemsId,
       shipping_address_id: shippingAddressId,
       payment_method: selectedPaymentMethod,
       redirect_url: Linking.createURL("orderHistory"),
@@ -184,15 +157,7 @@ const PlaceOrderScreen: React.FC = () => {
       });
     }
   };
-
-  // Render loading state for product or address
-  if (selectedProductLoading || !addresses) {
-    return (
-      <SafeAreaViewWrapper>
-        <ActivityIndicator size="large" color={staticColors.darkSlate} />
-      </SafeAreaViewWrapper>
-    );
-  }
+  
   const calculateOriginalTotal = () => {
     return selectedCartItems.reduce((total, item) => {
       return total + item.product.final_price * item.quantity;
@@ -276,9 +241,7 @@ const PlaceOrderScreen: React.FC = () => {
               </TouchableOpacity>
             ))}
           </View>
-          <PromoCodeSection
-            selectedCartItems={selectedCartItems}
-          />
+          <PromoCodeSection selectedCartItems={selectedCartItems} />
 
           {appliedPromoCode !== null && (
             <View style={styles.totalPriceContainerColumn}>
