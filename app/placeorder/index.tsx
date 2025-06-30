@@ -184,34 +184,6 @@ const PlaceOrderScreen: React.FC = () => {
           />
           <CartItemsList cartItems={selectedCartItems} />
 
-          {appliedPromoCode && (
-            <View style={styles.totalPriceContainerColumn}>
-              <Text style={styles.summaryHeading}>Price Summary</Text>
-              <View style={styles.priceRow}>
-                <Text style={styles.priceLabel}>Promo Code</Text>
-                <Text style={[styles.priceValue, styles.promoText]}>
-                  {appliedPromoCode}
-                </Text>
-              </View>
-              <View style={styles.priceRow}>
-                <Text style={styles.priceLabel}>Subtotal</Text>
-                <Text style={styles.priceValue}>₹ {calculateSubtotal()}</Text>
-              </View>
-              <View style={styles.priceRow}>
-                <Text style={styles.priceLabel}>Discount</Text>
-                <Text style={[styles.priceValue, styles.discountText]}>
-                  - ₹ {calculateDiscount()}
-                </Text>
-              </View>
-              <View style={styles.priceRow}>
-                <Text style={[styles.priceLabel, styles.totalText]}>Total</Text>
-                <Text style={[styles.priceValue, styles.totalText]}>
-                  ₹ {calculateTotalPrice()}
-                </Text>
-              </View>
-            </View>
-          )}
-
           <View style={[commonStyles.justifyBetwwen, spacingStyles.mt5]}>
             <Text style={commonStyles.itemCountTitle}>Payment Method</Text>
           </View>
