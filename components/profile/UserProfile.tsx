@@ -30,8 +30,6 @@ import { LIST_LIMIT } from "@/constants/constants";
 const UserProfile = () => {
   const [likedProductItems, setLikedProductItems] = useState<string[]>([]);
   const dispatch = useAppDispatch();
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
   const limit = LIST_LIMIT;
   const {
     data: categories,
@@ -48,22 +46,6 @@ const UserProfile = () => {
   useEffect(() => {
     dispatch(fetchProducts({ params: { page: 1, limit } }));
   }, [dispatch]);
-
-  const handleLoadMore = () => {
-    if (products.length && !productsLoading && hasMore) {
-      const nextPage = page + 1;
-      setPage(nextPage);
-      dispatch(fetchProducts({ params: { page: nextPage, limit } })).then(
-        (action) => {
-          if (action.payload && Array.isArray(action.payload)) {
-            setHasMore(action.payload.length === limit);
-          } else {
-            setHasMore(false);
-          }
-        }
-      );
-    }
-  };
 
   const renderProductItem = ({ item }: { item: Product }) => (
     <ProductCard

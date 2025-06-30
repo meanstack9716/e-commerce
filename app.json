@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "ecommerce",
-    "slug": "expo-ecommerce",
+    "slug": "e-commerce",
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "ecommerce",
@@ -22,6 +22,8 @@
       "package": "com.innotech.indofashion",
       "permissions": [
         "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION"
       ],
       "intentFilters": [
@@ -34,7 +36,10 @@
               "host": "orderHistory"
             }
           ],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
       ]
     },
@@ -65,13 +70,13 @@
         "origin": false
       },
       "eas": {
-        "projectId": "119c229b-eb36-4efd-891c-c8429349aca8"
+        "projectId": "c20f239e-fe19-4dcb-a454-3ed6b64de873"
       }
     },
     "runtimeVersion": "1.0.0",
     "updates": {
-      "url": "https://u.expo.dev/119c229b-eb36-4efd-891c-c8429349aca8"
+      "url": "https://u.expo.dev/c20f239e-fe19-4dcb-a454-3ed6b64de873"
     },
-    "owner": "piyushinnotech"
+    "owner": "kaushaki"
   }
 }

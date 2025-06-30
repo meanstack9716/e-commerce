@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "@/store/hooks";
 import { RootState } from "@/store/store";
 import {
-  SafeAreaView,
   View,
   Text,
   TextInput,
@@ -11,6 +10,7 @@ import {
   TouchableOpacity,
   Modal,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
 import Toast from "react-native-toast-message";
 import { useSelector } from "react-redux";
@@ -254,7 +254,8 @@ export default function UserManageAccount() {
 
   return (
     <SafeAreaViewWrapper style={styles.safeArea}>
-      <KeyboardAvoidingViewWrapper>
+      {/* <KeyboardAvoidingViewWrapper> */}
+        <ScrollView>
         <View style={styles.container}>
           <View style={styles.header}>
             <TouchableOpacity onPress={handleBack}>
@@ -289,7 +290,7 @@ export default function UserManageAccount() {
                 onPress={() => setShowImagePickerModal(true)}
                 disabled={profilePicLoading}
               >
-                <Ionicons name="pencil" size={16} color="#fff" />
+                <Ionicons name="pencil" size={16} color={staticColors.white} />
               </TouchableOpacity>
             </View>
           </View>
@@ -417,7 +418,8 @@ export default function UserManageAccount() {
             </View>
           </TouchableOpacity>
         </Modal>
-      </KeyboardAvoidingViewWrapper>
+        </ScrollView>
+      {/* </KeyboardAvoidingViewWrapper> */}
     </SafeAreaViewWrapper>
   );
 }
@@ -505,6 +507,8 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.r12,
     alignItems: "center",
     marginTop: "auto",
+    ...spacingStyles.mt50,
+    ...spacingStyles.mb15
   },
   saveButtonDisabled: {
     backgroundColor: staticColors.lightGray,

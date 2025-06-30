@@ -34,7 +34,6 @@ import ProductFilter from "@/components/productFilter/ProductFilter";
 import ProductCard from "@/components/home/ProductCard";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import ProductCardSkeleton from "@/components/common/ProductCardSkeleton";
-
 import {
   clearSearchHistory,
   getSearchHistory,

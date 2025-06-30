@@ -350,6 +350,7 @@ const ProductDetailsScreen: React.FC = () => {
               price={product.final_price}
               handleLikePress={handleLikePress}
               handleAddToCart={handleAddToCart}
+              isLiked={isProductLiked}
             />
 
             <Text style={styles.heading}>Similar Products</Text>
@@ -413,6 +414,7 @@ const ProductDetailsScreen: React.FC = () => {
         <ProductActionButtons
           onAddToCart={handleAddToCart}
           onWishlist={handleLikePress}
+          isLiked={isProductLiked}
         />
       )}
       {/* <ViewSimilarModal
