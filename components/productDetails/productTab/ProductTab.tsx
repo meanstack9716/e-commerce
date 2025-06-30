@@ -12,11 +12,7 @@ import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import {fontSizes, fontWeights} from "@/style/typography";
 import borderRadius from "@/style/borderRadius";
-
-interface TabProps {
-  activeTab: string;
-  setActiveTab: (tab: string) => void;
-}
+import { TabProps } from "./ProductTab.types";
 
 const ProductTab: React.FC<TabProps> = ({ activeTab, setActiveTab }) => {
   const tabs = ["ALL", "Similar", "Your Next Favourites"];
@@ -57,10 +53,10 @@ const tabStyles = StyleSheet.create({
   },
   tab: {
     ...spacingStyles.py5,
-    ...spacingStyles.px15,
+    ...spacingStyles.px20,
     borderWidth: 1,
     borderColor: staticColors.borderLight,
-     borderRadius: borderRadius.r20,
+     borderRadius: borderRadius.r16,
     ...spacingStyles.mr10,
   },
   activeTab: {

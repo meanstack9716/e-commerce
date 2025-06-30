@@ -14,7 +14,6 @@ import borderRadius from "@/style/borderRadius";
 import staticColors from "@/style/staticColors";
 import { fontSizes, fontWeights } from "@/style/typography";
 import { fontFamilies } from "@/style/fontFamilies";
-
 export interface ProductCardProps {
   id: string;
   title: string;
