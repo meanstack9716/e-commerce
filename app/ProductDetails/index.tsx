@@ -57,7 +57,7 @@ const ProductDetailsScreen: React.FC = () => {
     productReviews,
     loading: reviewsLoading,
     error: reviewsError,
-    page
+    page,
   } = useSelector((state: RootState) => state.review);
   const { items: wishlistItems } = useSelector(
     (state: RootState) => state.wishlist
@@ -89,7 +89,11 @@ const ProductDetailsScreen: React.FC = () => {
     if (id) {
       dispatch(fetchProductById(id as string));
       dispatch(
-        fetchProductReviews({ productId: id as string, page: 1, limit:LIST_LIMIT })
+        fetchProductReviews({
+          productId: id as string,
+          page: 1,
+          limit: LIST_LIMIT,
+        })
       );
       if (isAuthenticatedUser) {
         dispatch(fetchUserReview(id as string));
@@ -335,6 +339,7 @@ const ProductDetailsScreen: React.FC = () => {
               <Text style={styles.title}>{product.title}</Text>
               <Text style={styles.description}>{product.description}</Text>
             </View>
+
             {/* <MegaDealBadge /> */}
             <SizeSelector
               product={product}
@@ -343,6 +348,7 @@ const ProductDetailsScreen: React.FC = () => {
               price={product.final_price}
               handleLikePress={handleLikePress}
               handleAddToCart={handleAddToCart}
+              isLiked={isProductLiked}
             />
 
             {productReviews.length > 0 && (
@@ -386,8 +392,8 @@ const ProductDetailsScreen: React.FC = () => {
             <SimilarProducts currentProduct={product} /> */}
             {/* 
             <BrandRating />
-            <Text style={styles.heading}>Products you may like</Text>
-            <ProductList /> */}
+           
+            */}
           </>
         }
       />
@@ -404,6 +410,7 @@ const ProductDetailsScreen: React.FC = () => {
         <ProductActionButtons
           onAddToCart={handleAddToCart}
           onWishlist={handleLikePress}
+          isLiked={isProductLiked}
         />
       )}
       {/* <ViewSimilarModal
