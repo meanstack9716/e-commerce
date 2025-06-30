@@ -13,7 +13,7 @@ export const SafeAreaViewWrapper: React.FC<SafeAreaViewProps> = ({
 }) => {
   return (
     <SafeAreaView
-      style={[styles.container, { backgroundColor }, style]}
+      style={[styles.container, { backgroundColor }, style]} edges={edges}
     >
       {children}
     </SafeAreaView>

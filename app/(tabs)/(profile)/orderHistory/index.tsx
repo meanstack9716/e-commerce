@@ -91,7 +91,7 @@ const OrderHistoryScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaViewWrapper backgroundColor={staticColors.white}>
+    <SafeAreaViewWrapper>
       <ProfileHeaderBar
         title="History"
         profileImage={images.unKnownUser}

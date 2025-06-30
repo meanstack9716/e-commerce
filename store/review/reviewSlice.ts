@@ -128,13 +128,11 @@ export const updateReview = createAsyncThunk<
     if (!token) {
       return rejectWithValue("No authentication token found.");
     }
-
     try {
       const formData = buildFormData(payload);
       if (payload.review_id) {
         formData.append("review_id", payload.review_id);
       }
-
       const response = await axiosConfig.post(
         `/products/update-review`,
         formData,
