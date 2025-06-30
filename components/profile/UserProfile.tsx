@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,7 +8,7 @@ import {
   FlatList,
   SafeAreaView,
 } from "react-native";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { CategoriresCard } from "../categoriesCard";
 import { useSelector } from "react-redux";
 import { SafeAreaViewWrapper } from "../common/SafeAreaView/SafeAreaViewWrapper";
@@ -43,9 +43,13 @@ const UserProfile = () => {
     error: productsError,
   } = useSelector((state: any) => state.products);
 
-  useEffect(() => {
-    dispatch(fetchProducts({ params: { page: 1, limit } }));
-  }, [dispatch]);
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        dispatch(fetchProducts({ params: { page: 1, limit } }));
+      };
+    }, [dispatch])
+  );
 
   const renderProductItem = ({ item }: { item: Product }) => (
     <ProductCard
