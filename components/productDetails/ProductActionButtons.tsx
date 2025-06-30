@@ -10,27 +10,30 @@ import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import colors from "@/style/staticColors";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
-import {fontSizes, fontWeights} from "@/style/typography";
+import { fontSizes, fontWeights } from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
 import borderRadius from "@/style/borderRadius";
-
 interface BottomActionsProps {
   onAddToCart?: () => void;
   onWishlist?: () => void;
-  isWishlisted?: boolean;
   containerStyle?: object;
+  isLiked?: boolean;
 }
 
 const ProductActionButtons: React.FC<BottomActionsProps> = ({
   onAddToCart = () => {},
   onWishlist = () => {},
-  isWishlisted = false,
   containerStyle = {},
+  isLiked,
 }) => {
   return (
     <View style={[styles.bottomContainer, containerStyle]}>
       <TouchableOpacity style={styles.wishlistButton} onPress={onWishlist}>
-        <FontAwesome name={isWishlisted ? "heart" : "heart-o"} size={16} color={colors.primary} />
+        <FontAwesome
+          name={isLiked ? "heart" : "heart-o"}
+          size={16}
+          color={isLiked ? staticColors.DarkRed : staticColors.primary}
+        />
         <Text style={styles.wishlist}>Wishlist</Text>
       </TouchableOpacity>
 
@@ -71,7 +74,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     ...spacingStyles.py10,
-     borderRadius: borderRadius.r12,
+    borderRadius: borderRadius.r12,
     borderWidth: 1,
     borderColor: staticColors.borderDark,
     flexDirection: "row",
