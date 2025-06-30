@@ -2,12 +2,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { handleApiError } from "@/utils/handleApiError";
 import axiosConfig from "@/utils/axiosConfig";
 import { Product, Color } from "@/interfaces";
-<<<<<<< HEAD
 import { LIST_LIMIT } from "@/constants/constants";
-
-=======
 import { RECOMMENDED_KEYWORD_LIMIT } from "@/constants/constants";
->>>>>>> 11a36e72bdfe4fd6dd152de3b230c188f98ae6f1
 interface ProductsState {
   data: Product[];
   selectedProduct: Product | null;

@@ -34,13 +34,11 @@ import ProductFilter from "@/components/productFilter/ProductFilter";
 import ProductCard from "@/components/home/ProductCard";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import ProductCardSkeleton from "@/components/common/ProductCardSkeleton";
-import SearchHistory from "@/components/search/searchHistory/SearchHistory";
 import {
   clearSearchHistory,
   getSearchHistory,
   saveSearchQuery,
 } from "@/utils/searchStorage";
-import SearchSuggestions from "@/components/search/searchHistory/SearchSuggestions";
 
 const ProductSearchScreen: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -311,25 +309,6 @@ const ProductSearchScreen: React.FC = () => {
             />
           </TouchableOpacity>
         </View>
-        {!isSearchSubmitted && (
-          <SearchHistory
-            history={searchHistory}
-            onItemPress={handleHistoryItemPress}
-            onClearHistory={handleClearSearchHistory}
-          />
-        )}
-
-        <SearchSuggestions
-          title="Search history"
-          searchList={searchHistory}
-          onSuggestionPress={handleHistoryItemPress}
-          onClearHistory={handleClearSearchHistory}
-        />
-        <SearchSuggestions
-          title="Recommended"
-          searchList={recommendedKeywords}
-          onSuggestionPress={handleHistoryItemPress}
-        />
 
         {isSearchSubmitted ? (
           loading && page === 1 ? (
