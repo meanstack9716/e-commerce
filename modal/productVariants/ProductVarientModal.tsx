@@ -13,7 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 import staticColors from "@/style/staticColors";
 import borderRadius from "@/style/borderRadius";
 import { BlurView } from "expo-blur";
-import { fontSizes, fontWeights } from "@/style/typography";
+import { fontSizes } from "@/style/typography";
 import {
   AvailableSize,
   ColorOption,
@@ -22,7 +22,6 @@ import {
 import spacingStyles from "@/style/spacingStyles";
 import { fontFamilies } from "@/style/fontFamilies";
 import gapSizes from "@/style/gapSizes";
-import { router } from "expo-router";
 
 const ProductVarientModal: React.FC<ProductModalProps> = ({
   visible,
@@ -35,6 +34,7 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
   onColorSelect,
   price,
   handleLikePress,
+  isLiked = false,
   handleAddToCart,
   productId,
 }) => {
@@ -56,19 +56,6 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
       color: colorOption.value,
       colorName: colorOption.color,
       images: colorOption.images,
-    });
-  };
-
-  const handleBuyNow = () => {
-    onClose(); 
-    router.push({
-      pathname: "/placeorder",
-      params: {
-        productId,
-        quantity: quantity.toString(),
-        isBuyNow: "true",
-        imageUrl: mainImage,
-      },
     });
   };
 
@@ -170,16 +157,6 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
 
                   <View style={styles.buttonContainer}>
                     <TouchableOpacity
-                      style={styles.favoriteButton}
-                      onPress={handleLikePress}
-                    >
-                      <Ionicons
-                        name="heart-outline"
-                        size={26}
-                        color={staticColors.darkSlate}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity
                       style={styles.addToCartButton}
                       onPress={handleAddToCart}
                     >
@@ -187,9 +164,15 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={styles.buyNowButton}
-                      onPress={handleBuyNow}
+                      onPress={handleLikePress}
                     >
-                      <Text style={styles.buttonText}>Buy now</Text>
+                      <Ionicons
+                        name={isLiked ? "heart" : "heart-outline"}
+                        size={18}
+                        color={isLiked ? staticColors.DarkRed : staticColors.textSoftGray}
+                        style={{ marginRight: 6 }}
+                      />
+                      <Text style={styles.buttonText}>Add to wishlist</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -353,12 +336,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     ...spacingStyles.my10,
   },
-  favoriteButton: {
-    backgroundColor: staticColors.bgSoftGray,
-    justifyContent: "center",
-    borderRadius: borderRadius.r10,
-    ...spacingStyles.p10,
-  },
   addToCartButton: {
     backgroundColor: staticColors.darkSlate,
     borderRadius: borderRadius.r10,
@@ -373,6 +350,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     ...spacingStyles.py10,
     justifyContent: "center",
+    flexDirection: "row",
     flex: 1,
     alignItems: "center",
   },

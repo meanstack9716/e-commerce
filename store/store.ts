@@ -8,6 +8,7 @@ import orderReducer from './order/orderSlice'
 import wishlistReducer from './wishlist/wishlistSlice'
 import userReducer from './user/userSlice'
 import reviewReducer from './review/reviewSlice'
+import promoCodeReducer from './promoCode/promoCodeSlice'
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -19,6 +20,7 @@ export const store = configureStore({
     wishlist: wishlistReducer,
     user: userReducer,
     review: reviewReducer,
+    promoCode: promoCodeReducer,
   },
 });
 

@@ -349,6 +349,7 @@ const ProductDetailsScreen: React.FC = () => {
               price={product.final_price}
               handleLikePress={handleLikePress}
               handleAddToCart={handleAddToCart}
+              isLiked={isProductLiked}
             />
 
             {productReviews.length > 0 && (
@@ -411,6 +412,7 @@ const ProductDetailsScreen: React.FC = () => {
         <ProductActionButtons
           onAddToCart={handleAddToCart}
           onWishlist={handleLikePress}
+          isLiked={isProductLiked}
         />
       )}
       {/* <ViewSimilarModal

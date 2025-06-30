@@ -31,7 +31,8 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
   onSizeSelect,
   price,
   handleLikePress,
-  handleAddToCart
+  handleAddToCart,
+  isLiked,
 }) => {
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState<string>("");
@@ -253,6 +254,7 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
         }}
         handleLikePress={handleLikePress}
         handleAddToCart={handleAddToCart}
+        isLiked={isLiked}
       />
     </View>
   );

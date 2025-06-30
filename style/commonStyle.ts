@@ -231,6 +231,7 @@ export const commonStyles = StyleSheet.create({
   itemCountTitle: {
     fontSize: fontSizes.xl,
     fontFamily: fontFamilies.ralewayBold,
+    ...spacingStyles.mt5
   },
   itemCountWrap: {
     borderRadius: borderRadius.circle,

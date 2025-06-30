@@ -6,14 +6,11 @@ import {
   FlatList,
   ScrollView,
   TouchableOpacity,
-  SafeAreaView,
 } from "react-native";
 import { router, useFocusEffect } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
+import Toast from "react-native-toast-message";
 import useBackHandler from "@/utils/useBackHandler";
-import spacingStyles from "@/style/spacingStyles";
-import staticColors from "@/style/staticColors";
-import { fontSizes, fontWeights } from "@/style/typography";
 import FullScreenLoader from "@/components/common/FullScreenLoader";
 import { AppDispatch, RootState } from "@/store/store";
 import { fetchAddresses } from "@/store/address/addressSlice";
@@ -22,9 +19,6 @@ import {
   removeFromCartApi,
   updateCartItemQuantityApi,
 } from "@/store/cart/cartSlice";
-import borderRadius from "@/style/borderRadius";
-import gapSizes from "@/style/gapSizes";
-import { fontFamilies } from "@/style/fontFamilies";
 import ContactCard from "@/components/contactCard/ContactCard";
 import EmptyCart from "@/components/cart-items/emptyCart";
 import { CartItem } from "@/interfaces";
@@ -32,7 +26,11 @@ import { getFormattedAddress } from "@/utils/formatAddress";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import CardItemCard from "@/components/cart-items/cartItemCard";
 import ProductDeleteConfirmationModal from "@/modal/ProductDeleteConfirmationModal";
-import Toast from "react-native-toast-message";
+import spacingStyles from "@/style/spacingStyles";
+import staticColors from "@/style/staticColors";
+import { fontSizes } from "@/style/typography";
+import borderRadius from "@/style/borderRadius";
+import { fontFamilies } from "@/style/fontFamilies";
 import { commonStyles } from "@/style/commonStyle";
 
 const ShoppingBagScreen: React.FC = () => {
@@ -43,22 +41,19 @@ const ShoppingBagScreen: React.FC = () => {
   const selectedAddressId = useSelector(
     (state: RootState) => state.address.selectedAddressId
   );
-  const [isLoading, setIsLoading] = useState(true);
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   );
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
-
   const [isConfirmationModalVisible, setIsConfirmationModalVisible] =
     useState(false);
   const [confirmationModalDetails, setConfirmationModalDetails] = useState<{
     message: string;
-    onPrimaryAction: () => void;
-    onSecondaryAction: () => void;
+    onPrimaryAction?: () => void;
+    onSecondaryAction?: () => void;
   }>({
     message: "",
-    onPrimaryAction: () => { },
-    onSecondaryAction: () => { },
   });
 
   const handleGoBack = () => {
@@ -87,7 +82,7 @@ const ShoppingBagScreen: React.FC = () => {
   );
 
   useEffect(() => {
-    if (!selectedItems.length && cartItems.length) {
+    if (selectedItems.length === 0 && cartItems.length > 0) {
       setSelectedItems(cartItems.map((item) => item.id));
     }
   }, [cartItems]);
@@ -96,17 +91,13 @@ const ShoppingBagScreen: React.FC = () => {
     setIsConfirmationModalVisible(false);
     setConfirmationModalDetails({
       message: "",
-      onPrimaryAction: () => { },
-      onSecondaryAction: () => { },
     });
   };
 
   const onDeleteCartItem = (id: string) => {
     setConfirmationModalDetails({
       message: `Are you sure you want to remove this item from bag?`,
-      onPrimaryAction: () => {
-        handleCloseModal();
-      },
+      onPrimaryAction: handleCloseModal,
       onSecondaryAction: async () => {
         dispatch(removeFromCartApi({ ids: [id] }));
         handleCloseModal();
@@ -203,7 +194,6 @@ const ShoppingBagScreen: React.FC = () => {
                 </Text>
               </View>
             )}
-
           </View>
           {isAuthenticated && token && (
             <ContactCard

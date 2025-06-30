@@ -87,6 +87,7 @@ export default {
   BoldPink: "#FF5790",
   HotRed: "#F81140",
   textSoftGray: "#F3F3F3",
+  gray50:'#F4F4F4',
   gray100: "#F8F8F8",
   gray200: "#C7C7C7",
   gray300: "#F9F9F9",
@@ -101,4 +102,5 @@ export default {
   skyBlue50:'#F4F6FE',
   skyBlue100:"#AAC3FF",
   inputBg: "#F1F4FE",
+  red50:'#D97474'
 };
