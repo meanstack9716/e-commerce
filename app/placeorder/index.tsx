@@ -185,18 +185,6 @@ const PlaceOrderScreen: React.FC = () => {
     }
   };
 
-  // Handle empty cart case
-  if (!selectedCartItems || selectedCartItems.length === 0) {
-    return (
-      <SafeAreaViewWrapper>
-        <Text style={styles.errorText}>No items found in cart.</Text>
-        <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-          <Text style={styles.backButtonText}>Go Back</Text>
-        </TouchableOpacity>
-      </SafeAreaViewWrapper>
-    );
-  }
-
   // Render loading state for product or address
   if (selectedProductLoading || !addresses) {
     return (
