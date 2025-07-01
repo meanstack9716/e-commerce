@@ -29,7 +29,10 @@ import SizeSelector from "@/components/productDetails/SizeSelector";
 import ProductActionButtons from "@/components/productDetails/ProductActionButtons";
 import FullScreenLoader from "@/components/common/FullScreenLoader";
 import borderRadius from "@/style/borderRadius";
-import { addToWishlist } from "@/store/wishlist/wishlistSlice";
+import {
+  addToWishlist,
+  removeWishlistItem,
+} from "@/store/wishlist/wishlistSlice";
 import Toast from "react-native-toast-message";
 import { LinearGradient } from "expo-linear-gradient";
 import { fontFamilies } from "@/style/fontFamilies";
@@ -153,16 +156,29 @@ const ProductDetailsScreen: React.FC = () => {
       router.navigate("./LoginScreen");
       return;
     }
+
     try {
-      await dispatch(
-        addToWishlist({
-          productId: product.id,
-          selectedSize,
-          selectedColor,
-          quantity: "1",
-        })
-      ).unwrap();
-      setIsProductLiked(true);
+      if (isProductLiked) {
+        const wishlistItem = wishlistItems.find(
+          (item) =>
+            item.product.id === product.id &&
+            item.selected_size === selectedSize &&
+            item.selected_color === selectedColor
+        );
+        if (wishlistItem && wishlistItem.id) {
+          await dispatch(removeWishlistItem(wishlistItem.id)).unwrap();
+        }
+      } else {
+        await dispatch(
+          addToWishlist({
+            productId: product.id,
+            selectedSize,
+            selectedColor,
+            quantity: "1",
+          })
+        ).unwrap();
+      }
+      setIsProductLiked((prev) => !prev);
     } catch (error) {
       console.log(error);
     }
@@ -354,7 +370,10 @@ const ProductDetailsScreen: React.FC = () => {
             />
 
             <Text style={styles.heading}>Similar Products</Text>
-            <SimilarProducts currentProduct={product} handleAddToCart={handleAddToCart}/>
+            <SimilarProducts
+              currentProduct={product}
+              handleAddToCart={handleAddToCart}
+            />
 
             {productReviews.length > 0 && (
               <View style={styles.reviewSection}>
@@ -396,7 +415,7 @@ const ProductDetailsScreen: React.FC = () => {
             {/* 
             <BrandRating />
            */}
-             <Text style={styles.heading}>Products you may like</Text>
+            <Text style={styles.heading}>Products you may like</Text>
             <ProductMayYouLike />
           </>
         }

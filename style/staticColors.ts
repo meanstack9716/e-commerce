@@ -82,6 +82,7 @@ export default {
   dotColor: "#C7D6FB",
   bgSoftGray: "#F9F9F9",
   bgSoftBlue: "#F8FAFF",
+  bgSoftBlue200: "#f2f6fc",
   RoyalBlue: "#0042E033",
   PastelRose: "#F1AEAE",
   BoldPink: "#FF5790",

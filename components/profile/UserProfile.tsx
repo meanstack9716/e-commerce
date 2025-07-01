@@ -75,7 +75,7 @@ const UserProfile = () => {
   return (
     <View style={styles.container}>
       <ProfileHeaderBar
-        title="category"
+        title="My activity"
         profileImage={images.genderFemale}
         titleStyle={styles.profileHeaderTitle}
       />
@@ -119,6 +119,7 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.white,
   },
   profileHeaderTitle: {
+    ...spacingStyles.pt2,
     ...spacingStyles.pb5,
     ...spacingStyles.px15,
     backgroundColor: staticColors.primaryBlue,

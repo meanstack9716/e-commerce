@@ -64,6 +64,7 @@ export const fetchProducts = createAsyncThunk<
   { rejectValue: string }
 >("products/fetchProducts", async ({ params = {} }, { rejectWithValue }) => {
   try {
+    console.log(params)
     const response = await axiosConfig.get("/products/list", {
       params: {
         ...params,

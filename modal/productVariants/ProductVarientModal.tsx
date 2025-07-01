@@ -67,10 +67,10 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
       onRequestClose={onClose}
     >
       <TouchableWithoutFeedback onPress={onClose}>
-        <BlurView intensity={50} tint="light" style={styles.centeredView}>
+        <BlurView intensity={80} tint="light" style={styles.centeredView}>
           <TouchableWithoutFeedback>
             <View style={styles.modalView}>
-              <View style={styles.content}>
+              <View>
                 <View style={styles.header}>
                   <Image source={{ uri: mainImage }} style={styles.avatar} />
                   <View>
@@ -205,13 +205,12 @@ const styles = StyleSheet.create({
     borderTopRightRadius: borderRadius.r10,
     borderTopLeftRadius: borderRadius.r10,
   },
-  content: {},
   header: {
     flexDirection: "row",
     alignItems: "center",
     ...spacingStyles.mb10,
     ...spacingStyles.p20,
-    backgroundColor: staticColors.bgSoftBlue,
+    backgroundColor: staticColors.bgSoftBlue200,
   },
   avatar: {
     width: 85,
@@ -223,7 +222,7 @@ const styles = StyleSheet.create({
   colorSizeRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 6,
+    ...spacingStyles.mt10,
     gap: gapSizes.md,
   },
   priceTag: {

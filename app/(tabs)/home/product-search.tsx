@@ -62,19 +62,7 @@ const ProductSearchScreen: React.FC = () => {
     lastPage,
   } = useSelector((state: any) => state.products);
   const allProducts = useSelector((state: any) => state.products.data);
-  const filteredProducts = allProducts.filter((product: Product) =>
-    product.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
   const limit = LIST_LIMIT;
-
-  useEffect(() => {
-    const loadSearchHistory = async () => {
-      const history = await getSearchHistory();
-      setSearchHistory(history);
-    };
-    loadSearchHistory();
-    dispatch(fetchRecommendedKeywords({ limit: RECOMMENDED_KEYWORD_LIMIT }));
-  }, [dispatch]);
   const hasMore = products.length > 0 && page < lastPage;
   const { recommendedKeywords } = useSelector((state: any) => state.products);
   const { subCategories, sizes, colors, priceMin, priceMax } = productFilters;
@@ -141,26 +129,24 @@ const ProductSearchScreen: React.FC = () => {
     }
   };
 
-  const handleHistoryItemPress = async (query: string) => {
-    setSearchTerm(query);
-    setIsSearchSubmitted(true);
-    setPage(1);
-    dispatch(resetProducts());
-    dispatch(
-      fetchProducts({
-        params: {
-          searchTerm: query,
-          subCategoryIds: subCategories,
-          sizes,
-          colors,
-          minPrice: priceMin,
-          maxPrice: priceMax,
-          page: 1,
-          limit,
-        },
-      })
-    );
-  };
+ const handleHistoryItemPress = async (query: string) => {
+  setSearchTerm(query);
+  setIsSearchSubmitted(true);
+  setPage(1);
+  dispatch(resetProducts());
+  dispatch(
+    fetchProducts({
+      params: {
+        searchTerm: query,
+        subCategoryIds: [],
+        sizes: [],
+        colors: [],
+        page: 1,
+        limit,
+      },
+    })
+  );
+};
 
   const handleClearSearchHistory = async () => {
     await clearSearchHistory();
@@ -445,7 +431,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     backgroundColor: staticColors.white,
     zIndex: 10,
-  },
+  },  
   footerSkeletonContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
