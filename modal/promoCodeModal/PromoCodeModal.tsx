@@ -61,7 +61,7 @@ const PromoCodeModal: React.FC<PromoCodeModalProps> = ({
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundColor: "rgba(0, 0, 0, 0.1)",
     justifyContent: "flex-end",
   },
   modalContent: {

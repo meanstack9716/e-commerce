@@ -63,11 +63,6 @@ export default function PasswordScreen() {
     resetErrors();
   };
 
-  useEffect(() => {
-  console.log("PasswordScreen re-rendered");
-}, []);
-
-
   const handleForgetPassword = () => {
     router.navigate({
       pathname: "/PasswordRecoveryScreen",
@@ -99,7 +94,7 @@ export default function PasswordScreen() {
           <Text style={styles.label}>Type your password</Text>
           <View style={styles.passwordContainer}>
             <PasswordTextField
-              placeholder="Confirm Password"
+              placeholder="Enter Your Password"
               value={password}
               onChangeText={(text) => {
                 setPassword(text);

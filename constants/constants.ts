@@ -29,7 +29,7 @@ export const NUMERIC_SIZES = [
 ];
 export const PRODUCT_RANGE_MIN_PRICE = 10;
 export const PRODUCT_RANGE_MAX_PRICE = 30000;
-export const RECOMMENDED_KEYWORD_LIMIT=5;
-export const LIST_LIMIT = 10;
+export const LIST_LIMIT = 10
 export const REVIEW_COMMENT_CHARACTER = 50
+export const RECOMMENDED_KEYWORD_LIMIT=5
 export const MAX_SEARCH_HISTORY_LENGTH = 5;

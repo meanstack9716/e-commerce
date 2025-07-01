@@ -213,7 +213,6 @@ const HomeScreen: React.FC = () => {
   return (
     <View style={styles.container}>
       <SafeAreaViewWrapper>
-        {/* <FullScreenLoader visible={isLoading} /> */}
         <StatusBar
           barStyle="dark-content"
           translucent
@@ -269,7 +268,7 @@ const HomeScreen: React.FC = () => {
             showsVerticalScrollIndicator={false}
             columnWrapperStyle={{
               justifyContent: "space-between",
-              ...spacingStyles.my20,
+              ...spacingStyles.my10,
             }}
             ListFooterComponent={() =>
               productsLoading && products.length > 0 ? (
@@ -323,20 +322,6 @@ const styles = StyleSheet.create({
   headingText: {
     fontSize: fontSizes.lg,
     fontFamily: fontFamilies.ralewayBold,
-  },
-  seeAllContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    gap: gapSizes.sm,
-  },
-  seeAllText: {
-    fontSize: fontSizes.sm,
-    fontFamily: fontFamilies.ralewayBold,
-  },
-  categoryCountText: {
-    fontSize: fontSizes.xs,
-    fontFamily: fontFamilies.ralewayExtraBold,
   },
   columnWrapper: {
     justifyContent: "space-between",

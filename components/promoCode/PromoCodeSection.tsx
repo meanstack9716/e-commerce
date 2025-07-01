@@ -64,6 +64,7 @@ const PromoCodeSection: React.FC<PromoCodeSectionProps> = ({
         type: "error",
         text1: "Error",
         text2: error,
+        visibilityTime: 3000,
       });
     }
     if (appliedPromoCode) {

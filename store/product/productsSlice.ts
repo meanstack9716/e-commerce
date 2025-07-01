@@ -64,13 +64,13 @@ export const fetchProducts = createAsyncThunk<
   { rejectValue: string }
 >("products/fetchProducts", async ({ params = {} }, { rejectWithValue }) => {
   try {
+    console.log(params)
     const response = await axiosConfig.get("/products/list", {
       params: {
         ...params,
       },
     });
     if (response.data?.data) {
-      console.log("API response:", response.data);
       const { data, current_page, last_page } = response.data;
       return { data, page: current_page, lastPage: last_page };
     }

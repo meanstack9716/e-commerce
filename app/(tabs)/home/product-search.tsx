@@ -62,9 +62,6 @@ const ProductSearchScreen: React.FC = () => {
     lastPage,
   } = useSelector((state: any) => state.products);
   const allProducts = useSelector((state: any) => state.products.data);
-  const filteredProducts = allProducts.filter((product: Product) =>
-    product.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
   const limit = LIST_LIMIT;
   const hasMore = products.length > 0 && page < lastPage;
   const { recommendedKeywords } = useSelector((state: any) => state.products);
@@ -132,24 +129,24 @@ const ProductSearchScreen: React.FC = () => {
     }
   };
 
-  const handleHistoryItemPress = async (query: string) => {
-    setSearchTerm(query);
-    setIsSearchSubmitted(true);
-    setPage(1);
-    dispatch(resetProducts());
-    dispatch(
-      fetchProducts({
-        params: {
-          searchTerm: query,
-          subCategoryIds: subCategories,
-          sizes,
-          colors,
-          page: 1,
-          limit,
-        },
-      })
-    );
-  };
+ const handleHistoryItemPress = async (query: string) => {
+  setSearchTerm(query);
+  setIsSearchSubmitted(true);
+  setPage(1);
+  dispatch(resetProducts());
+  dispatch(
+    fetchProducts({
+      params: {
+        searchTerm: query,
+        subCategoryIds: [],
+        sizes: [],
+        colors: [],
+        page: 1,
+        limit,
+      },
+    })
+  );
+};
 
   const handleClearSearchHistory = async () => {
     await clearSearchHistory();
@@ -214,7 +211,6 @@ const ProductSearchScreen: React.FC = () => {
 
   const loadMoreProducts = async () => {
     if (loading || !hasMore) return;
-
     const nextPage = page + 1;
     setPage(nextPage);
     dispatch(
@@ -435,7 +431,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     backgroundColor: staticColors.white,
     zIndex: 10,
-  },
+  },  
   footerSkeletonContainer: {
     flexDirection: "row",
     flexWrap: "wrap",

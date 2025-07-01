@@ -134,6 +134,7 @@ export const removeAddress = createAsyncThunk<
       await axiosConfig.delete(`/address/remove/${id}`, getAuthHeaders(state));
       return id;
     } catch (error: any) {
+      console.log(error)
       return rejectWithValue(
         error.response?.data?.message || "Failed to remove address"
       );

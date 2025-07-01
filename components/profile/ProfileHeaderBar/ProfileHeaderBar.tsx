@@ -20,23 +20,34 @@ const ProfileHeaderBar: React.FC<ProfileHeaderBarProps> = ({
   title,
   profileImage,
   containerStyle,
-  titleStyle
+  titleStyle,
 }) => {
+  const handleProfilePress = () => {
+    router.push("/userManageAccount");
+  };
   return (
     <View style={[styles.container, containerStyle]}>
       <View style={styles.leftSection}>
-        <Image source={profileImage} style={styles.profileImage} />
+        <TouchableOpacity onPress={handleProfilePress}>
+          <Image source={profileImage} style={styles.profileImage} />
+        </TouchableOpacity>
         <Text style={[styles.title, titleStyle]}>{title}</Text>
       </View>
       <View style={styles.iconGroup}>
-        <TouchableOpacity style={[styles.iconWrapper]} onPress={()=> router.push('/wishlist')}>
+        <TouchableOpacity
+          style={[styles.iconWrapper]}
+          onPress={() => router.push("/wishlist")}
+        >
           <Ionicons
             name="heart-outline"
             size={20}
             color={staticColors.primaryBlue}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.iconWrapper} onPress={() => router.push('/settings')}>
+        <TouchableOpacity
+          style={styles.iconWrapper}
+          onPress={() => router.push("/settings")}
+        >
           <Ionicons
             name="settings-outline"
             size={20}
@@ -86,11 +97,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   iconWrapper: {
-    padding:7,
+    padding: 7,
     ...spacingStyles.ml10,
     position: "relative",
-    backgroundColor:staticColors.skyBlue50,
-    borderRadius:borderRadius.circle
+    backgroundColor: staticColors.skyBlue50,
+    borderRadius: borderRadius.circle,
   },
 });
 export default ProfileHeaderBar;

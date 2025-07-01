@@ -29,7 +29,10 @@ import SizeSelector from "@/components/productDetails/SizeSelector";
 import ProductActionButtons from "@/components/productDetails/ProductActionButtons";
 import FullScreenLoader from "@/components/common/FullScreenLoader";
 import borderRadius from "@/style/borderRadius";
-import { addToWishlist } from "@/store/wishlist/wishlistSlice";
+import {
+  addToWishlist,
+  removeWishlistItem,
+} from "@/store/wishlist/wishlistSlice";
 import Toast from "react-native-toast-message";
 import { LinearGradient } from "expo-linear-gradient";
 import { fontFamilies } from "@/style/fontFamilies";
@@ -43,6 +46,7 @@ import {
 } from "@/store/review/reviewSlice";
 import { LIST_LIMIT } from "@/constants/constants";
 import ProductMayYouLike from "@/components/productDetails/ProductMayYouLike";
+import SimilarProducts from "@/components/productDetails/similarProduct/SimilarProducts";
 
 const { width: screenWidth } = Dimensions.get("window");
 const ProductDetailsScreen: React.FC = () => {
@@ -152,16 +156,29 @@ const ProductDetailsScreen: React.FC = () => {
       router.navigate("./LoginScreen");
       return;
     }
+
     try {
-      await dispatch(
-        addToWishlist({
-          productId: product.id,
-          selectedSize,
-          selectedColor,
-          quantity: "1",
-        })
-      ).unwrap();
-      setIsProductLiked(true);
+      if (isProductLiked) {
+        const wishlistItem = wishlistItems.find(
+          (item) =>
+            item.product.id === product.id &&
+            item.selected_size === selectedSize &&
+            item.selected_color === selectedColor
+        );
+        if (wishlistItem && wishlistItem.id) {
+          await dispatch(removeWishlistItem(wishlistItem.id)).unwrap();
+        }
+      } else {
+        await dispatch(
+          addToWishlist({
+            productId: product.id,
+            selectedSize,
+            selectedColor,
+            quantity: "1",
+          })
+        ).unwrap();
+      }
+      setIsProductLiked((prev) => !prev);
     } catch (error) {
       console.log(error);
     }
@@ -352,6 +369,12 @@ const ProductDetailsScreen: React.FC = () => {
               isLiked={isProductLiked}
             />
 
+            <Text style={styles.heading}>Similar Products</Text>
+            <SimilarProducts
+              currentProduct={product}
+              handleAddToCart={handleAddToCart}
+            />
+
             {productReviews.length > 0 && (
               <View style={styles.reviewSection}>
                 {/* Title + Stars + Rating */}
@@ -389,12 +412,10 @@ const ProductDetailsScreen: React.FC = () => {
             {/* <DeliveryCheck />
             <ReturnPolicy /> */}
 
-            {/* <Text style={styles.heading}>Similar Products</Text>
-            <SimilarProducts currentProduct={product} /> */}
             {/* 
             <BrandRating />
            */}
-             <Text style={styles.heading}>Products you may like</Text>
+            <Text style={styles.heading}>Products you may like</Text>
             <ProductMayYouLike />
           </>
         }
@@ -557,8 +578,8 @@ const styles = StyleSheet.create({
     color: staticColors.white,
   },
   heading: {
-    fontSize: fontSizes.md,
-    fontWeight: fontWeights.semiBold,
+    fontSize: fontSizes.lg,
+    fontFamily: fontFamilies.ralewayExtraBold,
     ...spacingStyles.mb10,
     color: staticColors.primary,
     ...spacingStyles.px15,
@@ -583,7 +604,7 @@ const styles = StyleSheet.create({
   reviewSection: { ...spacingStyles.mx15 },
   reviewTitle: {
     fontSize: fontSizes.lg,
-    fontFamily: "RalewayeExtraBold",
+    fontFamily: fontFamilies.ralewayExtraBold,
     color: staticColors.black,
     ...spacingStyles.mr10,
   },
