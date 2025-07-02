@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
-  ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -66,6 +65,15 @@ const ProductSearchScreen: React.FC = () => {
   const hasMore = products.length > 0 && page < lastPage;
   const { recommendedKeywords } = useSelector((state: any) => state.products);
   const { subCategories, sizes, colors, priceMin, priceMax } = productFilters;
+
+  useEffect(() => {
+    const loadSearchHistory = async () => {
+      const history = await getSearchHistory();
+      setSearchHistory(history);
+    };
+    loadSearchHistory();
+    dispatch(fetchRecommendedKeywords({ limit: RECOMMENDED_KEYWORD_LIMIT }));
+  }, [dispatch]);
 
   useEffect(() => {
     const hasFilters =

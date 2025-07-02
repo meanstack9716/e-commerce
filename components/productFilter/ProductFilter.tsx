@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
-import Slider from "@react-native-community/slider";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import { fontSizes } from "@/style/typography";
@@ -28,6 +27,7 @@ import {
 import { useAppDispatch } from "@/store/hooks";
 import { fetchColors } from "@/store/product/productsSlice";
 import { ProductFilterProps } from "./ProductFilter.types";
+import { RangeSlider } from "@react-native-assets/slider";
 
 const { width } = Dimensions.get("window");
 
@@ -57,6 +57,18 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
     max: initialPriceMax ?? PRODUCT_RANGE_MAX_PRICE,
   });
   const [sizeType, setSizeType] = useState<"standard" | "numeric">("standard");
+
+  const handleRangeChange = ([newMin, newMax]: [number, number]) => {
+    setPriceRange((prev) => {
+      const updatedMin = newMin < prev.max - 1000 ? newMin : prev.min;
+      const updatedMax = newMax > prev.min + 1000 ? newMax : prev.max;
+
+      return {
+        min: updatedMin,
+        max: updatedMax,
+      };
+    });
+  };
 
   useEffect(() => {
     dispatch(fetchColors());
@@ -335,57 +347,17 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
           </View>
 
           <View style={styles.rangeSliderContainer}>
-            <View style={styles.sliderTrack}>
-              <View
-                style={[
-                  styles.sliderRange,
-                  {
-                    left: `${((priceRange.min - PRODUCT_RANGE_MIN_PRICE) / (PRODUCT_RANGE_MAX_PRICE - PRODUCT_RANGE_MIN_PRICE)) * 100}%`,
-                    width: `${((priceRange.max - priceRange.min) / (PRODUCT_RANGE_MAX_PRICE - PRODUCT_RANGE_MIN_PRICE)) * 100}%`,
-                  },
-                ]}
-              />
-              <View
-                style={[
-                  styles.sliderThumb,
-                  {
-                    left: `${((priceRange.min - PRODUCT_RANGE_MIN_PRICE) / (PRODUCT_RANGE_MAX_PRICE - PRODUCT_RANGE_MIN_PRICE)) * 100}%`,
-                  },
-                ]}
-              />
-              <View
-                style={[
-                  styles.sliderThumb,
-                  {
-                    left: `${((priceRange.max - PRODUCT_RANGE_MIN_PRICE) / (PRODUCT_RANGE_MAX_PRICE - PRODUCT_RANGE_MIN_PRICE)) * 100}%`,
-                  },
-                ]}
-              />
-            </View>
-            <Slider
-              style={styles.invisibleSlider}
+            <RangeSlider
+              range={[priceRange.min, priceRange.max]}
               minimumValue={PRODUCT_RANGE_MIN_PRICE}
               maximumValue={PRODUCT_RANGE_MAX_PRICE}
               step={100}
-              minimumTrackTintColor="transparent"
-              maximumTrackTintColor="transparent"
-              thumbTintColor="transparent"
-              value={priceRange.min}
-              onValueChange={(value) => {
-                const newValue = Math.round(value);
-                const minDist = Math.abs(newValue - priceRange.min);
-                const maxDist = Math.abs(newValue - priceRange.max);
-
-                if (minDist < maxDist) {
-                  if (newValue < priceRange.max - 1000) {
-                    setPriceRange((prev) => ({ ...prev, min: newValue }));
-                  }
-                } else {
-                  if (newValue > priceRange.min + 100) {
-                    setPriceRange((prev) => ({ ...prev, max: newValue }));
-                  }
-                }
-              }}
+              onValueChange={handleRangeChange}
+              outboundColor="#ddd"
+              inboundColor={staticColors.primaryBlue}
+              thumbTintColor={staticColors.primaryBlue}
+              trackHeight={6}
+              thumbSize={22}
             />
           </View>
         </View>
@@ -520,7 +492,7 @@ const styles = StyleSheet.create({
     width: width - 30,
   },
   sizeScrollContent: {
-  flexDirection: "row",
+    flexDirection: "row",
     alignItems: "center",
     ...spacingStyles.px15,
     gap: gapSizes.xxl,

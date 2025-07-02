@@ -69,6 +69,7 @@ export const fetchProducts = createAsyncThunk<
         ...params,
       },
     });
+    console.log("params",params)
     if (response.data?.data) {
       const { data, current_page, last_page } = response.data;
       return { data, page: current_page, lastPage: last_page };

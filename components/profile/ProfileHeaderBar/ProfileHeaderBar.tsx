@@ -25,9 +25,21 @@ const ProfileHeaderBar: React.FC<ProfileHeaderBarProps> = ({
   const handleProfilePress = () => {
     router.push("/userManageAccount");
   };
+
+  const handleBackPress = () => {
+    router.back();
+  };
+
   return (
     <View style={[styles.container, containerStyle]}>
       <View style={styles.leftSection}>
+        <TouchableOpacity style={styles.backButton} onPress={handleBackPress}>
+          <Ionicons
+            name="arrow-back"
+            size={24}
+            color={staticColors.primaryBlue}
+          />
+        </TouchableOpacity>
         <TouchableOpacity onPress={handleProfilePress}>
           <Image source={profileImage} style={styles.profileImage} />
         </TouchableOpacity>
@@ -58,6 +70,7 @@ const ProfileHeaderBar: React.FC<ProfileHeaderBarProps> = ({
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
@@ -68,6 +81,10 @@ const styles = StyleSheet.create({
   leftSection: {
     flexDirection: "row",
     alignItems: "center",
+  },
+  backButton: {
+    ...spacingStyles.py5,
+    ...spacingStyles.mr15,
   },
   profileImage: {
     width: 40,
@@ -104,4 +121,5 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.circle,
   },
 });
+
 export default ProfileHeaderBar;
