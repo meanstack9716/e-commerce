@@ -47,6 +47,10 @@ export default function AuthLayout() {
         name="BaseURL"
         options={{ title: "BaseURL", headerShown: false }}
       />
+       <Stack.Screen
+        name="ReferAndEarnScreen"
+        options={{ title: "ReferAndEarnScreen", headerShown: false }}
+      />
     </Stack>
   );
 }

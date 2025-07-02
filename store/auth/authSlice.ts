@@ -6,7 +6,7 @@ import axiosConfig from "@/utils/axiosConfig";
 
 interface AuthState {
   loading: boolean;
-  loginError:string | null;
+  loginError: string | null;
   error: string | null;
   registered: boolean;
   isAuthenticated: boolean;
@@ -18,7 +18,7 @@ interface AuthState {
 
 const initialState: AuthState = {
   loading: false,
-  loginError:null,
+  loginError: null,
   error: null,
   registered: false,
   isAuthenticated: false,
@@ -60,15 +60,25 @@ export const registerUser = createAsyncThunk(
       email,
       password,
       password_confirmation,
-    }: { email: string; password: string; password_confirmation: string },
+      referral_code,
+    }: {
+      email: string;
+      password: string;
+      password_confirmation: string;
+      referral_code?: string;
+    },
     { rejectWithValue }
   ) => {
     try {
-      const response = await axiosConfig.post("/auth/register", {
+      const requestBody: any = {
         email,
         password,
         password_confirmation,
-      });
+      };
+      if (referral_code) {
+        requestBody.referral_code = referral_code;
+      }
+      const response = await axiosConfig.post("/auth/register", requestBody);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(handleApiError(error, "Registration failed"));
@@ -92,7 +102,10 @@ export const loginUser = createAsyncThunk(
       }
       try {
         await AsyncStorage.setItem("authToken", response.data.token);
-        await AsyncStorage.setItem("authUser", JSON.stringify(response.data.user));
+        await AsyncStorage.setItem(
+          "authUser",
+          JSON.stringify(response.data.user)
+        );
         const savedToken = await AsyncStorage.getItem("authToken");
         const savedUser = await AsyncStorage.getItem("authUser");
       } catch (storageError) {
@@ -198,7 +211,8 @@ export const logoutUser = createAsyncThunk(
   async (_, { rejectWithValue, dispatch }) => {
     try {
       const token = await AsyncStorage.getItem("authToken");
-      await axiosConfig.post(`/auth/logout`,
+      await axiosConfig.post(
+        `/auth/logout`,
         {},
         {
           headers: {
@@ -226,7 +240,7 @@ const authSlice = createSlice({
   reducers: {
     clearAuthError: (state) => {
       state.error = null;
-      state.loginError = null
+      state.loginError = null;
     },
     resetRegistration: (state) => {
       state.registered = false;
