@@ -1,4 +1,10 @@
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+} from "react-native";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
@@ -28,7 +34,7 @@ export default function SettingPage() {
       title: "Personal",
       items: [
         { label: "Profile", route: "userManageAccount" },
-        { label: "Shipping Address", route: null },
+        { label: "Referal Code", route: "ReferAndEarnScreen" },
         { label: "Payment methods", route: null },
       ],
     },
@@ -36,7 +42,7 @@ export default function SettingPage() {
       title: "Shop",
       items: [
         { label: "Order", route: "/orderHistory" },
-        { label: "Faq", route: 'faq' },
+        { label: "Faq", route: "faq" },
         { label: "About Us", route: null },
         { label: "Terms and Use", route: null },
         { label: "Privacy Policy", route: null },
@@ -64,7 +70,7 @@ export default function SettingPage() {
   );
 
   return (
-    <SafeAreaViewWrapper style={{flex: 1}}>
+    <SafeAreaViewWrapper style={{ flex: 1 }}>
       <View style={styles.container}>
         <View style={styles.headerContain}>
           <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
@@ -97,12 +103,12 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.white,
   },
   headerContain: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     ...spacingStyles.mb20,
   },
   backButton: {
-    ...spacingStyles.mr15
+    ...spacingStyles.mr15,
   },
   header: {
     fontSize: fontSizes.xl,

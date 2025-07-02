@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
-import Slider from "@react-native-community/slider";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import { fontSizes } from "@/style/typography";
@@ -362,7 +361,7 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
                 ]}
               />
             </View>
-            <Slider
+            {/* <Slider
               style={styles.invisibleSlider}
               minimumValue={PRODUCT_RANGE_MIN_PRICE}
               maximumValue={PRODUCT_RANGE_MAX_PRICE}
@@ -386,7 +385,7 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
                   }
                 }
               }}
-            />
+            /> */}
           </View>
         </View>
       </ScrollView>
@@ -520,7 +519,7 @@ const styles = StyleSheet.create({
     width: width - 30,
   },
   sizeScrollContent: {
-  flexDirection: "row",
+    flexDirection: "row",
     alignItems: "center",
     ...spacingStyles.px15,
     gap: gapSizes.xxl,
