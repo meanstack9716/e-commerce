@@ -11,7 +11,6 @@ import {
 import { router, useFocusEffect } from "expo-router";
 import { CategoriresCard } from "../categoriesCard";
 import { useSelector } from "react-redux";
-import { SafeAreaViewWrapper } from "../common/SafeAreaView/SafeAreaViewWrapper";
 import ProductCard from "../home/ProductCard";
 import images from "@/constants/images";
 import { Product } from "@/interfaces";

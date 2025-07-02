@@ -39,7 +39,6 @@ import { fontFamilies } from "@/style/fontFamilies";
 import UserProfile from "@/components/profile/UserProfile";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import WelcomeScreen from "@/app/(auth)/WelcomeScreen";
-import UserInformationScreen from "./userInformation";
 
 export default function ProfileScreen() {
   const [activeProfileSection, setActiveProfileSection] = useState("Profile");
