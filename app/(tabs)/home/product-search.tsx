@@ -62,22 +62,10 @@ const ProductSearchScreen: React.FC = () => {
     lastPage,
   } = useSelector((state: any) => state.products);
   const allProducts = useSelector((state: any) => state.products.data);
-  const filteredProducts = allProducts.filter((product: Product) =>
-    product.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
   const limit = LIST_LIMIT;
   const hasMore = products.length > 0 && page < lastPage;
   const { recommendedKeywords } = useSelector((state: any) => state.products);
   const { subCategories, sizes, colors, priceMin, priceMax } = productFilters;
-
-  useEffect(() => {
-    const loadSearchHistory = async () => {
-      const history = await getSearchHistory();
-      setSearchHistory(history);
-    };
-    loadSearchHistory();
-    dispatch(fetchRecommendedKeywords({ limit: RECOMMENDED_KEYWORD_LIMIT }));
-  }, [dispatch]);
 
   useEffect(() => {
     const hasFilters =
@@ -141,9 +129,9 @@ const ProductSearchScreen: React.FC = () => {
       fetchProducts({
         params: {
           searchTerm: query,
-          subCategoryIds: subCategories,
-          sizes,
-          colors,
+          subCategoryIds: [],
+          sizes: [],
+          colors: [],
           page: 1,
           limit,
         },

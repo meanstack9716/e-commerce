@@ -586,7 +586,7 @@ const styles = StyleSheet.create({
     fontFamily: fontFamilies.ralewayMedium,
   },
   rangeSliderContainer: {
-    height: 30,
+    height: 50,
     justifyContent: "center",
     ...spacingStyles.ml10,
     ...spacingStyles.mr25,
@@ -612,8 +612,8 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   sliderThumb: {
-    width: 32,
-    height: 32,
+    // width: 32,
+    // height: 32,
     borderRadius: borderRadius.circle,
     backgroundColor: staticColors.white,
     borderWidth: 2,

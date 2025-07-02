@@ -11,7 +11,6 @@ import {
 import { router, useFocusEffect } from "expo-router";
 import { CategoriresCard } from "../categoriesCard";
 import { useSelector } from "react-redux";
-import { SafeAreaViewWrapper } from "../common/SafeAreaView/SafeAreaViewWrapper";
 import ProductCard from "../home/ProductCard";
 import images from "@/constants/images";
 import { Product } from "@/interfaces";
@@ -75,7 +74,7 @@ const UserProfile = () => {
   return (
     <View style={styles.container}>
       <ProfileHeaderBar
-        title="category"
+        title="My activity"
         profileImage={images.genderFemale}
         titleStyle={styles.profileHeaderTitle}
       />
@@ -119,6 +118,7 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.white,
   },
   profileHeaderTitle: {
+    ...spacingStyles.pt2,
     ...spacingStyles.pb5,
     ...spacingStyles.px15,
     backgroundColor: staticColors.primaryBlue,
