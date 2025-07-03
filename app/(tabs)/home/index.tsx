@@ -46,8 +46,6 @@ const HomeScreen: React.FC = () => {
   const [productSearchQuery, setProductSearchQuery] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const insets = useSafeAreaInsets();
   const dispatch = useAppDispatch();
   const limit = LIST_LIMIT;
   const {
@@ -60,13 +58,13 @@ const HomeScreen: React.FC = () => {
     data: products,
     loading: productsLoading,
     error: productsError,
+    lastPage,
   } = useSelector((state: any) => state.products);
 
   useFocusEffect(
     useCallback(() => {
       dispatch(fetchCategories());
       setPage(1);
-      setHasMore(true);
       dispatch(fetchProducts({ params: { page: 1, limit } }));
     }, [dispatch])
   );
@@ -105,7 +103,6 @@ const HomeScreen: React.FC = () => {
             onPress: () => {
               dispatch(fetchCategories());
               setPage(1);
-              setHasMore(true);
               dispatch(fetchProducts({ params: { page: 1, limit } }));
             },
           },
@@ -176,18 +173,10 @@ const HomeScreen: React.FC = () => {
   };
 
   const handleLoadMore = () => {
-    if (products.length && !productsLoading && hasMore) {
+    if (!productsLoading && page < lastPage) {
       const nextPage = page + 1;
       setPage(nextPage);
-      dispatch(fetchProducts({ params: { page: nextPage, limit } })).then(
-        (action) => {
-          if (action.payload && Array.isArray(action.payload)) {
-            setHasMore(action.payload.length === limit);
-          } else {
-            setHasMore(false);
-          }
-        }
-      );
+      dispatch(fetchProducts({ params: { page: nextPage, limit } }));
     }
   };
 

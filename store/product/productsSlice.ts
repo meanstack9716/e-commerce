@@ -3,6 +3,7 @@ import { handleApiError } from "@/utils/handleApiError";
 import axiosConfig from "@/utils/axiosConfig";
 import { Product, Color } from "@/interfaces";
 import { RECOMMENDED_KEYWORD_LIMIT } from "@/constants/constants";
+import { RootState } from "../store";
 interface ProductsState {
   data: Product[];
   selectedProduct: Product | null;
@@ -84,8 +85,19 @@ export const fetchProducts = createAsyncThunk<
 export const fetchProductById = createAsyncThunk<
   Product,
   string,
-  { rejectValue: string }
->("products/fetchProductById", async (id, { rejectWithValue }) => {
+  { state: RootState; rejectValue: string }
+>("products/fetchProductById", async (id, { getState, rejectWithValue }) => {
+  const cachedProduct = getState().products.data.find(
+    (product) => product.id === id
+  );
+
+  if (cachedProduct) {
+    console.log(`✅ Using cached product for ID: ${id}`);
+    return cachedProduct;
+  }
+
+  console.log(`🌐 Fetching product from API for ID: ${id}`);
+
   try {
     const response = await axiosConfig.get(`/products/${id}`);
     const apiProduct = response.data.data;

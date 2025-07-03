@@ -13,7 +13,7 @@ import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { useLocalSearchParams, router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/store/store";
+import { AppDispatch, RootState, store } from "@/store/store";
 import {
   clearSelectedProduct,
   fetchProductById,
@@ -46,6 +46,8 @@ import {
 } from "@/store/review/reviewSlice";
 import { LIST_LIMIT } from "@/constants/constants";
 import ProductMayYouLike from "@/components/productDetails/ProductMayYouLike";
+import ProductDetailsSkeleton from "@/components/productDetails/ProductDetailsSkeleton";
+import { Product } from "@/interfaces";
 
 const { width: screenWidth } = Dimensions.get("window");
 const ProductDetailsScreen: React.FC = () => {
@@ -85,30 +87,41 @@ const ProductDetailsScreen: React.FC = () => {
   const flatListRef = useRef<FlatList>(null);
   const imageCarouselRef = useRef<FlatList>(null);
   const screenHeight = Dimensions.get("window").height;
+  const [localProduct, setLocalProduct] = useState<Product | null>(null);
 
   const isAuthenticatedUser = useAppSelector(
     (state) => state.auth.isAuthenticated
   );
-  useEffect(() => {
-    if (id) {
-      dispatch(fetchProductById(id as string));
-      dispatch(
-        fetchProductReviews({
-          productId: id as string,
-          page: 1,
-          limit: LIST_LIMIT,
-        })
-      );
-      if (isAuthenticatedUser) {
-        dispatch(fetchUserReview(id as string));
-      }
+useEffect(() => {
+  if (id) {
+    // Get cached product immediately
+    const cachedProduct = store.getState().products.data.find(
+      (product) => product.id === id
+    );
+    if (cachedProduct) {
+      setLocalProduct(cachedProduct); // instant display
     }
 
-    return () => {
-      dispatch(clearSelectedProduct());
-      dispatch(resetReviewState());
-    };
-  }, [id, dispatch, isAuthenticatedUser]);
+    dispatch(fetchProductById(id as string));
+    dispatch(
+      fetchProductReviews({
+        productId: id as string,
+        page: 1,
+        limit: LIST_LIMIT,
+      })
+    );
+    if (isAuthenticatedUser) {
+      dispatch(fetchUserReview(id as string));
+    }
+  }
+
+  return () => {
+    dispatch(clearSelectedProduct());
+    dispatch(resetReviewState());
+    setLocalProduct(null);
+  };
+}, [id, dispatch, isAuthenticatedUser]);
+
 
   // const renderStars = () => {
   //   if (!product) return null;
@@ -222,12 +235,21 @@ const ProductDetailsScreen: React.FC = () => {
     }
   };
 
-  if (loading || error || reviewsLoading || reviewsError) {
+  if (!product) {
     return (
       <SafeAreaViewWrapper>
-        <FullScreenLoader visible={loading || reviewsLoading} />
+        <ProductDetailsSkeleton />
+      </SafeAreaViewWrapper>
+    );
+  }
+
+  if (error || reviewsError) {
+    return (
+      <SafeAreaViewWrapper>
         <View style={styles.loadingContainer}>
-          <Text style={styles.loadingText}>{error || reviewsError}</Text>
+          <Text style={styles.loadingText}>
+            {error || reviewsError || "Something went wrong."}
+          </Text>
         </View>
       </SafeAreaViewWrapper>
     );
