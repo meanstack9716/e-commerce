@@ -99,7 +99,7 @@ useEffect(() => {
       (product) => product.id === id
     );
     if (cachedProduct) {
-      setLocalProduct(cachedProduct); // instant display
+      setLocalProduct(cachedProduct); 
     }
 
     dispatch(fetchProductById(id as string));

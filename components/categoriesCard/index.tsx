@@ -1,13 +1,10 @@
 import React, { ReactNode } from "react";
 import {
   Image,
-  KeyboardAvoidingView,
-  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  ViewStyle,
 } from "react-native";
 import staticColors from "@/style/staticColors";
 import { CategoriesCardProps } from "./index.types";

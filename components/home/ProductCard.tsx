@@ -56,13 +56,14 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 style={styles.cardImage}
               />
             </View>
-
           </View>
           <Text style={styles.cardTitle} numberOfLines={2}>
             {textTruncate(title, 10)}
           </Text>
           <View style={styles.priceContainer}>
-            <Text style={styles.cardPrice}>₹{final_price}</Text>
+            <Text style={styles.cardPrice}>
+              ₹{Math.floor(final_price || 0)}
+            </Text>
             {discount_percent && discount_percent > 0 && (
               <Text style={styles.discountText}>{discount_percent}% OFF</Text>
             )}
@@ -81,9 +82,9 @@ const styles = StyleSheet.create({
     padding: 1,
   },
   cardItemContainer: {
-    flexDirection: 'column',
+    flexDirection: "column",
     gap: 5,
-    borderRadius: borderRadius.r8
+    borderRadius: borderRadius.r8,
   },
   imageShadowContainer: {
     backgroundColor: staticColors.white,
@@ -114,9 +115,9 @@ const styles = StyleSheet.create({
   },
   priceContainer: {
     flexDirection: "row",
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
     alignItems: "center",
-    ...spacingStyles.px4
+    ...spacingStyles.px4,
   },
   cardPrice: {
     fontSize: fontSizes.base,

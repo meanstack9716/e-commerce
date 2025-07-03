@@ -25,6 +25,7 @@ const initialState: ReviewState = {
   productReviews: [],
   page: 1,
   hasMoreReviews: true,
+  
 };
 
 export interface ReviewPayload {
@@ -34,6 +35,7 @@ export interface ReviewPayload {
   images?: string[];
   review_id?: string;
   remove_img_indexes?: number[];
+
 }
 
 export const fetchUserReview = createAsyncThunk<
@@ -74,9 +76,8 @@ export const fetchProductReviews = createAsyncThunk<
       const response = await axiosConfig.get(
         `/products/${productId}/reviews?page=${page}&limit=${limit}`
       );
-      console.log(response, { limit });
       const reviews = response.data.data;
-      const hasMoreReviews = reviews.length === limit;
+      const hasMoreReviews = response.data.current_page < response.data.last_page;
       return { reviews, hasMoreReviews };
     } catch (error: any) {
       return rejectWithValue(

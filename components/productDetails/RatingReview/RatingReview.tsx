@@ -50,24 +50,24 @@ const RatingReview: React.FC<RatingReviewProps> = ({ review }) => {
           <Text style={styles.reviewText} numberOfLines={3}>
             {review.review}
           </Text>
-        </View>
-      </View>
 
-      {review.img_urls && review.img_urls.length > 0 && (
-        <FlatList
-          horizontal
-          data={review.img_urls}
-          renderItem={({ item: imgUrl }) => (
-            <Image
-              source={{ uri: imgUrl }}
-              style={commonStyles.reviewImage}
-              resizeMode="cover"
+          {review.img_urls && review.img_urls.length > 0 && (
+            <FlatList
+              horizontal
+              data={review.img_urls}
+              renderItem={({ item: imgUrl }) => (
+                <Image
+                  source={{ uri: imgUrl }}
+                  style={commonStyles.reviewImage}
+                  resizeMode="cover"
+                />
+              )}
+              keyExtractor={(imgUrl, index) => `review-img-${index}`}
+              showsHorizontalScrollIndicator={false}
             />
           )}
-          keyExtractor={(imgUrl, index) => `review-img-${index}`}
-          showsHorizontalScrollIndicator={false}
-        />
-      )}
+        </View>
+      </View>
     </View>
   );
 };
@@ -75,7 +75,7 @@ const RatingReview: React.FC<RatingReviewProps> = ({ review }) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: staticColors.white,
-    ...spacingStyles.mb10,
+    ...spacingStyles.mb,
   },
   starsContainer: {
     flexDirection: "row",
@@ -100,7 +100,6 @@ const styles = StyleSheet.create({
     fontFamily: "NunitoSans",
     fontWeight: fontWeights.black,
     color: staticColors.black,
-    ...spacingStyles.mb5,
   },
 });
 
