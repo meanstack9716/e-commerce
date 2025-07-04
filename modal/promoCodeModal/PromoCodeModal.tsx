@@ -8,7 +8,6 @@ import {
   Text,
   TouchableWithoutFeedback,
 } from "react-native";
-import Toast from "react-native-toast-message";
 import spacingStyles from "@/style/spacingStyles";
 import borderRadius from "@/style/borderRadius";
 import staticColors from "@/style/staticColors";
@@ -24,6 +23,7 @@ const PromoCodeModal: React.FC<PromoCodeModalProps> = ({
   appliedPromoCode,
   onSelectPromoCode,
   onRemovePromoCode,
+  loadingPromoCode
 }) => {
   return (
     <Modal
@@ -48,6 +48,7 @@ const PromoCodeModal: React.FC<PromoCodeModalProps> = ({
                   appliedPromoCode={appliedPromoCode}
                   onApplyPromoCode={onSelectPromoCode}
                   onRemovePromoCode={onRemovePromoCode}
+                  loadingPromoCode={loadingPromoCode}
                 />
               </ScrollView>
             </View>

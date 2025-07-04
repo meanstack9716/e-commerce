@@ -36,7 +36,6 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
   handleLikePress,
   isLiked = false,
   handleAddToCart,
-  productId,
 }) => {
   const [quantity, setQuantity] = useState(1);
 
@@ -325,7 +324,7 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.iceBlue,
     fontSize: fontSizes["2xl"],
     fontFamily: fontFamilies.ralewayeMedium,
-    marginHorizontal: 20,
+    ...spacingStyles.mx10,
     alignItems: "center",
     justifyContent: "center",
     textAlign: "center",
@@ -341,7 +340,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.py10,
     justifyContent: "center",
     flex: 1,
-    ...spacingStyles.mx15,
+    ...spacingStyles.mr15,
     alignItems: "center",
   },
   buyNowButton: {

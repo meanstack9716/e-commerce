@@ -14,9 +14,7 @@ import { useSelector } from "react-redux";
 import { Product } from "@/interfaces";
 import { useAppDispatch } from "@/store/hooks";
 import {
-  fetchProducts,
   fetchRecommendedKeywords,
-  resetProducts,
 } from "@/store/product/productsSlice";
 import images from "@/constants/images";
 import staticColors from "@/style/staticColors";
@@ -39,6 +37,7 @@ import {
   saveSearchQuery,
 } from "@/utils/searchStorage";
 import SearchSuggestions from "@/components/search/searchHistory/SearchSuggestions";
+import { fetchSearchProducts, resetSearchProducts } from "@/store/product/searchProductsSlice";
 
 const ProductSearchScreen: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -55,14 +54,14 @@ const ProductSearchScreen: React.FC = () => {
   const [page, setPage] = useState(1);
   const dispatch = useAppDispatch();
   const {
-    data: products,
+    data: filteredData,
     loading,
     error,
     lastPage,
-  } = useSelector((state: any) => state.products);
+  } = useSelector((state: any) => state.searchProducts);
   const allProducts = useSelector((state: any) => state.products.data);
   const limit = LIST_LIMIT;
-  const hasMore = products.length > 0 && page < lastPage;
+  const hasMore = filteredData.length > 0 && page < lastPage;
   const { recommendedKeywords } = useSelector((state: any) => state.products);
   const { subCategories, sizes, colors, priceMin, priceMax } = productFilters;
 
@@ -86,9 +85,9 @@ const ProductSearchScreen: React.FC = () => {
     if (hasFilters && isSearchSubmitted) {
       setIsSearchSubmitted(true);
       setPage(1);
-      dispatch(resetProducts());
+      dispatch(resetSearchProducts());
       dispatch(
-        fetchProducts({
+        fetchSearchProducts({
           params: {
             subCategoryIds: subCategories,
             sizes,
@@ -110,9 +109,9 @@ const ProductSearchScreen: React.FC = () => {
       setSearchHistory(updatedHistory);
       setIsSearchSubmitted(true);
       setPage(1);
-      dispatch(resetProducts());
+      dispatch(resetSearchProducts());
       dispatch(
-        fetchProducts({
+        fetchSearchProducts({
           params: {
             searchTerm: searchTerm,
             subCategoryIds: subCategories,
@@ -132,9 +131,9 @@ const ProductSearchScreen: React.FC = () => {
     setSearchTerm(query);
     setIsSearchSubmitted(true);
     setPage(1);
-    dispatch(resetProducts());
+    dispatch(resetSearchProducts());
     dispatch(
-      fetchProducts({
+      fetchSearchProducts({
         params: {
           searchTerm: query,
           subCategoryIds: [],
@@ -163,7 +162,7 @@ const ProductSearchScreen: React.FC = () => {
       priceMin: PRODUCT_RANGE_MIN_PRICE,
       priceMax: PRODUCT_RANGE_MAX_PRICE,
     });
-    dispatch(resetProducts());
+    dispatch(resetSearchProducts());
   };
 
   const handleProductFilter = () => {
@@ -182,7 +181,7 @@ const ProductSearchScreen: React.FC = () => {
     setPage(1);
 
     dispatch(
-      fetchProducts({
+      fetchSearchProducts({
         params: {
           searchTerm,
           subCategoryIds: newFilters.subCategories,
@@ -214,7 +213,7 @@ const ProductSearchScreen: React.FC = () => {
     const nextPage = page + 1;
     setPage(nextPage);
     dispatch(
-      fetchProducts({
+      fetchSearchProducts({
         params: {
           searchTerm,
           subCategoryIds: subCategories,
@@ -331,9 +330,9 @@ const ProductSearchScreen: React.FC = () => {
             />
           ) : error ? (
             <Text style={styles.errorText}>Error: {error}</Text>
-          ) : products.length > 0 ? (
+          ) : filteredData.length > 0 ? (
             <FlatList
-              data={products}
+              data={filteredData}
               renderItem={renderProductItem}
               keyExtractor={(item) => item.id}
               numColumns={2}

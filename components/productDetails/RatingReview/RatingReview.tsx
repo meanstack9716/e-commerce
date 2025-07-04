@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, Image, FlatList } from "react-native";
 import staticColors from "@/style/staticColors";
 import { fontSizes, fontWeights } from "@/style/typography";
 import spacingStyles from "@/style/spacingStyles";
-import borderRadius from "@/style/borderRadius";
 import { commonStyles } from "@/style/commonStyle";
 import images from "@/constants/images";
 import { renderStars } from "@/utils/starUtils";
@@ -22,6 +21,10 @@ const RatingReview: React.FC<RatingReviewProps> = ({ review }) => {
   };
 
   const getAvatarSource = () => {
+    const profileUrl = review?.reviewed_by?.profile_url;
+    if (profileUrl) {
+      return { uri: profileUrl };
+    }
     return images.unKnownUser;
   };
 

@@ -46,7 +46,7 @@ import {
 } from "@/store/review/reviewSlice";
 import { LIST_LIMIT } from "@/constants/constants";
 import ProductMayYouLike from "@/components/productDetails/ProductMayYouLike";
-import ProductDetailsSkeleton from "@/components/productDetails/ProductDetailsSkeleton";
+import ProductDetailsSkeleton from "@/components/skeleton/ProductDetailsSkeleton";
 import { Product } from "@/interfaces";
 
 const { width: screenWidth } = Dimensions.get("window");

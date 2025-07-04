@@ -10,7 +10,6 @@ import {
   Dimensions,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import { router, useFocusEffect } from "expo-router";
 import { useSelector } from "react-redux";
@@ -30,6 +29,8 @@ import borderRadius from "@/style/borderRadius";
 import gapSizes from "@/style/gapSizes";
 import { fontFamilies } from "@/style/fontFamilies";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
+import WishlistSkeleton from "@/components/skeleton/WishlistSkeleton";
+
 
 const WishlistScreen: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -204,12 +205,14 @@ const WishlistScreen: React.FC = () => {
       </View>
 
       {loading && (
-        <ActivityIndicator
-          size="large"
-          color={staticColors.primary}
-          style={styles.loader}
+        <FlatList
+          data={Array(3).fill(0)} 
+          keyExtractor={(_, index) => `skeleton-${index}`}
+          renderItem={() => <WishlistSkeleton />}
+          contentContainerStyle={styles.flatList}
         />
       )}
+
       {error && <Text style={styles.errorText}>Error: {error}</Text>}
 
       {!loading && !error && items.length === 0 && (
@@ -221,7 +224,7 @@ const WishlistScreen: React.FC = () => {
           </Text>
           <TouchableOpacity
             style={styles.shopNowButton}
-            onPress={() => router.navigate("/(tabs)")}
+            onPress={() => router.navigate("/(tabs)/home")}
           >
             <Text style={styles.shopNowText}>SHOP NOW</Text>
           </TouchableOpacity>

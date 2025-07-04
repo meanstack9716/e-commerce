@@ -20,11 +20,11 @@ import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaVi
 import { SelectedItem } from "./orderHistory.types";
 import OrderItem from "@/components/order/orderItem/OrderItem";
 import ProfileHeaderBar from "@/components/profile/ProfileHeaderBar/ProfileHeaderBar";
-import OrderItemSkeleton from "@/components/common/OrderItemSkeleton";
 import { LIST_LIMIT } from "@/constants/constants";
 import { Order } from "@/interfaces";
 import OrderDetailsModal from "@/modal/OrderDetailsModal/OrderDetailsModal";
 import OrderItemsSelectionModal from "@/modal/order/OrderItemsSelectionModal";
+import OrderItemSkeleton from "@/components/skeleton/OrderItemSkeleton";
 
 const OrderHistoryScreen: React.FC = () => {
   const dispatch = useAppDispatch();

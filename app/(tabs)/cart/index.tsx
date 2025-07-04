@@ -8,22 +8,18 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { router, useFocusEffect } from "expo-router";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import Toast from "react-native-toast-message";
 import useBackHandler from "@/utils/useBackHandler";
-import FullScreenLoader from "@/components/common/FullScreenLoader";
-import { AppDispatch, RootState } from "@/store/store";
+import {  RootState } from "@/store/store";
 import { fetchAddresses } from "@/store/address/addressSlice";
 import {
   fetchCartItemsApi,
   removeFromCartApi,
   updateCartItemQuantityApi,
 } from "@/store/cart/cartSlice";
-import ContactCard from "@/components/contactCard/ContactCard";
-import EmptyCart from "@/components/cart-items/emptyCart";
 import { CartItem } from "@/interfaces";
 import { getFormattedAddress } from "@/utils/formatAddress";
-import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import CardItemCard from "@/components/cart-items/cartItemCard";
 import ProductDeleteConfirmationModal from "@/modal/ProductDeleteConfirmationModal";
 import spacingStyles from "@/style/spacingStyles";
@@ -32,9 +28,14 @@ import { fontSizes } from "@/style/typography";
 import borderRadius from "@/style/borderRadius";
 import { fontFamilies } from "@/style/fontFamilies";
 import { commonStyles } from "@/style/commonStyle";
+import ContactCard from "@/components/contactCard/ContactCard";
+import EmptyCart from "@/components/cart-items/emptyCart";
+import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
+import CartSkeleton from "@/components/skeleton/CartSkeleton";
+import { useAppDispatch } from "@/store/hooks";
 
 const ShoppingBagScreen: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const { cartItems, loading } = useSelector((state: RootState) => state.cart);
   const token = useSelector((state: RootState) => state.auth.token);
   const addresses = useSelector((state: RootState) => state.address.addresses);
@@ -171,8 +172,16 @@ const ShoppingBagScreen: React.FC = () => {
 
   if (isLoading) {
     return (
-      <SafeAreaViewWrapper style={styles.container}>
-        <FullScreenLoader visible={isLoading} />
+      <SafeAreaViewWrapper>
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={{ ...spacingStyles.py10 }}
+          showsVerticalScrollIndicator={false}
+        >
+          {[...Array(4)].map((_, index) => (
+            <CartSkeleton key={`cart-skeleton-${index}`} />
+          ))}
+        </ScrollView>
       </SafeAreaViewWrapper>
     );
   }

@@ -191,7 +191,8 @@ export const commonStyles = StyleSheet.create({
     height: 80,
     borderRadius: borderRadius.r8,
     ...spacingStyles.mr5,
-    ...spacingStyles.mt5
+    ...spacingStyles.mt5,
+    backgroundColor:staticColors.lightGray
   },
   searchContainer: {
     flexDirection: "row",

@@ -4,7 +4,7 @@ import { View, StyleSheet, Dimensions } from "react-native";
 import borderRadius from "@/style/borderRadius";
 import spacingStyles from "@/style/spacingStyles";
 import gapSizes from "@/style/gapSizes";
-import SkeletonPlaceholder from "../common/SkeletonPlaceholder ";
+import SkeletonPlaceholder from "./SkeletonPlaceholder ";
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   },
   addToCartButton: {
     height: 48,
-    marginHorizontal: 16,
+    ...spacingStyles.px15,
     borderRadius: borderRadius.r10,
     ...spacingStyles.mt10,
   },

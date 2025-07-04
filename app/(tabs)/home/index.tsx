@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
 import {
   View,
   Text,
@@ -15,20 +21,15 @@ import {
   Dimensions,
 } from "react-native";
 import { useSelector } from "react-redux";
-import { router, useFocusEffect } from "expo-router";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import ProductCard from "@/components/home/ProductCard";
-import FullScreenLoader from "@/components/common/FullScreenLoader";
-import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { fontSizes, fontWeights } from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
-import images from "@/constants/images";
 import { useAppDispatch } from "@/store/hooks";
 import { fetchCategories } from "@/store/category/categoriesSlice";
 import { fetchProducts } from "@/store/product/productsSlice";
-import borderRadius from "@/style/borderRadius";
 import { CategoryItem, Product, SubCategoryItem } from "@/interfaces";
 import { fontFamilies } from "@/style/fontFamilies";
 import { commonStyles } from "@/style/commonStyle";
@@ -47,6 +48,7 @@ const HomeScreen: React.FC = () => {
   const flatListRef = useRef<FlatList>(null);
   const dispatch = useAppDispatch();
   const limit = LIST_LIMIT;
+  const { subSubCategoryId } = useLocalSearchParams();
 
   const {
     data: categories,
@@ -63,27 +65,34 @@ const HomeScreen: React.FC = () => {
 
   useFocusEffect(
     useCallback(() => {
-      dispatch(fetchCategories());
-      setPage(1);
-      setIsLoadingMore(false);
-      dispatch(fetchProducts({ params: { page: 1, limit } }));
-    }, [dispatch, limit])
+      if (products.length === 0) {
+        dispatch(fetchCategories());
+        const params: any = { page: 1, limit };
+        if (subSubCategoryId && typeof subSubCategoryId === "string") {
+          params.subSubCategoryIds = subSubCategoryId;
+        }
+        dispatch(fetchProducts({ params }));
+      }
+    }, [dispatch, products.length, limit, subSubCategoryId])
   );
 
   useEffect(() => {
-    const backHandler = BackHandler.addEventListener("hardwareBackPress", () => {
-      if (router.canGoBack()) {
-        router.back();
-        return true;
-      } else {
-        if (Platform.OS === "ios") {
-          router.navigate("/(tabs)/(profile)");
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        if (router.canGoBack()) {
+          router.back();
+          return true;
         } else {
-          BackHandler.exitApp();
+          if (Platform.OS === "ios") {
+            router.navigate("/(tabs)/(profile)");
+          } else {
+            BackHandler.exitApp();
+          }
+          return true;
         }
-        return true;
       }
-    });
+    );
 
     return () => backHandler.remove();
   }, []);
@@ -92,7 +101,11 @@ const HomeScreen: React.FC = () => {
     if (categoriesError || productsError) {
       Alert.alert(
         "Error",
-        String(categoriesError || productsError || "Failed to fetch data. Please try again."),
+        String(
+          categoriesError ||
+            productsError ||
+            "Failed to fetch data. Please try again."
+        ),
         [
           {
             text: "Retry",
@@ -120,9 +133,11 @@ const HomeScreen: React.FC = () => {
       setIsLoadingMore(true);
       const nextPage = page + 1;
       setPage(nextPage);
-      dispatch(fetchProducts({ params: { page: nextPage, limit } })).finally(() => {
-        setIsLoadingMore(false);
-      });
+      dispatch(fetchProducts({ params: { page: nextPage, limit } })).finally(
+        () => {
+          setIsLoadingMore(false);
+        }
+      );
     }
   }, [productsLoading, page, lastPage, isLoadingMore, dispatch, limit]);
 
@@ -145,32 +160,39 @@ const HomeScreen: React.FC = () => {
 
   const renderSkeletonItem = useCallback(() => <ProductCardSkeleton />, []);
 
-  const renderHeader = useCallback(() => (
-    <View>
-      <View style={commonStyles.searchContainer}>
-        <Text style={commonStyles.searchContainerText}>Shop</Text>
-        <View style={commonStyles.searchInputContainer}>
-          <TextInput
-            placeholder="Search"
-            style={commonStyles.searchInput}
-            placeholderTextColor={staticColors.gray200}
-            value={productSearchQuery}
-            onChangeText={setProductSearchQuery}
-            onFocus={() => router.navigate("/home/product-search")}
-          />
+  const renderHeader = useCallback(
+    () => (
+      <View>
+        <View style={commonStyles.searchContainer}>
+          <Text style={commonStyles.searchContainerText}>Shop</Text>
+          <View style={commonStyles.searchInputContainer}>
+            <TextInput
+              placeholder="Search"
+              style={commonStyles.searchInput}
+              placeholderTextColor={staticColors.gray200}
+              value={productSearchQuery}
+              onChangeText={setProductSearchQuery}
+              onFocus={() => router.navigate("/home/product-search")}
+            />
+          </View>
         </View>
+        <ImageSlider slides={bannerData} />
+        <CategoriresCard categoryList={categories} />
       </View>
-      <ImageSlider slides={bannerData} />
-      <CategoriresCard categoryList={categories} />
-    </View>
-  ), [categories, productSearchQuery]);
+    ),
+    [categories, productSearchQuery]
+  );
 
   const isLoading = categoriesLoading || productsLoading;
 
   return (
     <View style={styles.container}>
       <SafeAreaViewWrapper>
-        <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
+        <StatusBar
+          barStyle="dark-content"
+          translucent
+          backgroundColor="transparent"
+        />
         <FlatList
           ref={flatListRef}
           data={
@@ -193,7 +215,11 @@ const HomeScreen: React.FC = () => {
           onEndReached={handleLoadMore}
           onEndReachedThreshold={1.0}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ minHeight: Dimensions.get("window").height * 2 }}
+          contentContainerStyle={
+            {
+              // paddingBottom: 10,
+            }
+          }
           columnWrapperStyle={{
             justifyContent: "space-between",
             ...spacingStyles.my20,

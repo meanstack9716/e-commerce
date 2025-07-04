@@ -20,11 +20,11 @@ import { useAppDispatch } from "@/store/hooks";
 import { RootState } from "@/store/store";
 import { fetchCategories } from "@/store/category/categoriesSlice";
 import { fontSizes, fontWeights } from "@/style/typography";
-import FullScreenLoader from "@/components/common/FullScreenLoader";
 import borderRadius from "@/style/borderRadius";
 import { CategoryItem, SubCategoryItem } from "@/interfaces";
 import gapSizes from "@/style/gapSizes";
 import { fontFamilies } from "@/style/fontFamilies";
+import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 
 const CategoriesScreen: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -50,9 +50,9 @@ const CategoriesScreen: React.FC = () => {
 
   useEffect(() => {
     if (categoryId && typeof categoryId === "string") {
-      setSelectedCategory(categoryId); 
+      setSelectedCategory(categoryId);
     } else if (categories && categories.length) {
-      setSelectedCategory(categories[0].id); 
+      setSelectedCategory(categories[0].id);
     }
   }, [categoryId, categories]);
 
@@ -138,11 +138,20 @@ const CategoriesScreen: React.FC = () => {
         <View style={styles.categoryList}>
           {item.sub_sub_categories.length ? (
             item.sub_sub_categories.map((subSubCategory, index) => (
-              <View style={styles.categoryListItem} key={subSubCategory.id}>
+              <TouchableOpacity
+                key={subSubCategory.id}
+                style={styles.categoryListItem}
+                onPress={() =>
+                  router.push({
+                    pathname: "/(tabs)/home",
+                    params: { subSubCategoryId: subSubCategory.id },
+                  })
+                }
+              >
                 <Text style={styles.categoryListItemText}>
                   {subSubCategory.name}
                 </Text>
-              </View>
+              </TouchableOpacity>
             ))
           ) : (
             <View style={styles.notFoundContainer}>
@@ -172,8 +181,7 @@ const CategoriesScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <FullScreenLoader visible={isLoading} />
+    <SafeAreaViewWrapper style={styles.container}>
       <ScrollView
         style={styles.mainContent}
         nestedScrollEnabled={true}
@@ -229,7 +237,7 @@ const CategoriesScreen: React.FC = () => {
           </View>
         )}
       </ScrollView>
-    </SafeAreaView>
+    </SafeAreaViewWrapper>
   );
 };
 
@@ -237,25 +245,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.white,
-    ...spacingStyles.pt25,
   },
   mainContent: {
     flex: 1,
-    ...spacingStyles.py10,
     ...spacingStyles.px15,
   },
   headingWrap: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    ...spacingStyles.pt15,
   },
   headingText: {
-    fontSize: fontSizes["2xl"],
+    fontSize: fontSizes.xl,
     fontFamily: fontFamilies.ralewayBold,
   },
   cancelButton: {
-    fontSize: fontSizes["xl"],
+    fontSize: fontSizes.lg,
     fontWeight: fontWeights.semiBold,
   },
   centeredContent: {

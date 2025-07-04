@@ -24,6 +24,7 @@ const images = {
   unKnownUser: require("@/assets/images/images/unknownUser.png"),
   noProductFound: require("@/assets/images/images/noProductFound.png"),
   promoCodeSuccess: require("@/assets/images/images/promo-code-success.png"),
+  promoCodeError:require("@/assets/images/images/promoCodeError.png")
 };
 
 export default images;

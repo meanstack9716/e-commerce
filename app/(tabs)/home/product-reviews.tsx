@@ -16,14 +16,13 @@ import { fontSizes } from "@/style/typography";
 import { fontFamilies } from "@/style/fontFamilies";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import RatingReview from "@/components/productDetails/RatingReview/RatingReview";
-import FullScreenLoader from "@/components/common/FullScreenLoader";
 import {
   fetchProductReviews,
   resetReviewState,
 } from "@/store/review/reviewSlice";
 import { LIST_LIMIT } from "@/constants/constants";
 import { Ionicons } from "@expo/vector-icons";
-import ReviewSkeleton from "@/components/common/ReviewSkeleton";
+import ReviewSkeleton from "@/components/skeleton/ReviewSkeleton";
 
 const ReviewsScreen: React.FC = () => {
   const { productId } = useLocalSearchParams();
@@ -45,7 +44,6 @@ const ReviewsScreen: React.FC = () => {
       );
     }
   }, [productId, dispatch]);
-
   const loadMoreReviews = () => {
     if (!loading && hasMoreReviews && productId) {
       dispatch(
