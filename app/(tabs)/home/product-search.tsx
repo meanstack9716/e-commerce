@@ -9,13 +9,11 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useSelector } from "react-redux";
 import { Product } from "@/interfaces";
 import { useAppDispatch } from "@/store/hooks";
-import {
-  fetchRecommendedKeywords,
-} from "@/store/product/productsSlice";
+import { fetchRecommendedKeywords } from "@/store/product/productsSlice";
 import images from "@/constants/images";
 import staticColors from "@/style/staticColors";
 import { commonStyles } from "@/style/commonStyle";
@@ -37,7 +35,10 @@ import {
   saveSearchQuery,
 } from "@/utils/searchStorage";
 import SearchSuggestions from "@/components/search/searchHistory/SearchSuggestions";
-import { fetchSearchProducts, resetSearchProducts } from "@/store/product/searchProductsSlice";
+import {
+  fetchSearchProducts,
+  resetSearchProducts,
+} from "@/store/product/searchProductsSlice";
 
 const ProductSearchScreen: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -64,6 +65,7 @@ const ProductSearchScreen: React.FC = () => {
   const hasMore = filteredData.length > 0 && page < lastPage;
   const { recommendedKeywords } = useSelector((state: any) => state.products);
   const { subCategories, sizes, colors, priceMin, priceMax } = productFilters;
+  const { subSubCategoryId } = useLocalSearchParams();
 
   useEffect(() => {
     const loadSearchHistory = async () => {
@@ -73,6 +75,25 @@ const ProductSearchScreen: React.FC = () => {
     loadSearchHistory();
     dispatch(fetchRecommendedKeywords({ limit: RECOMMENDED_KEYWORD_LIMIT }));
   }, [dispatch]);
+
+  useEffect(() => {
+    if (subSubCategoryId && typeof subSubCategoryId === "string") {
+      setIsSearchSubmitted(true);
+      setPage(1);
+      dispatch(resetSearchProducts());
+      dispatch(
+        fetchSearchProducts({
+          params: {
+            subSubCategoryIds: [subSubCategoryId],
+            sizes: [],
+            colors: [],
+            page: 1,
+            limit,
+          },
+        })
+      );
+    }
+  }, [subSubCategoryId]);
 
   useEffect(() => {
     const hasFilters =
@@ -219,8 +240,6 @@ const ProductSearchScreen: React.FC = () => {
           subCategoryIds: subCategories,
           sizes,
           colors,
-          minPrice: priceMin,
-          maxPrice: priceMax,
           page: nextPage,
           limit,
         },

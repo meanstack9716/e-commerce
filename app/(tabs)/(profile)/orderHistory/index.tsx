@@ -40,8 +40,8 @@ const OrderHistoryScreen: React.FC = () => {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [isDetailsModalVisible, setDetailsModalVisible] = useState(false);
   const [isItemsSelectionModalVisible, setItemsSelectionModalVisible] =
-    useState(false); 
-
+    useState(false);
+  const { user } = useSelector((state: RootState) => state.user);
   const handleOrderItemPress = (order: Order) => {
     setSelectedOrder(order);
     setDetailsModalVisible(true);
@@ -113,9 +113,12 @@ const OrderHistoryScreen: React.FC = () => {
     <SafeAreaViewWrapper>
       <ProfileHeaderBar
         title="History"
-        profileImage={images.unKnownUser}
+        profileImage={
+          user?.profile_url ? { uri: user.profile_url } : images.unKnownUser
+        }
         containerStyle={styles.profileHeaderContainer}
       />
+
       {error ? (
         <Text style={styles.errorText}>{error}</Text>
       ) : filteredOrders.length === 0 && !loading ? (

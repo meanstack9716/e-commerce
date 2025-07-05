@@ -8,10 +8,10 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { router, useFocusEffect } from "expo-router";
-import {  useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Toast from "react-native-toast-message";
 import useBackHandler from "@/utils/useBackHandler";
-import {  RootState } from "@/store/store";
+import { RootState } from "@/store/store";
 import { fetchAddresses } from "@/store/address/addressSlice";
 import {
   fetchCartItemsApi,
@@ -33,6 +33,8 @@ import EmptyCart from "@/components/cart-items/emptyCart";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import CartSkeleton from "@/components/skeleton/CartSkeleton";
 import { useAppDispatch } from "@/store/hooks";
+import { Ionicons } from "@expo/vector-icons";
+import gapSizes from "@/style/gapSizes";
 
 const ShoppingBagScreen: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -194,7 +196,14 @@ const ShoppingBagScreen: React.FC = () => {
           nestedScrollEnabled={true}
           showsVerticalScrollIndicator={false}
         >
-          <View style={commonStyles.itemCountHeader}>
+          <View style={styles.headerWrapper}>
+            <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
+              <Ionicons
+                name="arrow-back"
+                size={24}
+                color={staticColors.black}
+              />
+            </TouchableOpacity>
             <Text style={commonStyles.itemCountTitle}>Cart</Text>
             {isAuthenticated && token && (
               <View style={commonStyles.itemCountWrap}>
@@ -273,8 +282,13 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.white,
     ...spacingStyles.px12,
   },
+  headerWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap:gapSizes.md
+  },
   backButton: {
-    ...spacingStyles.mr12,
+    ...spacingStyles.mt10
   },
   itemsWrapper: {
     ...spacingStyles.py15,

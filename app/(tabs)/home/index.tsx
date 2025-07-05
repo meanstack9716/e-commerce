@@ -1,27 +1,17 @@
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  useMemo,
-  useRef,
-} from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   View,
   Text,
   TextInput,
-  TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
   StatusBar,
   FlatList,
-  Image,
   Alert,
   BackHandler,
   Platform,
-  Dimensions,
 } from "react-native";
 import { useSelector } from "react-redux";
-import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import ProductCard from "@/components/home/ProductCard";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
@@ -30,7 +20,7 @@ import gapSizes from "@/style/gapSizes";
 import { useAppDispatch } from "@/store/hooks";
 import { fetchCategories } from "@/store/category/categoriesSlice";
 import { fetchProducts } from "@/store/product/productsSlice";
-import { CategoryItem, Product, SubCategoryItem } from "@/interfaces";
+import { Product } from "@/interfaces";
 import { fontFamilies } from "@/style/fontFamilies";
 import { commonStyles } from "@/style/commonStyle";
 import { CategoriresCard } from "@/components/categoriesCard";
@@ -48,7 +38,6 @@ const HomeScreen: React.FC = () => {
   const flatListRef = useRef<FlatList>(null);
   const dispatch = useAppDispatch();
   const limit = LIST_LIMIT;
-  const { subSubCategoryId } = useLocalSearchParams();
 
   const {
     data: categories,
@@ -65,15 +54,11 @@ const HomeScreen: React.FC = () => {
 
   useFocusEffect(
     useCallback(() => {
-      if (products.length === 0) {
-        dispatch(fetchCategories());
-        const params: any = { page: 1, limit };
-        if (subSubCategoryId && typeof subSubCategoryId === "string") {
-          params.subSubCategoryIds = subSubCategoryId;
-        }
-        dispatch(fetchProducts({ params }));
-      }
-    }, [dispatch, products.length, limit, subSubCategoryId])
+      dispatch(fetchCategories());
+      setPage(1);
+      setIsLoadingMore(false);
+      dispatch(fetchProducts({ params: { page: 1, limit } }));
+    }, [dispatch, limit])
   );
 
   useEffect(() => {
@@ -215,11 +200,9 @@ const HomeScreen: React.FC = () => {
           onEndReached={handleLoadMore}
           onEndReachedThreshold={1.0}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={
-            {
-              // paddingBottom: 10,
-            }
-          }
+          contentContainerStyle={{
+            paddingBottom: 10,
+          }}
           columnWrapperStyle={{
             justifyContent: "space-between",
             ...spacingStyles.my20,

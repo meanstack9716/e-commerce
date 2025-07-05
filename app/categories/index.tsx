@@ -143,7 +143,7 @@ const CategoriesScreen: React.FC = () => {
                 style={styles.categoryListItem}
                 onPress={() =>
                   router.push({
-                    pathname: "/(tabs)/home",
+                    pathname: "/(tabs)/home/product-search",
                     params: { subSubCategoryId: subSubCategory.id },
                   })
                 }

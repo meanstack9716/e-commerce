@@ -28,9 +28,8 @@ export const fetchSearchProducts = createAsyncThunk<
         ...params,
       },
     });
-
+console.log(params)
     const { data, current_page, last_page } = response.data;
-
     return { data, page: current_page, lastPage: last_page };
   } catch (error) {
     return rejectWithValue(handleApiError(error, "Search failed"));

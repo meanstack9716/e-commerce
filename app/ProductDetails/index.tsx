@@ -82,7 +82,9 @@ const ProductDetailsScreen: React.FC = () => {
     useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [showBackToTop, setShowBackToTop] = useState(false);
-  const [displayImages, setDisplayImages] = useState<string[]>([]);
+  const [displayImages, setDisplayImages] = useState<string[]>(
+    product?.gallery?.map((img) => img.img_url) || product?.images || []
+  );
   const insets = useSafeAreaInsets();
   const flatListRef = useRef<FlatList>(null);
   const imageCarouselRef = useRef<FlatList>(null);
@@ -92,36 +94,35 @@ const ProductDetailsScreen: React.FC = () => {
   const isAuthenticatedUser = useAppSelector(
     (state) => state.auth.isAuthenticated
   );
-useEffect(() => {
-  if (id) {
-    // Get cached product immediately
-    const cachedProduct = store.getState().products.data.find(
-      (product) => product.id === id
-    );
-    if (cachedProduct) {
-      setLocalProduct(cachedProduct); 
+  useEffect(() => {
+    if (id) {
+      // Get cached product immediately
+      const cachedProduct = store
+        .getState()
+        .products.data.find((product) => product.id === id);
+      if (cachedProduct) {
+        setLocalProduct(cachedProduct);
+      }
+
+      dispatch(fetchProductById(id as string));
+      dispatch(
+        fetchProductReviews({
+          productId: id as string,
+          page: 1,
+          limit: LIST_LIMIT,
+        })
+      );
+      if (isAuthenticatedUser) {
+        dispatch(fetchUserReview(id as string));
+      }
     }
 
-    dispatch(fetchProductById(id as string));
-    dispatch(
-      fetchProductReviews({
-        productId: id as string,
-        page: 1,
-        limit: LIST_LIMIT,
-      })
-    );
-    if (isAuthenticatedUser) {
-      dispatch(fetchUserReview(id as string));
-    }
-  }
-
-  return () => {
-    dispatch(clearSelectedProduct());
-    dispatch(resetReviewState());
-    setLocalProduct(null);
-  };
-}, [id, dispatch, isAuthenticatedUser]);
-
+    return () => {
+      dispatch(clearSelectedProduct());
+      dispatch(resetReviewState());
+      setLocalProduct(null);
+    };
+  }, [id, dispatch, isAuthenticatedUser]);
 
   // const renderStars = () => {
   //   if (!product) return null;
@@ -481,6 +482,7 @@ const styles = StyleSheet.create({
   image: {
     width: screenWidth,
     height: 430,
+    backgroundColor: staticColors.lightGray,
   },
   dotContainer: {
     flexDirection: "row",
@@ -580,8 +582,9 @@ const styles = StyleSheet.create({
     textDecorationLine: "line-through",
   },
   discountWrapper: {
-    paddingHorizontal: 7,
-    paddingTop: 4,
+    ...spacingStyles.px6,
+    ...spacingStyles.pt2,
+    ...spacingStyles.pb5,
     ...spacingStyles.pb2,
     borderRadius: borderRadius.r5,
     alignSelf: "flex-start",

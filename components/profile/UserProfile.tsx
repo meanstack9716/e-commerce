@@ -25,11 +25,13 @@ import { useAppDispatch } from "@/store/hooks";
 import { fetchProducts } from "@/store/product/productsSlice";
 import ProductCardSkeleton from "../common/ProductCardSkeleton";
 import { LIST_LIMIT } from "@/constants/constants";
+import { RootState } from "@/store/store";
 
 const UserProfile = () => {
   const [likedProductItems, setLikedProductItems] = useState<string[]>([]);
   const dispatch = useAppDispatch();
   const limit = LIST_LIMIT;
+  const { user } = useSelector((state: RootState) => state.user);
   const {
     data: categories,
     loading: categoriesLoading,
@@ -75,7 +77,9 @@ const UserProfile = () => {
     <View style={styles.container}>
       <ProfileHeaderBar
         title="My activity"
-        profileImage={images.genderFemale}
+        profileImage={
+          user?.profile_url ? { uri: user.profile_url } : images.unKnownUser
+        }
         titleStyle={styles.profileHeaderTitle}
       />
       <CategoriresCard categoryList={categories} />

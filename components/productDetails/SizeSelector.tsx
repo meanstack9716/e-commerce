@@ -39,7 +39,6 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
   const [selectedColorName, setSelectedColorName] = useState<string>("");
   const [isProductVariantModalVisible, setIsProductVariantModalVisible] =
     useState(false);
-  const [showSizeChart, setShowSizeChart] = useState(false);
   const [availableColors, setAvailableColors] = useState<
     Array<{
       id: string;
@@ -311,6 +310,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: borderRadius.r12,
+    backgroundColor: staticColors.lightGray,
   },
 
   noColorsText: {
