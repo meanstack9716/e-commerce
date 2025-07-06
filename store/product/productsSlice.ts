@@ -69,9 +69,7 @@ export const fetchProducts = createAsyncThunk<
       params: {
         ...params,
       },
-   
     });
-       console.log(params)
     if (response.data?.data) {
       const { data, current_page, last_page } = response.data;
       return { data, page: current_page, lastPage: last_page };
@@ -87,21 +85,13 @@ export const fetchProductById = createAsyncThunk<
   Product,
   string,
   { state: RootState; rejectValue: string }
->("products/fetchProductById", async (id, { getState, rejectWithValue }) => {
-  console.log("Fetching product with ID:", id);
-  const cachedProduct = getState().products.data.find(
-    (product) => product.id === id
-  );
-  if (cachedProduct) {
-    return cachedProduct;
-  }
+>("products/fetchProductById", async (id, { rejectWithValue }) => {
   try {
     const response = await axiosConfig.get(`/products/${id}`);
     const apiProduct = response.data.data;
     if (apiProduct) {
       return apiProduct;
     }
-    console.log(response)
     return rejectWithValue("Invalid product data");
   } catch (error) {
     return rejectWithValue(

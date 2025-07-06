@@ -7,14 +7,13 @@ export interface Product {
   price: number;
   stock_quantity?: string;
   thumbnail_url: string;
-  images: string[];
   categories: string[];
   star?: number;
   details?: string;
   sku?: string;
   brand?: Brand;
   sizes?: Size[];
-  gallery?: GalleryItem[];
+  gallery: GalleryItem[];
   seller?: Seller;
   delivery_days?: string;
   total_rating: number;

@@ -16,7 +16,6 @@ import borderRadius from "@/style/borderRadius";
 
 import gapSizes from "@/style/gapSizes";
 import ProductVarientModal from "@/modal/productVariants/ProductVarientModal";
-import { Product } from "@/interfaces";
 import { NUMERIC_SIZES, STANDARD_SIZES } from "@/constants/constants";
 import { SizeSelectorProps } from "./SizeSelector.types";
 interface AvailableSize {
@@ -121,7 +120,11 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
           ?.map((item) => item.img_url) || [];
       const imgUrl = galleryItem?.img_url || product?.thumbnail_url || "";
       const images =
-        colorImages.length > 0 ? colorImages : product?.images || [];
+        colorImages.length > 0
+          ? colorImages
+          : product?.thumbnail_url
+            ? [product.thumbnail_url]
+            : [];
 
       return {
         id: variant.id,

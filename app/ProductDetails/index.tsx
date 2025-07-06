@@ -27,13 +27,11 @@ import { fontSizes, fontWeights } from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
 import SizeSelector from "@/components/productDetails/SizeSelector";
 import ProductActionButtons from "@/components/productDetails/ProductActionButtons";
-import FullScreenLoader from "@/components/common/FullScreenLoader";
 import borderRadius from "@/style/borderRadius";
 import {
   addToWishlist,
   removeWishlistItem,
 } from "@/store/wishlist/wishlistSlice";
-import Toast from "react-native-toast-message";
 import { LinearGradient } from "expo-linear-gradient";
 import { fontFamilies } from "@/style/fontFamilies";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
@@ -82,9 +80,7 @@ const ProductDetailsScreen: React.FC = () => {
     useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [showBackToTop, setShowBackToTop] = useState(false);
-  const [displayImages, setDisplayImages] = useState<string[]>(
-    product?.gallery?.map((img) => img.img_url) || product?.images || []
-  );
+  const [displayImages, setDisplayImages] = useState<string[]>([]);
   const insets = useSafeAreaInsets();
   const flatListRef = useRef<FlatList>(null);
   const imageCarouselRef = useRef<FlatList>(null);
@@ -96,14 +92,6 @@ const ProductDetailsScreen: React.FC = () => {
   );
   useEffect(() => {
     if (id) {
-      // Get cached product immediately
-      const cachedProduct = store
-        .getState()
-        .products.data.find((product) => product.id === id);
-      if (cachedProduct) {
-        setLocalProduct(cachedProduct);
-      }
-
       dispatch(fetchProductById(id as string));
       dispatch(
         fetchProductReviews({
@@ -112,6 +100,7 @@ const ProductDetailsScreen: React.FC = () => {
           limit: LIST_LIMIT,
         })
       );
+
       if (isAuthenticatedUser) {
         dispatch(fetchUserReview(id as string));
       }
@@ -293,7 +282,9 @@ const ProductDetailsScreen: React.FC = () => {
               horizontal
               pagingEnabled
               data={
-                displayImages.length > 0 ? displayImages : product?.images || []
+                displayImages.length > 0
+                  ? displayImages
+                  : product?.gallery?.map((img) => img.img_url) || []
               }
               keyExtractor={(_, index) => `image-${index}`}
               onScroll={handleScroll}
@@ -311,7 +302,7 @@ const ProductDetailsScreen: React.FC = () => {
               <View style={styles.dotContainer}>
                 {(displayImages.length > 0
                   ? displayImages
-                  : product?.images || []
+                  : product?.gallery?.map((img) => img.img_url) || []
                 ).map((_: string, index: number) => {
                   const isActive = activeIndex === index;
                   return (
