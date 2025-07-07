@@ -113,6 +113,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.px15,
     borderRadius: borderRadius.r10,
     ...spacingStyles.mt10,
+    ...spacingStyles.mx10
   },
 });
 

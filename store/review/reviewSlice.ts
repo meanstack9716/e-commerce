@@ -9,6 +9,7 @@ import { Review } from "@/interfaces";
 
 interface ReviewState {
   loading: boolean;
+  submitLoading: boolean;
   error: string | null;
   success: boolean;
   userReview: Review | null;
@@ -25,7 +26,7 @@ const initialState: ReviewState = {
   productReviews: [],
   page: 1,
   hasMoreReviews: true,
-  
+  submitLoading: false,
 };
 
 export interface ReviewPayload {
@@ -35,7 +36,6 @@ export interface ReviewPayload {
   images?: string[];
   review_id?: string;
   remove_img_indexes?: number[];
-
 }
 
 export const fetchUserReview = createAsyncThunk<
@@ -77,7 +77,8 @@ export const fetchProductReviews = createAsyncThunk<
         `/products/${productId}/reviews?page=${page}&limit=${limit}`
       );
       const reviews = response.data.data;
-      const hasMoreReviews = response.data.current_page < response.data.last_page;
+      const hasMoreReviews =
+        response.data.current_page < response.data.last_page;
       return { reviews, hasMoreReviews };
     } catch (error: any) {
       return rejectWithValue(
@@ -192,32 +193,32 @@ const reviewSlice = createSlice({
         state.error = action.payload as string;
       })
       .addCase(submitReview.pending, (state) => {
-        state.loading = true;
+        state.submitLoading = true;
         state.error = null;
         state.success = false;
       })
       .addCase(submitReview.fulfilled, (state, action) => {
-        state.loading = false;
+        state.submitLoading = false;
         state.success = true;
         state.error = null;
       })
       .addCase(submitReview.rejected, (state, action) => {
-        state.loading = false;
+        state.submitLoading = false;
         state.error = action.payload as string;
         state.success = false;
       })
       .addCase(updateReview.pending, (state) => {
-        state.loading = true;
+        state.submitLoading = true;
         state.error = null;
         state.success = false;
       })
       .addCase(updateReview.fulfilled, (state, action) => {
-        state.loading = false;
+        state.submitLoading = false;
         state.success = true;
         state.error = null;
       })
       .addCase(updateReview.rejected, (state, action) => {
-        state.loading = false;
+        state.submitLoading = false;
         state.error = action.payload as string;
         state.success = false;
       });

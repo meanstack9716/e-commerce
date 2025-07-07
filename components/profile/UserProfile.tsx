@@ -20,12 +20,13 @@ import borderRadius from "@/style/borderRadius";
 import { fontFamilies } from "@/style/fontFamilies";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import { fontSizes, fontWeights } from "@/style/typography";
+import { fontSizes } from "@/style/typography";
 import { useAppDispatch } from "@/store/hooks";
 import { fetchProducts } from "@/store/product/productsSlice";
 import ProductCardSkeleton from "../common/ProductCardSkeleton";
 import { LIST_LIMIT } from "@/constants/constants";
 import { RootState } from "@/store/store";
+import { fetchUserProfile } from "@/store/user/userSlice";
 
 const UserProfile = () => {
   const [likedProductItems, setLikedProductItems] = useState<string[]>([]);
@@ -43,6 +44,10 @@ const UserProfile = () => {
     loading: productsLoading,
     error: productsError,
   } = useSelector((state: any) => state.products);
+
+  useEffect(() => {
+    dispatch(fetchUserProfile());
+  });
 
   useFocusEffect(
     useCallback(() => {

@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 3,
-    resizeMode: "contain",
+    resizeMode: "cover",
     ...spacingStyles.mr10,
   },
   title: {

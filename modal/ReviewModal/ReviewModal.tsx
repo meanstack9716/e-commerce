@@ -36,6 +36,7 @@ import ConfirmationModal from "@/modal/commonModal/confirmationModal/Confirmatio
 import { Review } from "@/interfaces";
 import { clearOrderStatus, fetchOrders } from "@/store/order/orderSlice";
 import { LIST_LIMIT, REVIEW_COMMENT_CHARACTER } from "@/constants/constants";
+import ReviewModalSkeleton from "@/components/skeleton/ReviewModalSkeleton";
 
 const initialReviewState: ReviewState = {
   rating: 0,
@@ -52,19 +53,17 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
   productDescription,
 }) => {
   const dispatch = useAppDispatch();
-  const { loading, error, success, userReview } = useSelector(
+  const { loading, error, success, userReview , submitLoading } = useSelector(
     (state: RootState) => state.review
   );
 
   const currentUserId = useSelector((state: RootState) => state.auth?.user?.id);
-  const { orders, currentPage } = useSelector(
-    (state: RootState) => state.order
-  );
   const [reviewState, setReviewState] =
     useState<ReviewState>(initialReviewState);
   const [isReviewSubmitted, setIsReviewSubmitted] = useState(false);
   const [currentReview, setCurrentReview] = useState<Review | null>(null);
   const [removedImageIndices, setRemovedImageIndices] = useState<number[]>([]);
+  const user = useSelector((state: RootState) => state.user.user);
   const {
     errors,
     handleFieldChange,
@@ -252,122 +251,133 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
         onRequestClose={handleClose}
       >
         <TouchableWithoutFeedback onPress={handleClose}>
-          <View style={styles.centeredView}>
-            <TouchableWithoutFeedback>
-              <View style={styles.modalView}>
-                <Text style={styles.modalTitle}>{getModalTitle()}</Text>
-                <View style={styles.orderInfo}>
-                  <Image
-                    source={images.genderFemale}
-                    style={styles.avatarImage}
-                  />
-                  <View>
-                    <Text style={styles.productDescription}>
-                      {textTruncate(productDescription, 7)}
-                    </Text>
-                    <Text style={styles.orderText}>Order #{orderId}</Text>
-                  </View>
-                </View>
+          {loading ? (
+            <ReviewModalSkeleton />
+          ) : (
+            <View style={styles.centeredView}>
+              <TouchableWithoutFeedback>
+                <View style={styles.modalView}>
+                  <Text style={styles.modalTitle}>{getModalTitle()}</Text>
+                  <View style={styles.orderInfo}>
+                    <Image
+                      source={
+                        user?.profile_url
+                          ? { uri: user.profile_url }
+                          : images.genderFemale
+                      }
+                      style={styles.avatarImage}
+                    />
 
-                <View style={styles.ratingWithCamera}>
-                  <View style={styles.ratingContainer}>
-                    {[...Array(5)].map((_, index) => {
-                      const starRating = index + 1;
-                      return (
-                        <TouchableOpacity
-                          key={index}
-                          onPress={() => handleRating(starRating)}
-                        >
-                          <Ionicons
-                            name={
-                              reviewState.rating >= starRating
-                                ? "star"
-                                : "star-outline"
-                            }
-                            size={fontSizes["2xl"]}
-                            color={staticColors.darkYellow}
-                            style={styles.star}
-                          />
-                        </TouchableOpacity>
-                      );
-                    })}
+                    <View>
+                      <Text style={styles.productDescription}>
+                        {textTruncate(productDescription, 7)}
+                      </Text>
+                      <Text style={styles.orderText}>Order #{orderId}</Text>
+                    </View>
                   </View>
-                  {errors.rating && (
-                    <Text style={styles.errorText}>{errors.rating}</Text>
-                  )}
 
-                  <View style={styles.cameraRow}>
-                    <TouchableOpacity
-                      style={styles.cameraIcon}
-                      onPress={handleImagePick}
-                    >
-                      <Ionicons
-                        name="camera-outline"
-                        size={18}
-                        color={staticColors.primaryBlue}
-                      />
-                    </TouchableOpacity>
-
-                    <Text style={styles.cameraText}>
-                      Add photos to your review
-                    </Text>
-                  </View>
-                  <View style={styles.imagePreviewContainer}>
-                    <ScrollView
-                      horizontal
-                      showsHorizontalScrollIndicator={false}
-                      contentContainerStyle={styles.imagePreviewContainer}
-                    >
-                      {reviewState.selectedImages.map((uri, index) => (
-                        <View
-                          key={`${uri}-${index}`}
-                          style={styles.imageWrapper}
-                        >
-                          <Image source={{ uri }} style={styles.previewImage} />
+                  <View style={styles.ratingWithCamera}>
+                    <View style={styles.ratingContainer}>
+                      {[...Array(5)].map((_, index) => {
+                        const starRating = index + 1;
+                        return (
                           <TouchableOpacity
-                            style={styles.removeIcon}
-                            onPress={() => removeSelectedReviewImage(uri)}
+                            key={index}
+                            onPress={() => handleRating(starRating)}
                           >
                             <Ionicons
-                              name="close-circle"
-                              size={20}
-                              color={staticColors.primaryBlue}
+                              name={
+                                reviewState.rating >= starRating
+                                  ? "star"
+                                  : "star-outline"
+                              }
+                              size={fontSizes["2xl"]}
+                              color={staticColors.darkYellow}
+                              style={styles.star}
                             />
                           </TouchableOpacity>
-                        </View>
-                      ))}
-                    </ScrollView>
+                        );
+                      })}
+                    </View>
+                    {errors.rating && (
+                      <Text style={styles.errorText}>{errors.rating}</Text>
+                    )}
+
+                    <View style={styles.cameraRow}>
+                      <TouchableOpacity
+                        style={styles.cameraIcon}
+                        onPress={handleImagePick}
+                      >
+                        <Ionicons
+                          name="camera-outline"
+                          size={18}
+                          color={staticColors.primaryBlue}
+                        />
+                      </TouchableOpacity>
+
+                      <Text style={styles.cameraText}>
+                        Add photos to your review
+                      </Text>
+                    </View>
+                    <View style={styles.imagePreviewContainer}>
+                      <ScrollView
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={styles.imagePreviewContainer}
+                      >
+                        {reviewState.selectedImages.map((uri, index) => (
+                          <View
+                            key={`${uri}-${index}`}
+                            style={styles.imageWrapper}
+                          >
+                            <Image
+                              source={{ uri }}
+                              style={styles.previewImage}
+                            />
+                            <TouchableOpacity
+                              style={styles.removeIcon}
+                              onPress={() => removeSelectedReviewImage(uri)}
+                            >
+                              <Ionicons
+                                name="close-circle"
+                                size={20}
+                                color={staticColors.primaryBlue}
+                              />
+                            </TouchableOpacity>
+                          </View>
+                        ))}
+                      </ScrollView>
+                    </View>
                   </View>
-                </View>
 
-                <TextInput
-                  style={styles.commentInput}
-                  multiline
-                  placeholder="Write your review (minimum 50 characters)"
-                  placeholderTextColor={staticColors.black}
-                  value={reviewState.comment}
-                  onChangeText={handleCommentChange}
-                  textAlignVertical="top"
-                  textAlign="left"
-                />
-                <Text style={styles.charCount}>
-                  {reviewState.comment.length}/50
-                </Text>
-                {errors.comment && (
-                  <Text style={styles.errorText}>{errors.comment}</Text>
-                )}
-                {error && <Text style={styles.errorText}>{error}</Text>}
+                  <TextInput
+                    style={styles.commentInput}
+                    multiline
+                    placeholder="Write your review (minimum 50 characters)"
+                    placeholderTextColor={staticColors.black}
+                    value={reviewState.comment}
+                    onChangeText={handleCommentChange}
+                    textAlignVertical="top"
+                    textAlign="left"
+                  />
+                  <Text style={styles.charCount}>
+                    {reviewState.comment.length}/50
+                  </Text>
+                  {errors.comment && (
+                    <Text style={styles.errorText}>{errors.comment}</Text>
+                  )}
+                  {error && <Text style={styles.errorText}>{error}</Text>}
 
-                <TouchableOpacity
-                  style={[
-                    styles.submitButton,
-                    (loading || errors.rating || errors.comment) &&
-                      styles.disabledButton,
-                  ]}
-                  onPress={handleSubmit}
-                  disabled={loading || !!errors.rating || !!errors.comment}
-                >
-                  {loading ? (
+                  <TouchableOpacity
+                    style={[
+                      styles.submitButton,
+                      (loading || errors.rating || errors.comment) &&
+                        styles.disabledButton,
+                    ]}
+                    onPress={handleSubmit}
+                    disabled={loading || !!errors.rating || !!errors.comment}
+                  >
+                    {submitLoading ? (
                     <ActivityIndicator
                       size="small"
                       color={staticColors.white}
@@ -376,11 +386,12 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
                     <Text style={styles.submitButtonText}>
                       {getReveiwButtonText()}
                     </Text>
-                  )}
-                </TouchableOpacity>
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
+                    )} 
+                  </TouchableOpacity>
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
+          )}
         </TouchableWithoutFeedback>
       </Modal>
 

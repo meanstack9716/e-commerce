@@ -91,7 +91,7 @@ const PlaceOrderScreen: React.FC = () => {
 
   // Handle back navigation
   const handleBack = () => {
-    dispatch(removePromoCode()); //clr applied promo code when we back using arrow 
+    dispatch(removePromoCode()); //clr applied promo code when we back using arrow
     router.back();
   };
 
@@ -156,10 +156,9 @@ const PlaceOrderScreen: React.FC = () => {
           text1: "Order Placed",
           text2: "Your order has been placed successfully.",
         });
-        router.push("/orderHistory");
+        router.replace("/orderHistory");
       }
     } catch (error) {
-      console.log(error)
       Toast.show({
         type: "error",
         text1: "Order Failed",
