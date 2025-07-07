@@ -81,6 +81,7 @@ const styles = StyleSheet.create({
   leftSection: {
     flexDirection: "row",
     alignItems: "center",
+    ...spacingStyles.pt5,
   },
   backButton: {
     ...spacingStyles.py5,

@@ -21,20 +21,23 @@ export const fetchSearchProducts = createAsyncThunk<
   { data: Product[]; page: number; lastPage: number },
   { params?: any },
   { rejectValue: string }
->("search/fetchSearchProducts", async ({ params = {} }, { rejectWithValue }) => {
-  try {
-    const response = await axiosConfig.get("/products/list", {
-      params: {
-        ...params,
-      },
-    });
-console.log(params)
-    const { data, current_page, last_page } = response.data;
-    return { data, page: current_page, lastPage: last_page };
-  } catch (error) {
-    return rejectWithValue(handleApiError(error, "Search failed"));
+>(
+  "search/fetchSearchProducts",
+  async ({ params = {} }, { rejectWithValue }) => {
+    try {
+      const response = await axiosConfig.get("/products/list", {
+        params: {
+          ...params,
+        },
+      });
+      console.log("params ", params);
+      const { data, current_page, last_page } = response.data;
+      return { data, page: current_page, lastPage: last_page };
+    } catch (error) {
+      return rejectWithValue(handleApiError(error, "Search failed"));
+    }
   }
-});
+);
 
 const searchProductsSlice = createSlice({
   name: "searchProducts",

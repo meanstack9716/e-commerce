@@ -233,6 +233,11 @@ const ProductSearchScreen: React.FC = () => {
 
     const nextPage = page + 1;
     setPage(nextPage);
+
+    const shouldIncludePriceFilters =
+      priceMin !== PRODUCT_RANGE_MIN_PRICE ||
+      priceMax !== PRODUCT_RANGE_MAX_PRICE;
+
     dispatch(
       fetchSearchProducts({
         params: {
@@ -242,6 +247,10 @@ const ProductSearchScreen: React.FC = () => {
           colors,
           page: nextPage,
           limit,
+          ...(shouldIncludePriceFilters && {
+            minPrice: priceMin,
+            maxPrice: priceMax,
+          }),
         },
       })
     );
