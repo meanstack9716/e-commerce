@@ -30,7 +30,7 @@ import gapSizes from "@/style/gapSizes";
 import { fontFamilies } from "@/style/fontFamilies";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import WishlistSkeleton from "@/components/skeleton/WishlistSkeleton";
-
+import images from "@/constants/images";
 
 const WishlistScreen: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -206,7 +206,7 @@ const WishlistScreen: React.FC = () => {
 
       {loading && (
         <FlatList
-          data={Array(3).fill(0)} 
+          data={Array(3).fill(0)}
           keyExtractor={(_, index) => `skeleton-${index}`}
           renderItem={() => <WishlistSkeleton />}
           contentContainerStyle={styles.flatList}
@@ -217,16 +217,25 @@ const WishlistScreen: React.FC = () => {
 
       {!loading && !error && items.length === 0 && (
         <View style={styles.emptyWishlistContainer}>
-          <Text style={styles.emptyWishlistTitle}>Your wishlist is empty</Text>
-          <Text style={styles.emptyWishlistSubtitle}>
-            Save items that you like in your wishlist. Review them anytime and
-            easily move them to the bag.
+          <Image
+            source={images.emptyWishlist} // 👈 Replace with your actual image
+            style={styles.emptyWishlistImage}
+            resizeMode="contain"
+          />
+
+          <Text style={styles.emptyWishlistTitle}>
+            No Products in your wishlist
           </Text>
+
+          <Text style={styles.emptyWishlistSubtitle}>
+            It is simple! just tap on ❣️ to add any product to your wishlist
+          </Text>
+
           <TouchableOpacity
             style={styles.shopNowButton}
             onPress={() => router.navigate("/(tabs)/home")}
           >
-            <Text style={styles.shopNowText}>SHOP NOW</Text>
+            <Text style={styles.shopNowText}>View Products</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -357,8 +366,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     ...spacingStyles.p20,
   },
+  emptyWishlistImage: {
+    width: 200,
+    height: 200,
+    marginBottom: 20,
+  },
+
   emptyWishlistTitle: {
-    fontSize: fontSizes.xl,
+    fontSize: fontSizes.lg,
     fontWeight: fontWeights.semiBold,
     color: staticColors.darkGray,
     ...spacingStyles.mb10,
@@ -371,23 +386,16 @@ const styles = StyleSheet.create({
     ...spacingStyles.mb25,
   },
   shopNowButton: {
-    backgroundColor: staticColors.white,
-    ...spacingStyles.px25,
+    backgroundColor: staticColors.primaryBlue,
     ...spacingStyles.py10,
-    borderRadius: borderRadius.r5,
-    borderWidth: 1,
-    borderColor: staticColors.primary,
-    alignItems: "center",
+    ...spacingStyles.px30,
+    borderRadius: borderRadius.r10,
   },
   shopNowText: {
-    fontSize: fontSizes.sm,
-    color: staticColors.primary,
-    fontWeight: fontWeights.semiBold,
-  },
-  loader: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    color: staticColors.white,
+    fontWeight: fontWeights.bold,
+    fontSize: fontSizes.base,
+    ...spacingStyles.px20,
   },
   errorText: {
     color: staticColors.DarkRed,

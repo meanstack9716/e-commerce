@@ -213,14 +213,15 @@ const ShoppingBagScreen: React.FC = () => {
               </View>
             )}
           </View>
-          {isAuthenticated && token && (
-            <ContactCard
-              title="Shipping Address"
-              information={[getFormattedAddress(addresses, selectedAddressId)]}
-            />
-          )}
+
           {isAuthenticated && token && cartItems.length ? (
             <View style={styles.itemsWrapper}>
+              <ContactCard
+                title="Shipping Address"
+                information={[
+                  getFormattedAddress(addresses, selectedAddressId),
+                ]}
+              />
               <FlatList
                 data={cartItems}
                 renderItem={renderCartItem}
@@ -285,10 +286,10 @@ const styles = StyleSheet.create({
   headerWrapper: {
     flexDirection: "row",
     alignItems: "center",
-    gap:gapSizes.md
+    gap: gapSizes.md,
   },
   backButton: {
-    ...spacingStyles.mt10
+    ...spacingStyles.mt10,
   },
   itemsWrapper: {
     ...spacingStyles.py15,

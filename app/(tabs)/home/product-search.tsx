@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
+  Alert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -66,6 +67,16 @@ const ProductSearchScreen: React.FC = () => {
   const { recommendedKeywords } = useSelector((state: any) => state.products);
   const { subCategories, sizes, colors, priceMin, priceMax } = productFilters;
   const { subSubCategoryId } = useLocalSearchParams();
+  //for testing purpose
+  const DEFAULT_API_URL = process.env.EXPO_PUBLIC_API_URL || "";
+  // Function to show alert with base URL
+  const showBaseUrlAlert = (params: Record<string, any> = {}) => {
+    Alert.alert(
+      "API Call",
+      `Base URL: ${DEFAULT_API_URL} ${JSON.stringify(params) || "None"}`,
+      [{ text: "OK" }]
+    );
+  };
 
   useEffect(() => {
     const loadSearchHistory = async () => {
@@ -84,9 +95,9 @@ const ProductSearchScreen: React.FC = () => {
       dispatch(
         fetchSearchProducts({
           params: {
-            subSubCategoryIds: [subSubCategoryId],
-            sizes: [],
-            colors: [],
+            subSubCategoryIds: subSubCategoryId,
+            sizes: "",
+            colors: "",
             page: 1,
             limit,
           },
@@ -107,19 +118,16 @@ const ProductSearchScreen: React.FC = () => {
       setIsSearchSubmitted(true);
       setPage(1);
       dispatch(resetSearchProducts());
-      dispatch(
-        fetchSearchProducts({
-          params: {
-            subCategoryIds: subCategories,
-            sizes,
-            colors,
-            minPrice: priceMin,
-            maxPrice: priceMax,
-            page: 1,
-            limit,
-          },
-        })
-      );
+      const params = {
+        subCategoryIds: subCategories.join(","),
+        sizes: sizes.join(","),
+        colors: colors.join(","),
+        minPrice: priceMin,
+        maxPrice: priceMax,
+        page: 1,
+        limit,
+      };
+      dispatch(fetchSearchProducts({ params }));
     }
   }, [dispatch, subCategories, sizes, colors, priceMin, priceMax]);
 
@@ -131,18 +139,16 @@ const ProductSearchScreen: React.FC = () => {
       setIsSearchSubmitted(true);
       setPage(1);
       dispatch(resetSearchProducts());
-      dispatch(
-        fetchSearchProducts({
-          params: {
-            searchTerm: searchTerm,
-            subCategoryIds: subCategories,
-            sizes,
-            colors,
-            page: 1,
-            limit,
-          },
-        })
-      );
+      const params = {
+        searchTerm: searchTerm,
+        subCategoryIds: subCategories.join(","),
+        sizes: sizes.join(","),
+        colors: colors.join(","),
+        page: 1,
+        limit,
+      };
+      dispatch(fetchSearchProducts({ params }));
+      showBaseUrlAlert(params);
     } catch (error) {
       setIsSearchSubmitted(false);
     }
@@ -153,18 +159,16 @@ const ProductSearchScreen: React.FC = () => {
     setIsSearchSubmitted(true);
     setPage(1);
     dispatch(resetSearchProducts());
-    dispatch(
-      fetchSearchProducts({
-        params: {
-          searchTerm: query,
-          subCategoryIds: [],
-          sizes: [],
-          colors: [],
-          page: 1,
-          limit,
-        },
-      })
-    );
+    const params = {
+      searchTerm: query,
+      subCategoryIds: "",
+      sizes: "",
+      colors: "",
+      page: 1,
+      limit,
+    };
+    dispatch(fetchSearchProducts({ params }));
+    showBaseUrlAlert(params);
   };
 
   const handleClearSearchHistory = async () => {
@@ -200,21 +204,18 @@ const ProductSearchScreen: React.FC = () => {
     setProductFilters(newFilters);
     setIsSearchSubmitted(true);
     setPage(1);
+    const params = {
+      searchTerm,
+      subCategoryIds: newFilters.subCategories.join(","),
+      sizes: newFilters.sizes.join(","),
+      colors: newFilters.colors.join(","),
+      minPrice: newFilters.priceMin,
+      maxPrice: newFilters.priceMax,
+      page: 1,
+      limit,
+    };
 
-    dispatch(
-      fetchSearchProducts({
-        params: {
-          searchTerm,
-          subCategoryIds: newFilters.subCategories,
-          sizes: newFilters.sizes,
-          colors: newFilters.colors,
-          minPrice: newFilters.priceMin,
-          maxPrice: newFilters.priceMax,
-          page: 1,
-          limit,
-        },
-      })
-    );
+    dispatch(fetchSearchProducts({ params }));
   };
 
   const handleClearFilters = () => {
@@ -242,9 +243,9 @@ const ProductSearchScreen: React.FC = () => {
       fetchSearchProducts({
         params: {
           searchTerm,
-          subCategoryIds: subCategories,
-          sizes,
-          colors,
+          subCategoryIds: subCategories.join(","),
+          sizes: sizes.join(","),
+          colors: colors.join(","),
           page: nextPage,
           limit,
           ...(shouldIncludePriceFilters && {

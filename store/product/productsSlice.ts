@@ -18,6 +18,7 @@ interface ProductsState {
   recommendedKeywordsLoading: boolean;
   recommendedKeywordsError: string | null;
   lastPage: number;
+  productCache: Record<string, Product>;
 }
 
 const initialState: ProductsState = {
@@ -34,6 +35,7 @@ const initialState: ProductsState = {
   recommendedKeywordsLoading: false,
   recommendedKeywordsError: null,
   lastPage: 1,
+  productCache: {},
 };
 
 export const fetchColors = createAsyncThunk<
@@ -74,7 +76,6 @@ export const fetchProducts = createAsyncThunk<
       const { data, current_page, last_page } = response.data;
       return { data, page: current_page, lastPage: last_page };
     }
-
     return rejectWithValue("Invalid response format from API");
   } catch (error) {
     return rejectWithValue(handleApiError(error, "Failed to fetch products"));
@@ -85,7 +86,13 @@ export const fetchProductById = createAsyncThunk<
   Product,
   string,
   { state: RootState; rejectValue: string }
->("products/fetchProductById", async (id, { rejectWithValue }) => {
+>("products/fetchProductById", async (id, { getState, rejectWithValue }) => {
+  const state = getState();
+  const cachedProduct = state.products.productCache[id];
+
+  if (cachedProduct) {
+    return cachedProduct;
+  }
   try {
     const response = await axiosConfig.get(`/products/${id}`);
     const apiProduct = response.data.data;
@@ -145,6 +152,14 @@ const productsSlice = createSlice({
       state.selectedProductLoading = false;
       state.selectedProductError = null;
     },
+    clearProductCache: (state) => {
+      state.productCache = {};
+    },
+    cacheProduct: (state, action: { payload: Product }) => {
+      if (action.payload?.id) {
+        state.productCache[action.payload.id] = action.payload;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -175,6 +190,10 @@ const productsSlice = createSlice({
       .addCase(fetchProductById.fulfilled, (state, action) => {
         state.selectedProductLoading = false;
         state.selectedProduct = action.payload;
+        // Add to cache
+        if (action.payload?.id) {
+          state.productCache[action.payload.id] = action.payload;
+        }
       })
       .addCase(fetchProductById.rejected, (state, action) => {
         state.selectedProductLoading = false;
@@ -209,5 +228,10 @@ const productsSlice = createSlice({
   },
 });
 
-export const { resetProducts, clearSelectedProduct } = productsSlice.actions;
+export const {
+  resetProducts,
+  clearSelectedProduct,
+  clearProductCache,
+  cacheProduct,
+} = productsSlice.actions;
 export default productsSlice.reducer;

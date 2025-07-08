@@ -19,12 +19,13 @@ const images = {
   onBoardingCard3: require("@/assets/images/images/card-03.png"),
   onBoardingCard4: require("@/assets/images/images/card-04.png"),
   welcomeBag: require("@/assets/images/images/welcome-bag.png"),
-  emptyCart: require("@/assets/images/logo/empty-cart.png"),
+  emptyCart: require("@/assets/images/emptyCart.png"),
+  emptyWishlist: require("@/assets/images/emptyWishlist.png"),
   tickImage: require("@/assets/images/images/tickImage.png"),
   unKnownUser: require("@/assets/images/images/unknownUser.png"),
   noProductFound: require("@/assets/images/images/noProductFound.png"),
   promoCodeSuccess: require("@/assets/images/images/promo-code-success.png"),
-  promoCodeError:require("@/assets/images/images/promoCodeError.png")
+  promoCodeError: require("@/assets/images/images/promoCodeError.png"),
 };
 
 export default images;
