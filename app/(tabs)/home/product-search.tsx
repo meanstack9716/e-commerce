@@ -92,17 +92,16 @@ const ProductSearchScreen: React.FC = () => {
       setIsSearchSubmitted(true);
       setPage(1);
       dispatch(resetSearchProducts());
-      dispatch(
-        fetchSearchProducts({
-          params: {
-            subSubCategoryIds: subSubCategoryId,
-            sizes: "",
-            colors: "",
-            page: 1,
-            limit,
-          },
-        })
+      const params = {
+        subSubCategoryIds: subSubCategoryId,
+        sizes: "",
+        colors: "",
+        page: 1,
+        limit,
+      };
+      dispatch( fetchSearchProducts({ params})
       );
+      showBaseUrlAlert(params);
     }
   }, [subSubCategoryId]);
 
@@ -127,6 +126,7 @@ const ProductSearchScreen: React.FC = () => {
         page: 1,
         limit,
       };
+      showBaseUrlAlert(params);
       dispatch(fetchSearchProducts({ params }));
     }
   }, [dispatch, subCategories, sizes, colors, priceMin, priceMax]);

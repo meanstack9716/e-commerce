@@ -474,6 +474,8 @@ const styles = StyleSheet.create({
     width: screenWidth,
     height: 430,
     backgroundColor: staticColors.lightGray,
+    borderBottomLeftRadius: borderRadius.r20,
+    borderBottomRightRadius: borderRadius.r20,
   },
   dotContainer: {
     flexDirection: "row",

@@ -43,11 +43,23 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
     (c) => c.color === selectedColor
   );
   const mainImage = selectedColorData?.images[0];
+  const availableStock = selectedColorData?.stock_quantity || 0;
+
+  const handleIncrement = () => {
+    if (quantity < availableStock) {
+      setQuantity(quantity + 1);
+    }
+  };
+
+  const handleDecrement = () => {
+    setQuantity(Math.max(1, quantity - 1));
+  };
 
   const handleSizeSelect = (size: AvailableSize) => {
     if (size.left > 0) {
       onSizeSelect(size.label);
     }
+    setQuantity(1);
   };
 
   const handleColorSelect = (colorOption: ColorOption) => {
@@ -56,6 +68,7 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
       colorName: colorOption.color,
       images: colorOption.images,
     });
+    setQuantity(1);
   };
 
   return (
@@ -129,7 +142,7 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
                     <Text style={styles.sectionTitle}>Quantity</Text>
                     <View style={styles.quantityControl}>
                       <TouchableOpacity
-                        onPress={() => setQuantity(Math.max(1, quantity - 1))}
+                        onPress={handleDecrement}
                         style={styles.quantityButton}
                       >
                         <Ionicons
@@ -142,13 +155,18 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
                       <Text style={styles.quantity}>{quantity}</Text>
 
                       <TouchableOpacity
-                        onPress={() => setQuantity(quantity + 1)}
+                        onPress={handleIncrement}
                         style={styles.quantityButton}
+                        disabled={quantity >= availableStock}
                       >
                         <Ionicons
                           name="add"
                           size={fontSizes["xl"]}
-                          color={staticColors.primaryBlue}
+                          color={
+                            quantity >= availableStock
+                              ? staticColors.lightGray
+                              : staticColors.primaryBlue
+                          }
                         />
                       </TouchableOpacity>
                     </View>
@@ -168,7 +186,11 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
                       <Ionicons
                         name={isLiked ? "heart" : "heart-outline"}
                         size={18}
-                        color={isLiked ? staticColors.DarkRed : staticColors.textSoftGray}
+                        color={
+                          isLiked
+                            ? staticColors.DarkRed
+                            : staticColors.textSoftGray
+                        }
                         style={{ marginRight: 6 }}
                       />
                       <Text style={styles.buttonText}>Add to wishlist</Text>
@@ -267,7 +289,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: borderRadius.r8,
-    backgroundColor:staticColors.lightGray
+    backgroundColor: staticColors.lightGray,
   },
   sizeContainer: {
     flexDirection: "row",
