@@ -38,7 +38,7 @@ import gapSizes from "@/style/gapSizes";
 
 const ShoppingBagScreen: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { cartItems, loading } = useSelector((state: RootState) => state.cart);
+  const { cartItems, loading ,updateLoading  } = useSelector((state: RootState) => state.cart);
   const token = useSelector((state: RootState) => state.auth.token);
   const addresses = useSelector((state: RootState) => state.address.addresses);
   const selectedAddressId = useSelector(
@@ -171,8 +171,8 @@ const ShoppingBagScreen: React.FC = () => {
       params: { selectedItems: selectedItems },
     });
   };
-
-  if (isLoading) {
+const showSkeleton = isLoading || loading || updateLoading;
+  if (showSkeleton) {
     return (
       <SafeAreaViewWrapper>
         <ScrollView
@@ -238,6 +238,7 @@ const ShoppingBagScreen: React.FC = () => {
         </ScrollView>
         {isAuthenticated && token && cartItems.length ? (
           <View style={styles.totalPriceContainer}>
+             
             <Text style={styles.totalPrice}>
               Total ₹ {calculateTotalPrice()}
             </Text>

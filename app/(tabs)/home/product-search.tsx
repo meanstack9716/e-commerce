@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
-  Alert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -67,16 +66,6 @@ const ProductSearchScreen: React.FC = () => {
   const { recommendedKeywords } = useSelector((state: any) => state.products);
   const { subCategories, sizes, colors, priceMin, priceMax } = productFilters;
   const { subSubCategoryId } = useLocalSearchParams();
-  //for testing purpose
-  const DEFAULT_API_URL = process.env.EXPO_PUBLIC_API_URL || "";
-  // Function to show alert with base URL
-  const showBaseUrlAlert = (params: Record<string, any> = {}) => {
-    Alert.alert(
-      "API Call",
-      `Base URL: ${DEFAULT_API_URL} ${JSON.stringify(params) || "None"}`,
-      [{ text: "OK" }]
-    );
-  };
 
   useEffect(() => {
     const loadSearchHistory = async () => {
@@ -92,16 +81,17 @@ const ProductSearchScreen: React.FC = () => {
       setIsSearchSubmitted(true);
       setPage(1);
       dispatch(resetSearchProducts());
-      const params = {
-        subSubCategoryIds: subSubCategoryId,
-        sizes: "",
-        colors: "",
-        page: 1,
-        limit,
-      };
-      dispatch( fetchSearchProducts({ params})
+      dispatch(
+        fetchSearchProducts({
+          params: {
+            subSubCategoryIds: subSubCategoryId,
+            sizes: "",
+            colors: "",
+            page: 1,
+            limit,
+          },
+        })
       );
-      showBaseUrlAlert(params);
     }
   }, [subSubCategoryId]);
 
@@ -126,7 +116,6 @@ const ProductSearchScreen: React.FC = () => {
         page: 1,
         limit,
       };
-      showBaseUrlAlert(params);
       dispatch(fetchSearchProducts({ params }));
     }
   }, [dispatch, subCategories, sizes, colors, priceMin, priceMax]);
@@ -148,7 +137,6 @@ const ProductSearchScreen: React.FC = () => {
         limit,
       };
       dispatch(fetchSearchProducts({ params }));
-      showBaseUrlAlert(params);
     } catch (error) {
       setIsSearchSubmitted(false);
     }
@@ -168,7 +156,6 @@ const ProductSearchScreen: React.FC = () => {
       limit,
     };
     dispatch(fetchSearchProducts({ params }));
-    showBaseUrlAlert(params);
   };
 
   const handleClearSearchHistory = async () => {
