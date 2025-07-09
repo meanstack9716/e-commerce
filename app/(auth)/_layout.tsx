@@ -51,6 +51,10 @@ export default function AuthLayout() {
         name="ReferAndEarnScreen"
         options={{ title: "ReferAndEarnScreen", headerShown: false }}
       />
+         <Stack.Screen
+        name="RewardAndPonit"
+        options={{ title: "RewardAndPonit", headerShown: false }}
+      />
     </Stack>
   );
 }

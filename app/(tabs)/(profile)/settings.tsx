@@ -35,6 +35,7 @@ export default function SettingPage() {
       items: [
         { label: "Profile", route: "userManageAccount" },
         { label: "Referal Code", route: "ReferAndEarnScreen" },
+        { label: "Reward & Point", route: "RewardAndPonit" },
         { label: "Payment methods", route: null },
       ],
     },
@@ -43,9 +44,6 @@ export default function SettingPage() {
       items: [
         { label: "Order", route: "/orderHistory" },
         { label: "Faq", route: "faq" },
-        { label: "About Us", route: null },
-        { label: "Terms and Use", route: null },
-        { label: "Privacy Policy", route: null },
         { label: "Logout", isLogout: true },
       ],
     },
@@ -70,7 +68,7 @@ export default function SettingPage() {
   );
 
   return (
-    <SafeAreaViewWrapper style={{ flex: 1 }}>
+    <SafeAreaViewWrapper >
       <View style={styles.container}>
         <View style={styles.headerContain}>
           <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
