@@ -33,28 +33,39 @@ const WelcomeScreen = () => {
         <Text style={styles.subtitle}>
           Beautiful eCommerce UI Kit for your online store
         </Text>
+      </View>
+      <View style={styles.bottomContainer}>
+        <Button
+          title="Let's get started"
+          onPress={handleNextButton}
+          style={commonStyles.authButton}
+          textStyle={commonStyles.authButtonText}
+        />
 
-        <View style={styles.bottomContainer}>
-          <Button
-            title="Let's get started"
-            onPress={handleNextButton}
-            style={commonStyles.authButton}
-            textStyle={commonStyles.authButtonText}
+        <TouchableOpacity
+          style={styles.linkContainer}
+          onPress={handleAlreadyButton}
+        >
+          <Text style={styles.linkText}>I already have an account</Text>
+          <Ionicons
+            name="arrow-forward"
+            size={fontSizes.base}
+            color={staticColors.white}
+            style={styles.icon}
           />
-
-          <TouchableOpacity
-            style={styles.linkContainer}
-            onPress={handleAlreadyButton}
-          >
-            <Text style={styles.linkText}>I already have an account</Text>
-            <Ionicons
-              name="arrow-forward"
-              size={fontSizes.base}
-              color={staticColors.white}
-              style={styles.icon}
-            />
-          </TouchableOpacity>
-        </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.linkContainer}
+          onPress={() => router.navigate("/BaseURL")}
+        >
+          <Text style={styles.linkText}>Change your Base URL</Text>
+          <Ionicons
+            name="arrow-forward"
+            size={fontSizes.base}
+            color={staticColors.white}
+            style={styles.icon}
+          />
+        </TouchableOpacity>
       </View>
     </SafeAreaViewWrapper>
   );
@@ -62,24 +73,25 @@ const WelcomeScreen = () => {
 
 const styles = StyleSheet.create({
   safeContainer: {
-    flex: 1,
-    backgroundColor: staticColors.white,
+    ...spacingStyles.py30,
+    gap: gapSizes.xxl,
     ...spacingStyles.px20,
   },
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
+    ...spacingStyles.my30,
   },
   shadowContainer: {
     backgroundColor: staticColors.white,
     ...spacingStyles.p20,
     borderRadius: borderRadius.circle,
-    elevation: 5,
+    elevation: 7,
     shadowColor: staticColors.black,
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.3,
     shadowRadius: 10,
+    ...spacingStyles.mt30,
   },
   bagImage: {
     width: 90,
@@ -98,14 +110,13 @@ const styles = StyleSheet.create({
     fontFamily: fontFamilies.nunitoSans,
     color: staticColors.darkSlate,
     textAlign: "center",
-    ...spacingStyles.px25,
+    ...spacingStyles.pb30,
     lineHeight: 30,
   },
   bottomContainer: {
-    position: "absolute",
-    bottom: 50,
     width: "100%",
     alignItems: "center",
+    ...spacingStyles.mt30,
   },
   linkContainer: {
     flexDirection: "row",

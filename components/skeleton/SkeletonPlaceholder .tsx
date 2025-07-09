@@ -15,7 +15,7 @@ const SkeletonPlaceholder: React.FC<SkeletonPlaceholderProps> = ({
 }) => {
   return (
     <MotiView
-      style={style}
+      style={[{ backgroundColor: "#e0e0e0" }, style]}
       from={{ opacity: fromOpacity }}
       animate={{ opacity: toOpacity }}
       transition={{

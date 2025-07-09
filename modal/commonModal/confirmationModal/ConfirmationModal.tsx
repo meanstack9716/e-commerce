@@ -6,8 +6,10 @@ import {
   StyleSheet,
   Image,
   TouchableWithoutFeedback,
+  TouchableOpacity,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import borderRadius from "@/style/borderRadius";
 import spacingStyles from "@/style/spacingStyles";
 import { fontFamilies } from "@/style/fontFamilies";
@@ -21,9 +23,13 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   isSuccess,
   onClose,
 }) => {
+  const handleContinueShopping = () => {
+    router.navigate("/(tabs)/home");
+    onClose();
+  };
   return (
     <Modal
-      animationType="fade"
+      animationType="slide"
       transparent={true}
       visible={visible && isSuccess}
       onRequestClose={onClose}
@@ -39,10 +45,6 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
                   resizeMode="contain"
                 />
               </View>
-              <Text style={styles.confirmationTitle}>Done!</Text>
-              <Text style={styles.confirmationMessage}>
-                Thank you for your review
-              </Text>
               <View style={styles.confirmationStars}>
                 {[...Array(5)].map((_, index) => (
                   <Ionicons
@@ -53,6 +55,19 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
                   />
                 ))}
               </View>
+              <Text style={styles.confirmationTitle}>
+                Thank You for Your Review!
+              </Text>
+
+              <Text style={styles.confirmationMessage}>
+                Your feedback helps others shop smarter. Keep exploring! 💡💡
+              </Text>
+              <TouchableOpacity
+                style={styles.continueButton}
+                onPress={handleContinueShopping}
+              >
+                <Text style={styles.continueButtonText}>Continue Shopping</Text>
+              </TouchableOpacity>
             </View>
           </TouchableWithoutFeedback>
         </View>
@@ -68,13 +83,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
-
   confirmationModal: {
     backgroundColor: staticColors.white,
     borderRadius: borderRadius.r10,
-    paddingTop: 50,
-    ...spacingStyles.pb25,
-    paddingHorizontal: 20,
+    ...spacingStyles.p20,
     alignItems: "center",
     width: "90%",
     shadowColor: staticColors.black,
@@ -82,47 +94,59 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 5,
-    position: "relative",
   },
-
   outerCircle: {
-    width: 90,
-    height: 90,
+    width: 60,
+    height: 60,
     borderRadius: borderRadius.circle,
     backgroundColor: staticColors.white,
     justifyContent: "center",
     alignItems: "center",
     position: "absolute",
-    top: -35,
+    top: -30,
     shadowColor: staticColors.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
     elevation: 4,
   },
-
   checkImage: {
-    width: 60,
-    height: 60,
+    width: 40,
+    height: 40,
   },
   confirmationTitle: {
     fontSize: fontSizes.lg,
     fontFamily: fontFamilies.ralewayExtraBold,
-    color: staticColors.black,
-    ...spacingStyles.mb5,
-    textTransform: "capitalize",
-  },
-  confirmationMessage: {
-    fontSize: fontSizes.sm,
-    fontFamily: fontFamilies.nunitoSans,
-    color: staticColors.black,
+    color: staticColors.primaryBlue,
     textAlign: "center",
-    ...spacingStyles.mb15,
+    ...spacingStyles.my10,
   },
   confirmationStars: {
     flexDirection: "row",
     justifyContent: "center",
-    gap:gapSizes.md
+    gap: gapSizes.md,
+    ...spacingStyles.mt30,
+  },
+  confirmationMessage: {
+    fontSize: fontSizes.sm,
+    fontFamily: fontFamilies.ralewayMedium,
+    color: staticColors.black,
+    textAlign: "center",
+    ...spacingStyles.mb15,
+  },
+  continueButton: {
+    backgroundColor: staticColors.primaryBlue,
+    borderRadius: borderRadius.r10,
+    ...spacingStyles.py10,
+    ...spacingStyles.my5,
+    width: "100%",
+    alignItems: "center",
+  },
+  continueButtonText: {
+    fontSize: fontSizes.md,
+    fontFamily: fontFamilies.nunitoSans,
+    color: staticColors.white,
+    textTransform: "capitalize",
   },
 });
 

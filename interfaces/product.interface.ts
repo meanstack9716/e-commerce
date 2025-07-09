@@ -7,14 +7,13 @@ export interface Product {
   price: number;
   stock_quantity?: string;
   thumbnail_url: string;
-  images: string[];
   categories: string[];
   star?: number;
   details?: string;
   sku?: string;
   brand?: Brand;
   sizes?: Size[];
-  gallery?: GalleryItem[];
+  gallery: GalleryItem[];
   seller?: Seller;
   delivery_days?: string;
   total_rating: number;
@@ -31,6 +30,7 @@ export interface Review {
     first_name?: string;
     last_name?: string;
     email?: string; 
+    profile_url?:string
   };
   img_urls?: string[];
 }

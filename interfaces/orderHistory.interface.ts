@@ -14,4 +14,5 @@ export interface Order {
   payment_status:string
   created_at: string;
   items: OrderItem[];
+  products: Product[];
 }

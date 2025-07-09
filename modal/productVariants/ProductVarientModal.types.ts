@@ -9,7 +9,7 @@ export interface ColorOption {
   color: string;
   value: string;
   img_url: string;
-  stock_quantity: string;
+  stock_quantity: number;
   images: string[];
 }
 
