@@ -1,5 +1,11 @@
 import React, { useEffect } from "react";
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
@@ -10,10 +16,13 @@ import { fontSizes } from "@/style/typography";
 import { fontFamilies } from "@/style/fontFamilies";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import RatingReview from "@/components/productDetails/RatingReview/RatingReview";
-import FullScreenLoader from "@/components/common/FullScreenLoader";
-import { fetchProductReviews } from "@/store/review/reviewSlice";
+import {
+  fetchProductReviews,
+  resetReviewState,
+} from "@/store/review/reviewSlice";
 import { LIST_LIMIT } from "@/constants/constants";
 import { Ionicons } from "@expo/vector-icons";
+import ReviewSkeleton from "@/components/skeleton/ReviewSkeleton";
 
 const ReviewsScreen: React.FC = () => {
   const { productId } = useLocalSearchParams();
@@ -24,6 +33,7 @@ const ReviewsScreen: React.FC = () => {
 
   useEffect(() => {
     if (productId) {
+      dispatch(resetReviewState());
       dispatch(fetchProductById(productId as string));
       dispatch(
         fetchProductReviews({
@@ -34,7 +44,6 @@ const ReviewsScreen: React.FC = () => {
       );
     }
   }, [productId, dispatch]);
-
   const loadMoreReviews = () => {
     if (!loading && hasMoreReviews && productId) {
       dispatch(
@@ -49,50 +58,59 @@ const ReviewsScreen: React.FC = () => {
 
   return (
     <SafeAreaViewWrapper backgroundColor={staticColors.white}>
-      <FullScreenLoader visible={loading} />
-       <View style={styles.header}>
+      <View style={styles.header}>
         <View style={styles.headerContainer}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-            <Ionicons name="arrow-back" size={24} color={staticColors.black} />
+          <TouchableOpacity
+            onPress={() => router.back()}
+            style={styles.backButton}
+          >
+            <Ionicons name="arrow-back" size={22} color={staticColors.black} />
           </TouchableOpacity>
           <Text style={styles.title}>REVIEWS</Text>
         </View>
       </View>
-
-      <FlatList
-        data={productReviews}
-        renderItem={({ item }) => (
-          <RatingReview productId={productId as string} review={item} />
-        )}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.list}
-        ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>No reviews available</Text>
-          </View>
-        }
-        onEndReached={loadMoreReviews}
-        onEndReachedThreshold={0.5}
-      />
+      {loading ? (
+        <View style={styles.list}>
+          {[...Array(4)].map((_, index) => (
+            <ReviewSkeleton key={index} />
+          ))}
+        </View>
+      ) : (
+        <FlatList
+          data={productReviews}
+          renderItem={({ item }) => (
+            <RatingReview productId={productId as string} review={item} />
+          )}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.list}
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>No reviews available</Text>
+            </View>
+          }
+          onEndReached={loadMoreReviews}
+          onEndReachedThreshold={0.5}
+        />
+      )}
     </SafeAreaViewWrapper>
   );
 };
 
 const styles = StyleSheet.create({
   header: {
-    ...spacingStyles.px20,
+    ...spacingStyles.px10,
     ...spacingStyles.pt10,
     ...spacingStyles.pb5,
   },
-    headerContainer: {
+  headerContainer: {
     flexDirection: "row",
     alignItems: "center",
   },
   backButton: {
-   ...spacingStyles.mr10
+    ...spacingStyles.mr10,
   },
   title: {
-    fontSize: fontSizes["2xl"],
+    fontSize: fontSizes.lg,
     fontFamily: fontFamilies.ralewayExtraBold,
     color: staticColors.black,
   },

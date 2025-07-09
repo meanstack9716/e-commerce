@@ -34,6 +34,9 @@ const PromoCodeSection: React.FC<PromoCodeSectionProps> = ({
     useSelector((state: RootState) => state.promoCode);
   const [promoCodeSuccessModalVisible, setPromoCodeSuccessModalVisible] =
     useState(false);
+  const [isPromoCodeError, setIsPromoCodeError] = useState(false);
+  const [promoCodeModalMessage, setPromoCodeModalMessage] = useState("");
+
   const [promoCodeModalVisible, setPromoCodeModalVisible] = useState(false);
 
   useEffect(() => {
@@ -60,19 +63,22 @@ const PromoCodeSection: React.FC<PromoCodeSectionProps> = ({
 
   useEffect(() => {
     if (error) {
-      Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: error,
-      });
+      setIsPromoCodeError(true);
+      setPromoCodeModalMessage(error);
+      setPromoCodeSuccessModalVisible(true); // Show the modal on error too
     }
+
     if (appliedPromoCode) {
+      setIsPromoCodeError(false);
+      setPromoCodeModalMessage(`"${appliedPromoCode}" applied successfully!`);
       setPromoCodeSuccessModalVisible(true);
     }
   }, [error, appliedPromoCode]);
 
   const handleModalClose = () => {
     setPromoCodeSuccessModalVisible(false);
+    setIsPromoCodeError(false);
+    setPromoCodeModalMessage("");
   };
 
   if (loading && !promoCodes.length && !loadingPromoCode) {
@@ -87,9 +93,11 @@ const PromoCodeSection: React.FC<PromoCodeSectionProps> = ({
     <View style={styles.container}>
       <PromoCodeSuccessModal
         visible={promoCodeSuccessModalVisible}
-        promoCode={appliedPromoCode}
+        promoCode={promoCodeModalMessage}
         onClose={handleModalClose}
+        isError={isPromoCodeError}
       />
+
       <PromoCodeModal
         visible={promoCodeModalVisible}
         onClose={handleAllCouponsModalClose}
@@ -97,6 +105,7 @@ const PromoCodeSection: React.FC<PromoCodeSectionProps> = ({
         onSelectPromoCode={handleSelectPromoCode}
         promoCodes={promoCodes}
         onRemovePromoCode={handleRemovePromoCode}
+        loadingPromoCode={loadingPromoCode}
       />
 
       <View style={styles.header}>
@@ -108,21 +117,21 @@ const PromoCodeSection: React.FC<PromoCodeSectionProps> = ({
           />
           <Text style={styles.headerText}>Best Coupons For You</Text>
         </View>
-          <TouchableOpacity
-            style={styles.headerRight}
-            onPress={() => setPromoCodeModalVisible(true)}
-          >
-            <Text style={styles.allCouponsText}>ALL COUPONS</Text>
-            <Ionicons
-              name="chevron-forward"
-              size={16}
-              color={staticColors.blue500}
-            />
-          </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.headerRight}
+          onPress={() => setPromoCodeModalVisible(true)}
+        >
+          <Text style={styles.allCouponsText}>ALL COUPONS</Text>
+          <Ionicons
+            name="chevron-forward"
+            size={16}
+            color={staticColors.blue500}
+          />
+        </TouchableOpacity>
       </View>
 
       <PromoCodeList
-        promoCodes={promoCodes.slice(0,3)}
+        promoCodes={promoCodes.slice(0, 3)}
         appliedPromoCode={appliedPromoCode}
         loadingPromoCode={loadingPromoCode}
         onApplyPromoCode={handleSelectPromoCode}

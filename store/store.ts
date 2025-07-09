@@ -10,11 +10,13 @@ import userReducer from './user/userSlice'
 import reviewReducer from './review/reviewSlice'
 import promoCodeReducer from './promoCode/promoCodeSlice'
 import rewardReducer from './reward/rewardSlice'
+import searchProductsReducer from "./product/searchProductsSlice";
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     categories: categoriesReducer,
     products: productsReducer,
+    searchProducts: searchProductsReducer,
     cart: cartReducer,
     address: addressReducer,
     order: orderReducer,

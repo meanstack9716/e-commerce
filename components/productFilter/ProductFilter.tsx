@@ -27,6 +27,7 @@ import {
 import { useAppDispatch } from "@/store/hooks";
 import { fetchColors } from "@/store/product/productsSlice";
 import { ProductFilterProps } from "./ProductFilter.types";
+import { RangeSlider } from "@react-native-assets/slider";
 
 const { width } = Dimensions.get("window");
 
@@ -57,9 +58,23 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
   });
   const [sizeType, setSizeType] = useState<"standard" | "numeric">("standard");
 
+  const handleRangeChange = ([newMin, newMax]: [number, number]) => {
+    setPriceRange((prev) => {
+      const updatedMin = newMin < prev.max - 1000 ? newMin : prev.min;
+      const updatedMax = newMax > prev.min + 1000 ? newMax : prev.max;
+
+      return {
+        min: updatedMin,
+        max: updatedMax,
+      };
+    });
+  };
+
   useEffect(() => {
-    dispatch(fetchColors());
-  }, [dispatch]);
+    if (!availableColors || availableColors.length === 0) {
+      dispatch(fetchColors());
+    }
+  }, [dispatch, availableColors]);
 
   const subCategories: SubCategoryItem[] = categories.flatMap(
     (category: any) => category.sub_categories || []
@@ -334,58 +349,18 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
           </View>
 
           <View style={styles.rangeSliderContainer}>
-            <View style={styles.sliderTrack}>
-              <View
-                style={[
-                  styles.sliderRange,
-                  {
-                    left: `${((priceRange.min - PRODUCT_RANGE_MIN_PRICE) / (PRODUCT_RANGE_MAX_PRICE - PRODUCT_RANGE_MIN_PRICE)) * 100}%`,
-                    width: `${((priceRange.max - priceRange.min) / (PRODUCT_RANGE_MAX_PRICE - PRODUCT_RANGE_MIN_PRICE)) * 100}%`,
-                  },
-                ]}
-              />
-              <View
-                style={[
-                  styles.sliderThumb,
-                  {
-                    left: `${((priceRange.min - PRODUCT_RANGE_MIN_PRICE) / (PRODUCT_RANGE_MAX_PRICE - PRODUCT_RANGE_MIN_PRICE)) * 100}%`,
-                  },
-                ]}
-              />
-              <View
-                style={[
-                  styles.sliderThumb,
-                  {
-                    left: `${((priceRange.max - PRODUCT_RANGE_MIN_PRICE) / (PRODUCT_RANGE_MAX_PRICE - PRODUCT_RANGE_MIN_PRICE)) * 100}%`,
-                  },
-                ]}
-              />
-            </View>
-            {/* <Slider
-              style={styles.invisibleSlider}
+            <RangeSlider
+              range={[priceRange.min, priceRange.max]}
               minimumValue={PRODUCT_RANGE_MIN_PRICE}
               maximumValue={PRODUCT_RANGE_MAX_PRICE}
               step={100}
-              minimumTrackTintColor="transparent"
-              maximumTrackTintColor="transparent"
-              thumbTintColor="transparent"
-              value={priceRange.min}
-              onValueChange={(value) => {
-                const newValue = Math.round(value);
-                const minDist = Math.abs(newValue - priceRange.min);
-                const maxDist = Math.abs(newValue - priceRange.max);
-
-                if (minDist < maxDist) {
-                  if (newValue < priceRange.max - 1000) {
-                    setPriceRange((prev) => ({ ...prev, min: newValue }));
-                  }
-                } else {
-                  if (newValue > priceRange.min + 100) {
-                    setPriceRange((prev) => ({ ...prev, max: newValue }));
-                  }
-                }
-              }}
-            /> */}
+              onValueChange={handleRangeChange}
+              outboundColor="#ddd"
+              inboundColor={staticColors.primaryBlue}
+              thumbTintColor={staticColors.primaryBlue}
+              trackHeight={6}
+              thumbSize={22}
+            />
           </View>
         </View>
       </ScrollView>
@@ -413,6 +388,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     ...spacingStyles.mb10,
+    ...spacingStyles.mt5,
   },
   headerText: {
     fontSize: fontSizes["2xl"],
@@ -514,7 +490,7 @@ const styles = StyleSheet.create({
   },
   sizeContainer: {
     backgroundColor: staticColors.skyBlue50,
-    borderRadius: borderRadius.r16,
+    borderRadius: borderRadius.r24,
     overflow: "visible",
     width: width - 30,
   },
@@ -522,6 +498,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     ...spacingStyles.px15,
+    ...spacingStyles.py5,
     gap: gapSizes.xxl,
   },
   sizeButton: {
@@ -532,8 +509,8 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   selectedSizeButton: {
-    width: 30,
-    height: 30,
+    width: 32,
+    height: 32,
     backgroundColor: staticColors.white,
     shadowColor: staticColors.black,
     shadowOffset: { width: 0, height: 4 },
@@ -577,7 +554,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     ...spacingStyles.mx5,
-    ...spacingStyles.mb20,
   },
   priceRangeText: {
     fontSize: fontSizes.md,
@@ -585,47 +561,10 @@ const styles = StyleSheet.create({
     fontFamily: fontFamilies.ralewayMedium,
   },
   rangeSliderContainer: {
-    height: 30,
-    justifyContent: "center",
-    ...spacingStyles.ml10,
-    ...spacingStyles.mr25,
-  },
-  sliderTrack: {
-    height: 5,
-    backgroundColor: staticColors.skyBlue100,
-    borderRadius: borderRadius.r2,
-    position: "relative",
-  },
-  sliderRange: {
-    height: 5,
-    backgroundColor: staticColors.blue400,
-    borderRadius: borderRadius.r2,
-    position: "absolute",
-    top: 0,
-  },
-  invisibleSlider: {
-    position: "absolute",
-    width: "100%",
     height: 50,
-    opacity: 0,
-    zIndex: 2,
-  },
-  sliderThumb: {
-    width: 32,
-    height: 32,
-    borderRadius: borderRadius.circle,
-    backgroundColor: staticColors.white,
-    borderWidth: 2,
-    borderColor: staticColors.skyBlue100,
-    position: "absolute",
-    top: -16,
-    marginLeft: -10,
-    shadowColor: staticColors.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 5,
-    zIndex: 3,
+    justifyContent: "center",
+    ...spacingStyles.ml20,
+    ...spacingStyles.mr25,
   },
   footer: {
     flexDirection: "row",
@@ -634,11 +573,11 @@ const styles = StyleSheet.create({
     gap: gapSizes.md,
   },
   clearButton: {
-    flex: 0.3,
+    flex: 0.5,
     ...spacingStyles.py10,
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: staticColors.primaryBlue,
-    borderRadius: borderRadius.r12,
+    borderRadius: borderRadius.r10,
     alignItems: "center",
   },
   clearButtonText: {
@@ -647,7 +586,7 @@ const styles = StyleSheet.create({
     fontFamily: fontFamilies.nunitoSans,
   },
   applyButton: {
-    flex: 0.7,
+    flex: 0.5,
     ...spacingStyles.py10,
     backgroundColor: staticColors.primaryBlue,
     borderRadius: borderRadius.r10,

@@ -36,7 +36,6 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
   handleLikePress,
   isLiked = false,
   handleAddToCart,
-  productId,
 }) => {
   const [quantity, setQuantity] = useState(1);
 
@@ -44,11 +43,23 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
     (c) => c.color === selectedColor
   );
   const mainImage = selectedColorData?.images[0];
+  const availableStock = selectedColorData?.stock_quantity || 0;
+
+  const handleIncrement = () => {
+    if (quantity < availableStock) {
+      setQuantity(quantity + 1);
+    }
+  };
+
+  const handleDecrement = () => {
+    setQuantity(Math.max(1, quantity - 1));
+  };
 
   const handleSizeSelect = (size: AvailableSize) => {
     if (size.left > 0) {
       onSizeSelect(size.label);
     }
+    setQuantity(1);
   };
 
   const handleColorSelect = (colorOption: ColorOption) => {
@@ -57,6 +68,7 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
       colorName: colorOption.color,
       images: colorOption.images,
     });
+    setQuantity(1);
   };
 
   return (
@@ -67,10 +79,10 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
       onRequestClose={onClose}
     >
       <TouchableWithoutFeedback onPress={onClose}>
-        <BlurView intensity={50} tint="light" style={styles.centeredView}>
+        <BlurView intensity={80} tint="light" style={styles.centeredView}>
           <TouchableWithoutFeedback>
             <View style={styles.modalView}>
-              <View style={styles.content}>
+              <View>
                 <View style={styles.header}>
                   <Image source={{ uri: mainImage }} style={styles.avatar} />
                   <View>
@@ -130,7 +142,7 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
                     <Text style={styles.sectionTitle}>Quantity</Text>
                     <View style={styles.quantityControl}>
                       <TouchableOpacity
-                        onPress={() => setQuantity(Math.max(1, quantity - 1))}
+                        onPress={handleDecrement}
                         style={styles.quantityButton}
                       >
                         <Ionicons
@@ -143,13 +155,18 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
                       <Text style={styles.quantity}>{quantity}</Text>
 
                       <TouchableOpacity
-                        onPress={() => setQuantity(quantity + 1)}
+                        onPress={handleIncrement}
                         style={styles.quantityButton}
+                        disabled={quantity >= availableStock}
                       >
                         <Ionicons
                           name="add"
                           size={fontSizes["xl"]}
-                          color={staticColors.primaryBlue}
+                          color={
+                            quantity >= availableStock
+                              ? staticColors.lightGray
+                              : staticColors.primaryBlue
+                          }
                         />
                       </TouchableOpacity>
                     </View>
@@ -169,7 +186,11 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
                       <Ionicons
                         name={isLiked ? "heart" : "heart-outline"}
                         size={18}
-                        color={isLiked ? staticColors.DarkRed : staticColors.textSoftGray}
+                        color={
+                          isLiked
+                            ? staticColors.DarkRed
+                            : staticColors.textSoftGray
+                        }
                         style={{ marginRight: 6 }}
                       />
                       <Text style={styles.buttonText}>Add to wishlist</Text>
@@ -205,13 +226,12 @@ const styles = StyleSheet.create({
     borderTopRightRadius: borderRadius.r10,
     borderTopLeftRadius: borderRadius.r10,
   },
-  content: {},
   header: {
     flexDirection: "row",
     alignItems: "center",
     ...spacingStyles.mb10,
     ...spacingStyles.p20,
-    backgroundColor: staticColors.bgSoftBlue,
+    backgroundColor: staticColors.bgSoftBlue200,
   },
   avatar: {
     width: 85,
@@ -223,7 +243,7 @@ const styles = StyleSheet.create({
   colorSizeRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 6,
+    ...spacingStyles.mt10,
     gap: gapSizes.md,
   },
   priceTag: {
@@ -269,6 +289,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: borderRadius.r8,
+    backgroundColor: staticColors.lightGray,
   },
   sizeContainer: {
     flexDirection: "row",
@@ -326,7 +347,7 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.iceBlue,
     fontSize: fontSizes["2xl"],
     fontFamily: fontFamilies.ralewayeMedium,
-    marginHorizontal: 20,
+    ...spacingStyles.mx10,
     alignItems: "center",
     justifyContent: "center",
     textAlign: "center",
@@ -342,7 +363,7 @@ const styles = StyleSheet.create({
     ...spacingStyles.py10,
     justifyContent: "center",
     flex: 1,
-    ...spacingStyles.mx15,
+    ...spacingStyles.mr15,
     alignItems: "center",
   },
   buyNowButton: {

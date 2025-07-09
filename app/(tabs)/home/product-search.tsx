@@ -6,19 +6,14 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
-  ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useSelector } from "react-redux";
 import { Product } from "@/interfaces";
 import { useAppDispatch } from "@/store/hooks";
-import {
-  fetchProducts,
-  fetchRecommendedKeywords,
-  resetProducts,
-} from "@/store/product/productsSlice";
+import { fetchRecommendedKeywords } from "@/store/product/productsSlice";
 import images from "@/constants/images";
 import staticColors from "@/style/staticColors";
 import { commonStyles } from "@/style/commonStyle";
@@ -40,6 +35,10 @@ import {
   saveSearchQuery,
 } from "@/utils/searchStorage";
 import SearchSuggestions from "@/components/search/searchHistory/SearchSuggestions";
+import {
+  fetchSearchProducts,
+  resetSearchProducts,
+} from "@/store/product/searchProductsSlice";
 
 const ProductSearchScreen: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -56,19 +55,17 @@ const ProductSearchScreen: React.FC = () => {
   const [page, setPage] = useState(1);
   const dispatch = useAppDispatch();
   const {
-    data: products,
+    data: filteredData,
     loading,
     error,
     lastPage,
-  } = useSelector((state: any) => state.products);
+  } = useSelector((state: any) => state.searchProducts);
   const allProducts = useSelector((state: any) => state.products.data);
-  const filteredProducts = allProducts.filter((product: Product) =>
-    product.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
   const limit = LIST_LIMIT;
-  const hasMore = products.length > 0 && page < lastPage;
+  const hasMore = filteredData.length > 0 && page < lastPage;
   const { recommendedKeywords } = useSelector((state: any) => state.products);
   const { subCategories, sizes, colors, priceMin, priceMax } = productFilters;
+  const { subSubCategoryId } = useLocalSearchParams();
 
   useEffect(() => {
     const loadSearchHistory = async () => {
@@ -78,6 +75,25 @@ const ProductSearchScreen: React.FC = () => {
     loadSearchHistory();
     dispatch(fetchRecommendedKeywords({ limit: RECOMMENDED_KEYWORD_LIMIT }));
   }, [dispatch]);
+
+  useEffect(() => {
+    if (subSubCategoryId && typeof subSubCategoryId === "string") {
+      setIsSearchSubmitted(true);
+      setPage(1);
+      dispatch(resetSearchProducts());
+      dispatch(
+        fetchSearchProducts({
+          params: {
+            subSubCategoryIds: subSubCategoryId,
+            sizes: "",
+            colors: "",
+            page: 1,
+            limit,
+          },
+        })
+      );
+    }
+  }, [subSubCategoryId]);
 
   useEffect(() => {
     const hasFilters =
@@ -90,20 +106,17 @@ const ProductSearchScreen: React.FC = () => {
     if (hasFilters && isSearchSubmitted) {
       setIsSearchSubmitted(true);
       setPage(1);
-      dispatch(resetProducts());
-      dispatch(
-        fetchProducts({
-          params: {
-            subCategoryIds: subCategories,
-            sizes,
-            colors,
-            minPrice: priceMin,
-            maxPrice: priceMax,
-            page: 1,
-            limit,
-          },
-        })
-      );
+      dispatch(resetSearchProducts());
+      const params = {
+        subCategoryIds: subCategories.join(","),
+        sizes: sizes.join(","),
+        colors: colors.join(","),
+        minPrice: priceMin,
+        maxPrice: priceMax,
+        page: 1,
+        limit,
+      };
+      dispatch(fetchSearchProducts({ params }));
     }
   }, [dispatch, subCategories, sizes, colors, priceMin, priceMax]);
 
@@ -114,19 +127,16 @@ const ProductSearchScreen: React.FC = () => {
       setSearchHistory(updatedHistory);
       setIsSearchSubmitted(true);
       setPage(1);
-      dispatch(resetProducts());
-      dispatch(
-        fetchProducts({
-          params: {
-            searchTerm: searchTerm,
-            subCategoryIds: subCategories,
-            sizes,
-            colors,
-            page: 1,
-            limit,
-          },
-        })
-      );
+      dispatch(resetSearchProducts());
+      const params = {
+        searchTerm: searchTerm,
+        subCategoryIds: subCategories.join(","),
+        sizes: sizes.join(","),
+        colors: colors.join(","),
+        page: 1,
+        limit,
+      };
+      dispatch(fetchSearchProducts({ params }));
     } catch (error) {
       setIsSearchSubmitted(false);
     }
@@ -136,19 +146,16 @@ const ProductSearchScreen: React.FC = () => {
     setSearchTerm(query);
     setIsSearchSubmitted(true);
     setPage(1);
-    dispatch(resetProducts());
-    dispatch(
-      fetchProducts({
-        params: {
-          searchTerm: query,
-          subCategoryIds: subCategories,
-          sizes,
-          colors,
-          page: 1,
-          limit,
-        },
-      })
-    );
+    dispatch(resetSearchProducts());
+    const params = {
+      searchTerm: query,
+      subCategoryIds: "",
+      sizes: "",
+      colors: "",
+      page: 1,
+      limit,
+    };
+    dispatch(fetchSearchProducts({ params }));
   };
 
   const handleClearSearchHistory = async () => {
@@ -167,7 +174,7 @@ const ProductSearchScreen: React.FC = () => {
       priceMin: PRODUCT_RANGE_MIN_PRICE,
       priceMax: PRODUCT_RANGE_MAX_PRICE,
     });
-    dispatch(resetProducts());
+    dispatch(resetSearchProducts());
   };
 
   const handleProductFilter = () => {
@@ -184,21 +191,18 @@ const ProductSearchScreen: React.FC = () => {
     setProductFilters(newFilters);
     setIsSearchSubmitted(true);
     setPage(1);
+    const params = {
+      searchTerm,
+      subCategoryIds: newFilters.subCategories.join(","),
+      sizes: newFilters.sizes.join(","),
+      colors: newFilters.colors.join(","),
+      minPrice: newFilters.priceMin,
+      maxPrice: newFilters.priceMax,
+      page: 1,
+      limit,
+    };
 
-    dispatch(
-      fetchProducts({
-        params: {
-          searchTerm,
-          subCategoryIds: newFilters.subCategories,
-          sizes: newFilters.sizes,
-          colors: newFilters.colors,
-          minPrice: newFilters.priceMin,
-          maxPrice: newFilters.priceMax,
-          page: 1,
-          limit,
-        },
-      })
-    );
+    dispatch(fetchSearchProducts({ params }));
   };
 
   const handleClearFilters = () => {
@@ -217,17 +221,24 @@ const ProductSearchScreen: React.FC = () => {
 
     const nextPage = page + 1;
     setPage(nextPage);
+
+    const shouldIncludePriceFilters =
+      priceMin !== PRODUCT_RANGE_MIN_PRICE ||
+      priceMax !== PRODUCT_RANGE_MAX_PRICE;
+
     dispatch(
-      fetchProducts({
+      fetchSearchProducts({
         params: {
           searchTerm,
-          subCategoryIds: subCategories,
-          sizes,
-          colors,
-          minPrice: priceMin,
-          maxPrice: priceMax,
+          subCategoryIds: subCategories.join(","),
+          sizes: sizes.join(","),
+          colors: colors.join(","),
           page: nextPage,
           limit,
+          ...(shouldIncludePriceFilters && {
+            minPrice: priceMin,
+            maxPrice: priceMax,
+          }),
         },
       })
     );
@@ -335,9 +346,9 @@ const ProductSearchScreen: React.FC = () => {
             />
           ) : error ? (
             <Text style={styles.errorText}>Error: {error}</Text>
-          ) : products.length > 0 ? (
+          ) : filteredData.length > 0 ? (
             <FlatList
-              data={products}
+              data={filteredData}
               renderItem={renderProductItem}
               keyExtractor={(item) => item.id}
               numColumns={2}

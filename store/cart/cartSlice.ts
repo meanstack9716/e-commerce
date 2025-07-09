@@ -12,12 +12,14 @@ interface CartState {
   cartItems: CartItem[];
   loading: boolean;
   error: string | null;
+  updateLoading: boolean;
 }
 
 const initialState: CartState = {
   cartItems: [],
   loading: false,
   error: null,
+  updateLoading: false,
 };
 
 export const addToCartApi = createAsyncThunk<
@@ -171,11 +173,11 @@ const cartSlice = createSlice({
         state.error = action.payload as string;
       })
       .addCase(updateCartItemQuantityApi.pending, (state) => {
-        state.loading = true;
+        state.updateLoading  = true;
         state.error = null;
       })
       .addCase(updateCartItemQuantityApi.fulfilled, (state) => {
-        state.loading = false;
+        state.updateLoading  = false;
       })
       .addCase(updateCartItemQuantityApi.rejected, (state, action) => {
         Toast.show({
@@ -183,7 +185,7 @@ const cartSlice = createSlice({
           text1: action.payload as string,
           position: "top",
         });
-        state.loading = false;
+        state.updateLoading  = false;
         state.error = action.payload as string;
       });
   },

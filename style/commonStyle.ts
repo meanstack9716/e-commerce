@@ -166,8 +166,8 @@ export const commonStyles = StyleSheet.create({
     ...spacingStyles.px20,
   },
   reviewAvtar: {
-    width: 50,
-    height: 50,
+    width: 40,
+    height: 40,
     borderRadius: borderRadius.circle,
     borderColor: staticColors.white,
     backgroundColor: staticColors.white,
@@ -187,10 +187,12 @@ export const commonStyles = StyleSheet.create({
     ...spacingStyles.mt5,
   },
   reviewImage: {
-    width: 100,
-    height: 100,
+    width: 80,
+    height: 80,
     borderRadius: borderRadius.r8,
-    ...spacingStyles.mr5
+    ...spacingStyles.mr5,
+    ...spacingStyles.mt5,
+    backgroundColor:staticColors.lightGray
   },
   searchContainer: {
     flexDirection: "row",

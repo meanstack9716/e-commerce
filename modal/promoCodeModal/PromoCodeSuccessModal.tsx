@@ -7,7 +7,6 @@ import {
   TouchableWithoutFeedback,
   Image,
 } from "react-native";
-import { router, useLocalSearchParams } from "expo-router";
 import staticColors from "@/style/staticColors";
 import { fontSizes } from "@/style/typography";
 import { fontFamilies } from "@/style/fontFamilies";
@@ -20,6 +19,7 @@ const PromoCodeSuccessModal: React.FC<PromoCodeSuccessProps> = ({
   visible,
   promoCode,
   onClose,
+  isError = false,
 }) => {
   const handleClose = () => {
     onClose();
@@ -37,16 +37,20 @@ const PromoCodeSuccessModal: React.FC<PromoCodeSuccessProps> = ({
           <TouchableWithoutFeedback>
             <View style={styles.modalContent}>
               <Image
-                source={images.promoCodeSuccess}
+                source={isError ? images.promoCodeError : images.promoCodeSuccess}
                 style={styles.promoCodeImage}
                 resizeMode="contain"
               />
 
-              <Text style={styles.modalTitle}> 🎉 Congratulations !</Text>
+              <Text style={styles.modalTitle}>
+                {isError ? "❌ Error Applying Code" : "🎉 Congratulations!"}
+              </Text>
               <Text style={styles.modalMessage}>
-                Coupon code   
-                <Text style={styles.promoText}> "{promoCode}" </Text> applied
-                successfully!
+                {isError ? promoCode : (
+                  <>
+                    Coupon code <Text style={styles.promoText}>{promoCode}</Text> applied successfully!
+                  </>
+                )}
               </Text>
             </View>
           </TouchableWithoutFeedback>
@@ -55,6 +59,7 @@ const PromoCodeSuccessModal: React.FC<PromoCodeSuccessProps> = ({
     </Modal>
   );
 };
+
 
 const styles = StyleSheet.create({
   modalOverlay: {
@@ -71,7 +76,7 @@ const styles = StyleSheet.create({
     width: "80%",
     alignItems: "center",
   },
-  promoCodeImage: { width: 100, height: 100 },
+  promoCodeImage: { width: 75, height: 75 },
   modalTitle: {
     fontSize: fontSizes.lg,
     fontFamily: fontFamilies.ralewayBold,

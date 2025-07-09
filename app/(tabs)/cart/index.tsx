@@ -8,22 +8,18 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { router, useFocusEffect } from "expo-router";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Toast from "react-native-toast-message";
 import useBackHandler from "@/utils/useBackHandler";
-import FullScreenLoader from "@/components/common/FullScreenLoader";
-import { AppDispatch, RootState } from "@/store/store";
+import { RootState } from "@/store/store";
 import { fetchAddresses } from "@/store/address/addressSlice";
 import {
   fetchCartItemsApi,
   removeFromCartApi,
   updateCartItemQuantityApi,
 } from "@/store/cart/cartSlice";
-import ContactCard from "@/components/contactCard/ContactCard";
-import EmptyCart from "@/components/cart-items/emptyCart";
 import { CartItem } from "@/interfaces";
 import { getFormattedAddress } from "@/utils/formatAddress";
-import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 import CardItemCard from "@/components/cart-items/cartItemCard";
 import ProductDeleteConfirmationModal from "@/modal/ProductDeleteConfirmationModal";
 import spacingStyles from "@/style/spacingStyles";
@@ -32,10 +28,17 @@ import { fontSizes } from "@/style/typography";
 import borderRadius from "@/style/borderRadius";
 import { fontFamilies } from "@/style/fontFamilies";
 import { commonStyles } from "@/style/commonStyle";
+import ContactCard from "@/components/contactCard/ContactCard";
+import EmptyCart from "@/components/cart-items/emptyCart";
+import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
+import CartSkeleton from "@/components/skeleton/CartSkeleton";
+import { useAppDispatch } from "@/store/hooks";
+import { Ionicons } from "@expo/vector-icons";
+import gapSizes from "@/style/gapSizes";
 
 const ShoppingBagScreen: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const { cartItems, loading } = useSelector((state: RootState) => state.cart);
+  const dispatch = useAppDispatch();
+  const { cartItems, loading ,updateLoading  } = useSelector((state: RootState) => state.cart);
   const token = useSelector((state: RootState) => state.auth.token);
   const addresses = useSelector((state: RootState) => state.address.addresses);
   const selectedAddressId = useSelector(
@@ -168,11 +171,19 @@ const ShoppingBagScreen: React.FC = () => {
       params: { selectedItems: selectedItems },
     });
   };
-
-  if (isLoading) {
+const showSkeleton = isLoading || loading || updateLoading;
+  if (showSkeleton) {
     return (
-      <SafeAreaViewWrapper style={styles.container}>
-        <FullScreenLoader visible={isLoading} />
+      <SafeAreaViewWrapper>
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={{ ...spacingStyles.py10 }}
+          showsVerticalScrollIndicator={false}
+        >
+          {[...Array(4)].map((_, index) => (
+            <CartSkeleton key={`cart-skeleton-${index}`} />
+          ))}
+        </ScrollView>
       </SafeAreaViewWrapper>
     );
   }
@@ -185,7 +196,14 @@ const ShoppingBagScreen: React.FC = () => {
           nestedScrollEnabled={true}
           showsVerticalScrollIndicator={false}
         >
-          <View style={commonStyles.itemCountHeader}>
+          <View style={styles.headerWrapper}>
+            <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
+              <Ionicons
+                name="arrow-back"
+                size={24}
+                color={staticColors.black}
+              />
+            </TouchableOpacity>
             <Text style={commonStyles.itemCountTitle}>Cart</Text>
             {isAuthenticated && token && (
               <View style={commonStyles.itemCountWrap}>
@@ -195,14 +213,15 @@ const ShoppingBagScreen: React.FC = () => {
               </View>
             )}
           </View>
-          {isAuthenticated && token && (
-            <ContactCard
-              title="Shipping Address"
-              information={[getFormattedAddress(addresses, selectedAddressId)]}
-            />
-          )}
+
           {isAuthenticated && token && cartItems.length ? (
             <View style={styles.itemsWrapper}>
+              <ContactCard
+                title="Shipping Address"
+                information={[
+                  getFormattedAddress(addresses, selectedAddressId),
+                ]}
+              />
               <FlatList
                 data={cartItems}
                 renderItem={renderCartItem}
@@ -219,6 +238,7 @@ const ShoppingBagScreen: React.FC = () => {
         </ScrollView>
         {isAuthenticated && token && cartItems.length ? (
           <View style={styles.totalPriceContainer}>
+             
             <Text style={styles.totalPrice}>
               Total ₹ {calculateTotalPrice()}
             </Text>
@@ -264,8 +284,13 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.white,
     ...spacingStyles.px12,
   },
+  headerWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: gapSizes.md,
+  },
   backButton: {
-    ...spacingStyles.mr12,
+    ...spacingStyles.mt10,
   },
   itemsWrapper: {
     ...spacingStyles.py15,

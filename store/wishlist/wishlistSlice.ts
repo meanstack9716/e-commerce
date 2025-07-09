@@ -1,6 +1,5 @@
 import { WishlistItem } from "@/types/types";
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import axios from "axios";
 import { RootState } from "../store";
 import { getAuthHeaders } from "@/utils/apiHeader";
 import axiosConfig from "@/utils/axiosConfig";
@@ -11,7 +10,6 @@ interface WishlistState {
   error: string | null;
 }
 
-const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 const initialState: WishlistState = {
   items: [],
   loading: false,

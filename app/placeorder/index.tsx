@@ -29,6 +29,7 @@ import { getFormattedAddress } from "@/utils/formatAddress";
 import { CartItem } from "@/interfaces";
 import { OrderPayload } from "./placeorder.type";
 import PromoCodeSection from "@/components/promoCode/PromoCodeSection";
+import { removePromoCode } from "@/store/promoCode/promoCodeSlice";
 const paymentOptions = [{ label: "Cash On Delivery" }, { label: "Razorpay" }];
 
 const PlaceOrderScreen: React.FC = () => {
@@ -60,7 +61,7 @@ const PlaceOrderScreen: React.FC = () => {
     }
   }, [selectedAddressId, shippingAddressId]);
 
-   const selectedCartItems: CartItem[] = cartItems.filter((item) =>
+  const selectedCartItems: CartItem[] = cartItems.filter((item) =>
     selectedCartItemsId.includes(item.id)
   );
 
@@ -81,8 +82,16 @@ const PlaceOrderScreen: React.FC = () => {
     return discounted_amount !== null ? discounted_amount : calculateSubtotal();
   };
 
+  //clear applied promo code when we back from h/w
+  useEffect(() => {
+    return () => {
+      dispatch(removePromoCode());
+    };
+  }, []);
+
   // Handle back navigation
   const handleBack = () => {
+    dispatch(removePromoCode()); //clr applied promo code when we back using arrow
     router.back();
   };
 
@@ -104,7 +113,7 @@ const PlaceOrderScreen: React.FC = () => {
         text2: "Please select an address or create a new address.",
       });
       return;
-    } 
+    }
 
     const payload: OrderPayload = {
       cart_items_ids: selectedCartItemsId,
@@ -133,7 +142,7 @@ const PlaceOrderScreen: React.FC = () => {
             text1: "Order Placed",
             text2: "Your order has been placed successfully.",
           });
-          router.navigate("/orderHistory");
+          router.push("/orderHistory");
         } else {
           Toast.show({
             type: "error",
@@ -147,7 +156,7 @@ const PlaceOrderScreen: React.FC = () => {
           text1: "Order Placed",
           text2: "Your order has been placed successfully.",
         });
-        router.navigate("/orderHistory");
+        router.replace("/orderHistory");
       }
     } catch (error) {
       Toast.show({
@@ -157,7 +166,7 @@ const PlaceOrderScreen: React.FC = () => {
       });
     }
   };
-  
+
   const calculateOriginalTotal = () => {
     return selectedCartItems.reduce((total, item) => {
       return total + item.product.final_price * item.quantity;
@@ -404,7 +413,7 @@ const styles = StyleSheet.create({
   totalText: {
     fontSize: fontSizes.md,
     fontFamily: fontFamilies.ralewayBold,
-  }
+  },
 });
 
 export default PlaceOrderScreen;

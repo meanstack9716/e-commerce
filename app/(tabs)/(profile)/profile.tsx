@@ -38,6 +38,7 @@ import borderRadius from "@/style/borderRadius";
 import { fontFamilies } from "@/style/fontFamilies";
 import UserProfile from "@/components/profile/UserProfile";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
+import WelcomeScreen from "@/app/(auth)/WelcomeScreen";
 
 export default function ProfileScreen() {
   const [activeProfileSection, setActiveProfileSection] = useState("Profile");
@@ -73,7 +74,7 @@ export default function ProfileScreen() {
     const sectionComponents: { [key: string]: React.ReactNode } = {
       Profile: (
         <>
-          {isAuthenticated ? <UserProfile /> : <ProfileListSection />}
+          {isAuthenticated ? <UserProfile /> :<WelcomeScreen />}
           {/* <FooterLinks onLinkPress={(link) => setActiveProfileSection(link)} />
           {isAuthenticated && (
             <TouchableOpacity

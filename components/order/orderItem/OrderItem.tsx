@@ -36,6 +36,8 @@ const OrderItem: React.FC<OrderItemProps> = ({ item, onReviewPress }) => {
   const imageUrl =
     firstItem?.gallery?.[0]?.img_url || product.thumbnail_url || "";
 
+  const isDelivered = item.status.toLowerCase() === "delivered";
+
   return (
     <View style={styles.card}>
       {imageUrl ? (
@@ -59,16 +61,18 @@ const OrderItem: React.FC<OrderItemProps> = ({ item, onReviewPress }) => {
             <Text style={styles.date}>{createdDate}</Text>
           </View>
 
-          <View style={styles.button}>
-            <TouchableOpacity
-              style={styles.reviewButton}
-              onPress={() =>
-                onReviewPress(item.id, product.id, product.description)
-              }
-            >
-              <Text style={styles.reviewButtonText}>Review</Text>
-            </TouchableOpacity>
-          </View>
+          {isDelivered && (
+            <View style={styles.button}>
+              <TouchableOpacity
+                style={styles.reviewButton}
+                onPress={() =>
+                  onReviewPress(item.id, product.id, product.description)
+                }
+              >
+                <Text style={styles.reviewButtonText}>Review</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </View>
     </View>

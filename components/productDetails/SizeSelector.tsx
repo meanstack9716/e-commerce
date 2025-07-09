@@ -16,7 +16,6 @@ import borderRadius from "@/style/borderRadius";
 
 import gapSizes from "@/style/gapSizes";
 import ProductVarientModal from "@/modal/productVariants/ProductVarientModal";
-import { Product } from "@/interfaces";
 import { NUMERIC_SIZES, STANDARD_SIZES } from "@/constants/constants";
 import { SizeSelectorProps } from "./SizeSelector.types";
 interface AvailableSize {
@@ -39,7 +38,6 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
   const [selectedColorName, setSelectedColorName] = useState<string>("");
   const [isProductVariantModalVisible, setIsProductVariantModalVisible] =
     useState(false);
-  const [showSizeChart, setShowSizeChart] = useState(false);
   const [availableColors, setAvailableColors] = useState<
     Array<{
       id: string;
@@ -122,7 +120,11 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
           ?.map((item) => item.img_url) || [];
       const imgUrl = galleryItem?.img_url || product?.thumbnail_url || "";
       const images =
-        colorImages.length > 0 ? colorImages : product?.images || [];
+        colorImages.length > 0
+          ? colorImages
+          : product?.thumbnail_url
+            ? [product.thumbnail_url]
+            : [];
 
       return {
         id: variant.id,
@@ -311,6 +313,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: borderRadius.r12,
+    backgroundColor: staticColors.lightGray,
   },
 
   noColorsText: {

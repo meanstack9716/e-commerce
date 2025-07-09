@@ -5,6 +5,7 @@ export interface PromoCodeSuccessProps {
   promoCode?: string | null;
   error?: string | null;
   onClose: () => void;
+    isError?: boolean;
 }
 
 export interface PromoCodeModalProps {
@@ -14,4 +15,5 @@ export interface PromoCodeModalProps {
   appliedPromoCode: string | null;
   onSelectPromoCode: (code: string) => void;
   onRemovePromoCode: () => void;
+  loadingPromoCode:string | null
 }
