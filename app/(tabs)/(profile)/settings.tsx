@@ -105,12 +105,12 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.white,
   },
   headerContain: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     ...spacingStyles.mb20,
   },
   backButton: {
-    ...spacingStyles.mr15,
+    ...spacingStyles.mr15
   },
   header: {
     fontSize: fontSizes.xl,

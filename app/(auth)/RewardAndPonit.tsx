@@ -1,5 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { View, Text, FlatList, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { Ionicons, MaterialIcons, FontAwesome } from "@expo/vector-icons";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
@@ -14,6 +20,8 @@ import { fontFamilies } from "@/style/fontFamilies";
 import { LIST_LIMIT } from "@/constants/constants";
 import RewardAndPointSkeleton from "@/components/referAndEarn/ReferAndEarnSkeelton";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
+import gapSizes from "@/style/gapSizes";
+import { router } from "expo-router";
 
 const RewardAndPoint: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -47,6 +55,10 @@ const RewardAndPoint: React.FC = () => {
       .unwrap()
       .finally(() => setLoadingMore(false));
   }, [currentPage, dispatch, lastPage, loading, loadingMore]);
+
+  const handleBackPress = () => {
+    router.back();
+  };
 
   // Render each reward history card
   const renderHistoryItem = ({ item }: { item: any }) => (
@@ -129,7 +141,17 @@ const RewardAndPoint: React.FC = () => {
       {/* Top Header and Points */}
       <View style={styles.header}>
         <View style={styles.headerTop}>
-          <Text style={styles.headerTitle}>My Rewards</Text>
+          <View style={styles.headerContainer}>
+            <TouchableOpacity onPress={handleBackPress}>
+              <Ionicons
+                name="arrow-back"
+                size={24}
+                color={staticColors.white}
+              />
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>My Rewards</Text>
+          </View>
+
           <MaterialIcons name="redeem" size={24} color={staticColors.white} />
         </View>
 
@@ -222,7 +244,8 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: staticColors.primary,
-    ...spacingStyles.p20,
+    ...spacingStyles.px20,
+    ...spacingStyles.py15,
     borderBottomLeftRadius: borderRadius.r20,
     borderBottomRightRadius: borderRadius.r20,
     ...spacingStyles.mb15,
@@ -233,6 +256,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     ...spacingStyles.mb15,
   },
+  headerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: gapSizes.md,
+  },
   headerTitle: {
     fontSize: fontSizes["2xl"],
     fontFamily: fontFamilies.ralewayBold,
@@ -242,6 +270,7 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.RoyalBlue,
     borderRadius: borderRadius.r20,
     ...spacingStyles.p15,
+    ...spacingStyles.mb10
   },
   pointsHeader: {
     flexDirection: "row",

@@ -32,10 +32,6 @@ const ReferAndEarnScreen = () => {
     showMessage("Referral code copied!");
   };
 
-  const handleReferNow = () => {
-    router.navigate("/OnboardingScreen");
-  };
-
   const handleBackPress = () => {
     router.back();
   };
@@ -72,10 +68,6 @@ const ReferAndEarnScreen = () => {
             />
           </TouchableOpacity>
         </View>
-
-        <TouchableOpacity style={styles.button} onPress={handleReferNow}>
-          <Text style={styles.buttonText}>Next</Text>
-        </TouchableOpacity>
 
         {message && (
           <View style={styles.messageBox}>
@@ -140,19 +132,6 @@ const styles = StyleSheet.create({
     fontWeight: fontWeights.bold,
     fontSize: fontSizes.base,
     color: staticColors.primary,
-  },
-  button: {
-    ...spacingStyles.mt30,
-    backgroundColor: staticColors.lightGreen150,
-    ...spacingStyles.py15,
-    borderRadius: borderRadius.r10,
-    width: "100%",
-    alignItems: "center",
-  },
-  buttonText: {
-    color: staticColors.white,
-    fontWeight: fontWeights.extraBold,
-    fontSize: fontSizes.base,
   },
   messageBox: {
     ...spacingStyles.mt20,
