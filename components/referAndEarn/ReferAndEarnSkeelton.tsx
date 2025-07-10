@@ -1,7 +1,6 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import staticColors from "@/style/staticColors";
-
 import borderRadius from "@/style/borderRadius";
 import spacingStyles from "@/style/spacingStyles";
 import { SafeAreaViewWrapper } from "../common/SafeAreaView/SafeAreaViewWrapper";

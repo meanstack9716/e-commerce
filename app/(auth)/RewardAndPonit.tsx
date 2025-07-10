@@ -26,7 +26,7 @@ const RewardAndPoint: React.FC = () => {
     lastPage,
   } = useAppSelector((state) => state.reward);
 
-  const [loadingMore, setLoadingMore] = useState(false); 
+  const [loadingMore, setLoadingMore] = useState(false);
 
   const loadInitialData = useCallback(() => {
     dispatch(fetchRewardHistory({ page: 1, limit: LIST_LIMIT }));
@@ -90,7 +90,7 @@ const RewardAndPoint: React.FC = () => {
 
   const renderFooter = () => {
     if (loadingMore) {
-      return <RewardAndPointSkeleton />; 
+      return <RewardAndPointSkeleton />;
     }
     if (currentPage >= lastPage && rewardHistory.length > 0) {
       return (
@@ -115,7 +115,7 @@ const RewardAndPoint: React.FC = () => {
       />
       <Text style={styles.emptyText}>Oops! Your reward bag is empty</Text>
       <Text style={styles.emptySubtext}>
-        Buy something you love — points and perks will follow!
+        Buy something you love — points and perks will follow! 🎁
       </Text>
     </View>
   );
@@ -282,7 +282,7 @@ const styles = StyleSheet.create({
   },
   activityHeader: {
     ...spacingStyles.px20,
-    ...spacingStyles.mb10
+    ...spacingStyles.mb10,
   },
   sectionTitle: {
     fontSize: fontSizes.lg,
