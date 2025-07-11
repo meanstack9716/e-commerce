@@ -259,20 +259,6 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.lg,
     fontFamily: fontFamilies.ralewayBold,
   },
-  seeAllContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    gap: gapSizes.sm,
-  },
-  seeAllText: {
-    fontSize: fontSizes.sm,
-    fontFamily: fontFamilies.ralewayBold,
-  },
-  categoryCountText: {
-    fontSize: fontSizes.xs,
-    fontFamily: fontFamilies.ralewayExtraBold,
-  },
   columnWrapper: {
     justifyContent: "space-between",
   },

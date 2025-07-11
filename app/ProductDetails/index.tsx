@@ -43,6 +43,7 @@ import {
   resetReviewState,
 } from "@/store/review/reviewSlice";
 import { LIST_LIMIT } from "@/constants/constants";
+import SimilarProducts from "@/components/productDetails/similarProduct/SimilarProducts";
 import ProductMayYouLike from "@/components/productDetails/ProductMayYouLike";
 import ProductDetailsSkeleton from "@/components/skeleton/ProductDetailsSkeleton";
 import { Product } from "@/interfaces";
@@ -381,6 +382,9 @@ const ProductDetailsScreen: React.FC = () => {
               isLiked={isProductLiked}
             />
 
+            <Text style={styles.heading}>Similar Products</Text>
+            <SimilarProducts currentProduct={product} handleAddToCart={handleAddToCart}/>
+
             {productReviews.length > 0 && (
               <View style={styles.reviewSection}>
                 {/* Title + Stars + Rating */}
@@ -418,8 +422,6 @@ const ProductDetailsScreen: React.FC = () => {
             {/* <DeliveryCheck />
             <ReturnPolicy /> */}
 
-            {/* <Text style={styles.heading}>Similar Products</Text>
-            <SimilarProducts currentProduct={product} /> */}
             {/* 
             <BrandRating />
            */}
@@ -590,8 +592,8 @@ const styles = StyleSheet.create({
     color: staticColors.white,
   },
   heading: {
-    fontSize: fontSizes.md,
-    fontWeight: fontWeights.semiBold,
+    fontSize: fontSizes.lg,
+    fontFamily: fontFamilies.ralewayExtraBold,
     ...spacingStyles.mb10,
     color: staticColors.primary,
     ...spacingStyles.px15,
@@ -616,7 +618,7 @@ const styles = StyleSheet.create({
   reviewSection: { ...spacingStyles.mx15 },
   reviewTitle: {
     fontSize: fontSizes.lg,
-    fontFamily: "RalewayeExtraBold",
+    fontFamily: fontFamilies.ralewayExtraBold,
     color: staticColors.black,
     ...spacingStyles.mr10,
   },

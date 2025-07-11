@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -6,46 +6,54 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
 import { router } from "expo-router";
-import data from "@/assets/data/products.json";
-import { Product } from "../../types/types";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import {fontSizes, fontWeights} from "@/style/typography";
+import { fontSizes, fontWeights } from "@/style/typography";
 import { textTruncate } from "@/utils/textTruncate";
 import { commonStyles } from "@/style/commonStyle";
-import { FontAwesome } from "@expo/vector-icons";
-import { useDispatch, useSelector } from "react-redux";
-import { addToCart } from "@/store/cart/cartSlice";
-import { RootState } from "@/store/store";
 import borderRadius from "@/style/borderRadius";
-const SimilarProducts = ({ currentProduct }: { currentProduct: Product }) => {
-  const dispatch = useDispatch();
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated
-  );
-  if (!currentProduct) return null;
+import { useAppDispatch } from "@/store/hooks";
+import { SimilarProduct, SimilarProductsProps } from "./SimilarProduct.types";
+import { fontFamilies } from "@/style/fontFamilies";
+import { fetchSimilarProducts } from "@/store/similarProduct/SimilarProductSlice";
 
-  const allProductData = data.products || data;
+const SimilarProducts = ({
+  currentProduct,
+  handleAddToCart,
+}: SimilarProductsProps) => {
+  const dispatch = useAppDispatch();
 
-  const allProducts: Product[] = allProductData.map((item) => ({
-    ...item,
-    title: item.title ?? "Untitled Product",
-  }));
+  const {
+    data: similarProducts,
+    loading,
+    error,
+  }: {
+    data: SimilarProduct[];
+    loading: boolean;
+    error: string | null;
+  } = useSelector((state: RootState) => state.similarProducts);
 
-  const similarProducts = allProducts.filter((product) => {
-    if (product.id === currentProduct.id) return false;
+  const productColor = currentProduct.gallery?.[0]?.color;
 
-    const sharedCategory = product.categories.some((cat) =>
-      currentProduct.categories.includes(cat)
-    );
+  useEffect(() => {
+    if (currentProduct?.id) {
+      dispatch(
+        fetchSimilarProducts({
+          productId: currentProduct.id,
+          color: productColor,
+        })
+      );
+    }
+  }, [dispatch, currentProduct]);
 
-    return sharedCategory;
-  });
-
-  const limitedSimilar = similarProducts.slice(0, 6);
-  if (limitedSimilar.length === 0) return null;
+  const limitedProducts = similarProducts
+    .filter((product) => product.id !== currentProduct.id)
+    .slice(0, 15);
 
   const navigateToProductDetails = (productId: string) => {
     router.navigate({
@@ -54,18 +62,35 @@ const SimilarProducts = ({ currentProduct }: { currentProduct: Product }) => {
     });
   };
 
-  const handleAddToCart = (product: Product) => {
-    dispatch(
-      addToCart({ product: product, selectedSize: undefined, isAuthenticated })
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator color={staticColors.lightGray} />
+      </View>
     );
-    router.navigate("/cart");
-  };
+  }
+
+  if (error) {
+    return (
+      <View style={styles.container}>
+        <Text>Error: {error}</Text>
+      </View>
+    );
+  }
+
+  if (limitedProducts.length === 0) {
+    return (
+      <View style={styles.container}>
+        <Text>No similar products found.</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
       <FlatList
         horizontal
-        data={limitedSimilar}
+        data={limitedProducts}
         keyExtractor={(item) => item.id}
         showsHorizontalScrollIndicator={false}
         renderItem={({ item }) => (
@@ -74,8 +99,8 @@ const SimilarProducts = ({ currentProduct }: { currentProduct: Product }) => {
             onPress={() => navigateToProductDetails(item.id)}
           >
             <View style={commonStyles.imageContainer}>
-              {item.images && item.images.length > 0 ? (
-                <Image source={{ uri: item.images[0] }} style={styles.image} />
+              {item.image_url ? (
+                <Image source={{ uri: item.image_url }} style={styles.image} />
               ) : (
                 <View
                   style={[styles.image, commonStyles.imagePlaceholderContainer]}
@@ -85,21 +110,14 @@ const SimilarProducts = ({ currentProduct }: { currentProduct: Product }) => {
                   </Text>
                 </View>
               )}
-              <View style={commonStyles.ratingContainer}>
-                <Text>
-                  {item.star}{" "}
-                  <FontAwesome
-                    name="star"
-                    size={14}
-                    color={staticColors.lightYellow}
-                  />
-                </Text>
-              </View>
             </View>
+
             <Text style={[commonStyles.cardTitle, styles.title]}>
-              {textTruncate(item.title)}
+              {textTruncate(item.name || "Untitled Product")}
             </Text>
+
             <Text style={styles.price}>₹{item.price}</Text>
+
             <TouchableOpacity
               style={styles.addButton}
               onPress={() => handleAddToCart(item)}
@@ -116,10 +134,11 @@ const SimilarProducts = ({ currentProduct }: { currentProduct: Product }) => {
 const styles = StyleSheet.create({
   container: {
     ...spacingStyles.px15,
+    ...spacingStyles.mb20,
   },
   card: {
     ...spacingStyles.mr10,
-    width: 150,
+    width: 160,
     borderRadius: borderRadius.r8,
     overflow: "hidden",
   },
@@ -141,16 +160,18 @@ const styles = StyleSheet.create({
   },
   addButton: {
     ...spacingStyles.py5,
-    borderRadius: borderRadius.r20,
+    borderRadius: borderRadius.r12,
     ...spacingStyles.m5,
     borderWidth: 1,
-    borderColor: staticColors.primary,
+    borderColor: staticColors.primaryBlue,
+    alignItems: "center",
+    alignContent: "center",
   },
   addButtonText: {
-    color: staticColors.primary,
+    color: staticColors.primaryBlue,
     textAlign: "center",
-    fontSize: fontSizes.xs,
-    fontWeight: fontWeights.semiBold,
+    fontSize: fontSizes.sm,
+    fontFamily: fontFamilies.ralewayeSemiBold,
   },
 });
 

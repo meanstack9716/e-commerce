@@ -63,11 +63,6 @@ export default function PasswordScreen() {
     resetErrors();
   };
 
-  useEffect(() => {
-  console.log("PasswordScreen re-rendered");
-}, []);
-
-
   const handleForgetPassword = () => {
     router.navigate({
       pathname: "/PasswordRecoveryScreen",
