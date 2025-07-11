@@ -38,6 +38,7 @@ export default function CreateAccountScreen() {
     email: "",
     password: "",
     confirmPassword: "",
+    referralCode: "",
   });
 
   const {
@@ -97,6 +98,7 @@ export default function CreateAccountScreen() {
           email: formData.email,
           password: formData.password,
           password_confirmation: formData.confirmPassword,
+          referral_code: formData.referralCode?.trim(),
         })
       );
     }
@@ -167,6 +169,19 @@ export default function CreateAccountScreen() {
                   error={errors.confirmPassword}
                 />
               </View>
+
+              <TextInput
+                style={commonStyles.authInput}
+                placeholder="Referral code (optional)"
+                placeholderTextColor={staticColors.mutedGray}
+                autoCapitalize="none"
+                value={formData.referralCode}
+                onChangeText={(text) => handleInputChange("referralCode", text)}
+                autoComplete="off"
+                textContentType="none"
+                autoCorrect={false}
+              />
+
             </View>
             {error && <Text style={styles.errorText}>{error}</Text>}
             <View style={styles.bottomButtonContainer}>

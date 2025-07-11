@@ -1,4 +1,10 @@
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+} from "react-native";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
@@ -28,6 +34,9 @@ export default function SettingPage() {
       title: "Personal",
       items: [
         { label: "Profile", route: "userManageAccount" },
+        { label: "Referal Code", route: "ReferAndEarnScreen" },
+        { label: "Reward & Point", route: "RewardAndPonit" },
+        { label: "Payment methods", route: null },
       ],
     },
     {
@@ -63,7 +72,7 @@ export default function SettingPage() {
   );
 
   return (
-    <SafeAreaViewWrapper style={{flex: 1}}>
+    <SafeAreaViewWrapper >
       <View style={styles.container}>
         <View style={styles.headerContain}>
           <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>

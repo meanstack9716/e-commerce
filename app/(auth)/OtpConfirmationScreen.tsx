@@ -24,7 +24,7 @@ const OtpConfirmationScreen: React.FC = () => {
         const result = await dispatch(
           verifyUser({ email, code: otpCode })
         ).unwrap();
-        router.navigate("/OnboardingScreen");
+         router.navigate("/OnboardingScreen");
       } else if (useCase === "password-recovery") {
         const result = await dispatch(
           verifyEmailCode({ email, code: otpCode })
