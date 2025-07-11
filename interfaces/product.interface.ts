@@ -7,8 +7,7 @@ export interface Product {
   price: number;
   stock_quantity?: string;
   thumbnail_url: string;
-  images: string[];
-  categories: string[];
+  categories?: string[];
   star?: number;
   details?: string;
   sku?: string;
@@ -31,6 +30,7 @@ export interface Review {
     first_name?: string;
     last_name?: string;
     email?: string; 
+    profile_url?:string
   };
   img_urls?: string[];
 }

@@ -20,23 +20,46 @@ const ProfileHeaderBar: React.FC<ProfileHeaderBarProps> = ({
   title,
   profileImage,
   containerStyle,
-  titleStyle
+  titleStyle,
 }) => {
+  const handleProfilePress = () => {
+    router.push("/userManageAccount");
+  };
+
+  const handleBackPress = () => {
+    router.back();
+  };
+
   return (
     <View style={[styles.container, containerStyle]}>
       <View style={styles.leftSection}>
-        <Image source={profileImage} style={styles.profileImage} />
+        <TouchableOpacity style={styles.backButton} onPress={handleBackPress}>
+          <Ionicons
+            name="arrow-back"
+            size={24}
+            color={staticColors.primaryBlue}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleProfilePress}>
+          <Image source={profileImage} style={styles.profileImage} />
+        </TouchableOpacity>
         <Text style={[styles.title, titleStyle]}>{title}</Text>
       </View>
       <View style={styles.iconGroup}>
-        <TouchableOpacity style={[styles.iconWrapper]} onPress={()=> router.push('/wishlist')}>
+        <TouchableOpacity
+          style={[styles.iconWrapper]}
+          onPress={() => router.push("/wishlist")}
+        >
           <Ionicons
             name="heart-outline"
             size={20}
             color={staticColors.primaryBlue}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.iconWrapper} onPress={() => router.push('/settings')}>
+        <TouchableOpacity
+          style={styles.iconWrapper}
+          onPress={() => router.push("/settings")}
+        >
           <Ionicons
             name="settings-outline"
             size={20}
@@ -47,16 +70,22 @@ const ProfileHeaderBar: React.FC<ProfileHeaderBarProps> = ({
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    ...spacingStyles.pb10
+    ...spacingStyles.pb10,
   },
   leftSection: {
     flexDirection: "row",
     alignItems: "center",
+    ...spacingStyles.pt5,
+  },
+  backButton: {
+    ...spacingStyles.py5,
+    ...spacingStyles.mr15,
   },
   profileImage: {
     width: 40,
@@ -73,7 +102,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 3,
-    resizeMode: "contain",
+    resizeMode: "cover",
     ...spacingStyles.mr10,
   },
   title: {
@@ -86,11 +115,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   iconWrapper: {
-    padding:7,
+    padding: 7,
     ...spacingStyles.ml10,
     position: "relative",
-    backgroundColor:staticColors.skyBlue50,
-    borderRadius:borderRadius.circle
+    backgroundColor: staticColors.skyBlue50,
+    borderRadius: borderRadius.circle,
   },
 });
+
 export default ProfileHeaderBar;

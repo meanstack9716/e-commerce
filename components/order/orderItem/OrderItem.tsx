@@ -36,6 +36,8 @@ const OrderItem: React.FC<OrderItemProps> = ({ item, onReviewPress }) => {
   const imageUrl =
     firstItem?.gallery?.[0]?.img_url || product.thumbnail_url || "";
 
+  const isDelivered = item.status.toLowerCase() === "delivered";
+
   return (
     <View style={styles.card}>
       {imageUrl ? (
@@ -59,16 +61,18 @@ const OrderItem: React.FC<OrderItemProps> = ({ item, onReviewPress }) => {
             <Text style={styles.date}>{createdDate}</Text>
           </View>
 
-          <View style={styles.button}>
-            <TouchableOpacity
-              style={styles.reviewButton}
-              onPress={() =>
-                onReviewPress(item.id, product.id, product.description)
-              }
-            >
-              <Text style={styles.reviewButtonText}>Review</Text>
-            </TouchableOpacity>
-          </View>
+          {isDelivered && (
+            <View style={styles.button}>
+              <TouchableOpacity
+                style={styles.reviewButton}
+                onPress={() =>
+                  onReviewPress(item.id, product.id, product.description)
+                }
+              >
+                <Text style={styles.reviewButtonText}>Review</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </View>
     </View>
@@ -89,8 +93,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   orderImage: {
-    width: 145,
-    height: 120,
+    width: 150,
+    height: 150,
     borderRadius: borderRadius.r14,
     borderWidth: 3,
     borderColor: staticColors.white,
@@ -107,17 +111,17 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.xs,
     color: staticColors.black,
     fontFamily: fontFamilies.nunitoSans,
-    ...spacingStyles.mt2,
+    ...spacingStyles.my5,
   },
   orderNumber: {
     fontSize: 11,
-    fontFamily: fontFamilies.ralewayExtraBold,
-    ...spacingStyles.my5,
+    fontFamily: fontFamilies.ralewayeSemiBold,
+    ...spacingStyles.mb10,
   },
   statusText: {
     fontSize: fontSizes.sm,
     fontFamily: fontFamilies.ralewayBold,
-    ...spacingStyles.mb2,
+    ...spacingStyles.mb5,
   },
   footer: {
     flexDirection: "row",

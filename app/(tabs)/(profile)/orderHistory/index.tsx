@@ -12,9 +12,7 @@ import { useAppDispatch } from "@/store/hooks";
 import { RootState } from "@/store/store";
 import { clearOrderStatus, fetchOrders } from "@/store/order/orderSlice";
 import images from "@/constants/images";
-import borderRadius from "@/style/borderRadius";
 import spacingStyles from "@/style/spacingStyles";
-import { fontFamilies } from "@/style/fontFamilies";
 import { fontSizes } from "@/style/typography";
 import staticColors from "@/style/staticColors";
 import ReviewModal from "@/modal/ReviewModal/ReviewModal";
@@ -22,10 +20,12 @@ import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaVi
 import { SelectedItem } from "./orderHistory.types";
 import OrderItem from "@/components/order/orderItem/OrderItem";
 import ProfileHeaderBar from "@/components/profile/ProfileHeaderBar/ProfileHeaderBar";
-import OrderItemSkeleton from "@/components/common/OrderItemSkeleton";
 import { LIST_LIMIT } from "@/constants/constants";
 import { Order } from "@/interfaces";
 import OrderDetailsModal from "@/modal/OrderDetailsModal/OrderDetailsModal";
+import OrderItemsSelectionModal from "@/modal/order/OrderItemsSelectionModal";
+import OrderItemSkeleton from "@/components/skeleton/OrderItemSkeleton";
+import { fetchUserProfile } from "@/store/user/userSlice";
 
 const OrderHistoryScreen: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -40,11 +40,14 @@ const OrderHistoryScreen: React.FC = () => {
   const [isReviewModalVisible, setReviewModalVisible] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [isDetailsModalVisible, setDetailsModalVisible] = useState(false);
-
+  const [isItemsSelectionModalVisible, setItemsSelectionModalVisible] =
+    useState(false);
+  const { user } = useSelector((state: RootState) => state.user);
   const handleOrderItemPress = (order: Order) => {
     setSelectedOrder(order);
     setDetailsModalVisible(true);
   };
+
   useEffect(() => {
     dispatch(fetchOrders({ page: 1, limit: LIST_LIMIT }));
     return () => {
@@ -62,22 +65,39 @@ const OrderHistoryScreen: React.FC = () => {
     }
   };
 
-  const handleReviewPress = (
-    orderId: string,
+  const handleReviewPress = (order: Order) => {
+    if (order.items.length > 1) {
+      // Show item selection modal if multiple items
+      setSelectedOrder(order);
+      setItemsSelectionModalVisible(true);
+    } else {
+      // Directly open review modal for single item
+      const item = order.items[0];
+      setSelectedItem({
+        orderId: order.id,
+        productId: item.product.id,
+        productDescription: item.product.description,
+      });
+      setReviewModalVisible(true);
+    }
+  };
+
+  const handleItemSelection = (
     productId: string,
-    description: string
+    productDescription: string
   ) => {
     setSelectedItem({
-      orderId: orderId,
+      orderId: selectedOrder?.id || "",
       productId,
-      productDescription: description,
+      productDescription,
     });
+    setItemsSelectionModalVisible(false);
     setReviewModalVisible(true);
   };
-  // Show loading skeletons while fetching more orders
+
   const renderOrderItem = ({ item }: { item: Order }) => (
     <TouchableOpacity onPress={() => handleOrderItemPress(item)}>
-      <OrderItem item={item} onReviewPress={handleReviewPress} />
+      <OrderItem item={item} onReviewPress={() => handleReviewPress(item)} />
     </TouchableOpacity>
   );
 
@@ -91,21 +111,22 @@ const OrderHistoryScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaViewWrapper backgroundColor={staticColors.white}>
+    <SafeAreaViewWrapper>
       <ProfileHeaderBar
         title="History"
-        profileImage={images.unKnownUser}
+        profileImage={
+          user?.profile_url ? { uri: user.profile_url } : images.unKnownUser
+        }
         containerStyle={styles.profileHeaderContainer}
       />
+
       {error ? (
         <Text style={styles.errorText}>{error}</Text>
-      ) : // No orders case
-      filteredOrders.length === 0 && !loading ? (
+      ) : filteredOrders.length === 0 && !loading ? (
         <View style={styles.noOrdersContainer}>
           <Image source={images.noOrderImage} style={styles.noOrderImage} />
         </View>
       ) : (
-        // Orders List
         <FlatList
           data={filteredOrders}
           renderItem={renderOrderItem}
@@ -116,7 +137,6 @@ const OrderHistoryScreen: React.FC = () => {
           ListFooterComponent={renderFooter}
         />
       )}
-      {/* Review Modal */}
       <ReviewModal
         visible={isReviewModalVisible}
         onClose={() => setReviewModalVisible(false)}
@@ -124,11 +144,16 @@ const OrderHistoryScreen: React.FC = () => {
         productId={selectedItem.productId}
         productDescription={selectedItem.productDescription}
       />
-      {/* Order Details Modal */}
       <OrderDetailsModal
         visible={isDetailsModalVisible}
         order={selectedOrder}
         onClose={() => setDetailsModalVisible(false)}
+      />
+      <OrderItemsSelectionModal
+        visible={isItemsSelectionModalVisible}
+        onClose={() => setItemsSelectionModalVisible(false)}
+        order={selectedOrder}
+        onSelectItem={handleItemSelection}
       />
     </SafeAreaViewWrapper>
   );

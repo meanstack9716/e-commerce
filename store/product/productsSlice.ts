@@ -2,6 +2,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { handleApiError } from "@/utils/handleApiError";
 import axiosConfig from "@/utils/axiosConfig";
 import { Product, Color } from "@/interfaces";
+import { RECOMMENDED_KEYWORD_LIMIT } from "@/constants/constants";
+import { RootState } from "../store";
 interface ProductsState {
   data: Product[];
   selectedProduct: Product | null;
@@ -12,6 +14,11 @@ interface ProductsState {
   colors: Color[];
   colorsLoading: boolean;
   colorsError: string | null;
+  recommendedKeywords: string[];
+  recommendedKeywordsLoading: boolean;
+  recommendedKeywordsError: string | null;
+  lastPage: number;
+  productCache: Record<string, Product>;
 }
 
 const initialState: ProductsState = {
@@ -24,6 +31,11 @@ const initialState: ProductsState = {
   colors: [],
   colorsLoading: false,
   colorsError: null,
+  recommendedKeywords: [],
+  recommendedKeywordsLoading: false,
+  recommendedKeywordsError: null,
+  lastPage: 1,
+  productCache: {},
 };
 
 export const fetchColors = createAsyncThunk<
@@ -50,7 +62,7 @@ export const fetchColors = createAsyncThunk<
 });
 
 export const fetchProducts = createAsyncThunk<
-  { data: Product[]; page: number }, 
+  { data: Product[]; page: number; lastPage: number },
   { params?: any },
   { rejectValue: string }
 >("products/fetchProducts", async ({ params = {} }, { rejectWithValue }) => {
@@ -61,7 +73,8 @@ export const fetchProducts = createAsyncThunk<
       },
     });
     if (response.data?.data) {
-      return { data: response.data.data, page: params.page || 1 }; 
+      const { data, current_page, last_page } = response.data;
+      return { data, page: current_page, lastPage: last_page };
     }
     return rejectWithValue("Invalid response format from API");
   } catch (error) {
@@ -72,8 +85,14 @@ export const fetchProducts = createAsyncThunk<
 export const fetchProductById = createAsyncThunk<
   Product,
   string,
-  { rejectValue: string }
->("products/fetchProductById", async (id, { rejectWithValue }) => {
+  { state: RootState; rejectValue: string }
+>("products/fetchProductById", async (id, { getState, rejectWithValue }) => {
+  const state = getState();
+  const cachedProduct = state.products.productCache[id];
+
+  if (cachedProduct) {
+    return cachedProduct;
+  }
   try {
     const response = await axiosConfig.get(`/products/${id}`);
     const apiProduct = response.data.data;
@@ -88,6 +107,36 @@ export const fetchProductById = createAsyncThunk<
   }
 });
 
+export const fetchRecommendedKeywords = createAsyncThunk<
+  string[],
+  { limit?: number },
+  { rejectValue: string }
+>(
+  "products/fetchRecommendedKeywords",
+  async ({ limit = RECOMMENDED_KEYWORD_LIMIT }, { rejectWithValue }) => {
+    try {
+      const response = await axiosConfig.get(
+        "/search/products/recommended-keywords",
+        {
+          params: { limit },
+        }
+      );
+
+      if (Array.isArray(response.data.data)) {
+        return response.data.data;
+      }
+
+      return rejectWithValue(
+        "Invalid response format from recommended keywords API"
+      );
+    } catch (error) {
+      return rejectWithValue(
+        handleApiError(error, "Failed to fetch recommended keywords")
+      );
+    }
+  }
+);
+
 const productsSlice = createSlice({
   name: "products",
   initialState,
@@ -96,11 +145,20 @@ const productsSlice = createSlice({
       state.data = [];
       state.loading = false;
       state.error = null;
+      state.lastPage = 1;
     },
     clearSelectedProduct: (state) => {
       state.selectedProduct = null;
       state.selectedProductLoading = false;
       state.selectedProductError = null;
+    },
+    clearProductCache: (state) => {
+      state.productCache = {};
+    },
+    cacheProduct: (state, action: { payload: Product }) => {
+      if (action.payload?.id) {
+        state.productCache[action.payload.id] = action.payload;
+      }
     },
   },
   extraReducers: (builder) => {
@@ -111,10 +169,12 @@ const productsSlice = createSlice({
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.loading = false;
-        if (action.payload.page === 1) {
-          state.data = action.payload.data;
+        const { data, page, lastPage } = action.payload;
+        state.lastPage = lastPage;
+        if (page === 1) {
+          state.data = data;
         } else {
-          state.data = [...state.data, ...action.payload.data];
+          state.data = [...state.data, ...data];
         }
         state.error = null;
       })
@@ -130,6 +190,10 @@ const productsSlice = createSlice({
       .addCase(fetchProductById.fulfilled, (state, action) => {
         state.selectedProductLoading = false;
         state.selectedProduct = action.payload;
+        // Add to cache
+        if (action.payload?.id) {
+          state.productCache[action.payload.id] = action.payload;
+        }
       })
       .addCase(fetchProductById.rejected, (state, action) => {
         state.selectedProductLoading = false;
@@ -147,9 +211,27 @@ const productsSlice = createSlice({
       .addCase(fetchColors.rejected, (state, action) => {
         state.colorsLoading = false;
         state.colorsError = action.payload as string;
+      })
+      .addCase(fetchRecommendedKeywords.pending, (state) => {
+        state.recommendedKeywordsLoading = true;
+        state.recommendedKeywordsError = null;
+      })
+      .addCase(fetchRecommendedKeywords.fulfilled, (state, action) => {
+        state.recommendedKeywordsLoading = false;
+        state.recommendedKeywords = action.payload;
+      })
+      .addCase(fetchRecommendedKeywords.rejected, (state, action) => {
+        state.recommendedKeywordsLoading = false;
+        state.recommendedKeywordsError =
+          action.payload || "Failed to load keywords";
       });
   },
 });
 
-export const { resetProducts, clearSelectedProduct } = productsSlice.actions;
+export const {
+  resetProducts,
+  clearSelectedProduct,
+  clearProductCache,
+  cacheProduct,
+} = productsSlice.actions;
 export default productsSlice.reducer;

@@ -28,8 +28,6 @@ export default function SettingPage() {
       title: "Personal",
       items: [
         { label: "Profile", route: "userManageAccount" },
-        { label: "Shipping Address", route: null },
-        { label: "Payment methods", route: null },
       ],
     },
     {
@@ -37,10 +35,11 @@ export default function SettingPage() {
       items: [
         { label: "Order", route: "/orderHistory" },
         { label: "Faq", route: 'faq' },
-        { label: "About Us", route: null },
-        { label: "Terms and Use", route: null },
-        { label: "Privacy Policy", route: null },
+        // { label: "About Us", route: null },
+        // { label: "Terms and Use", route: null },
+        // { label: "Privacy Policy", route: null },
         { label: "Logout", isLogout: true },
+        { label: "Change BaseURL", route: "/BaseURL" },
       ],
     },
   ];

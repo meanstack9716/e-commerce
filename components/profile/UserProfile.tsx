@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,10 +8,9 @@ import {
   FlatList,
   SafeAreaView,
 } from "react-native";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { CategoriresCard } from "../categoriesCard";
 import { useSelector } from "react-redux";
-import { SafeAreaViewWrapper } from "../common/SafeAreaView/SafeAreaViewWrapper";
 import ProductCard from "../home/ProductCard";
 import images from "@/constants/images";
 import { Product } from "@/interfaces";
@@ -21,18 +20,19 @@ import borderRadius from "@/style/borderRadius";
 import { fontFamilies } from "@/style/fontFamilies";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
-import { fontSizes, fontWeights } from "@/style/typography";
+import { fontSizes } from "@/style/typography";
 import { useAppDispatch } from "@/store/hooks";
 import { fetchProducts } from "@/store/product/productsSlice";
 import ProductCardSkeleton from "../common/ProductCardSkeleton";
 import { LIST_LIMIT } from "@/constants/constants";
+import { RootState } from "@/store/store";
+import { fetchUserProfile } from "@/store/user/userSlice";
 
 const UserProfile = () => {
   const [likedProductItems, setLikedProductItems] = useState<string[]>([]);
   const dispatch = useAppDispatch();
-  const [page, setPage] = useState(1);
-   const [hasMore, setHasMore] = useState(true);
   const limit = LIST_LIMIT;
+  const { user } = useSelector((state: RootState) => state.user);
   const {
     data: categories,
     loading: categoriesLoading,
@@ -46,24 +46,16 @@ const UserProfile = () => {
   } = useSelector((state: any) => state.products);
 
   useEffect(() => {
-    dispatch(fetchProducts({ params: { page: 1, limit } }));
-  }, [dispatch]);
+    dispatch(fetchUserProfile());
+  });
 
-  const handleLoadMore = () => {
-    if (products.length && !productsLoading && hasMore) {
-      const nextPage = page + 1;
-      setPage(nextPage);
-      dispatch(fetchProducts({ params: { page: nextPage, limit } })).then(
-        (action) => {
-          if (action.payload && Array.isArray(action.payload)) {
-            setHasMore(action.payload.length === limit);
-          } else {
-            setHasMore(false);
-          }
-        }
-      );
-    }
-  };
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        dispatch(fetchProducts({ params: { page: 1, limit } }));
+      };
+    }, [dispatch])
+  );
 
   const renderProductItem = ({ item }: { item: Product }) => (
     <ProductCard
@@ -89,8 +81,10 @@ const UserProfile = () => {
   return (
     <View style={styles.container}>
       <ProfileHeaderBar
-        title="category"
-        profileImage={images.genderFemale}
+        title="My activity"
+        profileImage={
+          user?.profile_url ? { uri: user.profile_url } : images.unKnownUser
+        }
         titleStyle={styles.profileHeaderTitle}
       />
       <CategoriresCard categoryList={categories} />
@@ -127,13 +121,13 @@ const UserProfile = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     flexDirection: "column",
     gap: gapSizes.sm,
     ...spacingStyles.px12,
     backgroundColor: staticColors.white,
   },
   profileHeaderTitle: {
+    ...spacingStyles.pt2,
     ...spacingStyles.pb5,
     ...spacingStyles.px15,
     backgroundColor: staticColors.primaryBlue,

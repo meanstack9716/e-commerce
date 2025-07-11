@@ -13,7 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 import staticColors from "@/style/staticColors";
 import borderRadius from "@/style/borderRadius";
 import { BlurView } from "expo-blur";
-import { fontSizes, fontWeights } from "@/style/typography";
+import { fontSizes } from "@/style/typography";
 import {
   AvailableSize,
   ColorOption,
@@ -22,7 +22,6 @@ import {
 import spacingStyles from "@/style/spacingStyles";
 import { fontFamilies } from "@/style/fontFamilies";
 import gapSizes from "@/style/gapSizes";
-import { router } from "expo-router";
 
 const ProductVarientModal: React.FC<ProductModalProps> = ({
   visible,
@@ -35,8 +34,8 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
   onColorSelect,
   price,
   handleLikePress,
+  isLiked = false,
   handleAddToCart,
-  productId,
 }) => {
   const [quantity, setQuantity] = useState(1);
 
@@ -44,11 +43,23 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
     (c) => c.color === selectedColor
   );
   const mainImage = selectedColorData?.images[0];
+  const availableStock = selectedColorData?.stock_quantity || 0;
+
+  const handleIncrement = () => {
+    if (quantity < availableStock) {
+      setQuantity(quantity + 1);
+    }
+  };
+
+  const handleDecrement = () => {
+    setQuantity(Math.max(1, quantity - 1));
+  };
 
   const handleSizeSelect = (size: AvailableSize) => {
     if (size.left > 0) {
       onSizeSelect(size.label);
     }
+    setQuantity(1);
   };
 
   const handleColorSelect = (colorOption: ColorOption) => {
@@ -57,19 +68,7 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
       colorName: colorOption.color,
       images: colorOption.images,
     });
-  };
-
-  const handleBuyNow = () => {
-    onClose(); 
-    router.push({
-      pathname: "/placeorder",
-      params: {
-        productId,
-        quantity: quantity.toString(),
-        isBuyNow: "true",
-        imageUrl: mainImage,
-      },
-    });
+    setQuantity(1);
   };
 
   return (
@@ -80,10 +79,10 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
       onRequestClose={onClose}
     >
       <TouchableWithoutFeedback onPress={onClose}>
-        <BlurView intensity={50} tint="light" style={styles.centeredView}>
+        <BlurView intensity={80} tint="light" style={styles.centeredView}>
           <TouchableWithoutFeedback>
             <View style={styles.modalView}>
-              <View style={styles.content}>
+              <View>
                 <View style={styles.header}>
                   <Image source={{ uri: mainImage }} style={styles.avatar} />
                   <View>
@@ -143,7 +142,7 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
                     <Text style={styles.sectionTitle}>Quantity</Text>
                     <View style={styles.quantityControl}>
                       <TouchableOpacity
-                        onPress={() => setQuantity(Math.max(1, quantity - 1))}
+                        onPress={handleDecrement}
                         style={styles.quantityButton}
                       >
                         <Ionicons
@@ -156,29 +155,24 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
                       <Text style={styles.quantity}>{quantity}</Text>
 
                       <TouchableOpacity
-                        onPress={() => setQuantity(quantity + 1)}
+                        onPress={handleIncrement}
                         style={styles.quantityButton}
+                        disabled={quantity >= availableStock}
                       >
                         <Ionicons
                           name="add"
                           size={fontSizes["xl"]}
-                          color={staticColors.primaryBlue}
+                          color={
+                            quantity >= availableStock
+                              ? staticColors.lightGray
+                              : staticColors.primaryBlue
+                          }
                         />
                       </TouchableOpacity>
                     </View>
                   </View>
 
                   <View style={styles.buttonContainer}>
-                    <TouchableOpacity
-                      style={styles.favoriteButton}
-                      onPress={handleLikePress}
-                    >
-                      <Ionicons
-                        name="heart-outline"
-                        size={26}
-                        color={staticColors.darkSlate}
-                      />
-                    </TouchableOpacity>
                     <TouchableOpacity
                       style={styles.addToCartButton}
                       onPress={handleAddToCart}
@@ -187,9 +181,19 @@ const ProductVarientModal: React.FC<ProductModalProps> = ({
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={styles.buyNowButton}
-                      onPress={handleBuyNow}
+                      onPress={handleLikePress}
                     >
-                      <Text style={styles.buttonText}>Buy now</Text>
+                      <Ionicons
+                        name={isLiked ? "heart" : "heart-outline"}
+                        size={18}
+                        color={
+                          isLiked
+                            ? staticColors.DarkRed
+                            : staticColors.textSoftGray
+                        }
+                        style={{ marginRight: 6 }}
+                      />
+                      <Text style={styles.buttonText}>Add to wishlist</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -222,13 +226,12 @@ const styles = StyleSheet.create({
     borderTopRightRadius: borderRadius.r10,
     borderTopLeftRadius: borderRadius.r10,
   },
-  content: {},
   header: {
     flexDirection: "row",
     alignItems: "center",
     ...spacingStyles.mb10,
     ...spacingStyles.p20,
-    backgroundColor: staticColors.bgSoftBlue,
+    backgroundColor: staticColors.bgSoftBlue200,
   },
   avatar: {
     width: 85,
@@ -240,7 +243,7 @@ const styles = StyleSheet.create({
   colorSizeRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 6,
+    ...spacingStyles.mt10,
     gap: gapSizes.md,
   },
   priceTag: {
@@ -286,6 +289,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: borderRadius.r8,
+    backgroundColor: staticColors.lightGray,
   },
   sizeContainer: {
     flexDirection: "row",
@@ -343,7 +347,7 @@ const styles = StyleSheet.create({
     backgroundColor: staticColors.iceBlue,
     fontSize: fontSizes["2xl"],
     fontFamily: fontFamilies.ralewayeMedium,
-    marginHorizontal: 20,
+    ...spacingStyles.mx10,
     alignItems: "center",
     justifyContent: "center",
     textAlign: "center",
@@ -353,19 +357,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     ...spacingStyles.my10,
   },
-  favoriteButton: {
-    backgroundColor: staticColors.bgSoftGray,
-    justifyContent: "center",
-    borderRadius: borderRadius.r10,
-    ...spacingStyles.p10,
-  },
   addToCartButton: {
     backgroundColor: staticColors.darkSlate,
     borderRadius: borderRadius.r10,
     ...spacingStyles.py10,
     justifyContent: "center",
     flex: 1,
-    ...spacingStyles.mx15,
+    ...spacingStyles.mr15,
     alignItems: "center",
   },
   buyNowButton: {
@@ -373,6 +371,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     ...spacingStyles.py10,
     justifyContent: "center",
+    flexDirection: "row",
     flex: 1,
     alignItems: "center",
   },

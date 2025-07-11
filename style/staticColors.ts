@@ -82,11 +82,13 @@ export default {
   dotColor: "#C7D6FB",
   bgSoftGray: "#F9F9F9",
   bgSoftBlue: "#F8FAFF",
+  bgSoftBlue200: "#f2f6fc",
   RoyalBlue: "#0042E033",
   PastelRose: "#F1AEAE",
   BoldPink: "#FF5790",
   HotRed: "#F81140",
   textSoftGray: "#F3F3F3",
+  gray50:'#F4F4F4',
   gray100: "#F8F8F8",
   gray200: "#C7C7C7",
   gray300: "#F9F9F9",
@@ -101,4 +103,5 @@ export default {
   skyBlue50:'#F4F6FE',
   skyBlue100:"#AAC3FF",
   inputBg: "#F1F4FE",
+  red50:'#D97474'
 };

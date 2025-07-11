@@ -9,7 +9,7 @@ export interface ColorOption {
   color: string;
   value: string;
   img_url: string;
-  stock_quantity: string;
+  stock_quantity: number;
   images: string[];
 }
 
@@ -26,8 +26,9 @@ export interface ProductModalProps {
     colorName: string;
     images: string[];
   }) => void;
-  price:number;
-  productId?:string
+  price: number;
+  productId?: string;
   handleLikePress: () => void;
-   handleAddToCart:() => void;
+  handleAddToCart: () => void;
+  isLiked?: boolean;
 }

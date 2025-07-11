@@ -9,49 +9,52 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { router } from "expo-router";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchProducts } from "@/store/product/productsSlice";
+import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { fontSizes, fontWeights } from "@/style/typography";
 import { textTruncate } from "@/utils/textTruncate";
 import { commonStyles } from "@/style/commonStyle";
-import { FontAwesome } from "@expo/vector-icons";
 import borderRadius from "@/style/borderRadius";
 import { useAppDispatch } from "@/store/hooks";
-import { SimilarProductsProps } from "./SimilarProduct.types";
+import { SimilarProduct, SimilarProductsProps } from "./SimilarProduct.types";
 import { fontFamilies } from "@/style/fontFamilies";
+import { fetchSimilarProducts } from "@/store/similarProduct/SimilarProductSlice";
 
 const SimilarProducts = ({
   currentProduct,
   handleAddToCart,
 }: SimilarProductsProps) => {
   const dispatch = useAppDispatch();
+
   const {
-    data: allProducts,
+    data: similarProducts,
     loading,
     error,
-  } = useSelector((state: RootState) => state.products);
+  }: {
+    data: SimilarProduct[];
+    loading: boolean;
+    error: string | null;
+  } = useSelector((state: RootState) => state.similarProducts);
+
+  const productColor = currentProduct.gallery?.[0]?.color;
 
   useEffect(() => {
-    dispatch(fetchProducts({ params: { page: 1, limit: 15 } }));
-  }, [dispatch]);
+    if (currentProduct?.id) {
+      dispatch(
+        fetchSimilarProducts({
+          productId: currentProduct.id,
+          color: productColor,
+        })
+      );
+    }
+  }, [dispatch, currentProduct]);
 
-  if (!currentProduct) {
-    return (
-      <View style={styles.container}>
-        <Text>No product provided.</Text>
-      </View>
-    );
-  }
-
-  // Limit to 15 products
-  const limitedProducts = allProducts
+  const limitedProducts = similarProducts
     .filter((product) => product.id !== currentProduct.id)
     .slice(0, 15);
 
-  // Handle navigation to product details
   const navigateToProductDetails = (productId: string) => {
     router.navigate({
       pathname: "/ProductDetails",
@@ -59,16 +62,14 @@ const SimilarProducts = ({
     });
   };
 
-  // Render loading state
   if (loading) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator color={staticColors.lightGray}></ActivityIndicator>
+        <ActivityIndicator color={staticColors.lightGray} />
       </View>
     );
   }
 
-  // Render error state
   if (error) {
     return (
       <View style={styles.container}>
@@ -77,11 +78,10 @@ const SimilarProducts = ({
     );
   }
 
-  // Render if no products are found
   if (limitedProducts.length === 0) {
     return (
       <View style={styles.container}>
-        <Text>No products found.</Text>
+        <Text>No similar products found.</Text>
       </View>
     );
   }
@@ -99,8 +99,8 @@ const SimilarProducts = ({
             onPress={() => navigateToProductDetails(item.id)}
           >
             <View style={commonStyles.imageContainer}>
-              {item.images && item.images.length > 0 ? (
-                <Image source={{ uri: item.images[0] }} style={styles.image} />
+              {item.image_url ? (
+                <Image source={{ uri: item.image_url }} style={styles.image} />
               ) : (
                 <View
                   style={[styles.image, commonStyles.imagePlaceholderContainer]}
@@ -110,21 +110,14 @@ const SimilarProducts = ({
                   </Text>
                 </View>
               )}
-              <View style={commonStyles.ratingContainer}>
-                <Text style={styles.ratingText}>
-                  {item.star || "N/A"}{" "}
-                  <FontAwesome
-                    name="star"
-                    size={12}
-                    color={staticColors.lightYellow}
-                  />
-                </Text>
-              </View>
             </View>
+
             <Text style={[commonStyles.cardTitle, styles.title]}>
-              {textTruncate(item.title || "Untitled Product")}
+              {textTruncate(item.name || "Untitled Product")}
             </Text>
+
             <Text style={styles.price}>₹{item.price}</Text>
+
             <TouchableOpacity
               style={styles.addButton}
               onPress={() => handleAddToCart(item)}
@@ -165,7 +158,6 @@ const styles = StyleSheet.create({
     ...spacingStyles.mx5,
     color: staticColors.black,
   },
-  ratingText: { fontSize: fontSizes.xs },
   addButton: {
     ...spacingStyles.py5,
     borderRadius: borderRadius.r12,

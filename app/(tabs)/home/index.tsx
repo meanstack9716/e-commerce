@@ -1,36 +1,26 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   View,
   Text,
   TextInput,
-  TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
   StatusBar,
   FlatList,
-  Image,
   Alert,
   BackHandler,
   Platform,
-  ScrollView,
 } from "react-native";
-
 import { useSelector } from "react-redux";
 import { router, useFocusEffect } from "expo-router";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ProductCard from "@/components/home/ProductCard";
-import FullScreenLoader from "@/components/common/FullScreenLoader";
-import colors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import staticColors from "@/style/staticColors";
 import { fontSizes, fontWeights } from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
-import images from "@/constants/images";
 import { useAppDispatch } from "@/store/hooks";
 import { fetchCategories } from "@/store/category/categoriesSlice";
 import { fetchProducts } from "@/store/product/productsSlice";
-import borderRadius from "@/style/borderRadius";
-import { CategoryItem, Product, SubCategoryItem } from "@/interfaces";
+import { Product } from "@/interfaces";
 import { fontFamilies } from "@/style/fontFamilies";
 import { commonStyles } from "@/style/commonStyle";
 import { CategoriresCard } from "@/components/categoriesCard";
@@ -42,14 +32,13 @@ import { LIST_LIMIT } from "@/constants/constants";
 
 const HomeScreen: React.FC = () => {
   const [likedProductItems, setLikedProductItems] = useState<string[]>([]);
-  const [activeProductTab, setActiveProductTab] = useState<string>("All");
   const [productSearchQuery, setProductSearchQuery] = useState<string>("");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const insets = useSafeAreaInsets();
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const flatListRef = useRef<FlatList>(null);
   const dispatch = useAppDispatch();
   const limit = LIST_LIMIT;
+
   const {
     data: categories,
     loading: categoriesLoading,
@@ -60,15 +49,16 @@ const HomeScreen: React.FC = () => {
     data: products,
     loading: productsLoading,
     error: productsError,
+    lastPage,
   } = useSelector((state: any) => state.products);
 
   useFocusEffect(
     useCallback(() => {
       dispatch(fetchCategories());
       setPage(1);
-      setHasMore(true);
+      setIsLoadingMore(false);
       dispatch(fetchProducts({ params: { page: 1, limit } }));
-    }, [dispatch])
+    }, [dispatch, limit])
   );
 
   useEffect(() => {
@@ -96,129 +86,68 @@ const HomeScreen: React.FC = () => {
     if (categoriesError || productsError) {
       Alert.alert(
         "Error",
-        categoriesError ||
-          productsError ||
-          "Failed to fetch data. Please try again.",
+        String(
+          categoriesError ||
+            productsError ||
+            "Failed to fetch data. Please try again."
+        ),
         [
           {
             text: "Retry",
             onPress: () => {
               dispatch(fetchCategories());
               setPage(1);
-              setHasMore(true);
+              setIsLoadingMore(false);
               dispatch(fetchProducts({ params: { page: 1, limit } }));
             },
           },
-          {
-            text: "Cancel",
-            style: "cancel",
-          },
+          { text: "Cancel", style: "cancel" },
         ]
       );
     }
-  }, [categoriesError, productsError, dispatch]);
+  }, [categoriesError, productsError, dispatch, limit]);
 
-  const tabs = [
-    "All",
-    ...categories.slice(0, 3).map((cat: any) => cat.name),
-    "Categories",
-  ];
-
-  useEffect(() => {
-    if (!activeProductTab && tabs.length > 0) {
-      setActiveProductTab("All");
-    }
-  }, [tabs, activeProductTab]);
-
-  const getFilteredProducts = () => {
-    let filtered = products;
-
-    if (
-      activeProductTab &&
-      activeProductTab !== "All" &&
-      activeProductTab !== "Categories" &&
-      tabs.includes(activeProductTab)
-    ) {
-      const activeCategory = categories.find(
-        (cat: any) => cat.name.toLowerCase() === activeProductTab.toLowerCase()
-      );
-      if (activeCategory) {
-        const subCategoryIds = activeCategory.sub_categories.map(
-          (sub: any) => sub.id
-        );
-        filtered = filtered.filter((product: Product) =>
-          product.categories.some(
-            (cat) => cat === activeCategory.id || subCategoryIds.includes(cat)
-          )
-        );
-      }
-    }
-
-    if (selectedCategory) {
-      filtered = filtered.filter((product: Product) =>
-        product.categories.includes(selectedCategory)
-      );
-    }
-
-    if (productSearchQuery) {
-      filtered = filtered.filter((product: Product) =>
-        product.title.toLowerCase().includes(productSearchQuery.toLowerCase())
-      );
-    }
-
-    return filtered;
-  };
-
-  const toggleProductLike = (id: string) => {
+  const toggleProductLike = useCallback((id: string) => {
     setLikedProductItems((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
-  };
+  }, []);
 
-  const handleLoadMore = () => {
-    if (products.length && !productsLoading && hasMore) {
+  const handleLoadMore = useCallback(() => {
+    if (!productsLoading && page < lastPage && !isLoadingMore) {
+      setIsLoadingMore(true);
       const nextPage = page + 1;
       setPage(nextPage);
-      dispatch(fetchProducts({ params: { page: nextPage, limit } })).then(
-        (action) => {
-          if (action.payload && Array.isArray(action.payload)) {
-            setHasMore(action.payload.length === limit);
-          } else {
-            setHasMore(false);
-          }
+      dispatch(fetchProducts({ params: { page: nextPage, limit } })).finally(
+        () => {
+          setIsLoadingMore(false);
         }
       );
     }
-  };
+  }, [productsLoading, page, lastPage, isLoadingMore, dispatch, limit]);
 
-  const renderProductItem = ({ item }: { item: Product }) => (
-    <ProductCard
-      {...item}
-      liked={likedProductItems.includes(item.id)}
-      onLikePress={() => toggleProductLike(item.id)}
-      onPress={() =>
-        router.navigate({
-          pathname: "/ProductDetails",
-          params: { id: item.id },
-        })
-      }
-    />
+  const renderProductItem = useCallback(
+    ({ item }: { item: Product }) => (
+      <ProductCard
+        {...item}
+        liked={likedProductItems.includes(item.id)}
+        onLikePress={() => toggleProductLike(item.id)}
+        onPress={() =>
+          router.navigate({
+            pathname: "/ProductDetails",
+            params: { id: item.id },
+          })
+        }
+      />
+    ),
+    [likedProductItems, toggleProductLike]
   );
 
-  const renderSkeletonItem = () => <ProductCardSkeleton />;
+  const renderSkeletonItem = useCallback(() => <ProductCardSkeleton />, []);
 
-  const isLoading = categoriesLoading || productsLoading;
-  const hasError = categoriesError || productsError;
-
-  return (
-    <View style={styles.container}>
-      <SafeAreaViewWrapper>
-        {/* <FullScreenLoader visible={isLoading} /> */}
-        <StatusBar
-          barStyle="dark-content"
-          translucent
-          backgroundColor="transparent"
-        />
+  const renderHeader = useCallback(
+    () => (
+      <View>
         <View style={commonStyles.searchContainer}>
           <Text style={commonStyles.searchContainerText}>Shop</Text>
           <View style={commonStyles.searchInputContainer}>
@@ -230,72 +159,78 @@ const HomeScreen: React.FC = () => {
               onChangeText={setProductSearchQuery}
               onFocus={() => router.navigate("/home/product-search")}
             />
-            {/* <TouchableOpacity>
-              <Ionicons
-                name="camera-outline"
-                size={20}
-                color={staticColors.blue400}
-              />
-            </TouchableOpacity> */}
           </View>
         </View>
+        <ImageSlider slides={bannerData} />
+        <CategoriresCard categoryList={categories} />
+      </View>
+    ),
+    [categories, productSearchQuery]
+  );
 
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <ImageSlider slides={bannerData} />
-          <CategoriresCard categoryList={categories} />
+  const isLoading = categoriesLoading || productsLoading;
 
-          {hasError && <Text style={styles.errorText}>Error: {hasError}</Text>}
-
-          <FlatList
-            data={
-              productsLoading && products.length === 0
-                ? Array(4).fill({})
-                : getFilteredProducts()
-            }
-            numColumns={2}
-            keyExtractor={(item, index) =>
-              productsLoading && products.length === 0
-                ? `skeleton-${index}`
-                : item.id
-            }
-            renderItem={
-              productsLoading && products.length === 0
-                ? renderSkeletonItem
-                : renderProductItem
-            }
-            onEndReached={handleLoadMore}
-            onEndReachedThreshold={0.5}
-            scrollEnabled={false}
-            showsVerticalScrollIndicator={false}
-            columnWrapperStyle={{
-              justifyContent: "space-between",
-              ...spacingStyles.my10,
-            }}
-            ListFooterComponent={() =>
-              productsLoading && products.length > 0 ? (
-                <View style={{ paddingVertical: 20 }}>
-                  <FlatList
-                    data={Array.from({ length: 4 })}
-                    renderItem={renderSkeletonItem}
-                    keyExtractor={(_, index) => `footer-skeleton-${index}`}
-                    numColumns={2}
-                    columnWrapperStyle={{
-                      justifyContent: "space-between",
-                      ...spacingStyles.my20,
-                    }}
-                  />
-                </View>
-              ) : null
-            }
-            ListEmptyComponent={() =>
-              !productsLoading ? (
-                <View style={styles.emptyContainer}>
-                  <Text style={styles.emptyText}>No products Available</Text>
-                </View>
-              ) : null
-            }
-          />
-        </ScrollView>
+  return (
+    <View style={styles.container}>
+      <SafeAreaViewWrapper>
+        <StatusBar
+          barStyle="dark-content"
+          translucent
+          backgroundColor="transparent"
+        />
+        <FlatList
+          ref={flatListRef}
+          data={
+            productsLoading && products.length === 0
+              ? Array(4).fill({})
+              : products
+          }
+          numColumns={2}
+          keyExtractor={(item, index) =>
+            productsLoading && products.length === 0
+              ? `skeleton-${index}`
+              : item.id
+          }
+          renderItem={
+            productsLoading && products.length === 0
+              ? renderSkeletonItem
+              : renderProductItem
+          }
+          ListHeaderComponent={renderHeader}
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={1.0}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingBottom: 10,
+          }}
+          columnWrapperStyle={{
+            justifyContent: "space-between",
+            ...spacingStyles.my20,
+          }}
+          ListFooterComponent={() =>
+            productsLoading && products.length > 0 ? (
+              <View style={{ paddingVertical: 20 }}>
+                <FlatList
+                  data={Array.from({ length: 4 })}
+                  renderItem={renderSkeletonItem}
+                  keyExtractor={(_, index) => `footer-skeleton-${index}`}
+                  numColumns={2}
+                  columnWrapperStyle={{
+                    justifyContent: "space-between",
+                    ...spacingStyles.my20,
+                  }}
+                />
+              </View>
+            ) : null
+          }
+          ListEmptyComponent={() =>
+            !productsLoading ? (
+              <View style={styles.emptyContainer}>
+                <Text style={styles.emptyText}>No products Available</Text>
+              </View>
+            ) : null
+          }
+        />
       </SafeAreaViewWrapper>
     </View>
   );

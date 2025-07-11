@@ -6,7 +6,8 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
+import * as Linking from "expo-linking";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useColorScheme } from "@/hooks/useColorScheme";
@@ -17,6 +18,22 @@ SplashScreen.preventAutoHideAsync();
 
 function AppLayout() {
   const colorScheme = useColorScheme();
+  const router = useRouter();
+
+  useEffect(() => {
+    const handleDeepLink = (data: any) => {
+      if (data?.url) {
+        const url = data.url;
+        const parsed = Linking.parse(url);
+        if (parsed.path === "orderHistory") {
+          router.navigate("/orderHistory");
+        }
+      }
+    };
+
+    const subscription = Linking.addEventListener("url", handleDeepLink);
+    return () => subscription.remove();
+  }, []);
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
@@ -81,5 +98,3 @@ export default function RootLayout() {
     </Provider>
   );
 }
-
-

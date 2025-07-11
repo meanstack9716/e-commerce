@@ -4,9 +4,9 @@ import { MotiView } from "moti";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import borderRadius from "@/style/borderRadius";
-import SkeletonPlaceholder from "./SkeletonPlaceholder ";
+import SkeletonPlaceholder from "../skeleton/SkeletonPlaceholder ";
 interface OrderItemSkeletonProps {
-  count?: number; // Number of skeleton items to render
+  count?: number;
 }
 
 const OrderItemSkeleton: React.FC<OrderItemSkeletonProps> = ({ count = 5 }) => {

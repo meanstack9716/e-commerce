@@ -13,7 +13,7 @@ import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { useLocalSearchParams, router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/store/store";
+import { AppDispatch, RootState, store } from "@/store/store";
 import {
   clearSelectedProduct,
   fetchProductById,
@@ -27,10 +27,11 @@ import { fontSizes, fontWeights } from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
 import SizeSelector from "@/components/productDetails/SizeSelector";
 import ProductActionButtons from "@/components/productDetails/ProductActionButtons";
-import FullScreenLoader from "@/components/common/FullScreenLoader";
 import borderRadius from "@/style/borderRadius";
-import { addToWishlist } from "@/store/wishlist/wishlistSlice";
-import Toast from "react-native-toast-message";
+import {
+  addToWishlist,
+  removeWishlistItem,
+} from "@/store/wishlist/wishlistSlice";
 import { LinearGradient } from "expo-linear-gradient";
 import { fontFamilies } from "@/style/fontFamilies";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
@@ -43,6 +44,9 @@ import {
 } from "@/store/review/reviewSlice";
 import { LIST_LIMIT } from "@/constants/constants";
 import SimilarProducts from "@/components/productDetails/similarProduct/SimilarProducts";
+import ProductMayYouLike from "@/components/productDetails/ProductMayYouLike";
+import ProductDetailsSkeleton from "@/components/skeleton/ProductDetailsSkeleton";
+import { Product } from "@/interfaces";
 
 const { width: screenWidth } = Dimensions.get("window");
 const ProductDetailsScreen: React.FC = () => {
@@ -58,7 +62,7 @@ const ProductDetailsScreen: React.FC = () => {
     productReviews,
     loading: reviewsLoading,
     error: reviewsError,
-    page
+    page,
   } = useSelector((state: RootState) => state.review);
   const { items: wishlistItems } = useSelector(
     (state: RootState) => state.wishlist
@@ -82,6 +86,7 @@ const ProductDetailsScreen: React.FC = () => {
   const flatListRef = useRef<FlatList>(null);
   const imageCarouselRef = useRef<FlatList>(null);
   const screenHeight = Dimensions.get("window").height;
+  const [localProduct, setLocalProduct] = useState<Product | null>(null);
 
   const isAuthenticatedUser = useAppSelector(
     (state) => state.auth.isAuthenticated
@@ -90,8 +95,13 @@ const ProductDetailsScreen: React.FC = () => {
     if (id) {
       dispatch(fetchProductById(id as string));
       dispatch(
-        fetchProductReviews({ productId: id as string, page: 1, limit:LIST_LIMIT })
+        fetchProductReviews({
+          productId: id as string,
+          page: 1,
+          limit: LIST_LIMIT,
+        })
       );
+
       if (isAuthenticatedUser) {
         dispatch(fetchUserReview(id as string));
       }
@@ -100,6 +110,7 @@ const ProductDetailsScreen: React.FC = () => {
     return () => {
       dispatch(clearSelectedProduct());
       dispatch(resetReviewState());
+      setLocalProduct(null);
     };
   }, [id, dispatch, isAuthenticatedUser]);
 
@@ -149,15 +160,27 @@ const ProductDetailsScreen: React.FC = () => {
       return;
     }
     try {
-      await dispatch(
-        addToWishlist({
-          productId: product.id,
-          selectedSize,
-          selectedColor,
-          quantity: "1",
-        })
-      ).unwrap();
-      setIsProductLiked(true);
+      if (isProductLiked) {
+        const wishlistItem = wishlistItems.find(
+          (item) =>
+            item.product.id === product.id &&
+            item.selected_size === selectedSize &&
+            item.selected_color === selectedColor
+        );
+        if (wishlistItem && wishlistItem.id) {
+          await dispatch(removeWishlistItem(wishlistItem.id)).unwrap();
+        }
+      } else {
+        await dispatch(
+          addToWishlist({
+            productId: product.id,
+            selectedSize,
+            selectedColor,
+            quantity: "1",
+          })
+        ).unwrap();
+      }
+      setIsProductLiked((prev) => !prev);
     } catch (error) {
       console.log(error);
     }
@@ -203,12 +226,21 @@ const ProductDetailsScreen: React.FC = () => {
     }
   };
 
-  if (loading || error || reviewsLoading || reviewsError) {
+  if (!product) {
     return (
       <SafeAreaViewWrapper>
-        <FullScreenLoader visible={loading || reviewsLoading} />
+        <ProductDetailsSkeleton />
+      </SafeAreaViewWrapper>
+    );
+  }
+
+  if (error || reviewsError) {
+    return (
+      <SafeAreaViewWrapper>
         <View style={styles.loadingContainer}>
-          <Text style={styles.loadingText}>{error || reviewsError}</Text>
+          <Text style={styles.loadingText}>
+            {error || reviewsError || "Something went wrong."}
+          </Text>
         </View>
       </SafeAreaViewWrapper>
     );
@@ -251,7 +283,9 @@ const ProductDetailsScreen: React.FC = () => {
               horizontal
               pagingEnabled
               data={
-                displayImages.length > 0 ? displayImages : product?.images || []
+                displayImages.length > 0
+                  ? displayImages
+                  : product?.gallery?.map((img) => img.img_url) || []
               }
               keyExtractor={(_, index) => `image-${index}`}
               onScroll={handleScroll}
@@ -269,7 +303,7 @@ const ProductDetailsScreen: React.FC = () => {
               <View style={styles.dotContainer}>
                 {(displayImages.length > 0
                   ? displayImages
-                  : product?.images || []
+                  : product?.gallery?.map((img) => img.img_url) || []
                 ).map((_: string, index: number) => {
                   const isActive = activeIndex === index;
                   return (
@@ -336,6 +370,7 @@ const ProductDetailsScreen: React.FC = () => {
               <Text style={styles.title}>{product.title}</Text>
               <Text style={styles.description}>{product.description}</Text>
             </View>
+
             {/* <MegaDealBadge /> */}
             <SizeSelector
               product={product}
@@ -344,6 +379,7 @@ const ProductDetailsScreen: React.FC = () => {
               price={product.final_price}
               handleLikePress={handleLikePress}
               handleAddToCart={handleAddToCart}
+              isLiked={isProductLiked}
             />
 
             <Text style={styles.heading}>Similar Products</Text>
@@ -388,8 +424,9 @@ const ProductDetailsScreen: React.FC = () => {
 
             {/* 
             <BrandRating />
+           */}
             <Text style={styles.heading}>Products you may like</Text>
-            <ProductList /> */}
+            <ProductMayYouLike />
           </>
         }
       />
@@ -406,6 +443,7 @@ const ProductDetailsScreen: React.FC = () => {
         <ProductActionButtons
           onAddToCart={handleAddToCart}
           onWishlist={handleLikePress}
+          isLiked={isProductLiked}
         />
       )}
       {/* <ViewSimilarModal
@@ -437,6 +475,9 @@ const styles = StyleSheet.create({
   image: {
     width: screenWidth,
     height: 430,
+    backgroundColor: staticColors.lightGray,
+    borderBottomLeftRadius: borderRadius.r20,
+    borderBottomRightRadius: borderRadius.r20,
   },
   dotContainer: {
     flexDirection: "row",
@@ -536,8 +577,9 @@ const styles = StyleSheet.create({
     textDecorationLine: "line-through",
   },
   discountWrapper: {
-    paddingHorizontal: 7,
-    paddingTop: 4,
+    ...spacingStyles.px6,
+    ...spacingStyles.pt2,
+    ...spacingStyles.pb5,
     ...spacingStyles.pb2,
     borderRadius: borderRadius.r5,
     alignSelf: "flex-start",
