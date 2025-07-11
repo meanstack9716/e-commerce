@@ -13,7 +13,8 @@ import { StatusBar } from "expo-status-bar";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { store } from "@/store/store";
 import { AuthStateInitializer } from "@/components/auth/AuthStateInitializer";
-import Toast from "react-native-toast-message";
+import Toast from "react-native-toast-message"; 
+import { Platform } from "react-native";
 SplashScreen.preventAutoHideAsync();
 
 function AppLayout() {
@@ -34,6 +35,13 @@ function AppLayout() {
     const subscription = Linking.addEventListener("url", handleDeepLink);
     return () => subscription.remove();
   }, []);
+
+  if (Platform.OS === 'android') {
+  const { NativeModules } = require('react-native');
+  if (NativeModules.RNFirebaseApp) {
+    throw new Error('Firebase native module still exists! Clean your project again.');
+  }
+}
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>

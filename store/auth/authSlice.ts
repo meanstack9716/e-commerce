@@ -3,6 +3,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getApiUrl } from "@/utils/apiUtils";
 import axiosConfig from "@/utils/axiosConfig";
+import { getPushNotificationToken } from "@/utils/notifications";
 
 interface AuthState {
   loading: boolean;
@@ -83,9 +84,12 @@ export const loginUser = createAsyncThunk(
     { rejectWithValue, dispatch }
   ) => {
     try {
+      const fcm_token = await getPushNotificationToken();
+      console.log("Expo Push FCM_Token:", fcm_token);
       const response = await axiosConfig.post(`/auth/login`, {
         email,
         password,
+        fcm_token
       });
       if (!response.data.token || !response.data.user) {
         return rejectWithValue("Invalid login response: Missing token or user");
