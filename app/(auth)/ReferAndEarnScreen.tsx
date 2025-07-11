@@ -1,35 +1,50 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Clipboard,
-} from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { router } from "expo-router";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import * as Clipboard from "expo-clipboard";
 import staticColors from "@/style/staticColors";
 import spacingStyles from "@/style/spacingStyles";
 import borderRadius from "@/style/borderRadius";
 import { fontSizes, fontWeights } from "@/style/typography";
 import gapSizes from "@/style/gapSizes";
 import { useAppSelector } from "@/store/hooks";
-import { router } from "expo-router";
 import { SafeAreaViewWrapper } from "@/components/common/SafeAreaView/SafeAreaViewWrapper";
 
 const ReferAndEarnScreen = () => {
   const user = useAppSelector((state) => state.auth.user);
-  const referralCode = user?.referral_code || ".......";
+  const referralCode = user?.referral_code;
 
   const [message, setMessage] = useState<string | null>(null);
+  const [codeCopied, setCodeCopied] = useState(false);
+  const timeoutRef = useRef<number | null>(null);
 
-  const showMessage = (msg: string) => {
+  const showMessage = (msg: string, isError = false) => {
     setMessage(msg);
-    setTimeout(() => setMessage(null), 2000);
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    timeoutRef.current = setTimeout(() => setMessage(null), 2000);
   };
 
-  const handleCopy = () => {
-    Clipboard.setString(referralCode);
-    showMessage("Referral code copied!");
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
+  const handleCopy = async () => {
+    if (!referralCode) return;
+    try {
+      await Clipboard.setStringAsync(referralCode);
+      setCodeCopied(true)
+      showMessage("Referral code copied!");
+      setTimeout(() => setCodeCopied(false), 2000);
+    } catch (error) {
+      showMessage("Failed to copy code", true);
+    }
   };
 
   const handleBackPress = () => {
@@ -58,16 +73,24 @@ const ReferAndEarnScreen = () => {
           Send a referral link to your friends via SMS / Email / Whatsapp
         </Text>
 
-        <View style={styles.codeBox}>
-          <Text style={styles.codeText}>{referralCode}</Text>
-          <TouchableOpacity onPress={handleCopy}>
-            <Ionicons
-              name="copy-outline"
-              size={20}
-              color={staticColors.linkPrimary}
-            />
-          </TouchableOpacity>
-        </View>
+        {referralCode ? (
+          <View style={styles.codeBox}>
+            <Text style={styles.codeText}>{referralCode}</Text>
+            <TouchableOpacity onPress={handleCopy}>
+              <Ionicons
+                name={codeCopied ? "checkmark-circle-outline" : "copy-outline"}
+                size={20}
+                color={staticColors.linkPrimary}
+              />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View style={[styles.codeBox, styles.disabledCodeBox]}>
+            <Text style={[styles.codeText, styles.disabledCodeText]}>
+              No referral code available
+            </Text>
+          </View>
+        )}
 
         {message && (
           <View style={styles.messageBox}>
@@ -128,10 +151,17 @@ const styles = StyleSheet.create({
     width: "100%",
     ...spacingStyles.mt30,
   },
+  disabledCodeBox: {
+    backgroundColor: staticColors.bgCardLight,
+    justifyContent: "center",
+  },
   codeText: {
     fontWeight: fontWeights.bold,
     fontSize: fontSizes.base,
     color: staticColors.primary,
+  },
+  disabledCodeText: {
+    color: staticColors.textMuted,
   },
   messageBox: {
     ...spacingStyles.mt20,

@@ -98,7 +98,7 @@ export default function CreateAccountScreen() {
           email: formData.email,
           password: formData.password,
           password_confirmation: formData.confirmPassword,
-          referral_code: formData.referralCode?.trim() || undefined,
+          referral_code: formData.referralCode?.trim(),
         })
       );
     }
