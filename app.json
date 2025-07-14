@@ -19,6 +19,7 @@
       "adaptiveIcon": {
         "backgroundColor": "#ffffff"
       },
+      "googleServicesFile": "./google-services.json",
       "package": "com.innotech.indofashion",
       "permissions": [
         "ACCESS_FINE_LOCATION",

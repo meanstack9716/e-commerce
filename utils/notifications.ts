@@ -1,39 +1,35 @@
-import * as Notifications from "expo-notifications";
-import { Platform } from "react-native";
+import * as Notifications from 'expo-notifications';
+import * as Device from 'expo-device';
+import { Platform } from 'react-native';
 
-export async function getPushNotificationToken() {
+export async function registerForPushNotificationsAsync() {
   let token;
 
-  // Configure notification handler 
-  Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-      shouldShowAlert: true,
-      shouldPlaySound: true,
-      shouldSetBadge: true,
-      shouldShowBanner: true, // Required for iOS
-      shouldShowList: true, // Required for iOS
-    }),
-  });
+  if (Device.isDevice) {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
 
-  // Android: Set notification channel
-  if (Platform.OS === "android") {
-    await Notifications.setNotificationChannelAsync("default", {
-      name: "default",
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+
+    if (finalStatus !== 'granted') {
+      alert('Permission for push notifications not granted!');
+      return;
+    }
+
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+  } else {
+    alert('Must use a physical device for Push Notifications');
+  }
+
+  if (Platform.OS === 'android') {
+    Notifications.setNotificationChannelAsync('default', {
+      name: 'default',
       importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: "#FF231F7C",
     });
   }
 
-  // Check permissions (required for iOS)
-  const { status } = await Notifications.getPermissionsAsync();
-  if (status !== "granted") {
-    await Notifications.requestPermissionsAsync();
-  }
-
-  // Get the Expo Push Token
-  const { data: pushToken } = await Notifications.getExpoPushTokenAsync();
-  console.log("Expo Push Token:", pushToken);
-
-  return pushToken;
+  return token;
 }
