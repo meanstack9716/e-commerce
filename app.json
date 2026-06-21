@@ -19,6 +19,7 @@
       "adaptiveIcon": {
         "backgroundColor": "#ffffff"
       },
+      "googleServicesFile": "./google-services.json",
       "package": "com.innotech.indofashion",
       "permissions": [
         "ACCESS_FINE_LOCATION",
@@ -60,7 +61,8 @@
         }
       ],
       "expo-font",
-      "expo-web-browser"
+      "expo-web-browser",
+      "expo-notifications"
     ],
     "experiments": {
       "typedRoutes": true

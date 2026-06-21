@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "761513877321",
+    "project_id": "ecommerce-78b33",
+    "storage_bucket": "ecommerce-78b33.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:761513877321:android:696bbef4adea302ae9c498",
+        "android_client_info": {
+          "package_name": "com.innotech.indofashion"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtYegZ4IpAwRc9RnfSIVBCRphvHN_eoG8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

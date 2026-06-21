@@ -3,22 +3,23 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getApiUrl } from "@/utils/apiUtils";
 import axiosConfig from "@/utils/axiosConfig";
+import { registerForPushNotificationsAsync } from "@/utils/notifications";
 
 interface AuthState {
   loading: boolean;
-  loginError:string | null;
+  loginError: string | null;
   error: string | null;
   registered: boolean;
   isAuthenticated: boolean;
   user: any | null;
   resetEmail: string | null;
   resetCode: string | null;
-  token: string | null;
+  token: string | null; 
 }
 
 const initialState: AuthState = {
   loading: false,
-  loginError:null,
+  loginError: null,
   error: null,
   registered: false,
   isAuthenticated: false,
@@ -27,6 +28,7 @@ const initialState: AuthState = {
   resetCode: null,
   token: null,
 };
+
 export const loadAuthState = createAsyncThunk(
   "auth/loadAuthState",
   async (_, { rejectWithValue }) => {
@@ -64,10 +66,13 @@ export const registerUser = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
+      const fcm_token = await registerForPushNotificationsAsync();
+      console.log("Expo Push FCM_Token:", fcm_token);//for testing 
       const response = await axiosConfig.post("/auth/register", {
         email,
         password,
         password_confirmation,
+        fcm_token,
       });
       return response.data;
     } catch (error: any) {
@@ -83,16 +88,22 @@ export const loginUser = createAsyncThunk(
     { rejectWithValue, dispatch }
   ) => {
     try {
+      const fcm_token = await registerForPushNotificationsAsync();
+      console.log("Expo Push FCM_Token:", fcm_token);
       const response = await axiosConfig.post(`/auth/login`, {
         email,
         password,
+        fcm_token,
       });
       if (!response.data.token || !response.data.user) {
         return rejectWithValue("Invalid login response: Missing token or user");
       }
       try {
         await AsyncStorage.setItem("authToken", response.data.token);
-        await AsyncStorage.setItem("authUser", JSON.stringify(response.data.user));
+        await AsyncStorage.setItem(
+          "authUser",
+          JSON.stringify(response.data.user)
+        );
         const savedToken = await AsyncStorage.getItem("authToken");
         const savedUser = await AsyncStorage.getItem("authUser");
       } catch (storageError) {
@@ -198,7 +209,8 @@ export const logoutUser = createAsyncThunk(
   async (_, { rejectWithValue, dispatch }) => {
     try {
       const token = await AsyncStorage.getItem("authToken");
-      await axiosConfig.post(`/auth/logout`,
+      await axiosConfig.post(
+        `/auth/logout`,
         {},
         {
           headers: {
@@ -226,7 +238,7 @@ const authSlice = createSlice({
   reducers: {
     clearAuthError: (state) => {
       state.error = null;
-      state.loginError = null
+      state.loginError = null;
     },
     resetRegistration: (state) => {
       state.registered = false;
